@@ -4,7 +4,7 @@
 #
 
 %define         _state          stable
-%define         _ver		3.1.3
+%define         _ver		3.1.4
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -12,15 +12,15 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1.2
+Release:	0.1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	14afcd5713481b19a5a9908e522445de
+# Source0-md5:	c695c8574efca207c445dcef0bb4ae43
 # generated from kde-i18n
 Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	60e0b8d78230d8ad18d8aeab583702b6
+# Source1-md5:	2d1c3dd73adfd314e3a8b61e669fc30c
 Patch0:		%{name}-no_glut.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
@@ -443,7 +443,6 @@ install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,Settings/KDE,Utilities
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	RUN_KAPPFINDER=no
-
 
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 mv $ALD/{Settings/[!K]*,Settings/KDE}
