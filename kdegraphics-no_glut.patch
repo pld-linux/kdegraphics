@@ -33,3 +33,23 @@
  
  #include "pmglview.h"
  
+--- kdegraphics-3.1.2/kpovmodeler/Makefile.am.orig	2003-05-19 16:38:56.000000000 +0200
++++ kdegraphics-3.1.2/kpovmodeler/Makefile.am	2003-05-19 16:39:15.000000000 +0200
+@@ -160,7 +160,7 @@
+ 	version.h pmdocumentformat.h
+ 
+ libkpovmodelerpart_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) $(KDE_PLUGIN) $(LIBFREETYPE_RPATH) 
+-libkpovmodelerpart_la_LIBADD = $(LIBFREETYPE_LIBS) $(LIB_KPARTS) -lglut -lGLU -lGL -lXmu -lXi
++libkpovmodelerpart_la_LIBADD = $(LIBFREETYPE_LIBS) $(LIB_KPARTS) -lGLU -lGL -lXmu -lXi
+ libkpovmodelerpart_la_METASOURCES = AUTO
+ 
+ kpovmodeler_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+@@ -169,7 +169,7 @@
+ 
+ #kpovmodeler_SOURCES = $(pmallsources) main.cpp
+ #kpovmodeler_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+-#kpovmodeler_LDADD = $(LIB_KFILE) $(LIB_KPARTS) -lglut -lGLU -lGL -lXmu -lXi
++#kpovmodeler_LDADD = $(LIB_KFILE) $(LIB_KPARTS) -lGLU -lGL -lXmu -lXi
+ #kpovmodeler_METASOURCES = USE_AUTOMOC
+ 
+ rcdir = $(kde_datadir)/kpovmodeler
