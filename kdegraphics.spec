@@ -19,8 +19,8 @@ Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
+#Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 # Source0-md5:	675dd4f557574097b911350cc47f0843
 %if %{with i18n}
 Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
@@ -449,7 +449,7 @@ z indeksowaniem plików.
 Summary:	Common internationalization and localization files for kdegraphics
 Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdegraphics
 Group:	X11/Applications
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
+Requires:	kdelibs-i18n >= 9:%{version}
 
 %description i18n
 Common internationalization and localization files for kdegraphics.
