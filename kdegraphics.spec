@@ -13,8 +13,8 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplica珲es gr醘icas
 Summary(zh_CN):	KDE图形应用程序
 Name:		kdegraphics
-Version:	3.0.4
-Release:	4
+Version:	3.0.5a
+Release:	0.2
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -566,6 +566,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkviewerpart.so
 %attr(755,root,root) %{_libdir}/libkmultipage.*.*
 %attr(755,root,root) %{_libdir}/libkpagetest.so
+%{_libdir}/kview.la
 %{_datadir}/apps/kview*
 %{_applnkdir}/Graphics/Viewers/kview.desktop
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kview*}
@@ -601,6 +602,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %attr(755,root,root) %{_libdir}/kcolorchooser.so
+%{_libdir}/kcolorchooser.la
 %{_applnkdir}/Graphics/kcolorchooser.desktop
 %{_pixmapsdir}/kcolorchooser.png
 
@@ -611,6 +613,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kuickshow
 %attr(755,root,root) %{_libdir}/kuickshow.so
+%{_libdir}/kuickshow.la
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kuickshow.png}
