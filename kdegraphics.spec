@@ -445,18 +445,6 @@ indexing.
 Ten pakiet umo¿liwia zaawansowane wyszukiwanie plików graficznych z
 indeksowaniem plików.
 
-%package i18n
-Summary:	Common internationalization and localization files for kdegraphics
-Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdegraphics
-Group:		X11/Applications
-Requires:	kdelibs-i18n >= 9:%{version}
-
-%description i18n
-Common internationalization and localization files for kdegraphics.
-
-%description i18n -l pl
-Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdegraphics.
-
 %package kamera-i18n
 Summary:	Internationalization and localization files for kamera
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla programu kamera
