@@ -10,8 +10,8 @@
 %define		_snap		040508
 %define		_packager	adgor
 
-%define		_minlibsevr	9:3.2.90-040503
-%define		_minbaseevr	9:3.2.90-040503
+%define		_minlibsevr	9:3.2.90-040508
+%define		_minbaseevr	9:3.2.90-040508
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
