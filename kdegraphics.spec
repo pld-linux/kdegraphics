@@ -20,6 +20,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
+BuildRequires:	glut-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libgphoto2-devel
