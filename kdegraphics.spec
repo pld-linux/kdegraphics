@@ -3,14 +3,14 @@
 #   for some reason it checks for kpsewhich from tetex.
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-beta2
+%define         _kdever         kde-3.1-rc1
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	3.0.8
+Version:	3.0.9
 Release:	1
 Epoch:		8
 License:	GPL
@@ -671,8 +671,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kview_browserplugin.*
 %attr(755,root,root) %{_libdir}/kde3/kview_presenterplugin.*
 %attr(755,root,root) %{_libdir}/kde3/kview_scannerplugin.*
+%attr(755,root,root) %{_libdir}/kde3/kviewerpart.*
 %attr(755,root,root) %{_libdir}/kde3/libkviewcanvas.*
-%attr(755,root,root) %{_libdir}/kde3/libkviewerpart.*
 %attr(755,root,root) %{_libdir}/kde3/libkviewviewer.*
 %{_datadir}/apps/kview*
 %{_datadir}/services/kview*
