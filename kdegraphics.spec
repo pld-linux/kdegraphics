@@ -33,7 +33,7 @@ BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
-BuildRequires:	sed
+BuildRequires:	sed >= 4.0
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
 BuildRequires:	libieee1284-devel
@@ -423,7 +423,7 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 for plik in `find ./ -name *.desktop` ; do
 	if [ -d $plik ]; then
 	echo $plik
-	sed -ie "s/[nb]/[no]/g" $plik
+	sed -ie 's/\[nb\]/\[no\]/g' $plik
 	fi
 done
 				
