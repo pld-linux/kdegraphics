@@ -3,12 +3,12 @@
 #   for some reason it checks for kpsewhich from tetex.
 #
 # Conditional build:
-%bcond_with  i18n    # w/wo i18n subpackages
+%bcond_with	i18n	# w/wo i18n subpackages
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040327
-
+%define		_snap		040414
+#
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
@@ -20,8 +20,9 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
-##%% Source0-md5:	675dd4f557574097b911350cc47f0843
+#Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
+Source0:	%{name}-%{_snap}.tar.bz2
+# Source0-md5:	8b503b8d6bb9c84162b6b1d88f300ee6
 #Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 ##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 Patch0:		%{name}-vcategories.patch
