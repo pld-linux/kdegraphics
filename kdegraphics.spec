@@ -3,14 +3,14 @@
 #   for some reason it checks for kpsewhich from tetex.
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-rc3
+%define         _kdever         kde-3.1-rc4
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	3.0.99
+Version:	3.1
 Release:	1
 Epoch:		8
 License:	GPL
@@ -400,8 +400,6 @@ z indeksowaniem plików.
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
-#%{__make} -f Makefile.cvs
-
 %configure \
 	--enable-final
 %{__make}
@@ -423,16 +421,16 @@ mv $ALD/{Graphics/{kdvi,kfax,kghostview,kuickshow,kview}.desktop,Graphics/Viewer
 mv $ALD/{Graphics/{kcolorchooser,kruler}.desktop,Utilities}
 
 cd $ALD/Utilities
-cat kcolorchooser.desktop |sed 's/Icon=[^$]\+/Icon=colors/' \
+cat kcolorchooser.desktop |sed -e 's/Icon=[^$]\+/Icon=colors/' \
     > kcolorchooser.desktop.tmp
-cat kcolorchooser.desktop.tmp > kcolorchooser.desktop
-rm kcolorchooser.desktop.tmp
+mv -f kcolorchooser.desktop.tmp kcolorchooser.desktop
 cd -
 
-#cd $ALD/Settings/KDE/Peripherals
-#cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' > kamera.desktop.tmp
-#mv -f kamera.desktop.tmp kamera.desktop
-#cd -
+cd $ALD/Settings/KDE/Peripherals
+cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
+    > kamera.desktop.tmp
+mv -f kamera.desktop.tmp kamera.desktop
+cd -
 
 #bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
@@ -445,7 +443,8 @@ cd -
 #%find_lang kfile_png		--with-kde
 #%find_lang kfile_ps		--with-kde
 #%find_lang kpixmap2bitmap	--with-kde
-#cat kpixmap2bitmap.lang kfile_pdf.lang kfile_png.lang kfile_ps.lang >> %{name}.lang
+#cat kpixmap2bitmap.lang kfile_pdf.lang kfile_png.lang kfile_ps.lang \
+#    >> %{name}.lang
 #%find_lang kfract		--with-kde
 %find_lang kghostview		--with-kde
 %find_lang kiconedit		--with-kde
