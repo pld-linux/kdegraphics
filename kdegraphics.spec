@@ -7,7 +7,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.0.3
-Release:	2
+Release:	3
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -310,6 +310,8 @@ Summary:	Image viewer/browser
 Summary(pl):	Przegl±darka obrazków
 Group:		X11/Applications/Graphics
 Requires:	kdelibs = %{version}
+Provides:	kuickshow
+Obsoletes:	kuickshow
 
 %description kuickshow
 Image viewer/browser.
