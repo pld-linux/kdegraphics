@@ -3,8 +3,8 @@
 #   for some reason it checks for kpsewhich from tetex.
 #
 
-%define         _state          snapshots
-%define         _ver		3.1.93
+%define		_state		snapshots
+%define		_ver		3.1.93
 %define		_snap		031105
 
 Summary:	K Desktop Environment - Graphic Applications
@@ -21,6 +21,7 @@ Group:		X11/Applications/Graphics
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 # Source0-md5:	48016cdbbac3614dd420d9622aa1dacf
 Patch0:		%{name}-vcategories.patch
+BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= 9:%{version}
@@ -35,7 +36,6 @@ BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	rpmbuild(macros) >= 1.129
-BuildRequires:	sed >= 4.0
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
 BuildRequires:	libieee1284-devel
@@ -378,17 +378,19 @@ Program do przechwytywania ekranu dla KDE.
 Programa de captura de tela.
 
 %package ksvg
-Summary:	TODO
-Summary(pl):	TODO
+Summary:	Scalable Vector Graphics for KDE
+Summary(pl):	Skalowalna grafika a dla KDE
 Group:		X11/Applications/Graphics
 #Requires:	kdebase-core >= 9:%{version}
 Obsoletes:	kdegraphics
 
 %description ksvg
-KSVG is a KDE implementation of the Scalable Vector Graphics Specifications.
+KSVG is a KDE implementation of the Scalable Vector Graphics
+Specifications.
 
 %description ksvg -l pl
-TODO.
+KSVG stanowi implementacjê KDE specyfikacji skalowalnej grafiki
+wektorowej.
 
 %package kuickshow
 Summary:	Image viewer/browser
@@ -443,8 +445,8 @@ z indeksowaniem plików.
 
 %build
 
-for f in `find . -name *.desktop` ; do
-	sed -i 's/\[nb\]/\[no\]/g' $f
+for f in `find . -name *.desktop | grep -l '\[nb\]'` ; do
+	echo -e ',s/\[nb\]/[no]/\n,w' | ed $f
 done
 
 %{__make} -f admin/Makefile.common cvs
@@ -634,8 +636,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/ksnapshot.desktop
 %{_iconsdir}/*/*/apps/ksnapshot.*
 
-%files ksvg                                              
-%defattr(644,root,root,755)  
+%files ksvg
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/printnodetest
 %attr(755,root,root) %{_bindir}/svgdisplay
 %{_libdir}/libksvg.la
@@ -695,8 +697,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kview_presenterplugin.so
 %{_libdir}/kde3/kview_scannerplugin.la
 %attr(755,root,root) %{_libdir}/kde3/kview_scannerplugin.so
-%{_libdir}/kde3/kviewerpart.la                                                  
-%attr(755,root,root) %{_libdir}/kde3/kviewerpart.so   
+%{_libdir}/kde3/kviewerpart.la
+%attr(755,root,root) %{_libdir}/kde3/kviewerpart.so
 %{_libdir}/kde3/libkviewcanvas.la
 %attr(755,root,root) %{_libdir}/kde3/libkviewcanvas.so
 %{_libdir}/kde3/libkviewviewer.la
