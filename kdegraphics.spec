@@ -3,7 +3,7 @@
 #   for some reason it checks for kpsewhich from tetex.
 %define		_ver		3.0.3
 #define		_sub_ver
-%define		_rel		0.1
+%define		_rel		0.2
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -38,6 +38,8 @@ BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
+BuildRequires:	sed
+BuildRequires:	textutils
 BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -355,14 +357,20 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 rm -rf $RPM_BUILD_ROOT
 %{__make} RUN_KAPPFINDER=no DESTDIR=$RPM_BUILD_ROOT$ install
 
-install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,KDE}
-mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
-mv $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE}
+install -d $RPM_BUILD_ROOT%{_applnkdir}/{Settings/KDE,Graphics/Viewers}
+mv $RPM_BUILD_ROOT%{_applnkdir}/Settings/Peripherals $RPM_BUILD_ROOT%{_applnkdir}/Settings/KDE
+mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics/{kdvi,kfax,kghostview,kuickshow,kview}.desktop \
+	$RPM_BUILD_ROOT%{_applnkdir}/Graphics/Viewers
+cd $RPM_BUILD_ROOT%{_applnkdir}/Settings/KDE/Peripherals
+cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' > kamera.desktop.tmp
+mv -f kamera.desktop.tmp kamera.desktop
+cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
+%find_lang kcmkamera --with-kde
 %find_lang kdvi --with-kde
-#%find_lang kfax --with-kde
+%find_lang kfax --with-kde
 #%find_lang kfile_pdf --with-kde
 #%find_lang kfile_png --with-kde
 #%find_lang kfile_ps --with-kde
@@ -425,19 +433,19 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kdvi
 %attr(755,root,root) %{_libdir}/libkdvi.??
 %{_datadir}/apps/kdvi/
-%{_applnkdir}/Graphics/kdvi.desktop
+%{_applnkdir}/Graphics/Viewers/kdvi.desktop
 %{_pixmapsdir}/*/*/apps/kdvi.*
 
 #################################################
 #             KFAX
 #################################################
-%files kfax
+%files kfax -f kfax.lang
 # TODO -f kfax.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %attr(755,root,root) %{_libdir}/libkfax.??
 %{_datadir}/apps/kfax/
-%{_applnkdir}/Graphics/kfax.desktop
+%{_applnkdir}/Graphics/Viewers/kfax.desktop
 %{_pixmapsdir}/*/*/apps/kfax.*
 
 #################################################
@@ -513,7 +521,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkmultipage.*
 %attr(755,root,root) %{_libdir}/libkpagetest.??
 %{_datadir}/apps/kview*
-%{_applnkdir}/Graphics/kview.desktop
+%{_applnkdir}/Graphics/Viewers/kview.desktop
 %{_pixmapsdir}/*/*/apps/kview*
 
 #################################################
@@ -555,18 +563,18 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kuickshow
 %{_libdir}/kuickshow.??
 %{_datadir}/apps/kuickshow
-%{_applnkdir}/Graphics/kuickshow.desktop
+%{_applnkdir}/Graphics/Viewers/kuickshow.desktop
 %{_pixmapsdir}/*/*/apps/kuickshow.*
 
 #################################################
 #             KAMERA
 #################################################
-%files kamera
+%files kamera -f kcmkamera.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kio_kamera.??
 %{_libdir}/kde3/libkcm_kamera.??
 %{_datadir}/services/kamera.protocol
-%{_applnkdir}/KDE/Settings/Peripherals/kamera.desktop
+%{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
 %{_pixmapsdir}/*/*/actions/camera_test.*
 %{_pixmapsdir}/*/*/apps/camera.*
 %{_pixmapsdir}/*/*/devices/camera.*
