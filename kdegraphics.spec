@@ -24,7 +24,7 @@ Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 # Source0-md5:	675dd4f557574097b911350cc47f0843
 %if %{with i18n}
 Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:  f7aeb11765cd23f1719c1d18762fbc47
+# Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 %endif
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	ed
