@@ -516,7 +516,7 @@ KDE generic framework for graphics viewers allowing them to be
 embedded in KDE applications.
 
 %description kviewshell -l pl
-Szkielet KDE dla przegl±darek grafiki pozwala na zagnie¿dzanie w
+Szkielet KDE dla przegl±darek grafiki pozwala na zagnie¿d¿nie w
 aplikacjach KDE.
 
 %prep
