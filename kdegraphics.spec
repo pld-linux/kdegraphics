@@ -208,7 +208,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_libdir}/libkdvi.*
 
-%lang(fi) %{_datadir}/kde/doc/HTML/fi/kdvi
+#%lang(fi) %{_datadir}/kde/doc/HTML/fi/kdvi
 
 %{_datadir}/apps/kdvi/
 
