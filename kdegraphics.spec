@@ -2,12 +2,9 @@
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
 #
-# Conditional build:
-# _with_ra		- use it if You're building for Ra dist 
-#
 
 %define         _state          stable
-%define         _ver		3.1
+%define         _ver		3.1.1
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -15,7 +12,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	6
+Release:	0.1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -27,11 +24,7 @@ BuildRequires:	gettext-devel
 BuildRequires:	glut-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{version}
-%if %{?_with_ra:1}0
-BuildRequires:	gphoto2-devel
-%else
 BuildRequires:	libgphoto2-devel
-%endif
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
