@@ -486,7 +486,7 @@ mv $ALD/{Graphics/{kdvi,kfax,kghostview,kuickshow,kview}.desktop,Graphics/Viewer
 %postun kview -p /sbin/ldconfig
 
 %clean
-rm -rf $RPM_BUILD_ROOT}
+rm -rf $RPM_BUILD_ROOT
 
 #################################################
 #             DEVEL
