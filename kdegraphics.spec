@@ -1,22 +1,25 @@
 
 %define		_state		unstable
-%define		_ver		3.3.91
+%define		_ver		3.3.92
+%define		_snap		050217
 
-%define		_minlibsevr	9:3.3.91
-%define		_minbaseevr	9:3.3.91
+%define		_minlibsevr	9:3.3.92.050217
+%define		_minbaseevr	9:3.3.92.050217
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	%{_ver}
+Version:	%{_ver}.%{_snap}
+#Version:	%{_ver}
 Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	e819ff09157f1bf83c6a1ac70ab41439
+Source0:        http://ftp.pld-linux.org/software/kde/%{name}-%{_snap}.tar.bz2
+#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
+#%% Source0-md5:	e819ff09157f1bf83c6a1ac70ab41439
 Patch0:		kde-common-PLD.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
@@ -518,7 +521,8 @@ Szkielet KDE dla przegl±darek grafiki pozwala na zagnie¿d¿nie w
 aplikacjach KDE.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_snap}
+#%setup -q
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
@@ -542,8 +546,6 @@ aplikacjach KDE.
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
 	-e '/\[Desktop Entry\]/aEncoding=UTF-8' \
 	kpovmodeler/kpovmodeler.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;X-KDE-settings-peripherals/' \
-	kamera/kcontrol/kamera.desktop
 %{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' \
 	kgamma/kcmkgamma/kgamma.desktop
 for f in `find . -name *.desktop`; do
@@ -576,11 +578,7 @@ rm -rf *.lang
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	kde_libs_htmldir=%{_kdedocdir} \
 	kde_htmldir=%{_kdedocdir}
-
-mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
-	$RPM_BUILD_ROOT%{_desktopdir}/kde
 
 # Debian manpages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
@@ -669,6 +667,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kdvipart.so
 %{_datadir}/apps/kdvi
 %{_datadir}/config.kcfg/kdvi.kcfg
+%{_datadir}/services/kdvimultipage.desktop
 %{_desktopdir}/kde/kdvi.desktop
 %{_iconsdir}/*/*/*/kdvi.*
 %{_mandir}/man1/kdvi.1*
@@ -847,8 +846,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewgeneralconfig.so
 %{_libdir}/kde3/kcm_kviewpluginsconfig.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewpluginsconfig.so
-%{_libdir}/kde3/kcm_kviewpresenterconfig.la
-%attr(755,root,root) %{_libdir}/kde3/kcm_kviewpresenterconfig.so
+#%{_libdir}/kde3/kcm_kviewpresenterconfig.la
+#%attr(755,root,root) %{_libdir}/kde3/kcm_kviewpresenterconfig.so
 %{_libdir}/kde3/kcm_kviewviewerpluginsconfig.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewviewerpluginsconfig.so
 %{_libdir}/kde3/kview.la
@@ -873,7 +872,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kconfiguredialog/kviewcanvasconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewgeneralconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewpluginsconfig.desktop
-%{_datadir}/services/kconfiguredialog/kviewpresenterconfig.desktop
+#%{_datadir}/services/kconfiguredialog/kviewpresenterconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewviewerpluginsconfig.desktop
 %{_datadir}/services/kviewcanvas.desktop
 %{_datadir}/services/kviewviewer.desktop
@@ -882,7 +881,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/photobook.desktop
 %{_desktopdir}/kde/kview.desktop
 %{_iconsdir}/*/*/*/kview.png
-%{_iconsdir}/crystalsvg/16x16/apps/photobook.png
+%{_iconsdir}/crystalsvg/*/apps/photobook.png
 
 %{_mandir}/man1/kview.1*
 
@@ -891,10 +890,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kviewshell
 %{_libdir}/libkmultipage.la
 %attr(755,root,root) %{_libdir}/libkmultipage.so.*.*.*
+%{_libdir}/kde3/emptymultipagepart.la
+%attr(755,root,root) %{_libdir}/kde3/emptymultipagepart.so
 %{_libdir}/kde3/kviewerpart.la
 %attr(755,root,root) %{_libdir}/kde3/kviewerpart.so
 %{_datadir}/apps/kviewerpart
 %{_datadir}/apps/kviewshell
 %{_datadir}/config.kcfg/kviewshell.kcfg
+%{_datadir}/services/emptymultipage.desktop
+%{_datadir}/servicetypes/kmultipage.desktop
 %{_iconsdir}/*/*/*/kviewshell.png
 %{_mandir}/man1/kviewshell.1*
