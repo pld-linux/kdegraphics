@@ -29,6 +29,15 @@
  X-DCOP-ServiceType=Multi
 -Categories=Qt;KDE;Graphics
 +Categories=Qt;KDE;Graphics;X-Viewer
+--- kdegraphics-030918/kpdf/kpdf/kpdf.desktop~	2003-09-18 21:40:40.000000000 +0200
++++ kdegraphics-030918/kpdf/kpdf/kpdf.desktop	2003-09-20 04:13:42.000000000 +0200
+@@ -36,5 +36,5 @@
+ Type=Application
+ DocPath=kpdf/kpdf.html
+ InitialPreference=4
+-Categories=Qt;KDE;PDFViewer
++Categories=Qt;KDE;PDFViewer;Graphics;X-Viewer
+ 
 --- kdegraphics-030329/kuickshow/src/kuickshow.desktop~	Sat Mar  1 00:55:35 2003
 +++ kdegraphics-030329/kuickshow/src/kuickshow.desktop	Tue Apr  1 23:06:36 2003
 @@ -67,4 +67,4 @@
