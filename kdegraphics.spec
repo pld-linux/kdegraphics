@@ -553,6 +553,7 @@ Group:		X11/Applications
 Requires:	%{name}-kolourpaint = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
+Obsoletes:	kdegraphics-kpaint-i18n
 
 %description kolourpaint-i18n
 Internationalization and localization files for kolourpaint.
