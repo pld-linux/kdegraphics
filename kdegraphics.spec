@@ -19,6 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://team.pld.org.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
+# Source0-md5:	0d4a25e4ba3dd9fcbc0a23425dfdfe2e
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
