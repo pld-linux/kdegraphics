@@ -4,7 +4,7 @@
 #
 
 %define         _state          stable
-%define         _ver		3.1.1
+%define         _ver		3.1.1a
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -12,7 +12,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	0.1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -420,11 +420,8 @@ kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
 for plik in `find ./ -name \*.desktop` ; do
-	if [ -d $plik ]; then
-		echo $plik
-		sed -e 's/\[nb\]/[no]/g' $plik > ${plik}.1
-		mv -f ${plik}.1 $plik
-	fi
+	echo $plik
+	sed -i -e "s/\[nb\]/\[no\]/g" $plik
 done
 
 %configure \
