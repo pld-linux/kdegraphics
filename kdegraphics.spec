@@ -351,7 +351,7 @@ install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,KDE}
 mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
 mv $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE}
 
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang kdvi --with-kde
 %find_lang kfract --with-kde
