@@ -4,7 +4,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	2.2.2
-Release:	0.1
+Release:	1
 Epoch:		7
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -12,7 +12,6 @@ Group(de):	X11/Applikationen/Grafik
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/Aplicações/Gráficos
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
-Patch0:		%{name}-cast.patch
 BuildRequires:	kdelibs-devel >= 2.1
 BuildRequires:	qt-devel >= 2.2
 BuildRequires:	XFree86-devel >= 3.3.6
@@ -332,7 +331,6 @@ Wybieracz kolorów
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
