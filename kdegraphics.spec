@@ -10,7 +10,7 @@ Copyright:      GPL
 Source:		ftp://ftp.kde.org/pub/kde/snapshots/current/%{name}-%{REV}.tar.bz2
 BuildRequires:	kdelibs-devel = %{version}
 BuildRequires:	qt-devel >= 2.1.0
-BuildRequires:	XFree86-devel
+BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libjpeg-devel
@@ -165,6 +165,7 @@ Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3)
 %setup -q -n %name
 
 %build
+make -f Makefile.cvs
 export KDEDIR=%{_prefix}
 CXXFLAGS="$RPM_OPT_FLAGS -Wall" \
 CFLAGS="$RPM_OPT_FLAGS -Wall" \
@@ -192,6 +193,8 @@ make RUN_KAPPFINDER=no prefix=$RPM_BUILD_ROOT$KDEDIR install
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+#%files
+#%defattr(644,root,root,755)
 #################################################
 #             KDVI
 #################################################
@@ -199,17 +202,21 @@ rm -rf $RPM_BUILD_ROOT
 %files kdvi -f kdvi.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/kdvi.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/kdvi.kdelnk
 
 %attr(755,root,root) %{_bindir}/kdvi
 
-%{_datadir}/kde/doc/HTML/en/kdvi
+%{_libdir}/libkdvi.*
+
 %lang(fi) %{_datadir}/kde/doc/HTML/fi/kdvi
 
-%{_datadir}/kde/apps/kdvi/
+%{_datadir}/apps/kdvi/
 
-%{_datadir}/kde/icons/kdvi.xpm
-%{_datadir}/kde/icons/mini/kdvi.xpm
+%{_datadir}/icons/hicolor/32x32/apps/kdvi.*
+%{_datadir}/icons/hicolor/48x48/apps/kdvi.*
+
+%{_datadir}/icons/locolor/16x16/apps/kdvi.*
+%{_datadir}/icons/locolor/32x32/apps/kdvi.*
 
 #################################################
 #             KFAX
@@ -218,16 +225,19 @@ rm -rf $RPM_BUILD_ROOT
 %files kfax -f kfax.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/KFax.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/KFax.kdelnk
 
 %attr(755,root,root) %{_bindir}/kfax
 
-%{_datadir}/kde/doc/HTML/en/kfax
+#%{_datadir}/kde/doc/HTML/en/kfax
 
-%{_datadir}/kde/apps/kfax/
+%{_datadir}/apps/kfax/
 
-%{_datadir}/kde/icons/mini/kfax.xpm
-%{_datadir}/kde/icons/kfax.xpm
+%{_datadir}/icons/hicolor/32x32/apps/kfax.*
+%{_datadir}/icons/hicolor/48x48/apps/kfax.*
+
+%{_datadir}/icons/locolor/16x16/apps/kfax.*
+%{_datadir}/icons/locolor/32x32/apps/kfax.*
 
 #################################################
 #             KFract
@@ -236,14 +246,15 @@ rm -rf $RPM_BUILD_ROOT
 %files kfract -f kfract.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/kfract.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/kfract.kdelnk
 
 %attr(755,root,root) %{_bindir}/kfract
 
-%{_datadir}/kde/doc/HTML/en/kfract
+%{_datadir}/icons/hicolor/32x32/apps/kfract.*
+%{_datadir}/icons/hicolor/48x48/apps/kfract.*
 
-%{_datadir}/kde/icons/mini/kfract.xpm
-%{_datadir}/kde/icons/kfract.xpm
+%{_datadir}/icons/locolor/16x16/apps/kfract.*
+%{_datadir}/icons/locolor/32x32/apps/kfract.*
 
 #################################################
 #             KGHOSTVIEW
@@ -252,14 +263,20 @@ rm -rf $RPM_BUILD_ROOT
 %files kghostview -f kghostview.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/kghostview.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/kghostview.kdelnk
 
 %attr(755,root,root) %{_bindir}/kghostview
 
-%{_datadir}/kde/doc/HTML/en/kghostview
+%{_libdir}/libkghostview.la
+%{_libdir}/libkghostview.so.*.*.*
 
-%{_datadir}/kde/icons/mini/kghostview.xpm
-%{_datadir}/kde/icons/kghostview.xpm
+%{_datadir}/apps/kghostview
+
+%{_datadir}/icons/hicolor/32x32/apps/kghostview.*
+%{_datadir}/icons/hicolor/48x48/apps/kghostview.*
+
+%{_datadir}/icons/locolor/16x16/apps/kghostview.*
+%{_datadir}/icons/locolor/32x32/apps/kghostview.*
 
 #################################################
 #             KPAINT
@@ -272,12 +289,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_bindir}/kpaint
 
-%{_datadir}/kde/doc/HTML/en/kpaint
+%{_datadir}/apps/kpaint
 
-%{_datadir}/kde/apps/kpaint
+%{_datadir}/icons/hicolor/32x32/apps/kpaint.*
+%{_datadir}/icons/hicolor/48x48/apps/kpaint.*
 
-%{_datadir}/kde/icons/mini/kpaint.xpm
-%{_datadir}/kde/icons/kpaint.xpm
+%{_datadir}/icons/locolor/16x16/apps/kpaint.*
+%{_datadir}/icons/locolor/32x32/apps/kpaint.*
 
 #################################################
 #             KSNAPSHOT
@@ -290,11 +308,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_bindir}/ksnapshot
 
-%lang(cs) %{_datadir}/kde/doc/HTML/cs/ksnapshot
-%{_datadir}/kde/doc/HTML/en/ksnapshot
+#%lang(cs) %{_datadir}/kde/doc/HTML/cs/ksnapshot
 
-%{_datadir}/kde/icons/mini/ksnapshot.xpm
-%{_datadir}/kde/icons/ksnapshot.xpm
+%{_datadir}/icons/hicolor/32x32/apps/ksnapshot.*
+%{_datadir}/icons/hicolor/48x48/apps/ksnapshot.*
+
+%{_datadir}/icons/locolor/16x16/apps/ksnapshot.*
+%{_datadir}/icons/locolor/32x32/apps/ksnapshot.*
 
 #################################################
 #             KVIEW
@@ -307,10 +327,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_bindir}/kview
 
-%{_datadir}/kde/doc/HTML/en/kview
+%{_libdir}/libkview.la
+%{_libdir}/libbaglayout.la
 
-%{_datadir}/kde/icons/mini/kview.xpm
-%{_datadir}/kde/icons/kview.xpm
+%{_libdir}/libkview.so
+%{_libdir}/libbaglayout.so.*.*.*
+
+%{_datadir}/apps/kview
+
+%{_datadir}/icons/hicolor/32x32/apps/kview.*
+%{_datadir}/icons/hicolor/48x48/apps/kview.*
+
+%{_datadir}/icons/locolor/16x16/apps/kview.*
+%{_datadir}/icons/locolor/32x32/apps/kview.*
 
 #################################################
 #             KICONEDIT
@@ -323,10 +352,21 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_bindir}/kiconedit
 
-%lang(da) %{_datadir}/kde/doc/HTML/da/kiconedit
-%{_datadir}/kde/doc/HTML/en/kiconedit
+#%lang(da) %{_datadir}/kde/doc/HTML/da/kiconedit
 
-%{_datadir}/kde/apps/kiconedit
+%{_datadir}/apps/kiconedit
 
-%{_datadir}/kde/icons/mini/kiconedit.xpm
-%{_datadir}/kde/icons/kiconedit.xpm
+%{_datadir}/icons/hicolor/32x32/apps/kiconedit.*
+%{_datadir}/icons/hicolor/48x48/apps/kiconedit.*
+
+%{_datadir}/icons/locolor/16x16/apps/kiconedit.*
+%{_datadir}/icons/locolor/32x32/apps/kiconedit.*
+
+#####################################################
+%files
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/katalog
+
+%{_datadir}/icons/hicolor/48x48/apps/katalog.*
+
+%{_datadir}/icons/locolor/16x16/apps/katalog.*
