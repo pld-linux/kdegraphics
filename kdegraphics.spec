@@ -3,29 +3,27 @@
 #   for some reason it checks for kpsewhich from tetex.
 #
 # Conditional build:
-%bcond_without  i18n    # don't build i18n packages per module
+%bcond_with  i18n    # don't build i18n packages per module
 #
-%define		_state		stable
-%define		_ver		3.2.0
-##%define		_snap		040110
+%define		_state		snapshots
+%define		_ver		3.2.90
+%define		_snap		040206
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	%{_ver}
-Release:	4
+Version:	%{_ver}.%{_snap}
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
-#Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
-# Source0-md5:	675dd4f557574097b911350cc47f0843
-%if %{with i18n}
-Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
-%endif
+#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
+Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}-%{_snap}.tar.bz2
+##%% Source0-md5:	675dd4f557574097b911350cc47f0843
+#Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
+##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
@@ -44,6 +42,8 @@ BuildRequires:	libxml2-progs
 BuildRequires:	lockdev-devel
 BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
+BuildRequires:	unsermake
+BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	_noautoreqdep	libGL.so.1 libGLU.so.1
@@ -710,17 +710,20 @@ Internationalization and localization files for kfile.
 Pliki umiêdzynarodawiaj±ce dla kfile'a.
 
 %prep
-%setup -q 
+%setup -q -n %{name}-%{_snap}
 %patch0 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
+
+export UNSERMAKE=/usr/share/unsermake/unsermake
+
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
-	--with-qt-libraries=%{_libdir} \
 	--disable-rpath \
-	--enable-final
+	--enable-final \
+	--with-qt-libraries=%{_libdir}
 
 %{__make}
 
@@ -768,16 +771,16 @@ fi
 %find_lang kview		--with-kde
 
 %if %{with i18n}
-
-kview="_scale \
-browserplugin \
-canvas \
-effectsplugin \
-presenterplugin \
-scannerplugin \
-shell \
-templateplugin \
-viewer"
+kview="\
+	_scale \
+	browserplugin \
+	canvas \
+	effectsplugin \
+	presenterplugin \
+	scannerplugin \
+	shell \
+	templateplugin \
+	viewer"
 
 for i in $kview;
 do
@@ -803,19 +806,20 @@ cat kcmkamera.lang >> kamera.lang
 %find_lang libkscan --with-kde
 cat libkscan.lang >> kooka.lang
 
-kfile="bmp \
-dvi \
-gif \
-ico \
-jpeg \
-pcx \
-pdf \
-png \
-pnm \
-ps \
-tga \
-tiff \
-xbm"
+kfile="\
+	bmp \
+	dvi \
+	gif \
+	ico \
+	jpeg \
+	pcx \
+	pdf \
+	png \
+	pnm \
+	ps \
+	tga \
+	tiff \
+	xbm"
 
 for i in $kfile;
 do
@@ -826,20 +830,21 @@ done
 %find_lang desktop_kdegraphics --with-kde
 %endif
 
-files="kamera \
-kcoloredit \
-kgamma \
-kdvi \
-kghostview \
-kiconedit \
-kooka \
-kpaint \
-kpdf \
-kpovmodeler \
-kruler \
-ksnapshot \
-kuickshow \
-kview"
+files="\
+	kamera \
+	kcoloredit \
+	kgamma \
+	kdvi \
+	kghostview \
+	kiconedit \
+	kooka \
+	kpaint \
+	kpdf \
+	kpovmodeler \
+	kruler \
+	ksnapshot \
+	kuickshow \
+	kview"
 
 for i in $files; do
         > ${i}_en.lang
@@ -848,7 +853,6 @@ for i in $files; do
         grep -v apidocs $i.lang|grep -v en\/ > ${i}.lang.1
         mv ${i}.lang.1 ${i}.lang
 done
-
 
 durne=`ls -1 *.lang|grep -v _en`
 
