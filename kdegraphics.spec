@@ -444,6 +444,7 @@ z indeksowaniem plików.
 %patch0 -p1
 
 %build
+cp /usr/share/automake/config.sub admin
 for f in `find . -name \*.desktop | xargs grep -l '\[nb\]'` ; do
 	echo -e ',s/\[nb\]=/[no]=/\n,w' | ed $f 2>/dev/null
 done
