@@ -13,12 +13,13 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://team.pld.org.pl/~djurban/kde/%{name}-%{_snap}.tar.bz2
+Patch0:		%{name}-vcategories.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
 BuildRequires:	glut-devel
@@ -428,6 +429,7 @@ z indeksowaniem plików.
 
 %prep
 %setup -q -n %{name}-%{_snap}
+%patch0 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
