@@ -55,7 +55,7 @@ Graphic applications for the K Desktop Environment.
 Included with this package are:
 
 - Kamera - digital camera support
-- KColorEdit - color calette editor
+- KColorEdit - color palette editor
 - KColorChooser - color chooser
 - KDVI - displays TeX's device independent (.dvi) files,
 - KFax - displays fax files,
@@ -88,7 +88,7 @@ Pakiet zawiera:
 - Kamera - obs³uga kamer cyfrowych
 - KDVI - przegl±darka plików DVI,
 - KColorEdit - edytor palety kolorów
-- KColorChooser - wybóe koloru
+- KColorChooser - wybór koloru
 - KFax - program do wy¶wietlania faksów,
 - KFract - generator fraktali,
 - KGhostview - program do ogl±dania postscriptu (.ps),
