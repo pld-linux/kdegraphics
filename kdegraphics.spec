@@ -3,7 +3,7 @@
 #   for some reason it checks for kpsewhich from tetex.
 #
 # Conditional build:
-%bcond_without  i18n    # don't build i18n packages per module
+%bcond_without	i18n    # don't build i18n packages per module
 #
 %define		_state		stable
 %define		_ver		3.2.0
@@ -28,6 +28,7 @@ Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{v
 %endif
 Patch0:		%{name}-3.2branch.diff
 Patch1:		%{name}-vcategories.patch
+Patch2:		%{name}-gcc34.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
@@ -715,6 +716,7 @@ Pliki umiêdzynarodawiaj±ce dla kfile'a.
 %setup -q 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
