@@ -190,6 +190,7 @@ Summary(pl):	Przegl±darka plików DVI dla KDE
 Summary(pt_BR):	Programa de exibição de DVIs
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
+Requires:	%{name}-kview >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
