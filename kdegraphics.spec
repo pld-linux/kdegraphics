@@ -3,11 +3,11 @@
 #   for some reason it checks for kpsewhich from tetex.
 #
 # Conditional build:
-%bcond_with  i18n    # don't build i18n packages per module
+%bcond_with  i18n    # w/wo i18n subpackages
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040206
+%define		_snap		040216
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -20,7 +20,7 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}-%{_snap}.tar.bz2
+Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
 ##%% Source0-md5:	675dd4f557574097b911350cc47f0843
 #Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 ##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
@@ -710,7 +710,7 @@ Internationalization and localization files for kfile.
 Pliki umiêdzynarodawiaj±ce dla kfile'a.
 
 %prep
-%setup -q -n %{name}-%{_snap}
+%setup -q -n %{name}
 %patch0 -p1
 
 %build
@@ -755,20 +755,20 @@ else
 fi
 %endif
 
-%find_lang kamera		--with-kde
-%find_lang kcoloredit		--with-kde
-%find_lang kgamma		--with-kde
-%find_lang kdvi			--with-kde
-%find_lang kghostview		--with-kde
-%find_lang kiconedit		--with-kde
-%find_lang kooka		--with-kde
-%find_lang kpaint		--with-kde
-%find_lang kpdf			--with-kde
-%find_lang kpovmodeler		--with-kde
-%find_lang kruler		--with-kde
-%find_lang ksnapshot		--with-kde
-%find_lang kuickshow		--with-kde
-%find_lang kview		--with-kde
+%find_lang kamera	--with-kde
+%find_lang kcoloredit	--with-kde
+%find_lang kgamma	--with-kde
+%find_lang kdvi		--with-kde
+%find_lang kghostview	--with-kde
+%find_lang kiconedit	--with-kde
+%find_lang kooka	--with-kde
+%find_lang kpaint	--with-kde
+%find_lang kpdf		--with-kde
+%find_lang kpovmodeler	--with-kde
+%find_lang kruler	--with-kde
+%find_lang ksnapshot	--with-kde
+%find_lang kuickshow	--with-kde
+%find_lang kview	--with-kde
 
 %if %{with i18n}
 kview="\
@@ -782,28 +782,25 @@ kview="\
 	templateplugin \
 	viewer"
 
-for i in $kview;
-do
+for i in $kview; do
         %find_lang kview${i} --with-kde
         cat kview${i}.lang >> kview.lang
 done
 
-%find_lang kcm_kviewcanvasconfig --with-kde
-%find_lang kcm_kviewgeneralconfig --with-kde
-%find_lang kcm_kviewpluginsconfig --with-kde
-%find_lang kcm_kviewviewerpluginsconfig --with-kde
+%find_lang kcm_kviewcanvasconfig	--with-kde
 cat kcm_kviewcanvasconfig.lang >> kview.lang
+%find_lang kcm_kviewgeneralconfig	--with-kde
 cat kcm_kviewgeneralconfig.lang >> kview.lang
+%find_lang kcm_kviewpluginsconfig	--with-kde
 cat kcm_kviewpluginsconfig.lang >> kview.lang
+%find_lang kcm_kviewviewerpluginsconfig	--with-kde
 cat kcm_kviewviewerpluginsconfig.lang >> kview.lang
-
-%find_lang kcmkamera --with-kde
+%find_lang kcmkamera			--with-kde
 cat kcmkamera.lang >> kamera.lang
-
-%find_lang kfax --with-kde
-%find_lang kmrml --with-kde
-%find_lang ksvgplugin --with-kde
-%find_lang libkscan --with-kde
+%find_lang kfax				--with-kde
+%find_lang kmrml			--with-kde
+%find_lang ksvgplugin			--with-kde
+%find_lang libkscan			--with-kde
 cat libkscan.lang >> kooka.lang
 
 kfile="\
@@ -821,8 +818,7 @@ kfile="\
 	tiff \
 	xbm"
 
-for i in $kfile;
-do
+for i in $kfile; do
         %find_lang kfile_${i} --with-kde
         cat kfile_${i}.lang >> kfile.lang
 done
@@ -856,8 +852,7 @@ done
 
 durne=`ls -1 *.lang|grep -v _en`
 
-for i in $durne; 
-do
+for i in $durne; do
 	echo $i >> control
 	grep -v en\/ $i|grep -v apidocs >> ${i}.1
 	if [ -f ${i}.1 ] ; then
