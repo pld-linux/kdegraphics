@@ -1,10 +1,7 @@
 # TODO:
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
-#
-# Conditional build:
-%bcond_with	i18n	# w/wo i18n subpackages
-#
+
 %define		_state		snapshots
 %define		_ver		3.2.90
 %define		_snap		040508
@@ -26,8 +23,6 @@ Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
 Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
 ##%% Source0-md5:	8b503b8d6bb9c84162b6b1d88f300ee6
-#Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
-##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 Patch0:		%{name}-vcategories.patch
 Patch1:		kde-common-QTDOCDIR.patch
 #Patch2:		%{name}-gcc34.patch
@@ -452,274 +447,6 @@ indexing.
 Ten pakiet umo¿liwia zaawansowane wyszukiwanie plików graficznych z
 indeksowaniem plików.
 
-# <i18n stuff>
-
-%package i18n
-Summary:	Common internationalization and localization files for kdegraphics
-Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdegraphics
-Group:		X11/Applications
-Requires:	kdelibs-i18n >= 9:%{version}
-
-%description i18n
-Common internationalization and localization files for kdegraphics.
-
-%description i18n -l pl
-Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdegraphics.
-
-%package kamera-i18n
-Summary:	Internationalization and localization files for kamera
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla programu kamera
-Group:		X11/Applications
-Requires:	%{name}-kamera = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kamera-i18n
-Internationalization and localization files for kamera.
-
-%description kamera-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla programu kamera.
-
-%package kcoloredit-i18n
-Summary:	Internationalization and localization files for kcoloredit
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kcoloredita
-Group:		X11/Applications
-Requires:	%{name}-kcoloredit = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kcoloredit-i18n
-Internationalization and localization files for kcoloredit.
-
-%description kcoloredit-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kcoloredita.
-
-%package kdvi-i18n
-Summary:	Internationalization and localization files for kdvi
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kdvi
-Group:		X11/Applications
-Requires:	%{name}-kdvi = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-kview-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kdvi-i18n
-Internationalization and localization files for kdvi.
-
-%description kdvi-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kdvi.
-
-%package kgamma-i18n
-Summary:	Internationalization and localization files for kgamma
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kgamma
-Group:		X11/Applications
-Requires:	%{name}-kgamma = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kgamma-i18n
-Internationalization and localization files for kgamma.
-
-%description kgamma-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kgamma.
-
-%package kghostview-i18n
-Summary:	Internationalization and localization files for kghostview
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kghostview
-Group:		X11/Applications
-Requires:	%{name}-kghostview = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kghostview-i18n
-Internationalization and localization files for kghostview.
-
-%description kghostview-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kghostview.
-
-%package kiconedit-i18n
-Summary:	Internationalization and localization files for kiconedit
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kiconedita
-Group:		X11/Applications
-Requires:	%{name}-kiconedit = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kiconedit-i18n
-Internationalization and localization files for kiconedit.
-
-%description kiconedit-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kiconedita.
-
-%package kolourpaint-i18n
-Summary:	Internationalization and localization files for kolourpaint
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kolourpainta
-Group:		X11/Applications
-Requires:	%{name}-kolourpaint = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-Obsoletes:	kdegraphics-kpaint-i18n
-
-%description kolourpaint-i18n
-Internationalization and localization files for kolourpaint.
-
-%description kolourpaint-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kolourpainta.
-
-%package kooka-i18n
-Summary:	Internationalization and localization files for kooka
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kooki
-Group:		X11/Applications
-Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kooka-i18n
-Internationalization and localization files for kooka.
-
-%description kooka-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kooki.
-
-%package kpdf-i18n
-Summary:	Internationalization and localization files for kpdf
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kpdf
-Group:		X11/Applications
-Requires:	%{name}-kpdf = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kpdf-i18n
-Internationalization and localization files for kpdf.
-
-%description kpdf-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kpdf.
-
-%package kpovmodeler-i18n
-Summary:	Internationalization and localization files for kpovmodeler
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kpovmodelera
-Group:		X11/Applications
-Requires:	%{name}-kpovmodeler = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kpovmodeler-i18n
-Internationalization and localization files for kpovmodeler.
-
-%description kpovmodeler-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kpovmodelera.
-
-%package kruler-i18n
-Summary:	Internationalization and localization files for kruler
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla krulera
-Group:		X11/Applications
-Requires:	%{name}-kruler = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kruler-i18n
-Internationalization and localization files for kruler.
-
-%description kruler-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla krulera.
-
-%package ksnapshot-i18n
-Summary:	Internationalization and localization files for ksnapshot
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla ksnapshota
-Group:		X11/Applications
-Requires:	%{name}-ksnapshot = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description ksnapshot-i18n
-Internationalization and localization files for ksnapshot.
-
-%description ksnapshot-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla ksnapshota.
-
-%package kuickshow-i18n
-Summary:	Internationalization and localization files for kuickshow
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kuickshow
-Group:		X11/Applications
-Requires:	%{name}-kuickshow = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kuickshow-i18n
-Internationalization and localization files for kuickshow.
-
-%description kuickshow-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kuickshow.
-
-%package kview-i18n
-Summary:	Internationalization and localization files for kview
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kview
-Group:		X11/Applications
-Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kview-i18n
-Internationalization and localization files for kview.
-
-%description kview-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kview.
-
-%package ksvg-i18n
-Summary:	Internationalization and localization files for ksvg
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla ksvg
-Group:		X11/Applications
-Requires:	%{name}-ksvg = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-
-%description ksvg-i18n
-Internationalization and localization files for ksvg.
-
-%description ksvg-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla ksvg.
-
-%package kfax-i18n
-Summary:	Internationalization and localization files for kfax
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfaksa
-Group:		X11/Applications
-Requires:	%{name}-kfax = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-kview-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kfax-i18n
-Internationalization and localization files for kfax.
-
-%description kfax-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kfaksa.
-
-%package kmrml-i18n
-Summary:	Internationalization and localization files for kmrml
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmrml
-Group:		X11/Applications
-Requires:	%{name}-kmrml = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kmrml-i18n
-Internationalization and localization files for kmrml.
-
-%description kmrml-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kmrml.
-
-%package kfile-i18n
-Summary:	Internationalization and localization files for kfile
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfile'a
-Group:		X11/Applications
-Requires:	%{name}-kfile = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	konqueror-i18n >= 9:%{version}
-
-%description kfile-i18n
-Internationalization and localization files for kfile.
-
-%description kfile-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kfile'a.
-
 %prep
 %setup -q -n %{name}-%{_snap}
 %patch0 -p1
@@ -761,20 +488,6 @@ mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install debian/man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
-%if %{with i18n}
-if [ -f "%{SOURCE1}" ] ; then
-        bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
-        for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
-                if [ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ]; then
-                        rm -f $f
-                fi
-        done
-else
-        echo "No i18n sources found and building --with i18n. FIXIT!"
-        exit 1
-fi
-%endif
-
 %find_lang kamera	--with-kde
 %find_lang kcoloredit	--with-kde
 %find_lang kgamma	--with-kde
@@ -789,62 +502,6 @@ fi
 %find_lang ksnapshot	--with-kde
 %find_lang kuickshow	--with-kde
 %find_lang kview	--with-kde
-
-%if %{with i18n}
-kview="\
-	_scale \
-	browserplugin \
-	canvas \
-	effectsplugin \
-	presenterplugin \
-	scannerplugin \
-	shell \
-	templateplugin \
-	viewer"
-
-for i in $kview; do
-        %find_lang kview${i} --with-kde
-        cat kview${i}.lang >> kview.lang
-done
-
-%find_lang kcm_kviewcanvasconfig	--with-kde
-cat kcm_kviewcanvasconfig.lang >> kview.lang
-%find_lang kcm_kviewgeneralconfig	--with-kde
-cat kcm_kviewgeneralconfig.lang >> kview.lang
-%find_lang kcm_kviewpluginsconfig	--with-kde
-cat kcm_kviewpluginsconfig.lang >> kview.lang
-%find_lang kcm_kviewviewerpluginsconfig	--with-kde
-cat kcm_kviewviewerpluginsconfig.lang >> kview.lang
-%find_lang kcmkamera			--with-kde
-cat kcmkamera.lang >> kamera.lang
-%find_lang kfax				--with-kde
-%find_lang kmrml			--with-kde
-%find_lang ksvgplugin			--with-kde
-%find_lang libkscan			--with-kde
-cat libkscan.lang >> kooka.lang
-
-kfile="\
-	bmp \
-	dvi \
-	gif \
-	ico \
-	jpeg \
-	pcx \
-	pdf \
-	png \
-	pnm \
-	ps \
-	tga \
-	tiff \
-	xbm"
-
-for i in $kfile; do
-        %find_lang kfile_${i} --with-kde
-        cat kfile_${i}.lang >> kfile.lang
-done
-
-%find_lang desktop_kdegraphics --with-kde
-%endif
 
 files="\
 	kamera \
@@ -892,28 +549,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	kview		-p /sbin/ldconfig
 %postun	kview		-p /sbin/ldconfig
-
-%if %{with i18n}
-%files i18n -f desktop_kdegraphics.lang
-%files kamera-i18n -f kamera.lang
-%files kcoloredit-i18n -f kcoloredit.lang
-%files kdvi-i18n -f kdvi.lang
-%files kgamma-i18n -f kgamma.lang
-%files kghostview-i18n -f kghostview.lang
-%files kiconedit-i18n -f kiconedit.lang
-%files kolourpaint-i18n -f kolourpaint.lang
-%files kooka-i18n -f kooka.lang
-%files kpdf-i18n -f kpdf.lang
-%files kpovmodeler-i18n -f kpovmodeler.lang
-%files kruler-i18n -f kruler.lang
-%files ksnapshot-i18n -f ksnapshot.lang
-%files kuickshow-i18n -f kuickshow.lang
-%files kview-i18n -f kview.lang
-%files kfile-i18n -f kfile.lang
-%files kmrml-i18n -f kmrml.lang
-%files ksvg-i18n -f ksvgplugin.lang
-%files kfax-i18n -f kfax.lang
-%endif
 
 %files devel
 %defattr(644,root,root,755)
