@@ -20,12 +20,3 @@ diff -urN kdegraphics-3.0.orig/configure.in kdegraphics-3.0/configure.in
  
  # Process user input to configure
  AC_ARG_WITH(kamera,
-@@ -150,7 +151,7 @@
- LIBS="-lgphoto2_port -lgphoto2 $LIBS"
- #
- ac_cv_gphoto2_libraries="none"
--AC_TRY_LINK([#include <gphoto2.h>],[gp_init(0);],
-+AC_TRY_LINK([#include <gphoto2.h>],[gp_port_open(0);],
- [
- # libgphoto2 is in the standard search path.
- ac_cv_gphoto2_libraries=
