@@ -1,6 +1,9 @@
+# TODO:
+#   pdf plugin requires pdfinfo from xpdf to show pdf info.
+#   for some reason it checks for kpsewhich from tetex.
 %define		_ver		3.0
 #define		_sub_ver
-%define		_rel		1
+%define		_rel		2
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -20,8 +23,10 @@ Epoch:		7
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
+Patch0:		%{name}-gphoto2.patch
 BuildRequires:	kdelibs-devel >= %{_version}
 BuildRequires:	XFree86-devel >= 3.3.6
+BuildRequires:	imlib-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libjpeg-devel
@@ -294,14 +299,40 @@ Color chooser
 %description kcolorchooser -l pl
 Wybieracz kolorów.
 
+%package kuickshow
+Summary:	Image viewer/browser
+Summary(pl):	Przegl±darka obrazków
+Group:		X11/Applications/Graphics
+Requires:	kdelibs = %{version}
+
+%description kuickshow
+Image viewer/browser.
+
+%description kuickshow -l pl
+Przegl±darka obrazków.
+
+%package kamera
+Summary:	Digital camera support
+Summary(pl):	Obs³uga kamer cyfrowych
+Group:		X11/Applications/Graphics
+Requires:	kdelibs = %{version}
+
+%description kamera
+Digital camera support.
+
+%description kamera -l pl
+Obs³uga kamer cyfrowych.
+
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
-%configure2_13 \
+autoconf
+%configure \
 	--enable-final
 %{__make}
 
@@ -309,8 +340,9 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 rm -rf $RPM_BUILD_ROOT
 %{__make} RUN_KAPPFINDER=no DESTDIR=$RPM_BUILD_ROOT$ install
 
-install -d $RPM_BUILD_ROOT%{_applnkdir}/Graphics/Viewers
+install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,KDE}
 mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
+mv $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE}
 
 %find_lang kdvi --with-kde
 %find_lang kfract --with-kde
@@ -320,6 +352,9 @@ mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
 %find_lang kruler --with-kde
 %find_lang ksnapshot --with-kde
 %find_lang kview --with-kde
+%find_lang kooka --with-kde
+%find_lang kcoloredit --with-kde
+%find_lang kuickshow --with-kde
 
 %post   devel -p /sbin/ldconfig
 %postun devel -p /sbin/ldconfig
@@ -459,7 +494,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KOOKA
 #################################################
-%files kooka
+%files kooka -f kooka.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
 %attr(755,root,root) %{_libdir}/libkscan.so.*.*.*
@@ -472,7 +507,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KCOLOREDIT
 #################################################
-%files kcoloredit
+%files kcoloredit -f kcooloredit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_applnkdir}/Graphics/kcoloredit.desktop
@@ -486,3 +521,28 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %attr(755,root,root) %{_libdir}/kcolorchooser.??
 %{_applnkdir}/Graphics/kcolorchooser.desktop
+
+#################################################
+#             KUICKSHOW
+#################################################
+%files kuickshow -f kuickshow.lang
+%defattr(644,root,root,755)
+%{_bindir}/kuickshow
+%{_libdir}/kuickshow.??
+%{_datadir}/apps/kuickshow
+%{_applnkdir}/Graphics/kuickshow.desktop
+%{_pixmapsdir}/*/*/apps/kuickshow.*
+
+#################################################
+#             KAMERA
+#################################################
+%files kamera
+%defattr(644,root,root,755)
+%{_libdir}/kde3/kio_kamera.??
+%{_libdir}/kde3/libkcm_kamera.??
+%{_datadir}/services/kamera.protocol
+%{_applnkdir}/KDE/Settings/Peripheral/kamera.desktop
+%{_pixmapsdir}/*/*/actions/camera_test.*
+%{_pixmapsdir}/*/*/apps/camera.*
+%{_pixmapsdir}/*/*/devices/camera.*
+%{_pixmapsdir}/*/*/filesystems/camera.*
