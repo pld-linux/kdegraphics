@@ -6,7 +6,7 @@
 %bcond_without	i18n    # don't build i18n packages per module
 #
 %define		_state		stable
-%define		_ver		3.2.0
+%define		_ver		3.2.1
 ##%define		_snap		040110
 
 Summary:	K Desktop Environment - Graphic Applications
@@ -15,13 +15,13 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	4
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
+Source0:	http://download.kde.org/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
+# Source0-md5:	5a1676b46efdd64be2f9e9604f04b176
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
-# Source0-md5:	675dd4f557574097b911350cc47f0843
 %if %{with i18n}
 Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 # Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
@@ -714,7 +714,7 @@ Pliki umiêdzynarodawiaj±ce dla kfile'a.
 
 %prep
 %setup -q 
-%patch0 -p1
+#%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 
@@ -741,7 +741,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
 
 # Debian manpages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
-install debian/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
+install debian/man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 %if %{with i18n}
 if [ -f "%{SOURCE1}" ] ; then
@@ -982,6 +982,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
 %{_libdir}/kde3/libkghostviewpart.la
+%{_libdir}/libkghostviewlib.so.0.0.0
+%{_libdir}/libkghostviewlib.la
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kghostview
 %{_desktopdir}/kde/kghostview.desktop
