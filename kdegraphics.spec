@@ -566,7 +566,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             DAEMONWATCHER
 #################################################
-%files daemonwatcher -f daemonwatcher.lang
+%files daemonwatcher
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kded_daemonwatcher.la
 %attr(755,root,root) %{_libdir}/kde3/kded_daemonwatcher.so
