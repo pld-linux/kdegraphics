@@ -1,1667 +1,2229 @@
 diff -urN -x CVS kdegraphics.orig/kamera/kcontrol/kamera.desktop kdegraphics/kamera/kcontrol/kamera.desktop
---- kdegraphics.orig/kamera/kcontrol/kamera.desktop	Thu Jan 15 08:56:52 2004
-+++ kdegraphics/kamera/kcontrol/kamera.desktop	Sat Feb  7 13:43:01 2004
-@@ -23,7 +23,7 @@
+--- kdegraphics.orig/kamera/kcontrol/kamera.desktop	Fri Mar  5 13:51:03 2004
++++ kdegraphics/kamera/kcontrol/kamera.desktop	Mon May  3 15:03:28 2004
+@@ -20,7 +20,7 @@
+ Comment[ga]=Cumraigh Kamera
+ Comment[gl]=Configurar Kamera
+ Comment[he]=שינוי הגדרות Kamera
+-Comment[hi]=कॉन्फिगर केमरा
++Comment[hi]=कॉन्फ़िगर केमरा
  Comment[hr]=Podesi Kameru
  Comment[hu]=a Kamera beállítása
  Comment[id]=Konfigurasi kamera
--Comment[is]=Stilla samskiptaforrit stafrÃ¦nna myndavÃ©la (Kamera)
-+Comment[is]=Stilla samskiptaforrit stafrænna myndavéla (Kamera)
- Comment[it]=Configura Kamera
- Comment[ja]=カメラの設定
- Comment[ko]=카메라 설정
-@@ -50,7 +50,7 @@
- Comment[ven]=Dzudzanya kamera
- Comment[xh]=Qwalasela Umfoti
- Comment[xx]=xxConfigure Kameraxx
--Comment[zh_CN]=配置照相机
-+Comment[zh_CN]=配置 Kamera
- Comment[zh_TW]=設定照相機
+@@ -58,7 +58,7 @@
  Comment[zu]=Hlanganisa ikhamera
  Exec=kcmshell Peripherals/kamera
-@@ -71,7 +71,7 @@
- Keywords[he]=gphoto,kamera,מצלמה,מצלמת רשת,מצלמה דיגיטלית
- Keywords[hi]=जीफोटो,केमरा,डिजिकेम,वेबकेम,केमरा
- Keywords[hu]=gphoto,kamera,digitális kamera,webkamera,videókamera
--Keywords[is]=gphoto,myndavÃ©l,stafrÃ¦n myndavÃ©l,webcam,kamera
-+Keywords[is]=gphoto,myndavél,stafræn myndavél,webcam,kamera
- Keywords[it]=gphoto,fotocamera,macchina fotografica digitale,webcam,kamera
- Keywords[ja]=gphoto,カメラ,デジカム,ウェブカム,kamera
- Keywords[ko]=gphoto,camera,digicam,webcam,kamera,사진,카메라,사진기,웹캠
-@@ -92,7 +92,7 @@
- Keywords[ven]=Tshinepe tsha g,Tshaudzhia zwifanyiso,digicam,webcam,Tshaudzhiazwifanyiso
- Keywords[xh]=gphoto,umfoti,digicam,webcam,umfoti
- Keywords[xx]=xxgphoto,camera,digicam,webcam,kameraxx
--Keywords[zh_CN]=gphoto,camera,digicam,webcam,kamera,照相机,数字相机,摄像头
-+Keywords[zh_CN]=gphoto,camera,digicam,webcam,kamera,照相机,数码相机,摄像头
- Keywords[zh_TW]=gphoto,camera,digicam,webcam,kamera,照相機
- Keywords[zu]=gphoto,ikhamera,digicam,webcam,ikhamera
- Name=Digital Camera
-@@ -117,6 +117,7 @@
- Name[hi]=डिजिटल कैमरा
- Name[hr]=Digitalna kamera
- Name[hu]=Digitális kamera
-+Name[is]=Stafræn myndavél
- Name[it]=Macchina fotografica digitale
- Name[ja]=デジタルカメラ
- Name[lt]=Skaitmeninė kamera
-@@ -128,6 +129,7 @@
- Name[nso]=Camera ya Digital
- Name[pl]=Aparat cyfrowy
- Name[pt]=Câmara Digital
-+Name[pt_BR]=Câmera Digital
- Name[ro]=Aparat foto digital
- Name[ru]=Цифровая камера
- Name[se]=Digitalalaš govvenapperáhtta
-@@ -143,7 +145,7 @@
- Name[ven]=Tshau dzhia zwifanyiso tsha didzhithala
- Name[xh]=Ikhamera Yesuntswana
- Name[xx]=xxDigital Cameraxx
--Name[zh_CN]=数字相机
-+Name[zh_CN]=数码相机
- Name[zh_TW]=數位相機
- Name[zu]=Ikhamera ebonisa inani ngalinye
- SwallowExec=
+ Keywords=gphoto,camera,digicam,webcam,kamera
+-Keywords[ar]=gphoto,كاميرا,كاميرا رقمية,كلميرا ويب,kamera
++Keywords[ar]=gphoto,كاميرا,كاميرا رقمية,كاميرا ويب,kamera
+ Keywords[az]=gphoto,kamera,digicam,veb kamera,Kamera,webcam
+ Keywords[bg]=фото,апарат,фотоапарат,камера,цифров,gphoto,camera,digicam,webcam,kamera
+ Keywords[ca]=gphoto,càmera,digicam,webcam,kamera
 diff -urN -x CVS kdegraphics.orig/kcoloredit/kcolorchooser.desktop kdegraphics/kcoloredit/kcolorchooser.desktop
---- kdegraphics.orig/kcoloredit/kcolorchooser.desktop	Thu Jan 15 08:56:54 2004
-+++ kdegraphics/kcoloredit/kcolorchooser.desktop	Sat Feb  7 13:43:03 2004
-@@ -30,6 +30,7 @@
- GenericName[hi]=रंग चयनक
- GenericName[hr]=Izbornik boja
- GenericName[hu]=Színválasztó
-+GenericName[is]=Litavalstól
- GenericName[it]=Selettore di colori
- GenericName[ja]=色の選択
- GenericName[lt]=Spalvų parinkiklis
-@@ -69,6 +70,7 @@
- Name[fi]=Värivalitsin
- Name[hi]=के-कलर-चूसर
- Name[hr]=Izbornik boja
-+Name[is]=Litaval
- Name[lv]=KKrāsuIzvēlētājs
- Name[nb]=Fargevelger
- Name[nn]=KDE-fargeveljar
+--- kdegraphics.orig/kcoloredit/kcolorchooser.desktop	Mon Mar 29 15:01:11 2004
++++ kdegraphics/kcoloredit/kcolorchooser.desktop	Mon May  3 15:03:30 2004
+@@ -65,6 +65,7 @@
+ GenericName[zu]=Umkhethi Wombala
+ Name=KColorChooser
+ Name[af]=K-kleur-kieser
++Name[ar]=برنامج KColorChooser
+ Name[ca]=Elecció de colors
+ Name[cs]=Výběr barev
+ Name[cy]=KDewisLliw
 diff -urN -x CVS kdegraphics.orig/kcoloredit/kcoloredit.desktop kdegraphics/kcoloredit/kcoloredit.desktop
---- kdegraphics.orig/kcoloredit/kcoloredit.desktop	Thu Jan 15 08:56:56 2004
-+++ kdegraphics/kcoloredit/kcoloredit.desktop	Sat Feb  7 13:43:05 2004
-@@ -30,6 +30,7 @@
- GenericName[hi]=रंग पट्टिका संपादक
- GenericName[hr]=Uređivač palete
- GenericName[hu]=Palettaszerkesztő
-+GenericName[is]=Sýsla með litaspjöld
- GenericName[it]=Editor di tavolozza
- GenericName[ja]=カラーパレットエディタ
- GenericName[lt]=Spalvų paletės redaktorius
+--- kdegraphics.orig/kcoloredit/kcoloredit.desktop	Mon Mar 29 15:01:13 2004
++++ kdegraphics/kcoloredit/kcoloredit.desktop	Mon May  3 15:03:32 2004
+@@ -10,7 +10,7 @@
+ DocPath=kcoloredit/index.html
+ GenericName=Color Palette Editor
+ GenericName[af]=Kleur Palet Redigeerder
+-GenericName[ar]=محرر لوحة رسم الألوان
++GenericName[ar]=محرر لوحة الألوان
+ GenericName[bg]=Редактор на цветове
+ GenericName[bs]=Editor palete boja
+ GenericName[ca]=Editor de la paleta de colors
+@@ -63,6 +63,7 @@
+ GenericName[zu]=Umhleli Wombala we Palette
+ Name=KColorEdit
+ Name[af]=K-kleur-redigeer
++Name[ar]=برنامج KColorEdit
+ Name[cs]=Editor barev
+ Name[cy]=KGolyguLliw
+ Name[eo]=Kolorredaktilo
 diff -urN -x CVS kdegraphics.orig/kdvi/dviwin.cpp kdegraphics/kdvi/dviwin.cpp
---- kdegraphics.orig/kdvi/dviwin.cpp	Sun Nov 23 20:51:29 2003
-+++ kdegraphics/kdvi/dviwin.cpp	Sat Jan 31 19:13:34 2004
-@@ -1113,8 +1113,10 @@
+--- kdegraphics.orig/kdvi/dviwin.cpp	Sat Mar 27 11:55:38 2004
++++ kdegraphics/kdvi/dviwin.cpp	Sun Apr 11 11:12:08 2004
+@@ -309,7 +309,7 @@
+ 
+       if (showMsg) {
+ 	KDialogBase *dialog= new KDialogBase(i18n("KDVI: Information"), KDialogBase::Yes, KDialogBase::Yes, KDialogBase::Yes,
+-					     this, "information", true, true, i18n("&OK"));
++					     this, "information", true, true, KStdGuiItem::ok());
+ 
+ 	QVBox *topcontents = new QVBox (dialog);
+ 	topcontents->setSpacing(KDialog::spacingHint()*2);
+@@ -739,7 +739,7 @@
+   // which is NOT the default format, that means that the document
+   // will be drawn twice.
+   if (dviFile->suggestedPageSize != 0)
+-    emit( documentSpecifiedPageSize(*(dviFile->suggestedPageSize)) );    
++    emit( documentSpecifiedPageSize(*(dviFile->suggestedPageSize)) );
+   drawPage();
+ 
+ 
+@@ -799,21 +799,21 @@
+     // the LaTeX file. In that case, we jump to the beginning of the
+     // document.
+     bool anchorForRefFileFound = false; // Flag that is set if source file anchors for the refFileName could be found at all
+-    
++
+     QValueVector<DVI_SourceFileAnchor>::iterator bestMatch = sourceHyperLinkAnchors.end();
+     QValueVector<DVI_SourceFileAnchor>::iterator it;
+-    for( it = sourceHyperLinkAnchors.begin(); it != sourceHyperLinkAnchors.end(); ++it ) 
++    for( it = sourceHyperLinkAnchors.begin(); it != sourceHyperLinkAnchors.end(); ++it )
+       if (refFileName.stripWhiteSpace() == it->fileName.stripWhiteSpace()) {
+ 	anchorForRefFileFound = true;
+-	
++
+ 	if ( (it->line <= refLineNumber) &&
+ 	     ( (bestMatch == sourceHyperLinkAnchors.end()) || (it->line > bestMatch->line) ) )
+ 	  bestMatch = it;
+       }
+-    
++
+     reference = QString::null;
+-    
+-    if (bestMatch != sourceHyperLinkAnchors.end()) 
++
++    if (bestMatch != sourceHyperLinkAnchors.end())
+       emit(request_goto_page(bestMatch->page, (Q_INT32)(bestMatch->vertical_coordinate/shrinkfactor+0.5)));
+     else
+       if (anchorForRefFileFound == false)
+@@ -822,7 +822,7 @@
+ 			   i18n( "Could Not Find Reference" ));
+       else
+ 	emit(request_goto_page(0, 0));
+-    
++
+     return;
+   }
+   reference = QString::null;
+@@ -836,7 +836,7 @@
+ #ifdef DEBUG_DVIWIN
+   kdDebug(4300) << "dviWindow::gotoPage( new_page=" << new_page << " )" << endl;
+ #endif
+-  
++
+   if (dviFile == NULL) {
+ #ifdef DEBUG_DVIWIN
+     kdDebug(4300) << "gotoPage fails because no DVI file loaded" << endl;
+@@ -1075,7 +1075,7 @@
+     if (currentlyDrawnPage.hyperLinkList.size() > 0)
+       for(int i=0; i<currentlyDrawnPage.hyperLinkList.size(); i++) {
+ 	if (currentlyDrawnPage.hyperLinkList[i].box.contains(e->pos())) {
+-	  
++
+ #ifdef DEBUG_SPECIAL
+ 	  kdDebug(4300) << "hit: local link to " << currentlyDrawnPage.hyperLinkList[i].linkText << endl;
+ #endif
+@@ -1102,7 +1102,7 @@
+ 	      // the kfmclient seems to be MUCH safer.
+ 	      QUrl DVI_Url(dviFile->filename);
+ 	      QUrl Link_Url(DVI_Url, currentlyDrawnPage.hyperLinkList[i].linkText, TRUE );
+-	      
++
+ 	      QStringList args;
+ 	      args << "openURL";
+ 	      args << Link_Url.toString();
+@@ -1142,7 +1142,7 @@
  	  QFileInfo fi3(fi1.dir(),cp.mid(i));
  	  TeXfile = fi3.absFilePath();
  	  if ( !fi3.exists() ) {
--	    KMessageBox::sorry(this, i18n("The DVI-file refers to the TeX-file "
--					  "<strong>%1</strong> which could not be found.").arg(KShellProcess::quote(TeXfile)),
-+	    KMessageBox::sorry(this, QString("<qt>") + 
-+			       i18n("The DVI-file refers to the TeX-file "
-+				    "<strong>%1</strong> which could not be found.").arg(KShellProcess::quote(TeXfile)) +
-+			       QString("</qt>"),
- 			       i18n( "Could Not Find File" ));
- 	    return;
- 	  }
-@@ -1122,10 +1124,12 @@
- 
- 	QString command = editorCommand;
- 	if (command.isEmpty() == true) {
--	  int r = KMessageBox::warningContinueCancel(this, i18n("You have not yet specified an editor for inverse search. "
--								"Please choose your favorite editor in the "
--								"<strong>DVI options dialog</strong> "
--								"which you will find in the <strong>Settings</strong>-menu."),
-+	  int r = KMessageBox::warningContinueCancel(this, QString("<qt>") +
-+						     i18n("You have not yet specified an editor for inverse search. "
-+							  "Please choose your favorite editor in the "
-+							  "<strong>DVI options dialog</strong> "
-+							  "which you will find in the <strong>Settings</strong>-menu.") + 
-+							  QString("</qt>"),
+-	    KMessageBox::sorry(this, QString("<qt>") + 
++	    KMessageBox::sorry(this, QString("<qt>") +
+ 			       i18n("The DVI-file refers to the TeX-file "
+ 				    "<strong>%1</strong> which could not be found.").arg(KShellProcess::quote(TeXfile)) +
+ 			       QString("</qt>"),
+@@ -1157,7 +1157,7 @@
+ 						     i18n("You have not yet specified an editor for inverse search. "
+ 							  "Please choose your favorite editor in the "
+ 							  "<strong>DVI options dialog</strong> "
+-							  "which you will find in the <strong>Settings</strong>-menu.") + 
++							  "which you will find in the <strong>Settings</strong>-menu.") +
+ 							  QString("</qt>"),
  						     i18n("Need to Specify Editor"),
  		                                     i18n("Use KDE's Editor Kate for Now"));
- 	  if (r == KMessageBox::Continue)
-diff -urN -x CVS kdegraphics.orig/kdvi/kdvi.desktop kdegraphics/kdvi/kdvi.desktop
---- kdegraphics.orig/kdvi/kdvi.desktop	Thu Jan 15 08:56:58 2004
-+++ kdegraphics/kdvi/kdvi.desktop	Sat Feb  7 13:43:07 2004
-@@ -24,7 +24,7 @@
- GenericName[hr]=Preglednik DVI dokumenata
- GenericName[hu]=DVI-nézegető
- GenericName[id]=Viewer DVI
--GenericName[is]=DVI-sjÃ¡
-+GenericName[is]=DVI sjá
- GenericName[it]=Visualizzatore DVI
- GenericName[ja]=DVIビューア
- GenericName[ko]=DVI 보기
-@@ -34,6 +34,7 @@
- GenericName[mk]=Прикажувач на DVI
- GenericName[mt]=Werrej DVI
- GenericName[nb]=DVI-fremviser
-+GenericName[nds]=Kieker för DVI
- GenericName[nl]=DVI-weergaveprogramma
- GenericName[nn]=DVI-lesar
- GenericName[oc]=Visualisor DVI
-@@ -49,6 +50,7 @@
- GenericName[ss]=Sibuki se DVI 
- GenericName[sv]=DVI-visare
- GenericName[ta]=DVI காட்சி
-+GenericName[tg]=Намоишгари DVI
- GenericName[th]=ตัวแสดงผล DVI
- GenericName[tr]=DVI Görüntüleyici
- GenericName[uk]=Переглядач DVI
-diff -urN -x CVS kdegraphics.orig/kdvi/psgs.cpp kdegraphics/kdvi/psgs.cpp
---- kdegraphics.orig/kdvi/psgs.cpp	Mon Oct 27 19:53:06 2003
-+++ kdegraphics/kdvi/psgs.cpp	Sat Jan 31 19:22:34 2004
-@@ -2,13 +2,17 @@
+diff -urN -x CVS kdegraphics.orig/kdvi/dviwin_textsearch.cpp kdegraphics/kdvi/dviwin_textsearch.cpp
+--- kdegraphics.orig/kdvi/dviwin_textsearch.cpp	Sun Sep 14 13:18:09 2003
++++ kdegraphics/kdvi/dviwin_textsearch.cpp	Wed Apr 14 19:47:55 2004
+@@ -25,9 +25,9 @@
+ // of kdvi.
  
+ 
+-#include <qapplication.h> 
++#include <qapplication.h>
+ #include <qpainter.h>
+-#include <qprogressdialog.h> 
++#include <qprogressdialog.h>
+ #include <kmessagebox.h>
  #include <kdebug.h>
- #include <klocale.h>
-+#include <kmessagebox.h>
- #include <kprocess.h>
--
-+#include <kprocio.h>
-+#include <qfileinfo.h>
+ #include <keditcl.h>
+@@ -43,13 +43,13 @@
+   if (findDialog == 0) {
+     // WARNING: This text appears several times in the code. Change
+     // everywhere, or nowhere!
+-    if (KMessageBox::warningContinueCancel( this, 
++    if (KMessageBox::warningContinueCancel( this,
+ 					    i18n("<qt>This function searches the DVI file for plain text. Unfortunately, this version of "
+ 						 "KDVI treats only plain ASCII characters properly. Symbols, ligatures, mathematical "
+ 						 "formulae, accented characters, and non-english text, such as Russian or Korean, will "
+ 						 "most likely be messed up completely. Continue anyway?</qt>"),
+ 					    i18n("Function May Not Work as Expected"),
+-					    i18n("Continue"),
++					    KStdGuiItem::cont(),
+ 					    "warning_search_text_may_not_work") == KMessageBox::Cancel)
+       return;
+     findDialog = new KEdFind(this, "Text find dialog", true);
+@@ -97,9 +97,9 @@
+   unsigned int lastPageOfSearch  = dviFile->total_pages-1;
  
- #include "psgs.h"
+   _postscript = FALSE; // Switch off postscript to speed up things...
+-  QPixmap pixie(1,1); // Dummy pixmap for the method draw_page which wants to have a valid painter. 
++  QPixmap pixie(1,1); // Dummy pixmap for the method draw_page which wants to have a valid painter.
  
- extern const char psheader[];
+-  QProgressDialog progress( i18n("Searching for '%1'...").arg(searchText), i18n("Abort"), 
++  QProgressDialog progress( i18n("Searching for '%1'...").arg(searchText), i18n("Abort"),
+ 			    lastPageOfSearch - firstPageOfSearch, this, "searchForwardTextProgress", TRUE );
+   progress.setMinimumDuration ( 1000 );
+   while(current_page <= lastPageOfSearch) {
+@@ -110,7 +110,7 @@
  
+     // Go trough the text of the current page and search for the
+     // string.
+-    for(unsigned int i=DVIselection.selectedTextStart+1; i<currentlyDrawnPage.textLinkList.size(); i++) 
++    for(unsigned int i=DVIselection.selectedTextStart+1; i<currentlyDrawnPage.textLinkList.size(); i++)
+       if (currentlyDrawnPage.textLinkList[i].linkText.find(searchText, 0, case_sensitive) >= 0) {
+ 	// Restore the previous settings, including the current
+ 	// page. Otherwise, the program is "smart enough" not to
+@@ -134,7 +134,7 @@
+       if (current_page_sav != 0) {
+ 	int answ = KMessageBox::questionYesNo(this, i18n("<qt>The search string <strong>%1</strong> could not be found till the "
+ 							 "end of the document. Should the search be restarted from the beginning "
+-							 "of the document?</qt>").arg(searchText), 
++							 "of the document?</qt>").arg(searchText),
+ 					      i18n("Text Not Found"));
+ 	if (answ == KMessageBox::Yes) {
+ 	  firstPageOfSearch = 0;
+@@ -149,12 +149,12 @@
+     draw_page(); // We don't really care for errors in draw_page(), no error handling here.
+     foreGroundPaint.end();
+   }// of while (all pages)
+-  
 +
+   KMessageBox::sorry( this, i18n("<qt>The search string <strong>%1</strong> could not be found.</qt>").arg(searchText) );
+ 
+-  // Restore the PostScript setting 
++  // Restore the PostScript setting
+   _postscript = _postscript_sav;
+-  
 +
- pageInfo::pageInfo(QString _PostScriptString) {
-   PostScriptString = new QString(_PostScriptString);
-   Gfx              = NULL;
-@@ -33,6 +37,12 @@
-   resolution   = dpi;
-   pixel_page_w = pxlw;
-   pixel_page_h = pxlh;
+   // Restore the current page.
+   current_page = current_page_sav;
+   foreGroundPaint.begin( &pixie );
+@@ -185,7 +185,7 @@
+   unsigned int lastPageOfSearch  = current_page;
+ 
+   _postscript = FALSE; // Switch off postscript to speed up things...
+-  QPixmap pixie(1,1); // Dummy pixmap for the method draw_page which wants to have a valid painter. 
++  QPixmap pixie(1,1); // Dummy pixmap for the method draw_page which wants to have a valid painter.
+ 
+   QProgressDialog progress( i18n("Searching for '%1'...").arg(searchText), i18n("Abort"),
+ 			    lastPageOfSearch - firstPageOfSearch, this, "searchForwardTextProgress", TRUE );
+@@ -216,8 +216,8 @@
+       if (current_page_sav != 0) {
+ 	int answ = KMessageBox::questionYesNo(this, i18n("<qt>The search string <strong>%1</strong> could not be found till the "
+ 							 "beginning of the document. Should the search be restarted from the end "
+-							 "of the document?</qt>").arg(searchText), 
+-					      i18n("Text Not Found")); 
++							 "of the document?</qt>").arg(searchText),
++					      i18n("Text Not Found"));
+ 	if (answ == KMessageBox::Yes) {
+ 	  firstPageOfSearch = current_page_sav;
+ 	  current_page      = dviFile->total_pages-1;
+@@ -232,7 +232,7 @@
+     qApp->processEvents();
+     if ( progress.wasCancelled() )
+       break;
+-    
 +
-+  knownDevices.append("png256");
-+  knownDevices.append("jpeg");
-+  knownDevices.append("pnn");
-+  knownDevices.append("pnnraw");
-+  gsDevice = knownDevices.begin();
+     // Go trough the text of the current page and search for the
+     // string.
+     int i=DVIselection.selectedTextStart-1;
+@@ -259,12 +259,12 @@
+     draw_page(); // We don't really care for errors in draw_page(), no error handling here.
+     foreGroundPaint.end();
+   } while( current_page < dviFile->total_pages ); // Note: current_page is unsigned. It will not become negative, but very big
+-  
++
+   KMessageBox::sorry( this, i18n("<qt>The search string <strong>%1</strong> could not be found.</qt>").arg(searchText) );
+ 
+-  // Restore the PostScript setting 
++  // Restore the PostScript setting
+   _postscript = _postscript_sav;
+-  
++
+   // Restore the current page.
+   current_page = current_page_sav;
+   foreGroundPaint.begin( &pixie );
+diff -urN -x CVS kdegraphics.orig/kdvi/kdvi.desktop kdegraphics/kdvi/kdvi.desktop
+--- kdegraphics.orig/kdvi/kdvi.desktop	Fri Mar  5 13:51:05 2004
++++ kdegraphics/kdvi/kdvi.desktop	Mon May  3 15:03:34 2004
+@@ -2,7 +2,7 @@
+ Encoding=UTF-8
+ GenericName=DVI Viewer
+ GenericName[af]=Dvi Aansig
+-GenericName[ar]=عرض ملفات DVI
++GenericName[ar]=عارض ملفات DVI
+ GenericName[az]=DVI Nümayişçisi
+ GenericName[bg]=Преглед на документи DVI
+ GenericName[bs]=Preglednik DVI dokumenata
+@@ -65,6 +65,7 @@
+ BinaryPattern=kdvi;
+ Name=KDVI
+ Name[af]=Kdvi
++Name[ar]=برنامج KDVI
+ Name[eo]=DVI-rigardilo
+ Name[hi]=के-डीवीआई
+ Name[xx]=xxKDVIxx
+diff -urN -x CVS kdegraphics.orig/kdvi/squeeze.c kdegraphics/kdvi/squeeze.c
+--- kdegraphics.orig/kdvi/squeeze.c	Sat Jul 24 23:05:11 1999
++++ kdegraphics/kdvi/squeeze.c	Mon Apr 19 15:42:05 2004
+@@ -181,6 +181,6 @@
+    }
+    (void)fprintf(out, "\\n\";\n\n\
+ int\tpsheaderlen\t= %d;\n", stringlen + linepos + 1);
+-   exit(0) ;
++   return 0;
+    /*NOTREACHED*/
  }
- 
- ghostscript_interface::~ghostscript_interface() {
-@@ -113,7 +123,10 @@
- }
- 
- 
--void ghostscript_interface::gs_generate_graphics_file(int page, QString filename) {
-+void ghostscript_interface::gs_generate_graphics_file(int page, const QString &filename) {
-+  if (knownDevices.isEmpty())
-+    return;
-+
-   emit(setStatusBarText(i18n("Generating PostScript graphics...")));
-   
-   pageInfo *info = pageList.find(page);
-@@ -165,17 +178,69 @@
-   PSfile.close();
- 
-   // Step 2: Call GS with the File
--  KProcess proc;
-+  unlink(filename.ascii());
-+  KProcIO proc;
-   proc << "gs";
--  proc << "-dSAFER" << "-dPARANOIDSAFER" << "-dDELAYSAFER" << "-dNOPAUSE" << "-dBATCH" << "-sDEVICE=png256";
-+  proc << "-dSAFER" << "-dPARANOIDSAFER" << "-dDELAYSAFER" << "-dNOPAUSE" << "-dBATCH";
-+  proc << QString("-sDEVICE=%1").arg(*gsDevice);
-   proc << QString("-sOutputFile=%1").arg(filename);
-   proc << QString("-sExtraIncludePath=%1").arg(includePath);
-   proc << QString("-g%1x%2").arg(pixel_page_w).arg(pixel_page_h); // page size in pixels
-   proc << QString("-r%1").arg(resolution);                       // resolution in dpi
-   proc << "-c" << "<< /PermitFileReading [ ExtraIncludePath ] /PermitFileWriting [] /PermitFileControl [] >> setuserparams .locksafe";
-   proc << "-f" << PSfile.name();
--  proc.start(KProcess::Block);
-+  if (proc.start(KProcess::Block) == false) {
-+    // Starting ghostscript did not work. 
-+    // TODO: Issue error message, switch PS support off.
-+    kdError(4300) << "ghostview could not be started" << endl;
-+  }
-   PSfile.unlink();
-+
-+  // Check if gs has indeed produced a file.
-+  QFileInfo fi(filename);
-+  if (fi.exists() == false) {
-+
-+    // No. Check is the reason is that the device is not compiled into
-+    // ghostscript. If so, try again with another device.
-+    QString GSoutput;
-+    while(proc.readln(GSoutput) != -1) {
-+
-+      if (GSoutput.contains("Unknown device")) {
-+	kdDebug(4300) << QString("The version of ghostview installed on this computer does not support "
-+				   "the '%1' ghostview device driver.").arg(*gsDevice) << endl;
-+	knownDevices.remove(gsDevice);
-+	gsDevice = knownDevices.begin();
-+	if (knownDevices.isEmpty())
-+	  // TODO: show a requestor of some sort.
-+	  KMessageBox::detailedError(0, 
-+				     i18n("<qt>The version of ghostview that is installed on this computer doesnot contain "
-+					  "any of the ghostview devices drivers that are known to KDVI. PostScript "
-+					  "support is therefore switched off now in KDVI.</qt>"), 
-+				     i18n("<qt><p>The ghostview program, which KDVI uses internally to display the "
-+					  "PostScript graphics that is included in this DVI file, is generally able to "
-+					  "write its output in a variety of formats. The sub-programs that ghostview uses "
-+					  "for these tasks are called 'device drivers', there is one device driver for "
-+					  "each format that ghostview is able to write. Different versions of ghostview "
-+					  "often have different sets of device drivers available. It appears version of "
-+					  "ghostview that is installed on this computer does not contain "
-+					  "<strong>any</strong> of the devices drivers that are known to KDVI.</p>"
-+					  "<p>It seems unlikely that a regular installation of ghostview does not contain "
-+					  "these drivers. This error may therefore point to a serious misconfiguration of "
-+					  "the ghostview installation on your computer.</p>"
-+					  "<p>If you want fix the problems with ghostview, you can use the command "
-+					  "<strong>gs --help</strong> to display the list of device driver contained in "
-+					  "ghostview. Among others, KDVI can use the 'png256', the 'jpeg' and the 'pnm' "
-+					  "driver. Note that KDVIs need to be restarted to re-enable PostScript support."
-+					  "</p></qt>"));
-+	else {
-+	  kdDebug(4300) << QString("KDVI will now try to use the '%1' device driver.").arg(*gsDevice) << endl;
-+	  gs_generate_graphics_file(page, filename);
-+	}
-+	return;
-+      }
-+    }
-+  }
-+
-   emit(setStatusBarText(QString::null));
- }
- 
-diff -urN -x CVS kdegraphics.orig/kdvi/psgs.h kdegraphics/kdvi/psgs.h
---- kdegraphics.orig/kdvi/psgs.h	Wed Apr  9 22:58:19 2003
-+++ kdegraphics/kdvi/psgs.h	Sat Jan 31 19:22:34 2004
-@@ -61,7 +61,7 @@
-   QString  *PostScriptHeaderString;
- 
- private:
--  void                  gs_generate_graphics_file(int page, QString filename);
-+  void                  gs_generate_graphics_file(int page, const QString &filename);
-   QIntDict<pageInfo>    pageList;
- 
-   // Chache to store pages which contain PostScript and are therefore
-@@ -78,6 +78,19 @@
- 
-   QString               includePath;
- 
-+  // Output device that ghostscript is supposed tp use. Default is
-+  // "png256". If that does not work, gs_generate_graphics_file will
-+  // automatically try other known device drivers. If no known output
-+  // device can be found, something is badly wrong. In that case,
-+  // "gsDevice" is set to an empty string, and
-+  // gs_generate_graphics_file will return immediately.
-+  QValueListIterator<QString> gsDevice;
-+
-+  // A list of know devices, set by the constructor. This includes
-+  // "png256", "pnm". If a device is found to not work, its name is
-+  // removed from the list, and another device name is tried.
-+  QStringList           knownDevices;
-+
- signals:
-   /** Passed through to the top-level kpart. */
-   void setStatusBarText( const QString& );
 diff -urN -x CVS kdegraphics.orig/kfax/kfax.desktop kdegraphics/kfax/kfax.desktop
---- kdegraphics.orig/kfax/kfax.desktop	Thu Jan 15 08:57:00 2004
-+++ kdegraphics/kfax/kfax.desktop	Sat Feb  7 13:43:09 2004
-@@ -23,6 +23,7 @@
- GenericName[hi]=फैक्स प्रदर्शक
+--- kdegraphics.orig/kfax/kfax.desktop	Sun Feb 29 16:26:55 2004
++++ kdegraphics/kfax/kfax.desktop	Mon May  3 15:03:36 2004
+@@ -20,7 +20,7 @@
+ GenericName[fr]=Afficheur de fax
+ GenericName[gl]=Visor de fax
+ GenericName[he]=מציג פקסים
+-GenericName[hi]=फैक्स प्रदर्शक
++GenericName[hi]=फ़ैक्स प्रदर्शक
  GenericName[hr]=Preglednik faksova
  GenericName[hu]=Faxnézegető
-+GenericName[is]=Fax sjá
- GenericName[it]=Visualizzatore di fax
- GenericName[ja]=Faxビューア
- GenericName[lt]=Faksų žiūriklis
+ GenericName[is]=Fax sjá
+@@ -57,9 +57,10 @@
+ GenericName[zu]=Umbonisi wefax
+ Name=KFax
+ Name[af]=K-faks
++Name[ar]=برنامج KFax
+ Name[cy]=KFfacs
+ Name[eo]=Faksrigardilo
+-Name[hi]=के-फैक्स
++Name[hi]=के-फ़ैक्स
+ Name[lv]=KFakss
+ Name[sv]=Kfax
+ Name[ta]=கேஃபாக்ஸ்
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/bmp/kfile_bmp.desktop kdegraphics/kfile-plugins/bmp/kfile_bmp.desktop
---- kdegraphics.orig/kfile-plugins/bmp/kfile_bmp.desktop	Thu Jan 15 08:57:02 2004
-+++ kdegraphics/kfile-plugins/bmp/kfile_bmp.desktop	Sat Feb  7 13:43:11 2004
-@@ -19,6 +19,7 @@
- Name[hi]=BMP इन्फो
- Name[hr]=BMP informacije
- Name[hu]=BMP-jellemzők
-+Name[is]=BMP upplýsingar
- Name[it]=Informazioni BMP
- Name[ja]=BMP情報
- Name[lt]=BMP informacija
-diff -urN -x CVS kdegraphics.orig/kfile-plugins/dvi/kfile_dvi.desktop kdegraphics/kfile-plugins/dvi/kfile_dvi.desktop
---- kdegraphics.orig/kfile-plugins/dvi/kfile_dvi.desktop	Fri Jan 16 08:01:16 2004
-+++ kdegraphics/kfile-plugins/dvi/kfile_dvi.desktop	Sat Feb  7 13:43:13 2004
-@@ -16,7 +16,9 @@
- Name[gl]=Inf. DVI
- Name[hi]=DVI इन्फो
- Name[hu]=DVI-jellemzők
-+Name[is]=DVI upplýsingar
- Name[it]=Informazioni DVI
-+Name[ja]=DVI情報
- Name[nl]=DVI-info
- Name[nn]=DVI-info
- Name[pl]=Informacja o pliku DVI
-@@ -32,6 +34,7 @@
- Name[uz]=DVI ҳақида маълумот
- Name[wa]=Informåcion sol documint DVI
- Name[xx]=xxDVI Infoxx
-+Name[zh_CN]=DVI 信息
- ServiceTypes=KFilePlugin
+--- kdegraphics.orig/kfile-plugins/bmp/kfile_bmp.desktop	Mon Mar 29 15:01:15 2004
++++ kdegraphics/kfile-plugins/bmp/kfile_bmp.desktop	Mon May  3 15:03:38 2004
+@@ -3,6 +3,7 @@
  Type=Service
- X-KDE-Library=kfile_dvi
+ Name=BMP Info
+ Name[af]=Bmp Inligting
++Name[ar]=معلومات BMP
+ Name[ca]=Informació de BMP
+ Name[cs]=BMP info
+ Name[cy]=Gwybodaeth BMP
+diff -urN -x CVS kdegraphics.orig/kfile-plugins/dvi/kfile_dvi.desktop kdegraphics/kfile-plugins/dvi/kfile_dvi.desktop
+--- kdegraphics.orig/kfile-plugins/dvi/kfile_dvi.desktop	Mon Mar 29 15:01:17 2004
++++ kdegraphics/kfile-plugins/dvi/kfile_dvi.desktop	Mon May  3 15:03:40 2004
+@@ -3,6 +3,7 @@
+ Icon=
+ MimeType=application/x-dvi
+ Name=DVI Info
++Name[ar]=معلومات DVI
+ Name[ca]=Informació de DVI
+ Name[cs]=DVI info
+ Name[cy]=Gwybodaeth DVI
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/gif/kfile_gif.desktop kdegraphics/kfile-plugins/gif/kfile_gif.desktop
---- kdegraphics.orig/kfile-plugins/gif/kfile_gif.desktop	Thu Jan 15 08:57:06 2004
-+++ kdegraphics/kfile-plugins/gif/kfile_gif.desktop	Sat Feb  7 13:43:15 2004
-@@ -19,6 +19,7 @@
- Name[hi]=GIF इन्फो
- Name[hr]=GIF Informacije
- Name[hu]=GIF-jellemzők
-+Name[is]=GIF upplýsingar
- Name[it]=Informazioni GIF
- Name[ja]=GIF情報
- Name[lt]=GIF informacija
+--- kdegraphics.orig/kfile-plugins/gif/kfile_gif.desktop	Mon Mar 29 15:01:19 2004
++++ kdegraphics/kfile-plugins/gif/kfile_gif.desktop	Mon May  3 15:03:42 2004
+@@ -3,6 +3,7 @@
+ Type=Service
+ Name=GIF Info
+ Name[af]=Gif Inligting
++Name[ar]=معلومات GIF
+ Name[ca]=Informació de GIF
+ Name[cs]=GIF info
+ Name[cy]=Gwybodaeth GIF
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/ico/kfile_ico.desktop kdegraphics/kfile-plugins/ico/kfile_ico.desktop
---- kdegraphics.orig/kfile-plugins/ico/kfile_ico.desktop	Thu Jan 15 08:57:08 2004
-+++ kdegraphics/kfile-plugins/ico/kfile_ico.desktop	Sat Feb  7 13:43:17 2004
-@@ -19,6 +19,7 @@
- Name[hi]=ICO इन्फो
- Name[hr]=ICO informacije
- Name[hu]=ICO-jellemzők
-+Name[is]=ICO upplýsingar
- Name[it]=Informazioni ICO
- Name[ja]=ICO情報
- Name[lt]=ICO informacija
+--- kdegraphics.orig/kfile-plugins/ico/kfile_ico.desktop	Mon Mar 29 15:01:21 2004
++++ kdegraphics/kfile-plugins/ico/kfile_ico.desktop	Mon May  3 15:03:44 2004
+@@ -3,6 +3,7 @@
+ Type=Service
+ Name=ICO Info
+ Name[af]=Ico Inligting
++Name[ar]=معلومات ICO
+ Name[ca]=Informació d'ICO
+ Name[cs]=ICO info
+ Name[cy]=Gwybodaeth ICO
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/jpeg/exif.cpp kdegraphics/kfile-plugins/jpeg/exif.cpp
---- kdegraphics.orig/kfile-plugins/jpeg/exif.cpp	Mon Dec 15 20:09:31 2003
-+++ kdegraphics/kfile-plugins/jpeg/exif.cpp	Mon Feb  2 00:21:20 2004
-@@ -251,8 +251,8 @@
-         Sections[SectionsRead].Type = marker;
+--- kdegraphics.orig/kfile-plugins/jpeg/exif.cpp	Mon Feb  2 00:21:20 2004
++++ kdegraphics/kfile-plugins/jpeg/exif.cpp	Mon Apr 12 19:59:17 2004
+@@ -569,7 +569,7 @@
+                 // have appropriate aperture information yet.
+                 if (ExifData::ApertureFNumber == 0){
+                     ExifData::ApertureFNumber
+-                        = (float)exp(ConvertAnyFormat(ValuePtr, Format)*log(2)*0.5);
++                        = (float)exp(ConvertAnyFormat(ValuePtr, Format)*log(2.0)*0.5);
+                 }
+                 break;
  
-         // Read the length of the section.
--        lh = infile.getch();
--        ll = infile.getch();
-+        lh = (uchar) infile.getch();
-+        ll = (uchar) infile.getch();
- 
-         itemlen = (lh << 8) | ll;
+@@ -596,7 +596,7 @@
+                 // this value if we don't already have it from somewhere else.
+                 if (ExifData::ExposureTime == 0){
+                     ExifData::ExposureTime
+-                        = (float)(1/exp(ConvertAnyFormat(ValuePtr, Format)*log(2)));
++                        = (float)(1/exp(ConvertAnyFormat(ValuePtr, Format)*log(2.0)));
+                 }
+                 break;
  
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/jpeg/kfile_jpeg.desktop kdegraphics/kfile-plugins/jpeg/kfile_jpeg.desktop
---- kdegraphics.orig/kfile-plugins/jpeg/kfile_jpeg.desktop	Thu Jan 15 08:57:10 2004
-+++ kdegraphics/kfile-plugins/jpeg/kfile_jpeg.desktop	Sat Feb  7 13:43:19 2004
-@@ -18,8 +18,9 @@
- Name[hi]=JPEG EXIF इन्फो
- Name[hr]=JPEG EXIF Informacije
- Name[hu]=JPEG EXIF-jellemzők
-+Name[is]=JPEG EXIF upplýsingar
- Name[it]=Informazioni JPEG EXIF
--Name[ja]=JPEG EXIF 情報
-+Name[ja]=JPEG EXIF情報
- Name[lt]=JPEG EXIF informacija
- Name[nl]=JPEG EXIF-info
- Name[nn]=JPEG EXIF-info
+--- kdegraphics.orig/kfile-plugins/jpeg/kfile_jpeg.desktop	Mon Mar 29 15:01:23 2004
++++ kdegraphics/kfile-plugins/jpeg/kfile_jpeg.desktop	Mon May  3 15:03:46 2004
+@@ -2,6 +2,7 @@
+ Encoding=UTF-8
+ Type=Service
+ Name=JPEG EXIF Info
++Name[ar]=معلومات JPEG EXIF
+ Name[ca]=Informació de JPEG EXIF
+ Name[cs]=JPEG EXIF info
+ Name[cy]=Gwybodaeth JPEG EXIF
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/pcx/kfile_pcx.desktop kdegraphics/kfile-plugins/pcx/kfile_pcx.desktop
---- kdegraphics.orig/kfile-plugins/pcx/kfile_pcx.desktop	Fri Jan 16 08:01:18 2004
-+++ kdegraphics/kfile-plugins/pcx/kfile_pcx.desktop	Sat Feb  7 13:43:21 2004
+--- kdegraphics.orig/kfile-plugins/pcx/kfile_pcx.desktop	Mon Mar 29 15:01:25 2004
++++ kdegraphics/kfile-plugins/pcx/kfile_pcx.desktop	Mon May  3 15:03:48 2004
 @@ -2,6 +2,7 @@
  Encoding=UTF-8
  Type=Service
  Name=PCX File Meta Info
-+Name[bs]=PCX meta-podaci
++Name[ar]=معلومات ملف PCX
+ Name[bs]=PCX meta-podaci
  Name[ca]=Metainformació de fitxer PCX
  Name[cs]=Metainformace obrázku typu PCX
- Name[cy]=Meta-wybodaeth Ffeil PCX
-@@ -15,7 +16,9 @@
+@@ -14,7 +15,7 @@
+ Name[fi]=PCX-tiedoston metatiedot
+ Name[fr]=Meta Informations sur les fichiers PCX
  Name[gl]=Inf. metaficheiro PCX
- Name[hi]=PCX फाइल मेटा इन्फो
+-Name[hi]=PCX फाइल मेटा इन्फो
++Name[hi]=PCX फ़ाइल मेटा इन्फो
  Name[hu]=PCX-jellemzők
-+Name[is]=PCX File Meta upplýsingar
+ Name[is]=PCX File Meta upplýsingar
  Name[it]=Meta-informazioni sui file PCX
-+Name[ja]=PCXファイルメタ情報
- Name[nb]=PCX-filmetainfo
- Name[nl]=PCX meta-info
- Name[nn]=PCX-filmetainfo
-@@ -33,6 +36,7 @@
- Name[uz]=PCX-файлининг мета-маълумоти
- Name[wa]=Informåcion sol imådje PCX
- Name[xx]=xxPCX File Meta Infoxx
-+Name[zh_CN]=PCX 文件元信息
- ServiceTypes=KFilePlugin
- X-KDE-Library=kfile_pcx
- MimeType=image/x-pcx
-diff -urN -x CVS kdegraphics.orig/kfile-plugins/pdf/kfile_pdf.desktop kdegraphics/kfile-plugins/pdf/kfile_pdf.desktop
---- kdegraphics.orig/kfile-plugins/pdf/kfile_pdf.desktop	Thu Jan 15 08:57:14 2004
-+++ kdegraphics/kfile-plugins/pdf/kfile_pdf.desktop	Sat Feb  7 13:43:23 2004
-@@ -20,6 +20,7 @@
- Name[hi]=PDF इन्फो
- Name[hr]=PDF Informacije
- Name[hu]=PDF-jellemzők
-+Name[is]=PDF upplýsingar
- Name[it]=Informazioni PDF
- Name[ja]=PDF情報
- Name[lt]=PDF informacija
-diff -urN -x CVS kdegraphics.orig/kfile-plugins/png/kfile_png.desktop kdegraphics/kfile-plugins/png/kfile_png.desktop
---- kdegraphics.orig/kfile-plugins/png/kfile_png.desktop	Thu Jan 15 08:57:16 2004
-+++ kdegraphics/kfile-plugins/png/kfile_png.desktop	Sat Feb  7 13:43:25 2004
-@@ -20,6 +20,7 @@
- Name[hi]=PNG इन्फो
- Name[hr]=PNG Informacije
- Name[hu]=PNG-jellemzők
-+Name[is]=PNG upplýsingar
- Name[it]=Informazioni PNG
- Name[ja]=PNG情報
- Name[lt]=PNG informacija
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/pnm/kfile_pnm.desktop kdegraphics/kfile-plugins/pnm/kfile_pnm.desktop
---- kdegraphics.orig/kfile-plugins/pnm/kfile_pnm.desktop	Fri Jan 16 08:01:20 2004
-+++ kdegraphics/kfile-plugins/pnm/kfile_pnm.desktop	Sat Feb  7 13:43:27 2004
-@@ -15,7 +15,9 @@
- Name[gl]=Inf. PNM
- Name[hi]=PNM इन्फो
- Name[hu]=PNM-jellemzők
-+Name[is]=PNM upplýsingar
- Name[it]=Informazioni PNM
-+Name[ja]=PNM情報
- Name[nb]=PNM-info
- Name[nl]=PNM-Info
- Name[nn]=PNM-info
-@@ -32,6 +34,7 @@
- Name[uz]=PNM ҳақида маълумот
- Name[wa]=Informåcion sol imådje PNM
- Name[xx]=xxPNM Infoxx
-+Name[zh_CN]=PNM 信息
- ServiceTypes=KFilePlugin
- X-KDE-Library=kfile_pnm
- MimeType=image/x-portable-bitmap;image/x-portable-greymap;image/x-portable-pixmap
-diff -urN -x CVS kdegraphics.orig/kfile-plugins/ps/kfile_ps.desktop kdegraphics/kfile-plugins/ps/kfile_ps.desktop
---- kdegraphics.orig/kfile-plugins/ps/kfile_ps.desktop	Thu Jan 15 08:57:20 2004
-+++ kdegraphics/kfile-plugins/ps/kfile_ps.desktop	Sat Feb  7 13:43:29 2004
-@@ -20,6 +20,7 @@
- Name[hi]=पोस्टस्क्रिप्ट इन्फो
- Name[hr]=Postscript informacije
- Name[hu]=PostScript-jellemzők
-+Name[is]=PostScript upplýsingar
- Name[it]=Informazioni PostScript
- Name[ja]=PostScript情報
- Name[lt]=PostScript informacija
+--- kdegraphics.orig/kfile-plugins/pnm/kfile_pnm.desktop	Mon Mar 29 15:01:31 2004
++++ kdegraphics/kfile-plugins/pnm/kfile_pnm.desktop	Mon May  3 15:03:50 2004
+@@ -2,6 +2,7 @@
+ Encoding=UTF-8
+ Type=Service
+ Name=PNM Info
++Name[ar]=معلومات PNM
+ Name[ca]=Informació de PNM
+ Name[cs]=PNM info
+ Name[cy]=Gybodaeth PNM
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/tga/kfile_tga.desktop kdegraphics/kfile-plugins/tga/kfile_tga.desktop
---- kdegraphics.orig/kfile-plugins/tga/kfile_tga.desktop	Thu Jan 15 08:57:22 2004
-+++ kdegraphics/kfile-plugins/tga/kfile_tga.desktop	Sat Feb  7 13:43:31 2004
-@@ -17,6 +17,7 @@
- Name[hi]=ट्रू-विज़न टाग्रा इन्फो
- Name[hr]=Truevision Targa Infomacije
- Name[hu]=Truevision/Targa-jellemzők
-+Name[is]=Truevision Targa upplýsingar
- Name[it]=Informazioni Truevisione Targa
- Name[ja]=トゥルービジョンTarga情報
- Name[lt]=Truevision Targa informacija
+--- kdegraphics.orig/kfile-plugins/tga/kfile_tga.desktop	Mon Mar 29 15:01:35 2004
++++ kdegraphics/kfile-plugins/tga/kfile_tga.desktop	Mon May  3 15:03:52 2004
+@@ -2,6 +2,7 @@
+ Encoding=UTF-8
+ Type=Service
+ Name=Truevision Targa Info
++Name[ar]=معلومات Truevision Targa
+ Name[ca]=Informació de Targa Truevision
+ Name[cs]=Truevision Targa info
+ Name[cy]=Gwybodaeth Truevision Targa
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/tiff/kfile_tiff.desktop kdegraphics/kfile-plugins/tiff/kfile_tiff.desktop
---- kdegraphics.orig/kfile-plugins/tiff/kfile_tiff.desktop	Thu Jan 15 08:57:24 2004
-+++ kdegraphics/kfile-plugins/tiff/kfile_tiff.desktop	Sat Feb  7 13:43:33 2004
-@@ -19,6 +19,7 @@
- Name[hi]=TIFF फाइल मेटा इन्फो
+--- kdegraphics.orig/kfile-plugins/tiff/kfile_tiff.desktop	Mon Mar 29 15:01:37 2004
++++ kdegraphics/kfile-plugins/tiff/kfile_tiff.desktop	Mon May  3 15:03:54 2004
+@@ -3,6 +3,7 @@
+ Type=Service
+ Name=TIFF File Meta Info
+ Name[af]=Tiff Lêer Meta Inligting
++Name[ar]=معلومات ملف TIFF
+ Name[ca]=Metainformació de fitxer TIFF
+ Name[cs]=Metainformace obrázku typu TIFF
+ Name[cy]=Meta-wybodaeth Ffeil TIFF
+@@ -16,7 +17,7 @@
+ Name[fr]=Meta Informations sur les fichiers TIFF
+ Name[gl]=Inf. metaficheiro TIFF
+ Name[he]=מידע TIFF
+-Name[hi]=TIFF फाइल मेटा इन्फो
++Name[hi]=TIFF फ़ाइल मेटा इन्फो
  Name[hr]=TIFF meta informacije
  Name[hu]=TIFF-metajellemzők
-+Name[is]=TIFF File Meta upplýsingar
- Name[it]=Informazioni TIFF
- Name[ja]=TIFFファイルメタ情報
- Name[lt]=TIFF bylos meta informacija
+ Name[is]=TIFF File Meta upplýsingar
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/xbm/kfile_xbm.desktop kdegraphics/kfile-plugins/xbm/kfile_xbm.desktop
---- kdegraphics.orig/kfile-plugins/xbm/kfile_xbm.desktop	Thu Jan 15 08:57:26 2004
-+++ kdegraphics/kfile-plugins/xbm/kfile_xbm.desktop	Sat Feb  7 13:43:35 2004
-@@ -19,6 +19,7 @@
- Name[hi]=XBM इन्फो
- Name[hr]=XBM Infoformacije
- Name[hu]=XBM-jellemzők
-+Name[is]=XBM upplýsingar
- Name[it]=Informazioni XBM
- Name[ja]=XBM情報
- Name[lt]=XBM informacija
+--- kdegraphics.orig/kfile-plugins/xbm/kfile_xbm.desktop	Mon Mar 29 15:01:39 2004
++++ kdegraphics/kfile-plugins/xbm/kfile_xbm.desktop	Mon May  3 15:03:57 2004
+@@ -3,6 +3,7 @@
+ Type=Service
+ Name=XBM Info
+ Name[af]=Xbm Inligting
++Name[ar]=معلومات XBM
+ Name[ca]=Informació d'XBM
+ Name[cs]=XBM info
+ Name[cy]=Gwybodaeth XBM
 diff -urN -x CVS kdegraphics.orig/kgamma/kcmkgamma/kgamma.desktop kdegraphics/kgamma/kcmkgamma/kgamma.desktop
---- kdegraphics.orig/kgamma/kcmkgamma/kgamma.desktop	Sun Jan 18 11:04:38 2004
-+++ kdegraphics/kgamma/kcmkgamma/kgamma.desktop	Sat Feb  7 13:43:37 2004
-@@ -1,6 +1,7 @@
+--- kdegraphics.orig/kgamma/kcmkgamma/kgamma.desktop	Mon Mar 29 15:01:41 2004
++++ kdegraphics/kgamma/kcmkgamma/kgamma.desktop	Mon May  3 15:03:59 2004
+@@ -1,5 +1,6 @@
  [Desktop Entry]
  Comment=A monitor calibration tool
++Comment[ar]=أداة مراقبة وتعيير
  Comment[bg]=Калибриране на монитора
-+Comment[bs]=Alat za kalibraciju monitora
+ Comment[bs]=Alat za kalibraciju monitora
  Comment[ca]=Una eina de calibració del monitor
- Comment[cs]=Nástroj pro kalibraci monitoru
- Comment[cy]=Erfyn graddnodi dangosydd
-@@ -14,7 +15,9 @@
- Comment[gl]=Unha utilidade para calibrar o monitor
- Comment[hi]=मॉनीटर केलिब्रेशन उपकरण
- Comment[hu]=Monitorbeállító program
-+Comment[is]=Tól til að stilla skjáinn
- Comment[it]=Uno strumento per la calibrazione del monitor
-+Comment[ja]=モニタ測定ツール
- Comment[nb]=Et verktøy for å kalibrere skjermen
- Comment[nl]=Gereedschap om de kleurweergave goed in te stellen
- Comment[nn]=Eit verktøy for å kalibrera skjermen
-@@ -30,8 +33,10 @@
- Comment[tr]=Monitör kalibrasyon aracı
- Comment[uk]=Засіб для калібрування монітора
- Comment[xx]=xxA monitor calibration toolxx
-+Comment[zh_CN]=监视器校准工具
+@@ -38,6 +39,7 @@
+ Comment[zh_CN]=监视器校准工具
  
  Name=Monitor Gamma
-+Name[bs]=Monitor gamma
++Name[ar]=مراقبة جاما
+ Name[bs]=Monitor gamma
  Name[ca]=Gamma del monitor
  Name[cs]=Gamma monitoru
- Name[cy]=Gamma'r Dangosydd
-@@ -45,7 +50,9 @@
- Name[gl]=Gamma monitor
- Name[hi]=मॉनीटर गामा
- Name[hu]=Gamma-korrekció
-+Name[is]='Gamma'-stillingar skjás
- Name[it]=Gamma del monitor
-+Name[ja]=モニターガンマ
- Name[nb]=Skjermgamma
- Name[nl]=Beeldscherm gamma-instelling
- Name[nn]=Skjermgamma
-@@ -61,6 +68,7 @@
- Name[uk]=Гама монітора
- Name[wa]=Valixhance gama del waitroûle
- Name[xx]=xxMonitor Gammaxx
-+Name[zh_CN]=监视器 Gamma
+diff -urN -x CVS kdegraphics.orig/kghostview/infodialog.cpp kdegraphics/kghostview/infodialog.cpp
+--- kdegraphics.orig/kghostview/infodialog.cpp	Sun Jun 15 23:02:30 2003
++++ kdegraphics/kghostview/infodialog.cpp	Sun Apr 11 11:12:08 2004
+@@ -33,7 +33,7 @@
+ //
+ InfoDialog::InfoDialog( QWidget *parent, const char *name, bool modal )
+   :KDialogBase( i18n("Document Information"), Yes, Yes, Yes, parent,
+-		name, modal, true, i18n("&OK") )
++		name, modal, true, KStdGuiItem::ok() )
+ {
+   QFrame *page = makeMainWidget();
+   QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+@@ -70,13 +70,13 @@
+      *      mm minute
+      *      SS second
+      *      O is "+" or "-"
+-     *      HH is hour 
++     *      HH is hour
+      *      mm is minute
+-     *      
++     *
+      *      OHH'mm' form together the desviation to UCT time ( the timezone ).
+      *      Everything after the YYYY is optional.
+      *      The D: is "highly recommended", but legally optional
+-     *      
++     *
+      * For PS files, there is no such standard and dates appear
+      * in any format they desire.
+      */
+diff -urN -x CVS kdegraphics.orig/kghostview/kdscerrordialog.cpp kdegraphics/kghostview/kdscerrordialog.cpp
+--- kdegraphics.orig/kghostview/kdscerrordialog.cpp	Sun Jul 27 02:25:15 2003
++++ kdegraphics/kghostview/kdscerrordialog.cpp	Wed Apr 14 19:47:55 2004
+@@ -1,6 +1,6 @@
+ /**
+  * Copyright (C) 2001 the KGhostView authors. See file AUTHORS.
+- * 	
++ *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+@@ -18,17 +18,18 @@
  
- DocPath=kgamma
- Exec=kcmshell kgamma
-@@ -72,6 +80,7 @@
- Keywords[et]=KGamma,kgamma,Gamma,gamma
- Keywords[hi]=के-गामा,केगामा,गामा,गामा
- Keywords[hu]=KGamma,kgamma,gamma,gamma-korrekció
-+Keywords[ja]=KGamma, kgamma, ガンマ, Gamma, gamma
- Keywords[nl]=KGamma,kgamma,Gamma,gamma,kleurweergave
- Keywords[nn]=KGamma,gamma
- Keywords[pl]=KGamma, kgamma, Gamma, gamma, jasność,ciemność,rozjaśnienie
-@@ -85,6 +94,7 @@
- Keywords[uk]=KGamma, kgamma, Gamma, gamma, гама, яскравість
- Keywords[wa]=KGamma, kgamma, Gama, gama
- Keywords[xx]=xxKGamma, kgamma, Gamma, gammaxx
-+Keywords[zh_CN]=KGamma, kgamma, Gamma, gamma,伽玛
- Type=Application
- X-KDE-Init=kgamma
- X-KDE-FactoryName=kgamma
-diff -urN -x CVS kdegraphics.orig/kghostview/kghostview.desktop kdegraphics/kghostview/kghostview.desktop
---- kdegraphics.orig/kghostview/kghostview.desktop	Thu Jan 15 08:57:30 2004
-+++ kdegraphics/kghostview/kghostview.desktop	Sat Feb  7 13:43:39 2004
-@@ -40,6 +40,7 @@
- GenericName[hi]=PS/PDF प्रदर्शक
- GenericName[hr]=Preglednik PS/PDF dokumenata
- GenericName[hu]=PS/PDF-megjelenítő
-+GenericName[is]=PS/PDF sjá
- GenericName[it]=Visualizzatore PS/PDF
- GenericName[ja]=PS/PDFビューア
- GenericName[lt]=PS/PDF žiūriklis
-diff -urN -x CVS kdegraphics.orig/kghostview/kgv_view.cpp kdegraphics/kghostview/kgv_view.cpp
---- kdegraphics.orig/kghostview/kgv_view.cpp	Thu Jan 15 15:40:11 2004
-+++ kdegraphics/kghostview/kgv_view.cpp	Thu Feb  5 20:40:01 2004
-@@ -403,7 +403,7 @@
-     _docManager->getThumbnailService()->reset();
-     _markList->clear();
-     _pageDecorator->hide();
--    //_scrollBox->clear();
-+    _scrollBox->clear();
-     _isFileDirty = false;
-     if ( _job )
-     {
-@@ -947,12 +947,16 @@
+ #include <qlabel.h>
+ #include <qlayout.h>
+-#include <qpushbutton.h>
+ #include <qtextedit.h>
  
-     if( m_job && m_job->inherits( "KIO::TransferJob" ) )
-     {
-+	/* The code below should be correct except for what seems to be a bug in kio.
-+	 * See bug:69456 for details
- 	KIO::TransferJob *job = static_cast< KIO::TransferJob* >( m_job );
- 	job->putOnHold();
- 	KIO::Scheduler::publishSlaveOnHold();
-+	*/
-+	m_job->kill(true);
- 	m_job = 0;
-     }
--
-+        
-     _mimetype = mimetype;
+ #include <kdebug.h>
+ #include <klocale.h>
+ #include <kseparator.h>
++#include <kpushbutton.h>
++#include <kstdguiitem.h>
  
-     m_bFinished = true;
-diff -urN -x CVS kdegraphics.orig/kghostview/scrollbox.cpp kdegraphics/kghostview/scrollbox.cpp
---- kdegraphics.orig/kghostview/scrollbox.cpp	Wed Sep  3 17:23:18 2003
-+++ kdegraphics/kghostview/scrollbox.cpp	Thu Feb  5 20:40:01 2004
-@@ -113,6 +113,10 @@
-     setPaletteBackgroundPixmap( img.convertToImage().smoothScale( size() ) );
+ #include "kdscerrordialog.h"
+ #include "kdscerrordialog.moc"
+ 
+-KDSCErrorThreshold::KDSCErrorThreshold( int threshold, 
++KDSCErrorThreshold::KDSCErrorThreshold( int threshold,
+                                         KDSCErrorHandler* errorHandler ) :
+     _threshold( threshold ),
+     _errorHandler( errorHandler )
+@@ -39,25 +40,25 @@
+     if( _errorHandler != 0 && err.severity() >= _threshold )
+ 	return _errorHandler->error( err );
+     else
+-	// Cancel is the default handling strategy for dsc_error_fn, so 
+-	// we keep it. This cancels error handling and *not* document 
+-	// parsing! 
++	// Cancel is the default handling strategy for dsc_error_fn, so
++	// we keep it. This cancels error handling and *not* document
++	// parsing!
+ 	return Cancel;
+ }
+-    
++
+ KDSCErrorDialog::KDSCErrorDialog( QWidget* parent ) :
+     KDialog( parent, "dscerrordialog", true ),
+     _response( Ok )
+ {
+     QVBoxLayout* vbox = new QVBoxLayout( this, marginHint(), spacingHint() );
+-    
++
+     _lineNumberLabel = new QLabel( this );
+     vbox->addWidget( _lineNumberLabel );
+-    
++
+     _lineLabel = new QTextEdit( this );
+     _lineLabel->setReadOnly( true );
+     vbox->addWidget( _lineLabel );
+-    
++
+     _descriptionLabel = new QLabel( this );
+     vbox->addWidget( _descriptionLabel );
+ 
+@@ -67,17 +68,17 @@
+     QHBoxLayout* hbox = new QHBoxLayout( vbox );
+ 
+     hbox->addStretch();
+-    
+-    _okButton = new QPushButton( "Ok", this );
++
++    _okButton = new KPushButton( KStdGuiItem::ok(), this );
+     hbox->addWidget( _okButton );
+-    _cancelButton = new QPushButton( "Cancel", this );
++    _cancelButton = new KPushButton( KStdGuiItem::cancel(), this );
+     hbox->addWidget( _cancelButton );
+-    _ignoreAllButton = new QPushButton( "IgnoreAll", this );
++    _ignoreAllButton = new QPushButton( i18n("Ignore All"), this );
+     hbox->addWidget( _ignoreAllButton );
+ 
+     connect( _okButton,     SIGNAL( clicked() ), this, SLOT( slotOk()     ) );
+     connect( _cancelButton, SIGNAL( clicked() ), this, SLOT( slotCancel() ) );
+-    connect( _ignoreAllButton, SIGNAL( clicked() ), 
++    connect( _ignoreAllButton, SIGNAL( clicked() ),
+              this, SLOT( slotIgnoreAll() ) );
  }
  
-+void ScrollBox::clear()
-+{
-+    unsetPalette();
-+}
+@@ -86,24 +87,24 @@
+     switch( err.severity() )
+     {
+     case KDSCError::Information:
+-	setCaption( i18n( "DSC Information" ) ); 
++	setCaption( i18n( "DSC Information" ) );
+ 	break;
+     case KDSCError::Warning:
+-	setCaption( i18n( "DSC Warning" ) ); 
++	setCaption( i18n( "DSC Warning" ) );
+ 	break;
+     case KDSCError::Error:
+-	setCaption( i18n( "DSC Error" ) ); 
++	setCaption( i18n( "DSC Error" ) );
+ 	break;
+     }
  
- #include "scrollbox.moc"
+     _lineNumberLabel->setText( i18n( "On line %1:" ).arg( err.lineNumber() ) );
+     _lineLabel->setText( err.line() );
+     _descriptionLabel->setText( description( err.type() ) );
+-    
++
+     exec();
  
-diff -urN -x CVS kdegraphics.orig/kghostview/scrollbox.h kdegraphics/kghostview/scrollbox.h
---- kdegraphics.orig/kghostview/scrollbox.h	Sun Jun  8 22:49:07 2003
-+++ kdegraphics/kghostview/scrollbox.h	Thu Feb  5 20:40:01 2004
-@@ -35,6 +35,7 @@
-     void setViewPos( const QPoint& );
-     void setViewPos( int x, int y ) { setViewPos( QPoint( x, y ) ); }
-     void setThumbnail( QPixmap img );
-+    void clear();
+     kdDebug(4500) << "KDSCErrorDialog: returning " << _response << endl;
+-	
++
+     return _response;
+ }
  
- signals:
-     void valueChanged( const QPoint& );
+@@ -111,40 +112,40 @@
+ {
+     switch( type )
+     {
+-    case KDSCError::BBox: 
+-	return "TODO"; 
+-    case KDSCError::EarlyTrailer: 
+-	return "TODO"; 
+-    case KDSCError::EarlyEOF: 
+-	return "TODO"; 
+-    case KDSCError::PageInTrailer: 
+-	return "TODO"; 
+-    case KDSCError::PageOrdinal: 
+-	return "TODO"; 
+-    case KDSCError::PagesWrong: 
+-	return "TODO"; 
+-    case KDSCError::EPSNoBBox: 
+-	return "TODO"; 
+-    case KDSCError::EPSPages: 
+-	return "TODO"; 
+-    case KDSCError::NoMedia: 
+-	return "TODO"; 
+-    case KDSCError::AtEnd: 
+-	return "TODO"; 
+-    case KDSCError::DuplicateComment: 
+-	return "TODO"; 
+-    case KDSCError::DuplicateTrailer: 
+-	return "TODO"; 
+-    case KDSCError::BeginEnd: 
+-	return "TODO"; 
+-    case KDSCError::BadSection: 
+-	return "TODO"; 
+-    case KDSCError::LongLine: 
++    case KDSCError::BBox:
++	return "TODO";
++    case KDSCError::EarlyTrailer:
++	return "TODO";
++    case KDSCError::EarlyEOF:
++	return "TODO";
++    case KDSCError::PageInTrailer:
++	return "TODO";
++    case KDSCError::PageOrdinal:
++	return "TODO";
++    case KDSCError::PagesWrong:
++	return "TODO";
++    case KDSCError::EPSNoBBox:
++	return "TODO";
++    case KDSCError::EPSPages:
++	return "TODO";
++    case KDSCError::NoMedia:
++	return "TODO";
++    case KDSCError::AtEnd:
++	return "TODO";
++    case KDSCError::DuplicateComment:
++	return "TODO";
++    case KDSCError::DuplicateTrailer:
++	return "TODO";
++    case KDSCError::BeginEnd:
++	return "TODO";
++    case KDSCError::BadSection:
++	return "TODO";
++    case KDSCError::LongLine:
+ 	return i18n( "Lines in DSC documents must be shorter than 255 "
+-	             "characters." ); 
+-    case KDSCError::IncorrectUsage: 
+-	return "TODO"; 
+-    default: return "TODO"; 
++	             "characters." );
++    case KDSCError::IncorrectUsage:
++	return "TODO";
++    default: return "TODO";
+     }
+ }
+ 
+@@ -156,13 +157,13 @@
+ 
+ void KDSCErrorDialog::slotCancel()
+ {
+-    _response = Cancel;   
++    _response = Cancel;
+     accept();
+ }
+ 
+ void KDSCErrorDialog::slotIgnoreAll()
+ {
+-    _response = IgnoreAll;   
++    _response = IgnoreAll;
+     accept();
+ }
+ 
+diff -urN -x CVS kdegraphics.orig/kghostview/kghostview.desktop kdegraphics/kghostview/kghostview.desktop
+--- kdegraphics.orig/kghostview/kghostview.desktop	Fri Mar  5 13:51:09 2004
++++ kdegraphics/kghostview/kghostview.desktop	Mon May  3 15:04:01 2004
+@@ -2,6 +2,7 @@
+ Encoding=UTF-8
+ Name=KGhostView
+ Name[af]=Kghostview
++Name[ar]=برنامج KGhostView
+ Name[eo]=Postskriptrigardilo
+ Name[hi]=के-घोस्ट-व्यू
+ Name[hu]=KGhostview
 diff -urN -x CVS kdegraphics.orig/kiconedit/kiconedit.desktop kdegraphics/kiconedit/kiconedit.desktop
---- kdegraphics.orig/kiconedit/kiconedit.desktop	Thu Jan 15 08:57:32 2004
-+++ kdegraphics/kiconedit/kiconedit.desktop	Sat Feb  7 13:43:41 2004
-@@ -24,6 +24,7 @@
- GenericName[hi]=चिन्ह (आइकॉन) संपादक
- GenericName[hr]=Uređivač ikona
- GenericName[hu]=Ikonszerkesztő
-+GenericName[is]=Táknmyndaritill
- GenericName[it]=Editor di icone
- GenericName[ja]=アイコンエディタ
- GenericName[lt]=Ženkliukų redaktorius
-@@ -60,6 +61,7 @@
+--- kdegraphics.orig/kiconedit/kiconedit.desktop	Mon Mar 29 15:01:43 2004
++++ kdegraphics/kiconedit/kiconedit.desktop	Mon May  3 15:04:03 2004
+@@ -8,7 +8,7 @@
+ GenericName[ar]=محرر الإيقونات
+ GenericName[bg]=Редактор на икони
+ GenericName[bs]=Editor ikona
+-GenericName[ca]=Editor de icones
++GenericName[ca]=Editor d'icones
+ GenericName[cs]=Editor ikon
+ GenericName[cy]=Golygydd Eiconau
+ GenericName[da]=Ikoneditor
+@@ -60,6 +60,7 @@
+ GenericName[zu]=Umhleli we Icon
+ Name=KIconEdit
+ Name[af]=K-ikoon-redigeer
++Name[ar]=برنامج KIconEdit
+ Name[cy]=KGolyguEicon
  Name[eo]=Piktogramredaktilo
  Name[hi]=के-आइकॉन-एडिट
- Name[hr]=Uređivač ikona
-+Name[is]=Táknmyndaritill
- Name[lv]=KIkonuRedaktors
- Name[pl]=Edytor ikon
- Name[pt_BR]=KEditor de Ícones
+diff -urN -x CVS kdegraphics.orig/kmrml/kmrml/kcontrol/kcmkmrml.cpp kdegraphics/kmrml/kmrml/kcontrol/kcmkmrml.cpp
+--- kdegraphics.orig/kmrml/kmrml/kcontrol/kcmkmrml.cpp	Sun Jul 27 02:25:15 2003
++++ kdegraphics/kmrml/kmrml/kcontrol/kcmkmrml.cpp	Wed Apr 14 19:47:55 2004
+@@ -63,7 +63,7 @@
+ {
+     if (KMessageBox::warningContinueCancel(this,
+          i18n("Do you really want the configuration to be reset "
+-              "to the defaults?"), i18n("Are you sure?"), i18n("Continue"))
++              "to the defaults?"), i18n("Are you sure?"), KStdGuiItem::cont())
+         != KMessageBox::Continue)
+         return;
+ 
 diff -urN -x CVS kdegraphics.orig/kmrml/kmrml/kcontrol/kcmkmrml.desktop kdegraphics/kmrml/kmrml/kcontrol/kcmkmrml.desktop
---- kdegraphics.orig/kmrml/kmrml/kcontrol/kcmkmrml.desktop	Thu Jan 15 08:57:34 2004
-+++ kdegraphics/kmrml/kmrml/kcontrol/kcmkmrml.desktop	Sat Feb  7 13:43:43 2004
-@@ -24,6 +24,7 @@
+--- kdegraphics.orig/kmrml/kmrml/kcontrol/kcmkmrml.desktop	Sun Feb 29 16:27:29 2004
++++ kdegraphics/kmrml/kmrml/kcontrol/kcmkmrml.desktop	Mon May  3 15:04:05 2004
+@@ -8,9 +8,10 @@
+ X-KDE-Library=kmrml
+ 
+ Name=Image Index
++Name[ar]=فهرس الصور
+ Name[bg]=Графичен индекс
+ Name[bs]=Indeks slika
+-Name[ca]=Índex de imatge
++Name[ca]=Índex d'imatge
+ Name[cs]=Rejstřík obrázků
+ Name[cy]=Mynegai Delweddau
+ Name[da]=Billedindeks
+@@ -22,7 +23,7 @@
+ Name[fr]=Index des images
+ Name[gl]=Índice imaxe
  Name[he]=אינדקס תמונות
- Name[hi]=चित्र निर्देशिका
+-Name[hi]=चित्र निर्देशिका
++Name[hi]=छवि निर्देशिका
  Name[hu]=Képindexelő
-+Name[is]=Myndayfirlit
+ Name[is]=Myndayfirlit
  Name[it]=Indice di immagini
- Name[ja]=画像インデックス
- Name[lt]=Paveikslėlių rodyklė
-@@ -68,6 +69,7 @@
+@@ -56,9 +57,10 @@
+ Name[zu]=Isiqalo Sesithombe
+ 
+ Comment=Configuration for using the GNU Image Finding Tool
++Comment[ar]=اعدادات لاستخدام أداة GNU للبحث عن الصور
+ Comment[bg]=Програма за индексиране и търсене на изображения
+ Comment[bs]=Podešavanje za upotrebu GNU Alata za pronalaženje slika
+-Comment[ca]=Configuració per a l'ús de l'eina de cerca de imatges GNU
++Comment[ca]=Configuració per a l'ús de l'eina de cerca d'imatges GNU
+ Comment[cs]=Konfigurace používání nástroje GNU Image Finding Tool
+ Comment[cy]=Ffurfweddiad am ddefnyddio'r Erfyn Canfod Delweddau GNU
+ Comment[da]=Indstilling for brug af GNU Image Finding Tool
+@@ -70,7 +72,7 @@
+ Comment[fr]=Configuration pour l'utilisation du GNU Image Finding Tool
+ Comment[gl]=Configuración para empregar "GNU Image Finding Tool"
  Comment[he]=שינוי הגדרות כלי חיפוש התמונות של GNU
- Comment[hi]=ग्नू चित्र खोज उपकरण को उपयोग करने हेतु कॉन्फिगरेशन
+-Comment[hi]=ग्नू चित्र खोज उपकरण को उपयोग करने हेतु कॉन्फिगरेशन
++Comment[hi]=ग्नू छवि खोज उपकरण को उपयोग करने हेतु कॉन्फ़िगरेशन
  Comment[hu]=A GNU képkereső program beállításai
-+Comment[is]=Stillingar til þess að nota GNU myndleitartólið
+ Comment[is]=Stillingar til þess að nota GNU myndleitartólið
  Comment[it]=Configurazione dello strumento per la ricerca delle immagini
- Comment[ja]=GNU Image Finding Toolを使用する際の設定
- Comment[lt]=GNU paveikslėlių paieškos įrankio konfigūracija
+@@ -102,6 +104,7 @@
+ Comment[zu]=Inhlanganiselo yokusebenzisa Ithuluzi Lokuthola Isithombe se-GNU
+ 
+ Keywords=Images,Search,Query,Find,Gift,kmrml,mrml,CBIR
++Keywords[ar]=صور,بحث,استعلام,Find,Gift,kmrml,mrml,CBIR
+ Keywords[bg]=изображения,търсене,заявка,картинка,картинки,снимки,Images,Search,Query,Find,Gift,kmrml,mrml,CBIR
+ Keywords[bs]=Images,Search,Query,Find,Gift,kmrml,mrml,CBIR,slike,pretraga,upit,nađi
+ Keywords[ca]=Imatges,Cerca,Consulta,Busca,Gift,kmrml,mrml,CBIR
+@@ -116,7 +119,7 @@
+ Keywords[fr]=Images,Recherche,Requête,Chercher,Gift,kmrml,mrml,CBIR
+ Keywords[gl]=Images,Search,Query,Find,Gift,kmrml,mrml,CBIR, Buscar, Procurar
+ Keywords[he]=תמונות,חיפוש,שאילתה,Gift,kmrml,mrml,CBIR
+-Keywords[hi]=चित्र, खोज,ढूंढ,तलाश,उपहार,केएमआरएमएल,एमआरएमएल,सीबीआईआर
++Keywords[hi]=छवि, खोज,ढूंढ,तलाश,उपहार,केएमआरएमएल,एमआरएमएल,सीबीआईआर
+ Keywords[hu]=képek,keresés,lekérdezés,találat,Gift,kmrml,mrml,CBIR
+ Keywords[it]=Immagini,Ricerca,Trovare,Gift,kmrml,mrml,CBIR
+ Keywords[ja]=画像,検索,クエリ,検索,Gift,kmrml,mrml,CBIR
 diff -urN -x CVS kdegraphics.orig/kmrml/kmrml/mrml-servicemenu.desktop kdegraphics/kmrml/kmrml/mrml-servicemenu.desktop
---- kdegraphics.orig/kmrml/kmrml/mrml-servicemenu.desktop	Thu Jan 15 08:57:36 2004
-+++ kdegraphics/kmrml/kmrml/mrml-servicemenu.desktop	Sat Feb  7 13:43:45 2004
-@@ -21,6 +21,7 @@
+--- kdegraphics.orig/kmrml/kmrml/mrml-servicemenu.desktop	Mon Mar 29 15:01:45 2004
++++ kdegraphics/kmrml/kmrml/mrml-servicemenu.desktop	Mon May  3 15:04:07 2004
+@@ -5,6 +5,7 @@
+ [Desktop Action search]
+ Name=Search for Similar Images...
+ Name[af]=Soektog vir Soortgelyk Beelde...
++Name[ar]=بحث عن الصور المتشابهه...
+ Name[bg]=Търсене за подобни изображения...
+ Name[bs]=Traženje sličnih slika...
+ Name[ca]=Cerca imatges similars...
+@@ -19,7 +20,7 @@
+ Name[fr]=Recherche d'images semblables...
+ Name[gl]=Procurar imaxe semellantes...
  Name[he]=חיפוש תמונות דומות...
- Name[hi]=एक जैसे चित्रों हेतु ढूंढें...
+-Name[hi]=एक जैसे चित्रों हेतु ढूंढें...
++Name[hi]=एक जैसे छविों हेतु ढूंढें...
  Name[hu]=Ehhez hasonló képek keresése...
-+Name[is]=Leita að svipuðum myndum...
+ Name[is]=Leita að svipuðum myndum...
  Name[it]=Cerca immagini simili...
- Name[ja]=同じような画像を検索...
- Name[lt]=Panašių paveikslėlių paieška...
 diff -urN -x CVS kdegraphics.orig/kmrml/kmrml/mrml.desktop kdegraphics/kmrml/kmrml/mrml.desktop
---- kdegraphics.orig/kmrml/kmrml/mrml.desktop	Thu Jan 15 08:57:38 2004
-+++ kdegraphics/kmrml/kmrml/mrml.desktop	Sat Feb  7 13:43:47 2004
-@@ -15,6 +15,7 @@
+--- kdegraphics.orig/kmrml/kmrml/mrml.desktop	Sun Feb 29 16:27:33 2004
++++ kdegraphics/kmrml/kmrml/mrml.desktop	Mon May  3 15:04:09 2004
+@@ -1,6 +1,7 @@
+ [Desktop Entry]
+ Comment=Multimedia Retrieval Markup Language Document
+ Comment[af]=Multimedia Onttrekking Opmerk Taal Dokument
++Comment[ar]=مستند لغة ترميز استرجاع الوسائط المتعددة
+ Comment[bs]=Multimedia Retrieval Markup Language dokument
+ Comment[ca]=Document de llenguatge de marcatge de recuperació multimèdia
+ Comment[cs]=Multimedia Retrieval Markup Language dokument
+@@ -13,7 +14,7 @@
+ Comment[fi]=Multimedianhakuasiakirja
+ Comment[fr]=Document en langage Multimedia Retrieval Markup
  Comment[he]=מסמך שפת סימון לאיחזור מולטימדיה
- Comment[hi]=मल्टीमीडिया रिट्राइवल मार्कअप लैंग्वेज दस्तावेज
+-Comment[hi]=मल्टीमीडिया रिट्राइवल मार्कअप लैंग्वेज दस्तावेज
++Comment[hi]=मल्टीमीडिया रिट्राइवल मार्कअप लैंग्वेज दस्तावेज़
  Comment[hu]=MRML (Multimedia Retrieval Markup Language) dokumentum
-+Comment[is]=Multimedia Retrieval Markup Language skjal
+ Comment[is]=Multimedia Retrieval Markup Language skjal
  Comment[it]=Documento MRML
- Comment[ja]=Multimedia Retrieval Markup Language ドキュメント
- Comment[lt]=Multimedia Retrieval Markup kalbos dokumentas
 diff -urN -x CVS kdegraphics.orig/kmrml/kmrml/mrml_part.desktop kdegraphics/kmrml/kmrml/mrml_part.desktop
---- kdegraphics.orig/kmrml/kmrml/mrml_part.desktop	Thu Jan 15 08:57:40 2004
-+++ kdegraphics/kmrml/kmrml/mrml_part.desktop	Sat Feb  7 13:43:49 2004
-@@ -16,6 +16,7 @@
- Name[he]=תצוגת MRML
- Name[hi]=MRML दृश्य
- Name[hu]=MRML-nézet
-+Name[is]=MRML sýn
- Name[it]=Visualizzazione MRML
- Name[ja]=MRMLビュー
- Name[lt]=MRML peržiūra
+--- kdegraphics.orig/kmrml/kmrml/mrml_part.desktop	Sun Feb 29 16:27:35 2004
++++ kdegraphics/kmrml/kmrml/mrml_part.desktop	Mon May  3 15:04:11 2004
+@@ -2,6 +2,7 @@
+ Type=Service
+ Exec=blahfoo
+ Name=MRML View
++Name[ar]=برنامج MRML View
+ Name[ca]=Vista MRML
+ Name[cs]=MRML pohled
+ Name[cy]=Gwelydd MRML
 diff -urN -x CVS kdegraphics.orig/kmrml/kmrml/server/daemonwatcher.desktop kdegraphics/kmrml/kmrml/server/daemonwatcher.desktop
---- kdegraphics.orig/kmrml/kmrml/server/daemonwatcher.desktop	Fri Jan 16 08:01:24 2004
-+++ kdegraphics/kmrml/kmrml/server/daemonwatcher.desktop	Sat Feb  7 13:43:51 2004
+--- kdegraphics.orig/kmrml/kmrml/server/daemonwatcher.desktop	Thu Mar 18 14:49:30 2004
++++ kdegraphics/kmrml/kmrml/server/daemonwatcher.desktop	Mon May  3 15:04:13 2004
 @@ -2,6 +2,7 @@
  Encoding=UTF-8
  Type=Service
  Name=KDED KMRML Daemon Watcher
-+Name[bs]=KDED KMRML nadzor demona
++Name[ar]=مراقب KDED KMRML Daemon
+ Name[bs]=KDED KMRML nadzor demona
  Name[ca]=Dimoni vigilant KDED KMRL
  Name[cs]=Sledovač KMRML démonů
- Name[cy]=Gwyliwr Ellyll KMRML KDED
-@@ -14,7 +15,9 @@
- Name[gl]=Vixiante do daemon de KDED KMRML
- Name[hi]=KDED KMRML डेमन वाचर
- Name[hu]=KDED KMRML szolgáltatásfigyelő
-+Name[is]=Eftirlit með KDED KMRML þjóninum
- Name[it]=Controllo del demone KDED KMRML
-+Name[ja]=KDED KMRML デーモンウォッチャー
- Name[nb]=KDED KMRML nisseovervåker
- Name[nl]=KDED KMRML-daemonbeheer
- Name[nn]=KDED KMRML-nisseovervaking
-@@ -28,8 +31,10 @@
- Name[sv]=KDED KMRML-demonbevakare
- Name[ta]=KDED டிமென் வாட்சர்
+@@ -36,6 +37,7 @@
  Name[uk]=Спостерігач демону KDED KMRML
-+Name[zh_CN]=KDED KMRML 守护程序监视器
+ Name[zh_CN]=KDED KMRML 守护程序监视器
  Comment=Starts daemons on demand and restarts them on failure.
++Comment[ar]=يشغَل daemons عند الطلب ويعيد تشغيلهم عند الفشل.
  Comment[bg]=Стартиране на демоните при заявка и рестартиране на демони при грешка.
-+Comment[bs]=Pokreće demone po potrebi i restartuje ih ako se sruše.
+ Comment[bs]=Pokreće demone po potrebi i restartuje ih ako se sruše.
  Comment[ca]=Engega els dimonis sota petició i els torna a engegar si fallen.
- Comment[cs]=Spouští démony na požádání a restartuje je při selhání.
- Comment[cy]=Cychwyn ellyllau wrth ofyn, a'u ail-gychwyn wrth methiant.
-@@ -42,7 +47,9 @@
- Comment[gl]=Iniciar daemons cando sexa requirido e reinicia-los se fallan.
- Comment[hi]=मांग पर डेमन प्रारंभ करता है तथा असफल होने पर उन्हें पुनः चालू करता है.
- Comment[hu]=Szükség esetén elindítja, hiba esetén újraindítja a szolgáltatásokat.
-+Comment[is]=Ræsir þjóna þegar þarf og endurræsir þá ef þeir bregðast.
- Comment[it]=Avvia i demoni su richiesta e riavviali in caso di problemi.
-+Comment[ja]=デーモンをオンデマンドで起動し、失敗の際は再起動します。
- Comment[nb]=Starter nisser på forespørsler og starter dem igjen ved feil.
- Comment[nl]=Start KMRML-achtergrondprogramma op en herstart dit als het eventueel afbreekt.
- Comment[nn]=Startar nissar når dei trengst og startar dei om att ved feil.
-@@ -55,6 +62,7 @@
- Comment[sv]=Starta demoner vid behov och starta om dem vid fel
- Comment[ta]=அவசிய நேரத்தில் டிமென்னை துவக்கவும். இயலாதபோது திரும்ப துவங்கவும்.
- Comment[uk]=Запускає демони при потребі та перезапускає їх при аварії.
-+Comment[zh_CN]=按需启动守护程序并在失败时重新启动。
- ServiceTypes=KDEDModule
- X-KDE-ModuleType=Library
- X-KDE-Library=daemonwatcher
 diff -urN -x CVS kdegraphics.orig/kooka/kooka.desktop kdegraphics/kooka/kooka.desktop
---- kdegraphics.orig/kooka/kooka.desktop	Thu Jan 15 08:57:44 2004
-+++ kdegraphics/kooka/kooka.desktop	Sat Feb  7 13:43:53 2004
-@@ -29,6 +29,7 @@
- GenericName[hi]=स्कैन & ऑप्टिकल कैरेक्टर रिकॉग्नीशन प्रोग्राम (OCR)
- GenericName[hr]=Program za skaniranje i OCR
- GenericName[hu]=Lapolvasó
-+GenericName[is]=Forrit til að skanna inn myndir
- GenericName[it]=Programma di scansione e OCR
- GenericName[ja]=スキャン & OCR プログラム
- GenericName[lt]=Skanavimo ir teksto atpažinimo programa
+--- kdegraphics.orig/kooka/kooka.desktop	Mon Mar 29 15:01:47 2004
++++ kdegraphics/kooka/kooka.desktop	Mon May  3 15:04:15 2004
+@@ -60,7 +60,7 @@
+ GenericName[zh_TW]=掃描和文字辦識程式
+ GenericName[zu]=Scan & OCR Iprogremu
+ Name=Kooka
+-Name[ar]=كووكا
++Name[ar]=برنامج Kooka
+ Name[eo]=Kokao
+ Name[hi]=कूका
+ Name[is]=Skanni
 diff -urN -x CVS kdegraphics.orig/kpaint/kpaint.desktop kdegraphics/kpaint/kpaint.desktop
---- kdegraphics.orig/kpaint/kpaint.desktop	Thu Jan 15 08:57:46 2004
-+++ kdegraphics/kpaint/kpaint.desktop	Sat Feb  7 13:43:55 2004
-@@ -25,6 +25,7 @@
- GenericName[hi]=चित्र बनाने का प्रोग्राम
+--- kdegraphics.orig/kpaint/kpaint.desktop	Mon Mar 29 15:01:49 2004
++++ kdegraphics/kpaint/kpaint.desktop	Mon May  3 15:04:17 2004
+@@ -22,8 +22,9 @@
+ GenericName[fr]=Petit programme de dessin
+ GenericName[gl]=Programa de debuxo
+ GenericName[he]=תוכנית ציור
+-GenericName[hi]=चित्र बनाने का प्रोग्राम
++GenericName[hi]=छवि बनाने का प्रोग्राम
  GenericName[hr]=Program za slikanje
++GenericName[hsb]=Molowanski program
  GenericName[hu]=Rajzolóprogram
-+GenericName[is]=Teikniforrit
+ GenericName[is]=Teikniforrit
  GenericName[it]=Programma di disegno
- GenericName[ja]=ペイントプログラム
- GenericName[lo]=ໂປຣແກຣມວາດພາບທຳມະດາ
-@@ -32,6 +33,7 @@
- GenericName[lv]=Krāsošanas Programma
- GenericName[mt]=Programm sempliċi tat-tpinġija
- GenericName[nb]=Maleprogram
-+GenericName[nds]=Malprogramm
- GenericName[nl]=Tekenprogramma
- GenericName[nn]=Måleprogram
- GenericName[nso]=Lenaneo la Paint
-@@ -46,6 +48,7 @@
- GenericName[ss]=Luhlelo lwependi
- GenericName[sv]=Ritprogram
- GenericName[ta]=பெயிண்ட் நிரலி
-+GenericName[tg]=Барномаи нақша
- GenericName[th]=โปรแกรมวาดภาพธรรมดาๆ
- GenericName[tr]=Boyama Programı
- GenericName[uk]=Програма для малювання
-@@ -67,6 +70,7 @@
+@@ -64,7 +65,7 @@
+ Type=Application
+ Name=KPaint
+ Name[af]=K-verf
+-Name[ar]=الرسام
++Name[ar]=برنامج KPaint
+ Name[cy]=KPeintio
+ Name[el]=Ζωγραφική
  Name[eo]=Pentrilo
- Name[hi]=के-पेंट
- Name[hr]=Program za crtanje
-+Name[is]=Teikniforrit
- Name[lv]=KKrāsot
- Name[pl]=Paint
- Name[pt_BR]=KPintura
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/QOutputDev.cpp kdegraphics/kpdf/kpdf/QOutputDev.cpp
+--- kdegraphics.orig/kpdf/kpdf/QOutputDev.cpp	Thu Feb 19 16:14:03 2004
++++ kdegraphics/kpdf/kpdf/QOutputDev.cpp	Fri Apr 23 22:48:02 2004
+@@ -59,8 +59,8 @@
+ 
+ #include "QOutputDev.moc"
+ 
+-#define QPDFDBG(x) x		// special debug mode
+-//#define QPDFDBG(x)   		// normal compilation
++//#define QPDFDBG(x) x		// special debug mode
++#define QPDFDBG(x)   		// normal compilation
+ 
+ //------------------------------------------------------------------------
+ // Constants and macros
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/QOutputDevPixmap.cpp kdegraphics/kpdf/kpdf/QOutputDevPixmap.cpp
+--- kdegraphics.orig/kpdf/kpdf/QOutputDevPixmap.cpp	Fri Jan  2 22:10:39 2004
++++ kdegraphics/kpdf/kpdf/QOutputDevPixmap.cpp	Fri Apr 23 22:48:02 2004
+@@ -48,8 +48,8 @@
+ #include "QOutputDevPixmap.h"
+ #include "QOutputDevPixmap.moc"
+ 
+-#define QPDFDBG(x) x		// special debug mode
+-//#define QPDFDBG(x)   		// normal compilation
++//#define QPDFDBG(x) x		// special debug mode
++#define QPDFDBG(x)   		// normal compilation
+ 
+ //------------------------------------------------------------------------
+ // Constants and macros
 diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf.desktop kdegraphics/kpdf/kpdf/kpdf.desktop
---- kdegraphics.orig/kpdf/kpdf/kpdf.desktop	Fri Jan 16 08:01:26 2004
-+++ kdegraphics/kpdf/kpdf/kpdf.desktop	Sat Feb  7 13:43:57 2004
-@@ -27,7 +27,7 @@
- GenericName[hr]=Preglednik PDF dokumenata
- GenericName[hu]=PDF-nézegető
- GenericName[id]=Viewer PDF
--GenericName[is]=PDF-sjÃ¡
-+GenericName[is]=PDF sjá
- GenericName[it]=Visualizzatore PDF
- GenericName[ja]=PDFビューア
- GenericName[lo]=ສະແດງຜົນPDF
-@@ -36,6 +36,7 @@
- GenericName[mk]=Прикажувач на PDF датотеки
- GenericName[mt]=Werrej PDF
- GenericName[nb]=PDF-fremviser
-+GenericName[nds]=Kieker för PDF-Dateien
- GenericName[nl]=PDF-weergaveprogramma
- GenericName[nn]=PDF-lesar
- GenericName[oc]=Visualisor PDF
-@@ -49,11 +50,14 @@
- GenericName[ss]=Sibuki se PDF 
- GenericName[sv]=PDF-visare
- GenericName[ta]=PS/PDF காட்சி
-+GenericName[tg]=Намоишгари PDF
- GenericName[th]=ตัวแสดงผล PDF
- GenericName[tr]=PDF Görüntüleyici
- GenericName[uk]=Переглядач PDF
-+GenericName[uz]=PDF кўрувчи
- GenericName[ven]=Tshivhoni tsha PDF
- GenericName[xh]=Umboniseli we PDF
-+GenericName[zh_CN]=PDF 查看器
- GenericName[zu]=Umboniseli we PDF
- Exec=kpdf %i %m -caption "%c"
- Icon=kpdf
-diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf_shell.cpp kdegraphics/kpdf/kpdf/kpdf_shell.cpp
---- kdegraphics.orig/kpdf/kpdf/kpdf_shell.cpp	Thu Jan 15 06:42:12 2004
-+++ kdegraphics/kpdf/kpdf/kpdf_shell.cpp	Sun Feb  1 17:07:11 2004
-@@ -151,7 +151,7 @@
-   // the 'config' object points to the session managed
-   // config file.  anything you write here will be available
-   // later when this app is restored
--    config->writePathEntry( "URL", m_part->url().prettyURL() );
-+    config->writePathEntry( "URL", m_part->url().url() );
+--- kdegraphics.orig/kpdf/kpdf/kpdf.desktop	Mon Mar 29 15:01:51 2004
++++ kdegraphics/kpdf/kpdf/kpdf.desktop	Mon May  3 15:04:19 2004
+@@ -3,6 +3,7 @@
+ MimeType=application/pdf
+ Terminal=0
+ Name=KPDF
++Name[ar]=برنامج KPDF
+ Name[hi]=के-पीडीएफ
+ Name[xx]=xxKPDFxx
+ GenericName=PDF Viewer
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf_pagewidget.cc kdegraphics/kpdf/kpdf/kpdf_pagewidget.cc
+--- kdegraphics.orig/kpdf/kpdf/kpdf_pagewidget.cc	Mon Dec 29 05:39:40 2003
++++ kdegraphics/kpdf/kpdf/kpdf_pagewidget.cc	Tue Apr 27 00:44:50 2004
+@@ -38,6 +38,7 @@
+     PageWidget::setPDFDocument(PDFDoc* doc)
+     {
+         m_doc = doc;
++        m_currentPage = 1;
+         updatePixmap();
+     }
+ 
+@@ -121,16 +122,6 @@
+             p->fillRect ( clipx, clipy, clipw, cliph, bc );
+     }
+ 
+-    void PageWidget::nextPage()
+-    {
+-        setPage( getPage() + 1);
+-    }
+-
+-    void PageWidget::previousPage()
+-    {
+-        setPage( getPage() - 1 );
+-    }
+-
+     void PageWidget::zoomTo( double _value )
+     {
+         if ( m_zoomFactor != _value)
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf_pagewidget.h kdegraphics/kpdf/kpdf/kpdf_pagewidget.h
+--- kdegraphics.orig/kpdf/kpdf/kpdf_pagewidget.h	Sun Sep 28 15:44:25 2003
++++ kdegraphics/kpdf/kpdf/kpdf_pagewidget.h	Tue Apr 27 00:44:50 2004
+@@ -41,8 +41,6 @@
+         void zoomTo( double _value );
+ 
+     public slots:
+-        void nextPage();
+-        void previousPage();
+         void zoomIn();
+         void zoomOut();
+ 
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf_part.cpp kdegraphics/kpdf/kpdf/kpdf_part.cpp
+--- kdegraphics.orig/kpdf/kpdf/kpdf_part.cpp	Tue Mar 30 16:55:05 2004
++++ kdegraphics/kpdf/kpdf/kpdf_part.cpp	Wed Apr 28 00:31:10 2004
+@@ -53,7 +53,7 @@
+ 
+   pdfpartview = new PDFPartView(parentWidget, widgetName);
+ 
+-  connect(pdfpartview->pagesListBox, SIGNAL( clicked ( QListBoxItem * ) ),
++  connect(pdfpartview->pagesListBox, SIGNAL( currentChanged ( QListBoxItem * ) ),
+           this, SLOT( pageClicked ( QListBoxItem * ) ));
+ 
+   m_outputDev = pdfpartview->outputdev;
+@@ -93,7 +93,6 @@
+                        actionCollection(), "forward");
+ #endif
+ 
+-  KStdAction::print( this, SLOT( print() ), actionCollection() );
+   KStdAction::printPreview( this, SLOT( printPreview() ), actionCollection() );
+ 
+   m_prevPage = KStdAction::prior(this, SLOT(slotPreviousPage()),
+@@ -170,7 +169,7 @@
+     if ( m_doc )
+     {
+         bool ok = false;
+-        int num = KInputDialog::getInteger(i18n("Go to Page"), i18n("Page:"), m_currentPage,
++        int num = KInputDialog::getInteger(i18n("Go to Page"), i18n("Page:"), m_currentPage+1,
+                                            1, m_doc->getNumPages(), 1, 10, &ok/*, _part->widget()*/);
+         if (ok)
+             goToPage( num );
+@@ -179,9 +178,9 @@
+ 
+ void Part::goToPage( int page )
+ {
+-    m_currentPage = page;
+-    pdfpartview->pagesListBox->setCurrentItem(m_currentPage-1);
+-    m_outputDev->setPage(m_currentPage);
++    m_currentPage = page-1;
++    pdfpartview->pagesListBox->setCurrentItem(m_currentPage);
++    m_outputDev->setPage(m_currentPage+1);
+     updateActionPage();
  }
  
- void Shell::slotShowMenubar()
-@@ -169,7 +169,7 @@
-   // config file.  this function is automatically called whenever
-   // the app is being restored.  read in here whatever you wrote
-   // in 'saveProperties'
--    KURL url = config->readPathEntry( "URL" );
-+    KURL url ( config->readPathEntry( "URL" ) );
-     if ( url.isValid() )
-         openURL( url );
+@@ -204,9 +203,9 @@
+     if ( m_doc )
+     {
+         m_firstPage->setEnabled(m_currentPage!=0);
+-        m_lastPage->setEnabled(m_currentPage<m_doc->getNumPages());
++        m_lastPage->setEnabled(m_currentPage<m_doc->getNumPages()-1);
+         m_prevPage->setEnabled(m_currentPage!=0);
+-        m_nextPage->setEnabled(m_currentPage<m_doc->getNumPages());
++        m_nextPage->setEnabled(m_currentPage<m_doc->getNumPages()-1);
+     }
+     else
+     {
+@@ -273,9 +272,9 @@
+ {
+     if ( m_doc && m_doc->getNumPages() > 0 );
+     {
+-        m_currentPage = m_doc->getNumPages();
+-        m_outputDev->setPage(m_currentPage);
+-        pdfpartview->pagesListBox->setCurrentItem(m_currentPage-1);
++        m_currentPage = m_doc->getNumPages()-1;
++        m_outputDev->setPage(m_currentPage+1);
++        pdfpartview->pagesListBox->setCurrentItem(m_currentPage);
+         updateActionPage();
+     }
  }
+@@ -294,12 +293,16 @@
+ 
+ bool Part::nextPage()
+ {
+-    m_currentPage = pdfpartview->pagesListBox->currentItem() + 1;
+-    if ( m_doc && m_currentPage >= m_doc->getNumPages())
++    m_currentPage++;
++    
++    if (m_doc && m_currentPage >= m_doc->getNumPages())
++    {
++        m_currentPage--;
+         return false;
++    }
+ 
++    m_outputDev->setPage(m_currentPage+1);
+     pdfpartview->pagesListBox->setCurrentItem(m_currentPage);
+-    m_outputDev->nextPage();
+     updateActionPage();
+     return true;
+ }
+@@ -316,12 +319,16 @@
+ 
+ bool Part::previousPage()
+ {
+-    m_currentPage = pdfpartview->pagesListBox->currentItem() - 1;
+-    if ( m_currentPage  < 0)
++    m_currentPage--;
++    
++    if (m_currentPage < 0)
++    {
++        m_currentPage++;
+         return false;
++    }
+ 
+-    pdfpartview->pagesListBox->setCurrentItem(m_currentPage );
+-    m_outputDev->previousPage();
++    m_outputDev->setPage(m_currentPage+1);
++    pdfpartview->pagesListBox->setCurrentItem(m_currentPage);
+     updateActionPage();
+     return true;
+ }
+@@ -641,8 +648,9 @@
+ {
+     if ( !qbi )
+         return;
+-    m_currentPage = pdfpartview->pagesListBox->index(qbi)+1;
+-    m_outputDev->setPage(m_currentPage);
++    m_currentPage = pdfpartview->pagesListBox->index(qbi);
++    
++    m_outputDev->setPage(m_currentPage+1);
+     updateActionPage();
+ }
+ 
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf_part.desktop kdegraphics/kpdf/kpdf/kpdf_part.desktop
+--- kdegraphics.orig/kpdf/kpdf/kpdf_part.desktop	Sun Feb 29 16:27:45 2004
++++ kdegraphics/kpdf/kpdf/kpdf_part.desktop	Mon May  3 15:04:21 2004
+@@ -1,6 +1,7 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Name=KPDFPart
++Name[ar]=برنامج KPDFPart
+ Name[cs]=Komponenta KPDF
+ Name[hi]=के-पीडीएफ-पार्ट
+ Name[pt_BR]=Componente do KPDF
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf_part.rc kdegraphics/kpdf/kpdf/kpdf_part.rc
+--- kdegraphics.orig/kpdf/kpdf/kpdf_part.rc	Tue Mar 30 16:55:05 2004
++++ kdegraphics/kpdf/kpdf/kpdf_part.rc	Wed Apr 28 00:31:10 2004
+@@ -1,10 +1,9 @@
+ <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+-<kpartgui name="kpdf_part" version="13">
++<kpartgui name="kpdf_part" version="14">
+ <MenuBar>
+   <Menu name="file"><text>&amp;File</text>
+     <Action name="file_print" group="file_print"/>
+     <Action name="file_print_preview" group="file_print"/>
+-    <Separator group="file_print"/>
+   </Menu>
+   <Menu name="view"><text>&amp;View</text>
+     <Action name="fit_to_width"/>
+diff -urN -x CVS kdegraphics.orig/kpdf/kpdf/kpdf_shell.cpp kdegraphics/kpdf/kpdf/kpdf_shell.cpp
+--- kdegraphics.orig/kpdf/kpdf/kpdf_shell.cpp	Sun Feb  1 17:07:11 2004
++++ kdegraphics/kpdf/kpdf/kpdf_shell.cpp	Wed Apr 28 00:31:10 2004
+@@ -50,9 +50,6 @@
+   // set the shell's ui resource file
+   setXMLFile("kpdf_shell.rc");
+ 
+-  // then, setup our actions
+-  setupActions();
+-
+   // this routine will find and load our Part.  it finds the Part by
+   // name which is a bad idea usually.. but it's alright in this
+   // case since our Part is made for this Shell
+@@ -65,6 +62,8 @@
+                 factory->create(this, "kpdf_part", "KParts::ReadOnlyPart"));
+     if (m_part)
+     {
++      // then, setup our actions
++      setupActions();
+       // tell the KParts::MainWindow that this is indeed the main widget
+       setCentralWidget(m_part->widget());
+       // and integrate the part's GUI with the shell's
+@@ -122,6 +121,7 @@
+   recent = KStdAction::openRecent( this, SLOT( openURL( const KURL& ) ),
+ 				    actionCollection() );
+   KStdAction::saveAs(this, SLOT(fileSaveAs()), actionCollection());
++  KStdAction::print(m_part, SLOT(print()), actionCollection());
+   KStdAction::quit( this, SLOT(slotQuit()), actionCollection());
+ 
+   //createStandardStatusBarAction();
+diff -urN -x CVS kdegraphics.orig/kpovmodeler/kpovmodeler.desktop kdegraphics/kpovmodeler/kpovmodeler.desktop
+--- kdegraphics.orig/kpovmodeler/kpovmodeler.desktop	Sun Feb 29 16:27:48 2004
++++ kdegraphics/kpovmodeler/kpovmodeler.desktop	Mon May  3 15:04:23 2004
+@@ -6,7 +6,7 @@
+ MimeType=application/x-kpovmodeler;
+ Name=Povray Modeler
+ Name[af]=Povray Moduleerder
+-Name[ar]=مصمم Povray
++Name[ar]=مصمم ملفات Povray
+ Name[az]=Povrey Modelyer
+ Name[ca]=Modelador Povray
+ Name[cs]=Modelář Povray
+diff -urN -x CVS kdegraphics.orig/kpovmodeler/pmerrordialog.cpp kdegraphics/kpovmodeler/pmerrordialog.cpp
+--- kdegraphics.orig/kpovmodeler/pmerrordialog.cpp	Wed Mar 19 20:50:19 2003
++++ kdegraphics/kpovmodeler/pmerrordialog.cpp	Wed Apr 14 19:47:55 2004
+@@ -36,13 +36,13 @@
+    QVBox* page = makeVBoxMainWidget( );
+    QLabel* text = new QLabel( QString( "" ), ( QWidget* )page );
+ 
+-   
++
+    m_pTextView = new QTextEdit( ( QWidget* )page );
+    m_pTextView->setReadOnly( true );
+ 
+    m_messageDict.setAutoDelete( true );
+    m_messages.setAutoDelete( true );
+-   
++
+    PMMessageList::ConstIterator it;
+    for( it = messages.begin( ); it != messages.end( ); ++it )
+       m_messages.append( new PMMessage( *it ) );
+@@ -70,7 +70,7 @@
+          }
+       }
+    }
+-   
++
+    displayMessages( );
+ 
+    if( errorFlags & PMEWarning )
+@@ -82,16 +82,16 @@
+    }
+    else
+       text->setText( i18n( "There were errors:" ) );
+-   
+-   setButtonOKText( i18n( "OK" ),
++
++   setButtonOKText( KStdGuiItem::ok().text(),
+                     i18n( "Proceed" ),
+                     i18n( "When clicking <b>Proceed</b>, the program\n"
+                           "will try to proceed with the current action." ) );
+-   setButtonCancelText( i18n( "Cancel" ),
++   setButtonCancelText( KStdGuiItem::cancel().text(),
+                         i18n( "Cancel" ),
+                         i18n( "When clicking <b>Cancel<b>, the program\n"
+                               "will cancel the current action." ) );
+-      
++
+    if( errorFlags & PMEFatal )
+       showButtonOK( false );
+    else
+@@ -106,12 +106,12 @@
+    QString text;
+ 
+    text = "<qt>\n";
+-   
++
+    for( ; pit.current( ); ++pit )
+       text += "<p>" + pit.current( )->text( ) + "</p>\n";
+ 
+    text += "</qt>";
+-   
++
+    m_pTextView->setText( text );
+ }
+ 
+diff -urN -x CVS kdegraphics.orig/kpovmodeler/pmlinkedit.cpp kdegraphics/kpovmodeler/pmlinkedit.cpp
+--- kdegraphics.orig/kpovmodeler/pmlinkedit.cpp	Mon Dec 30 20:55:15 2002
++++ kdegraphics/kpovmodeler/pmlinkedit.cpp	Wed Apr 14 19:47:55 2004
+@@ -17,11 +17,12 @@
+ 
+ #include "pmlinkedit.h"
+ #include <qlineedit.h>
+-#include <qpushbutton.h>
+ #include <qlabel.h>
+ #include <qlayout.h>
+ #include <klocale.h>
+ #include <kdialog.h>
++#include <kpushbutton.h>
++#include <kstdguiitem.h>
+ 
+ #include "pmdeclare.h"
+ #include "pmobjectselect.h"
+@@ -55,19 +56,19 @@
+    m_bReadOnly = false;
+ 
+    QGridLayout* grid = new QGridLayout( this, 2, 2, 0, KDialog::spacingHint( ) );
+-   
++
+    grid->addWidget( new QLabel( i18n( "Prototype:" ), this ), 0, 0 );
+    grid->setColStretch( 0, 0 );
+    grid->setColStretch( 1, 1 );
+    m_pIDEdit = new QLineEdit( this );
+    m_pIDEdit->setReadOnly( true );
+    grid->addWidget( m_pIDEdit, 0, 1 );
+-   
++
+    QHBoxLayout* layout = new QHBoxLayout( );
+    grid->addLayout( layout, 1, 1 );
+    m_pSelectButton = new QPushButton( i18n( "Select" ), this );
+    layout->addWidget( m_pSelectButton );
+-   m_pClearButton = new QPushButton( i18n( "Clear" ), this );
++   m_pClearButton = new KPushButton( KStdGuiItem::clear(), this );
+    layout->addWidget( m_pClearButton );
+ 
+    connect( m_pSelectButton, SIGNAL( clicked( ) ), SLOT( slotSelectClicked( ) ) );
+@@ -124,7 +125,7 @@
+       else
+          result = PMObjectSelect::selectDeclare(
+             m_pDisplayedObject, m_declareTypes, obj, this );
+-         
++
+       if( ( result == QDialog::Accepted ) && obj )
+       {
+          m_pDeclare = ( PMDeclare* ) obj;
+@@ -132,7 +133,7 @@
+          m_pClearButton->setEnabled( true );
+          emit dataChanged( );
+       }
+-   }                                                                 
++   }
+ }
+ 
+ void PMLinkEdit::slotClearClicked( )
+diff -urN -x CVS kdegraphics.orig/kpovmodeler/pmpovrayoutputwidget.cpp kdegraphics/kpovmodeler/pmpovrayoutputwidget.cpp
+--- kdegraphics.orig/kpovmodeler/pmpovrayoutputwidget.cpp	Sat Sep 20 18:27:52 2003
++++ kdegraphics/kpovmodeler/pmpovrayoutputwidget.cpp	Wed Apr 14 19:47:55 2004
+@@ -19,11 +19,12 @@
+ 
+ #include <qtextedit.h>
+ #include <qlayout.h>
+-#include <qpushbutton.h>
+ 
+ #include <klocale.h>
+ #include <kglobalsettings.h>
+ #include <kconfig.h>
++#include <kpushbutton.h>
++#include <kstdguiitem.h>
+ 
+ #include "pmdebug.h"
+ 
+@@ -42,7 +43,7 @@
+ 
+    QHBoxLayout* buttonLayout = new QHBoxLayout( topLayout );
+    buttonLayout->addStretch( 1 );
+-   QPushButton* closeButton = new QPushButton( i18n( "Close" ), this );
++   QPushButton* closeButton = new KPushButton( KStdGuiItem::close(), this );
+    buttonLayout->addWidget( closeButton );
+    closeButton->setDefault( true );
+    connect( closeButton, SIGNAL( clicked( ) ), SLOT( hide( ) ) );
+diff -urN -x CVS kdegraphics.orig/kpovmodeler/pmpovraywidget.cpp kdegraphics/kpovmodeler/pmpovraywidget.cpp
+--- kdegraphics.orig/kpovmodeler/pmpovraywidget.cpp	Sat Sep 20 18:27:52 2003
++++ kdegraphics/kpovmodeler/pmpovraywidget.cpp	Wed Apr 14 19:47:55 2004
+@@ -27,10 +27,11 @@
+ #include <ktempfile.h>
+ #include <kio/netaccess.h>
+ #include <kglobalsettings.h>
++#include <kpushbutton.h>
++#include <kstdguiitem.h>
+ 
+ #include <qlayout.h>
+ #include <qprogressbar.h>
+-#include <qpushbutton.h>
+ #include <qlabel.h>
+ #include <qscrollview.h>
+ #include <qtimer.h>
+@@ -77,11 +78,11 @@
+    buttonLayout->addWidget( m_pPovrayOutputButton );
+ 
+    buttonLayout = new QHBoxLayout( topLayout );
+-   m_pSaveButton = new QPushButton( i18n( "Save..." ), this );
++   m_pSaveButton = new KPushButton( KStdGuiItem::saveAs(), this );
+    m_pSaveButton->setEnabled( false );
+    buttonLayout->addWidget( m_pSaveButton );
+    buttonLayout->addStretch( 1 );
+-   QPushButton* closeButton = new QPushButton( i18n( "Close" ), this );
++   QPushButton* closeButton = new KPushButton( KStdGuiItem::close(), this );
+    buttonLayout->addWidget( closeButton );
+ 
+    connect( m_pRenderWidget, SIGNAL( finished( int ) ),
 diff -urN -x CVS kdegraphics.orig/kruler/eventsrc kdegraphics/kruler/eventsrc
---- kdegraphics.orig/kruler/eventsrc	Thu Jan 15 08:57:55 2004
-+++ kdegraphics/kruler/eventsrc	Sat Feb  7 13:43:59 2004
-@@ -22,7 +22,7 @@
- Comment[hi]=केडीई स्क्रीन रूलर
- Comment[hr]=KDE ravnalo za ekran
- Comment[hu]=Képernyővonalzó
--Comment[is]=Reglustika
-+Comment[is]=KDE Reglustikan
- Comment[it]=Righello dello schermo per KDE
- Comment[ja]=KDE スクリーンルーラ
- Comment[ko]=KDE용 화면 자
-@@ -75,7 +75,7 @@
- Name[hi]=संकेतक कुंजियों द्वारा खिसकता है
- Name[hr]=Pomaknuto tipkama za kretanje
- Name[hu]=A vonalzó elmozgatva a kurzorbillentyűkkel
--Name[is]=FÃ¦rt meÃ° Ã¶rvalyklum
-+Name[is]=Fært með örvalyklum
- Name[it]=Spostato dai tasti cursore
- Name[ja]=カーソルキーで移動
- Name[ko]=방향 글쇠로 옮겼습니다
-@@ -126,7 +126,7 @@
- Comment[hi]=संकेतक कुंजियों की सहायता से रूसर पिक्सलवाइज़ खिसका
+--- kdegraphics.orig/kruler/eventsrc	Sun Feb 29 16:27:50 2004
++++ kdegraphics/kruler/eventsrc	Mon May  3 15:04:25 2004
+@@ -2,7 +2,7 @@
+ IconName=kruler
+ Comment=KDE Screen Ruler
+ Comment[af]=Kde Skerm Liniaal
+-Comment[ar]=مسطرة الشاشة
++Comment[ar]=مسطرة شاشة KDE
+ Comment[az]=KDE Ekran Xətkeşi
+ Comment[bg]=Линийка за екрана
+ Comment[bs]=KDE ekranski linijar
+@@ -111,7 +111,7 @@
+ Name[zu]=Inyakaziswe Izikhiye Ze Cursor
+ Comment=The ruler has moved pixelwise using the cursor keys
+ Comment[af]=Die liniaal het verskuif beeldelement-gewys te gebruik Die plekaanduier sleutels
+-Comment[ar]=تم تحريك المسطرو بكسليا باستخدام مفاتيح الفأرة
++Comment[ar]=تم تحريك المسطرة بكسليا باستخدام مفاتيح الفأرة
+ Comment[az]=Cədvəl piksel piksel istiqamət düymələri ilə hərəkət etdirildi
+ Comment[bs]=Linijar se pomjera u pixelima koristeći kursorske tipke
+ Comment[ca]=La regla s'ha mogut píxel a píxel usant les tecles de cursor
+@@ -127,7 +127,7 @@
+ Comment[fr]=La règle s'est déplacée sous l'action des touches fléchées
+ Comment[gl]=A regra moverá o "pixelwise" empregando as teclas de cursor
+ Comment[he]=הסרגל הוזז באמצעות מקשי החצים
+-Comment[hi]=संकेतक कुंजियों की सहायता से रूसर पिक्सलवाइज़ खिसका
++Comment[hi]=संकेतक कुंजियों की मदद से रूसर पिक्सलवाइज़ खिसका
  Comment[hr]=Ravnalo je pomaknuto pomoću tipki za kretanje
  Comment[hu]=A vonalzó elmozgatva képpontonként a kurzorbillentyűkkel
--Comment[is]=Reglustikan hefur veriÃ° fÃ¦rÃ° um e-a punkta meÃ° Ã¶rvalyklunum
-+Comment[is]=Reglustikan hefur verið færð um e-a punkta með örvalyklunum
- Comment[it]=Il righello è stato spostato utilizzando i tasti cursore
- Comment[ja]=ルーラはカーソルキーでピクセル幅動きます
- Comment[ko]=방향 글쇠로 자대를 옮겼습니다
+ Comment[is]=Reglustikan hefur verið færð um e-a punkta með örvalyklunum
+diff -urN -x CVS kdegraphics.orig/kruler/klineal.cpp kdegraphics/kruler/klineal.cpp
+--- kdegraphics.orig/kruler/klineal.cpp	Thu Nov 13 16:49:26 2003
++++ kdegraphics/kruler/klineal.cpp	Mon Apr 12 19:04:25 2004
+@@ -157,8 +157,8 @@
+   lenMenu->insertItem(i18n("&Tall"), this, SLOT(setTallLength()), CTRL+Key_T);
+   lenMenu->insertItem(i18n("&Full Screen Width"), this, SLOT(setFullLength()), CTRL+Key_F);
+   mMenu->insertItem(i18n("&Length"), lenMenu);
+-  mMenu->insertItem(i18n("&Choose Color..."), this, SLOT(choseColor()), CTRL+Key_C);
+-  mMenu->insertItem(i18n("Choose &Font..."), this, SLOT(choseFont()), Key_F);
++  mMenu->insertItem(SmallIcon("colorscm"),i18n("&Choose Color..."), this, SLOT(choseColor()), CTRL+Key_C);
++  mMenu->insertItem(SmallIcon("font"), i18n("Choose &Font..."), this, SLOT(choseFont()), Key_F);
+   mMenu->insertSeparator();
+   mMenu->insertItem(SmallIcon( "help" ), KStdGuiItem::help().text(), helpMenu());
+   mMenu->insertSeparator();
 diff -urN -x CVS kdegraphics.orig/kruler/kruler.desktop kdegraphics/kruler/kruler.desktop
---- kdegraphics.orig/kruler/kruler.desktop	Wed Jan 14 08:49:24 2004
-+++ kdegraphics/kruler/kruler.desktop	Sat Feb  7 13:44:01 2004
-@@ -21,6 +21,7 @@
- GenericName[hi]=स्क्रीन रूलर
- GenericName[hr]=Ravnalo
- GenericName[hu]=Képernyővonalzó
-+GenericName[is]=Reglustika
- GenericName[it]=Righello per lo schermo
- GenericName[ja]=スクリーン定規
- GenericName[lt]=Ekrano liniuotė
-@@ -54,6 +55,7 @@
+--- kdegraphics.orig/kruler/kruler.desktop	Mon Mar 29 15:01:53 2004
++++ kdegraphics/kruler/kruler.desktop	Mon May  3 15:04:27 2004
+@@ -52,7 +52,7 @@
+ BinaryPattern=
+ Name=KRuler
+ Name[af]=K-lineaal
+-Name[ar]=المسطرة
++Name[ar]=المسطرة (KRuler)
+ Name[cy]=KMesurydd
  Name[eo]=Liniilo
  Name[hi]=के-रूलर
- Name[hr]=Ravnalo
-+Name[is]=KReglustika
- Name[lv]=KRulers
- Name[pl]=Linijka
- Name[pt_BR]=KRégua
-diff -urN -x CVS kdegraphics.orig/ksnapshot/ksnapshot.desktop kdegraphics/ksnapshot/ksnapshot.desktop
---- kdegraphics.orig/ksnapshot/ksnapshot.desktop	Wed Jan 14 08:49:26 2004
-+++ kdegraphics/ksnapshot/ksnapshot.desktop	Sat Feb  7 13:44:03 2004
-@@ -22,6 +22,7 @@
- GenericName[hi]=स्क्रीन केप्चर प्रोग्राम
- GenericName[hr]=Program za snimanje zaslona
- GenericName[hu]=Képlopó
-+GenericName[is]=Forrit sem grípur skjámyndir
- GenericName[it]=Programma per fare foto allo schermo
- GenericName[ja]=スクリーンキャプチャープログラム
- GenericName[lo]=ໂປຣແກຣມຈັບພາບຫນ້າຈໍ
-@@ -43,6 +44,7 @@
- GenericName[sr]=Програм за снимање екрана
- GenericName[ss]=Luhlelo lwekubamba skrini
- GenericName[sv]=Ta en skärmdump
-+GenericName[tg]=Барномаи аккоси экран
- GenericName[th]=โปรแกรมจับภาพหน้าจอ
- GenericName[tr]=Ekran Yakalama Programı
- GenericName[uk]=Захоплювач екрана
+diff -urN -x CVS kdegraphics.orig/ksnapshot/ksnapshot.cpp kdegraphics/ksnapshot/ksnapshot.cpp
+--- kdegraphics.orig/ksnapshot/ksnapshot.cpp	Sat Sep 20 18:51:42 2003
++++ kdegraphics/ksnapshot/ksnapshot.cpp	Wed Apr 14 19:47:55 2004
+@@ -61,9 +61,9 @@
+ #define kApp KApplication::kApplication()
+ 
+ KSnapshot::KSnapshot(QWidget *parent, const char *name)
+-  : DCOPObject("interface"), 
+-    KDialogBase(parent, name, true, QString::null, Help|User1, User1, 
+-    true, KGuiItem( i18n( "&Quit" ), "exit" ) )
++  : DCOPObject("interface"),
++    KDialogBase(parent, name, true, QString::null, Help|User1, User1,
++    true, KStdGuiItem::quit() )
+ {
+     grabber = new QWidget( 0, 0, WStyle_Customize | WX11BypassWM );
+     grabber->move( -1000, -1000 );
+@@ -152,7 +152,7 @@
+     if ( KIO::NetAccess::exists( url, false, this ) ) {
+         const QString title = i18n( "File Exists" );
+         const QString text = i18n( "<qt>Do you really want to overwrite <b>%1</b>?</qt>" ).arg(url.prettyURL());
+-        if (KMessageBox::Yes != KMessageBox::warningYesNoCancel( this, text, title ) ) 
++        if (KMessageBox::Yes != KMessageBox::warningYesNoCancel( this, text, title ) )
+         {
+             return false;
+         }
+@@ -389,7 +389,7 @@
+         }
+     }
+ 
+-    //Rebuild the path 
++    //Rebuild the path
+     KURL newURL = filename;
+     newURL.setFileName( name );
+     setURL( newURL.url() );
+@@ -519,7 +519,7 @@
+ 
+ 		//Create the bounding box.
+ 		QRegion bbox(0, 0, snapshot.width(), snapshot.height());
+-                
++
+                 if( border > 0 ) {
+                     contents.translate( border, border );
+                     contents += QRegion( 0, 0, border, h );
+@@ -527,7 +527,7 @@
+                     contents += QRegion( 0, h - border, w, border );
+                     contents += QRegion( w - border, 0, border, h );
+                 }
+-                
++
+ 		//Get the masked away area.
+ 		QRegion maskedAway = bbox - contents;
+ 		QMemArray<QRect> maskedAwayRects = maskedAway.rects();
 diff -urN -x CVS kdegraphics.orig/ksvg/core/ksvgrenderer.desktop kdegraphics/ksvg/core/ksvgrenderer.desktop
---- kdegraphics.orig/ksvg/core/ksvgrenderer.desktop	Fri Jan 16 08:01:28 2004
-+++ kdegraphics/ksvg/core/ksvgrenderer.desktop	Sat Feb  7 13:44:05 2004
+--- kdegraphics.orig/ksvg/core/ksvgrenderer.desktop	Sun Feb 29 16:28:01 2004
++++ kdegraphics/ksvg/core/ksvgrenderer.desktop	Mon May  3 15:04:29 2004
 @@ -4,6 +4,7 @@
  X-KDE-ServiceType=KSVG/Renderer
  X-KDE-Derived=
  Comment=KSVG Rendering Backend
-+Comment[bs]=KSVG renderiranje
++Comment[ar]=خلفية رسم KSVG
+ Comment[bs]=KSVG renderiranje
  Comment[ca]=Representació en segon pla de KSVG
  Comment[cs]=Vykreslovací nástroj KSVG
- Comment[cy]=Ôl-wyneb Llunio KSVG
-@@ -16,7 +17,9 @@
- Comment[gl]=Backend de Renderizado KSVG
- Comment[hi]=के-एसवीजी रेंडरिंग बैकएण्ड
- Comment[hu]=KSVG megjelenítőmotor
-+Comment[is]=KSVG teiknari
- Comment[it]=Backend di KSVG per il rendering
-+Comment[ja]=KSVGバックエンドレンダラー
- Comment[nb]=Modul for KSVG-tegning
- Comment[nl]=KSVG weergavecomponent
- Comment[nn]=Modul for KSVG-teikning
-@@ -31,6 +34,7 @@
- Comment[tr]=KSVG Tarama Arkayüzü
- Comment[uk]=Інтерфейс відтворення KSVG
- Comment[xx]=xxKSVG Rendering Backendxx
-+Comment[zh_CN]=KSVG 渲染后端
+diff -urN -x CVS kdegraphics.orig/ksvg/impl/SVGWindowImpl.cc kdegraphics/ksvg/impl/SVGWindowImpl.cc
+--- kdegraphics.orig/ksvg/impl/SVGWindowImpl.cc	Mon Oct 27 11:17:03 2003
++++ kdegraphics/ksvg/impl/SVGWindowImpl.cc	Sun Apr 11 11:12:08 2004
+@@ -170,7 +170,7 @@
  
- [PropertyDef::X-KSVG-InternalName]
- Type=QString
-diff -urN -x CVS kdegraphics.orig/ksvg/impl/SVGMatrixImpl.cc kdegraphics/ksvg/impl/SVGMatrixImpl.cc
---- kdegraphics.orig/ksvg/impl/SVGMatrixImpl.cc	Tue Dec  9 14:42:26 2003
-+++ kdegraphics/ksvg/impl/SVGMatrixImpl.cc	Mon Feb  2 19:01:17 2004
-@@ -125,7 +125,7 @@
- 
- SVGMatrixImpl *SVGMatrixImpl::inverse()
+ bool SVGWindowImpl::confirm(const DOM::DOMString &message, const QString &title)
  {
--	m_mat.invert();
-+	m_mat = m_mat.invert();
- 	return this;
+-	return KMessageBox::warningYesNo(0L, QStyleSheet::convertFromPlainText(message.string()), title, i18n("&OK"), i18n("&Cancel")) == KMessageBox::Yes;
++	return KMessageBox::warningYesNo(0L, QStyleSheet::convertFromPlainText(message.string()), title, KStdGuiItem::ok(), KStdGuiItem::cancel()) == KMessageBox::Yes;
  }
  
+ DOM::DOMString SVGWindowImpl::prompt(const DOM::DOMString &message, const DOM::DOMString &_default, const QString &)
 diff -urN -x CVS kdegraphics.orig/ksvg/plugin/backends/agg/ksvgaggcanvas.desktop kdegraphics/ksvg/plugin/backends/agg/ksvgaggcanvas.desktop
---- kdegraphics.orig/ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	Fri Jan 16 08:01:30 2004
-+++ kdegraphics/ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	Sat Feb  7 13:44:07 2004
+--- kdegraphics.orig/ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	Sun Feb 29 16:28:03 2004
++++ kdegraphics/ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	Mon May  3 15:04:31 2004
 @@ -4,6 +4,7 @@
  X-KDE-Library=libksvgrendereragg
  X-KSVG-InternalName=agg
  Name=KSVG Rendering Backend - Anti Grain Geometry
-+Name[bs]=KSVG renderiranje - Anti Grain Geometry
++Name[ar]=خلفية رسم ل KSVG - هندسة Anti Grain
+ Name[bs]=KSVG renderiranje - Anti Grain Geometry
  Name[ca]=Representació en segon pla de KSVG - Geometria anti gra
  Name[cs]=Vykreslovací nástroj KSVG - Anti Grain Geometry
- Name[cy]=Ôl-wyneb Llunio KSVG - Geometreg Wrth-Raen
-@@ -15,7 +16,9 @@
- Name[fr]=Moteur de rendu KSVG - Anti Grain Geometry
- Name[hi]=के-एसवीजी रेंडरिंग बैकएण्ड- एन्टी ग्रेन ज्यामिती
- Name[hu]=KSVG megjelenítő motor - AGG (Anti Grain Geometry)
-+Name[is]=KSVG teiknari - Anti Grain Geometry
- Name[it]=Backend KSVG per il rendering - Geometrie senza sgranature
-+Name[ja]=KSVGバックエンドレンダラー - Anti Grain Geometry
- Name[nb]=Modul for KSVG-tegning - antikorngeometri
- Name[nl]=KSVG weergavecomponent - Anti Grain Geometry
- Name[nn]=Modul for KSVG-teikning - antikorngeometri
-@@ -29,7 +32,9 @@
- Name[sv]=KSVG-uppritningsmodul - geometri mot korninghet
- Name[uk]=Інтерфейс відтворення KSVG - AGG
+@@ -36,6 +37,7 @@
  Name[xx]=xxKSVG Rendering Backend - Anti Grain Geometryxx
-+Name[zh_CN]=KSVG 渲染后端 - 反增长几何形状
+ Name[zh_CN]=KSVG 渲染后端 - 反增长几何形状
  Comment=New, unstable ksvg rendering backend
-+Comment[bs]=Novi, nestabilni ksvg renderiranje backend
++Comment[ar]=خلفية الرسم ل ksvg الجديدة والغير مستقرة
+ Comment[bs]=Novi, nestabilni ksvg renderiranje backend
  Comment[ca]=Nou, inestable representador en segon pla de ksvg
  Comment[cs]=Nový, nestabilní vykreslovací nástroj KSVG
- Comment[cy]=Ôl-wyneb llunio ksvg newydd, ansad
-@@ -41,7 +46,9 @@
- Comment[fr]=Nouveau moteur de rendu ksvg instable
- Comment[hi]=नया, अस्थिर के-एसवीजी रेंडरिंग बैकएण्ड
- Comment[hu]=Új, még nem teljesen kiforrott megjelenítőmotor a KSVG-hez
-+Comment[is]=Nýr og óstöðugur ksvg teiknari
- Comment[it]=Nuovo, instabile backend ksvg per il rendering
-+Comment[ja]=新しく、まだ成長段階の ksvgバックエンドレンダラー
- Comment[nb]=Ny og ustabil modul for ksvg-tegning
- Comment[nl]=Nieuwe, niet stabiele KSVG weergavecomponent
- Comment[nn]=Ny og ustabil modul for ksvg-teikning
 diff -urN -x CVS kdegraphics.orig/ksvg/plugin/backends/libart/ksvglibartcanvas.desktop kdegraphics/ksvg/plugin/backends/libart/ksvglibartcanvas.desktop
---- kdegraphics.orig/ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	Fri Jan 16 08:01:32 2004
-+++ kdegraphics/ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	Sat Feb  7 13:44:09 2004
-@@ -4,6 +4,7 @@
+--- kdegraphics.orig/ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	Sun Feb 29 16:28:05 2004
++++ kdegraphics/ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	Mon May  3 15:04:33 2004
+@@ -4,8 +4,9 @@
  X-KDE-Library=libksvgrendererlibart
  X-KSVG-InternalName=libart
  Name=KSVG Rendering Backend - Libart
-+Name[bs]=KSVG renderiranje - Libart
- Name[ca]=Representació en segon pla de KSVG - Biblioteca de imatges
++Name[ar]=خلفية الرسم ل KSVG - Libart
+ Name[bs]=KSVG renderiranje - Libart
+-Name[ca]=Representació en segon pla de KSVG - Biblioteca de imatges
++Name[ca]=Representació en segon pla de KSVG - Biblioteca d'imatges
  Name[cs]=Vykreslovací nástroj KSVG - Libart
  Name[cy]=Ôl-wyneb Llunio KSVG - Libart
-@@ -15,7 +16,9 @@
- Name[fr]=Moteur de rendu KSVG - Libart
- Name[hi]=के-एसवीजी रेंडरिंग बैकएण्ड- लिबआर्ट
- Name[hu]=KSVG megjelenítőmotor - Libart
-+Name[is]=KSVG teiknari - Libart
- Name[it]=Backend KSVG per il rendering - Libart
-+Name[ja]=KSVGバックエンドレンダラー - Libart
- Name[nb]=Modul for KSVG-tegning - Libart
- Name[nl]=KSVG weergavecomponent - Libart
- Name[nn]=Modul for KSVG-teikning - Libart
-@@ -29,7 +32,9 @@
- Name[sv]=KSVG-uppritningsmodul - konstbibliotek
- Name[uk]=Інтерфейс відтворення KSVG - Libart
+ Name[da]=Bagende til KSVG-visning - Libart
+@@ -36,6 +37,7 @@
  Name[xx]=xxKSVG Rendering Backend - Libartxx
-+Name[zh_CN]=KSVG 渲染后端 - Libart
+ Name[zh_CN]=KSVG 渲染后端 - Libart
  Comment=Mature ksvg rendering backend
-+Comment[bs]=Zreli ksvg rendering backend
++Comment[ar]=خلفية الرسم لksvg البالغة
+ Comment[bs]=Zreli ksvg rendering backend
  Comment[ca]=Representador madur en segon pla de ksvg
  Comment[cs]=Vyspělý vykreslovací nástroj KSVG
- Comment[cy]=Ôl-wyneb llunio ksvg aeddfed
-@@ -41,7 +46,9 @@
- Comment[fr]=Moteur de rendu ksvg mature
- Comment[hi]=परिपक्व के-एसवीजी रेंडरिंग बैकएण्ड
- Comment[hu]=Egy kiforrott megjelenítőmotor a KSVG-hez
-+Comment[is]=Reyndur ksvg teiknari
- Comment[it]=Maturo backend ksvg per il rendering
-+Comment[ja]=成熟した ksvgバックエンドレンダラー
- Comment[nb]=Velutviklet modul for ksvg-tegning
- Comment[nl]=Volgroeide KSVG weergavecomponent
- Comment[nn]=Velutvikla modul for ksvg-teikning
-@@ -55,4 +62,5 @@
- Comment[sv]=Mogen KSVG-uppritningsmodul
- Comment[uk]=Стабільний інтерфейс відтворення KSVG
- Comment[xx]=xxMature ksvg rendering backendxx
-+Comment[zh_CN]=稳定的 ksvg 渲染后端
- author=Nikolas Zimmermann <wildfox@kde.org>
 diff -urN -x CVS kdegraphics.orig/ksvg/plugin/ksvgplugin.desktop kdegraphics/ksvg/plugin/ksvgplugin.desktop
---- kdegraphics.orig/ksvg/plugin/ksvgplugin.desktop	Fri Jan 16 08:01:34 2004
-+++ kdegraphics/ksvg/plugin/ksvgplugin.desktop	Sat Feb  7 13:44:11 2004
-@@ -7,6 +7,7 @@
- Name[fr]=Module SVG
- Name[hi]=के-एसवीजी-प्लगइन
- Name[hu]=KSVG bővítőmodul
-+Name[is]=KSVGÍforrit
- Name[lv]=KSVGIespraudnis
- Name[pl]=Wtyczka KSVG
- Name[sv]=KSVG-insticksprogram
-diff -urN -x CVS kdegraphics.orig/ksvg/plugin/svgthumbnail.desktop kdegraphics/ksvg/plugin/svgthumbnail.desktop
---- kdegraphics.orig/ksvg/plugin/svgthumbnail.desktop	Fri Jan 16 08:01:36 2004
-+++ kdegraphics/ksvg/plugin/svgthumbnail.desktop	Fri Jan 30 19:03:24 2004
-@@ -31,6 +31,7 @@
- Name[ven]=Dzigirafiki ya vekitha ya Scalable
- Name[xh]=Imizobo elinganiselwayo enesalathisi
- Name[xx]=xxScalable Vector Graphicsxx
-+Name[zh_CN]=可缩放矢量图
- Name[zu]=Imidwebo Enenani Elibalekayo
- MimeTypes=image/svg+xml
- X-KDE-Library=svgthumbnail
+--- kdegraphics.orig/ksvg/plugin/ksvgplugin.desktop	Sun Feb 29 16:28:07 2004
++++ kdegraphics/ksvg/plugin/ksvgplugin.desktop	Mon May  3 15:04:35 2004
+@@ -1,5 +1,6 @@
+ [Desktop Entry]
+ Name=KSVGPlugin
++Name[ar]=برنامج KSVGPlugin
+ Name[ca]=Connector KSVG
+ Name[cy]=AtegynKSVG
+ Name[el]=Πρόσθετο KSVG
+diff -urN -x CVS kdegraphics.orig/kuickshow/src/imagewindow.cpp kdegraphics/kuickshow/src/imagewindow.cpp
+--- kdegraphics.orig/kuickshow/src/imagewindow.cpp	Sun Jan 11 01:30:10 2004
++++ kdegraphics/kuickshow/src/imagewindow.cpp	Wed Apr 14 19:47:55 2004
+@@ -177,12 +177,10 @@
+     new KAction( i18n("Print Image..."), KStdAccel::print(),
+                  this, SLOT( printImage() ),
+                  m_actions, "print_image" );
+-    new KAction( i18n("Save As..."), KStdAccel::save(),
+-                 this, SLOT( saveImage() ),
++    KStdAction::saveAs( this, SLOT( saveImage() ),
+                  m_actions, "save_image_as" );
+ 
+-    new KAction( i18n("Close"), Key_Q,
+-                 this, SLOT( close() ),
++    KStdAction::close( this, SLOT( close() ),
+                  m_actions, "close_image" );
+     // --------
+     new KAction( i18n("More Brightness"), Key_B,
+@@ -273,7 +271,7 @@
+     }
+ 
+     updateCursor();
+-	
++
+     QString caption = i18n( "Filename (Imagewidth x Imageheight)",
+                             "%3 (%1 x %2)" );
+     caption = caption.arg( m_kuim->originalWidth() ).
+@@ -518,7 +516,7 @@
+ 
+     if ( key == Key_Shift )
+         updateCursor( ZoomCursor );
+-	
++
+     if ( key == Key_Escape || KStdAccel::close().contains( KKey( e ) ) )
+         close( true );
+     else if ( KStdAccel::save().contains( KKey( e ) ) )
+@@ -603,7 +601,7 @@
+     }
+ 
+     if ( e->state() & ShiftButton ) {
+-	
++
+ 	if ( !transWidget ) {
+ 	    transWidget = new QWidget( this );
+ 	    transWidget->setGeometry( 0, 0, width(), height() );
+@@ -616,10 +614,10 @@
+  	p.eraseRect( transWidget->rect() );
+ 	transWidget->show();
+ 	qApp->processOneEvent();
+-	
++
+ 	int width  = e->x() - xposPress;
+ 	int height = e->y() - yposPress;
+-	
++
+ 	if ( width < 0 ) {
+ 	    width = abs( width );
+ 	    xzoom = e->x();
+@@ -682,7 +680,7 @@
+     }
+ 
+     if ( yposPress > y ) {
+-	topY = y;	
++	topY = y;
+ 	botY = yposPress;
+     }
+     else {
 diff -urN -x CVS kdegraphics.orig/kuickshow/src/kuickshow.desktop kdegraphics/kuickshow/src/kuickshow.desktop
---- kdegraphics.orig/kuickshow/src/kuickshow.desktop	Wed Jan 14 08:49:28 2004
-+++ kdegraphics/kuickshow/src/kuickshow.desktop	Sat Feb  7 13:44:13 2004
-@@ -43,6 +43,7 @@
- GenericName[hi]=चित्र प्रदर्शक
+--- kdegraphics.orig/kuickshow/src/kuickshow.desktop	Mon Mar 29 15:01:55 2004
++++ kdegraphics/kuickshow/src/kuickshow.desktop	Sun Apr 25 01:23:02 2004
+@@ -25,7 +25,7 @@
+ GenericName[ar]=عارض صور
+ GenericName[bg]=Преглед на изображения
+ GenericName[bs]=Preglednik slika
+-GenericName[ca]=Visualitzador de imatges
++GenericName[ca]=Visualitzador d'imatges
+ GenericName[cs]=Prohlížeč obrázků
+ GenericName[cy]=Gwelydd Delweddau
+ GenericName[da]=Billedfremviser
+@@ -40,7 +40,7 @@
+ GenericName[ga]=Amharcán Íomhánna
+ GenericName[gl]=Visor de imaxes
+ GenericName[he]=מציג תמונות
+-GenericName[hi]=चित्र प्रदर्शक
++GenericName[hi]=छवि प्रदर्शक
  GenericName[hr]=Preglednik slika
  GenericName[hu]=Képnézegető
-+GenericName[is]=Myndaskoðari
- GenericName[it]=Visualizzatore di immagini
- GenericName[ja]=イメージビューア
- GenericName[lo]=ເຄື່ອງມືສະແດງພາບ
-@@ -50,6 +51,7 @@
- GenericName[lv]=Attēlu Skatītājs
- GenericName[mt]=Werrej tal-istampi
- GenericName[nb]=Bildefremviser
-+GenericName[nds]=Bildkieker
- GenericName[nl]=Afbeeldingenweergaveprogramma
- GenericName[nn]=Biletvisar
- GenericName[nso]=Molebeledi wa Ponagalo
-@@ -64,6 +66,7 @@
- GenericName[sr]=Приказивач слика
- GenericName[ss]=Sibuki semfanekiso
- GenericName[sv]=Bildvisare
-+GenericName[tg]=Намоишдиҳандаи тасвир
- GenericName[th]=เครื่องมือแสดงภาพ
- GenericName[tr]=Resim Göstericisi
- GenericName[uk]=Переглядач зображень
+ GenericName[is]=Myndaskoðari
 diff -urN -x CVS kdegraphics.orig/kview/config/kview.setdlg kdegraphics/kview/config/kview.setdlg
---- kdegraphics.orig/kview/config/kview.setdlg	Fri Jan 16 08:01:38 2004
-+++ kdegraphics/kview/config/kview.setdlg	Sat Feb  7 13:44:15 2004
+--- kdegraphics.orig/kview/config/kview.setdlg	Mon Mar 29 15:01:57 2004
++++ kdegraphics/kview/config/kview.setdlg	Mon May  3 15:04:37 2004
 @@ -1,5 +1,6 @@
  [Viewer]
  Name=Viewer
-+Name[bs]=Preglednik
++Name[ar]=العارض
+ Name[bs]=Preglednik
  Name[ca]=Visualitzador
  Name[cs]=Prohlížeč
- Name[cy]=Gwelydd
-@@ -13,7 +14,9 @@
- Name[gl]=Visor
- Name[hi]=प्रदर्शक
- Name[hu]=Nézegető
-+Name[is]=Birtir
- Name[it]=Visualizzatore
-+Name[ja]=ビューア
- Name[nb]=Fremviser
- Name[nl]=Weergaveprogramma
- Name[nn]=Framvisar
-@@ -30,8 +33,10 @@
- Name[uz]=Кўрувчи
- Name[wa]=Håyneu
+@@ -37,6 +38,7 @@
  Name[xx]=xxViewerxx
-+Name[zh_CN]=查看器
+ Name[zh_CN]=查看器
  Comment=This is the configuration for the part of KView that can be reused by other applications (meaning that the settings will also affect the KView part that gets embedded into Konqueror or other applications).
++Comment[ar]=هذه الإعدادات هي لجزء برنامج KView الذي يدمج في داخل متصفح Konqueror والبرامج الأخرى
  Comment[bg]=Конфигуриране на модулите на KView, които могат да бъдат използвани в другите програми. Това означава, че настройките ще имат ефект навсякъде, където се използва съответния модул.
-+Comment[bs]=Ovo je konfiguracija dijela KView-a kojeg mogu koristiti druge aplikacije (što znači da će se ove postavke takođe odraziti na KView dio koji se ugrađuje u Konqueror i druge aplikacije).
+ Comment[bs]=Ovo je konfiguracija dijela KView-a kojeg mogu koristiti druge aplikacije (što znači da će se ove postavke takođe odraziti na KView dio koji se ugrađuje u Konqueror i druge aplikacije).
  Comment[ca]=Aquesta és la configuració de la part de KView que es pot reutilitzar per altres aplicacions (vol dir que els paràmetres també afectaran la part KView que està incrustada dins el Konqueror o altres aplicacions).
- Comment[cs]=Toto je konfigurace komponenty KView, kterou lze použít v jiným aplikacích. To znamená, že nastavení ovlivní také aplikace, které tuto komponentu používají, např. Konqueror.
- Comment[da]=Dette er indstillingen for den del af KView der kan genbruges af andre programmer (hvilket detyder at opsætningen også vil påvirke den KView part der bliver indlejret i Konqueror eller andre programmer).
-@@ -43,7 +48,9 @@
- Comment[fr]=C'est la configuration pour la partie de KView qui peut être réutilisée par les autres applications (ce qui signifie que les réglages affecteront aussi le composant KView qui est intégré dans Konqueror ou les autres applications).
- Comment[gl]=Esta é a configuración para as partes de KView que poden ser rempregadas por otras aplicacións (Isto é que as configuracións que afectán a KView tamén o farán coa parte deste integrada en Konqueror ou noutras aplicaccións).
- Comment[hu]=Ezek a KView beágyazható, más alkalmazásokban felhasználható változatának beállításai (tehát a beállítások kihatással vannak a Konquerorba és más alkalmazásokba beágyazott megjelenítőkre).
-+Comment[is]=Þetta eru stillingar þess hluta KView sem önnur forrit geta notað (sem þýðir að þessar stillingar hafa einnig áhrif á KView hlutann sem er byggður inn í Konqueror og önnur forrit).
- Comment[it]=Questa è la configurazione per il componente di KView riutilizzabile da altre applicazioni (significa che le impostazioni avranno effetto per il componente KView integrabile in Konqueror o altre applicazioni).
-+Comment[ja]=これは他のアプリケーションでも利用される、KViewの（一部分の）設定です。（この設定はKonquerorや他のアプリケーションに埋め込まれているKViewに影響を与えることを意味します）
- Comment[nb]=Dette er oppsettet av den delen av KView som kan gjenbrukes i andre programmer. (Innstillingene her vil påvirke den KView-modulen som blir bygd inn i Konqueror eller andre programmer.)
- Comment[nl]=Dit zijn de instellingen van het onderdeel van KView dat ook door andere toepassingen gebruikt kan worden. Deze instellingen betreffen dus ook de KView Part zoals die in Konqueror of andere toepassingen kan worden ingebed.
- Comment[nn]=Dette er oppsettet av den delen av KView som kan brukast opp att i andre program. (Innstillingane her vil påverka den KView-modulen som vert bygd inn i Konqueror eller andre program.)
-@@ -57,6 +64,7 @@
- Comment[sv]=Det här är inställningen av den del av Kview som kan återanvändas av flera program (vilket betyder att inställningarna också påverkar Kview-delen som bäddas in i Konqueror eller andra program).
- Comment[uk]=Це параметри складової KView, які можуть бути використані багатьма програмами (тобто, зміни значеннь цих параметрів будуть впливати на складову KView вмонтовану у Konqueror та інші програми).
- Comment[xx]=xxThis is the configuration for the part of KView that can be reused by other applications (meaning that the settings will also affect the KView part that gets embedded into Konqueror or other applications).xx
-+Comment[zh_CN]=这是可被其它应用程序重用的 KView 部分的配置(这意味着，这里的设置也会影响嵌入到 Konqueror 或其它应用程序中的 KView 部分)。
+@@ -72,7 +74,7 @@
  Weight=1
  [Application]
  Name=Application
-@@ -88,7 +96,7 @@
- Name[mk]=Апликација
- Name[mt]=Programm
- Name[nb]=Program
--Name[nl]=Applicatie
-+Name[nl]=Toepassing
- Name[nn]=Program
- Name[pl]=Aplikacja
- Name[pt]=Aplicação
-@@ -107,9 +115,11 @@
- Name[wa]=Programe
- Name[xh]=Isicelo
- Name[xx]=xxApplicationxx
-+Name[zh_CN]=应用程序
+-Name[ar]=تطبيق
++Name[ar]=التطبيق
+ Name[az]=Proqram
+ Name[bg]=Програма
+ Name[br]=Arload
+@@ -123,6 +125,7 @@
+ Name[zh_CN]=应用程序
  Name[zu]=Isicelo
  Comment=Here you can set options that are special for the KView application when running stand-alone. What you change in here will not affect other applications.
++Comment[ar]=هنا يمكنك اختار الاختيارات الخاصة بتطبيق KView المستقل. أي تغيير هنا لن يؤثر على التطبيقات الأخرى.
  Comment[bg]=Конфигуриране на самостоятелната програма KView. Това означава, че настройките ще имат ефект само за програмата KView и останалите програми, които ползват модулите и, няма да бъдат повлияни.
-+Comment[bs]=Ovdje možete podesiti opcije koje su specifične za KView samostalnu aplikaciju. Ono što ovdje promijenite se neće odraziti na druge aplikacije.
+ Comment[bs]=Ovdje možete podesiti opcije koje su specifične za KView samostalnu aplikaciju. Ono što ovdje promijenite se neće odraziti na druge aplikacije.
  Comment[ca]=Aquí podeu establir les opcions específiques de l'aplicació KView quan s'executa autonomament. El que es canviï aquí no afectarà a les altres aplicacions.
- Comment[cs]=Zde vidíte možnosti, které jsou specifické pro samostatnou aplikaci KView. Změny zde neovlivní ostatní aplikace.
- Comment[cy]=Yma gallwch osod dewisiadau sy'n arbennig i'r cymhwysiad KGweld tra'n rhedeg yn arunigol.  Ni fydd y newidiadau a wneir yma yn effeithio cymwysiadau eraill.
-@@ -122,7 +132,8 @@
- Comment[fr]=Ici, vous pouvez déterminer les options spéciales pour l'application KView lorsqu'elle fonctionne isolément. Ce que vous changez ici n'affectera pas les autres applications.
- Comment[gl]=Elixe aqui as opcións especiais para KView cando funciona por si mesma. O que cambies neste lugar non afectara a outras aplicacións.
- Comment[hu]=Itt a KView önállóan futtatható változatára érvényes beállításokat lehet módosítani. Ezek a beállítások tehát nem befolyásolják más alkalmazások működését.
--Comment[it]==Qui puoi impostare le opzioni che riguardano l'applicazione KView quando è eseguita da sola. Quello che cambi qui non ha effetto in altre applicazioni.
-+Comment[is]=Hér getur þú stillt eiginleika KView forritsins þegar það keyrir eitt og sér.  Stillingar hér hafa engin áhrif á önnur forrit.
-+Comment[ja]=ここではスタンドアロンで実行されるKView用のオプションを設定できます。ここでの変更は他のアプリケーションに影響を及ぼしません。
- Comment[nb]=Her finner du innstillinger som bare påvirker KView som frittstående program. Disse innstillingene har ingenting å si for andre programmer.
- Comment[nl]=Deze instellingen gelden alleen voor de KView-toepassing op zichzelf. Wat u hier instelt heeft geen invloed op andere toepassingen.
- Comment[nn]=Her finn du innstillingar som berre påverkar KView som frittståande program. Desse innstillingane har ingenting å seia for andre program.
-@@ -136,4 +147,5 @@
- Comment[sv]=Här kan du ställa in alternativ som bara gäller för Kview-programmet när det körs själv. Det du ändrar här påverkar inte andra program.
- Comment[uk]=Тут Ви можете встановити значення параметрів для програми KView, коли вона виконується окремо. Зміни тут не будуть впливати на інші програми.
- Comment[xx]=xxHere you can set options that are special for the KView application when running stand-alone. What you change in here will not affect other applications.xx
-+Comment[zh_CN]=您可在此设定 KView 应用程序以独立形式运行时的特殊选项。您在此所在的更改不会影响其它应用程序。
- Weight=5
 diff -urN -x CVS kdegraphics.orig/kview/config/kviewgeneralconfig.desktop kdegraphics/kview/config/kviewgeneralconfig.desktop
---- kdegraphics.orig/kview/config/kviewgeneralconfig.desktop	Fri Jan 16 08:01:40 2004
-+++ kdegraphics/kview/config/kviewgeneralconfig.desktop	Sat Feb  7 13:44:17 2004
-@@ -41,7 +41,7 @@
- Name[mk]=Апликација
- Name[mt]=Programm
- Name[nb]=Program
--Name[nl]=Applicatie
-+Name[nl]=Toepassing
- Name[nn]=Program
- Name[pl]=Aplikacja
- Name[pt]=Aplicação
-@@ -60,9 +60,11 @@
- Name[wa]=Programe
- Name[xh]=Isicelo
- Name[xx]=xxApplicationxx
-+Name[zh_CN]=应用程序
+--- kdegraphics.orig/kview/config/kviewgeneralconfig.desktop	Fri Mar  5 13:51:20 2004
++++ kdegraphics/kview/config/kviewgeneralconfig.desktop	Mon May  3 15:04:39 2004
+@@ -13,7 +13,7 @@
+ X-KDE-CfgDlgHierarchy=Application
+ 
+ Name=Application
+-Name[ar]=تطبيق
++Name[ar]=التطبيق
+ Name[az]=Proqram
+ Name[bg]=Програма
+ Name[br]=Arload
+@@ -64,6 +64,7 @@
+ Name[zh_CN]=应用程序
  Name[zu]=Isicelo
  Comment=Configuration for the standalone Version of KView
++Comment[ar]=اعدادات الاصدار المستقل من KView
  Comment[bg]=Настройки на самостоятелната програма KView
-+Comment[bs]=Postavke za samostalnu verziju KView
+ Comment[bs]=Postavke za samostalnu verziju KView
  Comment[ca]=Configuració per a la versió independent de KView
- Comment[cs]=Nastavení samostatné verze KView
- Comment[cy]=Ffurfweddiad ar gyfer y fersiwn arunigol o KGweld
-@@ -75,7 +77,9 @@
+@@ -76,7 +77,7 @@
+ Comment[fi]=Asetukset itsenäiselle versiolle KView ohjelmasta
+ Comment[fr]=Configuration de la version isolée de KView
  Comment[gl]=Configuración para a versión "standalone" of KView
- Comment[hi]= के-व्यू के स्टैण्डएलोन संस्करण हेतु कॉन्फिगरेशन
+-Comment[hi]= के-व्यू के स्टैण्डएलोन संस्करण हेतु कॉन्फिगरेशन
++Comment[hi]= के-व्यू के स्टैण्डएलोन संस्करण हेतु कॉन्फ़िगरेशन
  Comment[hu]=A KView önállóan futtatható verziójának beállításai
-+Comment[is]=Stillingar fyrir KView
+ Comment[is]=Stillingar fyrir KView
  Comment[it]=Configurazione per KView
-+Comment[ja]=スタンドアロンバージョンのKViewの設定
- Comment[nb]=Oppsett av den frittstående utgaven av KView
- Comment[nl]=Instellingen voor KView op zichzelf
- Comment[nn]=Oppsett av den frittståande utgåva av KView
-@@ -89,3 +93,4 @@
- Comment[sv]=Inställning för fristående version av Kview
- Comment[uk]=Налаштування KView, як окреиої програми
- Comment[xx]=xxConfiguration for the standalone Version of KViewxx
-+Comment[zh_CN]=KView 标准版本的配置
 diff -urN -x CVS kdegraphics.orig/kview/config/plugins/kviewpluginsconfig.desktop kdegraphics/kview/config/plugins/kviewpluginsconfig.desktop
---- kdegraphics.orig/kview/config/plugins/kviewpluginsconfig.desktop	Fri Jan 16 08:01:42 2004
-+++ kdegraphics/kview/config/plugins/kviewpluginsconfig.desktop	Sat Feb  7 13:44:19 2004
-@@ -29,6 +29,7 @@
- Name[hi]=प्लगइन्स
- Name[hr]=Umetci
- Name[hu]=Bővítőmodulok
-+Name[is]=Íforrit
- Name[it]=Plugin
- Name[ja]=プラグイン
- Name[lo]=ລງບ
-@@ -43,14 +44,16 @@
- Name[sr]=Додаци
- Name[ss]=Ema- Plugin
- Name[sv]=Insticksprogram
--Name[tg]=Модульҳо
-+Name[tg]=Мутассалкунандаҳо
- Name[tr]=Eklentiler
- Name[uk]=Втулки
- Name[uz]=Плагинлар
- Name[wa]=Tchôke-divins
+--- kdegraphics.orig/kview/config/plugins/kviewpluginsconfig.desktop	Fri Mar  5 13:51:22 2004
++++ kdegraphics/kview/config/plugins/kviewpluginsconfig.desktop	Mon May  3 15:04:41 2004
+@@ -13,6 +13,7 @@
+ X-KDE-CfgDlgHierarchy=Application
+ 
+ Name=Plugins
++Name[ar]=البرامج المساعدة
+ Name[be]=Дапаўненьні
+ Name[bg]=Приставки
+ Name[bs]=Dodaci
+@@ -54,6 +55,7 @@
  Name[xx]=xxPluginsxx
-+Name[zh_CN]=插件
+ Name[zh_CN]=插件
  Comment=Choose and configure your plugins:
++Comment[ar]=اختيار وإعداد برامجك المساعدة
  Comment[bg]=Избор и конфигуриране на приставки:
-+Comment[bs]=Izaberite i podesite vaše dodatke:
+ Comment[bs]=Izaberite i podesite vaše dodatke:
  Comment[ca]=Escolliu i configureu els connectors:
- Comment[cs]=Zvolte a nastavte si moduly:
- Comment[cy]=Dewis a ffurfweddu eich ategion:
-@@ -64,7 +67,9 @@
+@@ -67,7 +69,7 @@
+ Comment[fi]=Valitse ja muokkaa liitännäisten asetuksia:
+ Comment[fr]=Choisir et configurer vos modules externes
  Comment[gl]=Elixe e configura os plugins:
- Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फिगर करें:
+-Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फिगर करें:
++Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फ़िगर करें:
  Comment[hu]=A bővítőmodulok beállítása:
-+Comment[is]=Velja og stilla íforrit:
+ Comment[is]=Velja og stilla íforrit:
  Comment[it]=Scegli e configura i tuoi plugin:
-+Comment[ja]=設定するプラグインを選択します：
- Comment[nb]=Velg og sett opp programtilleggene:
- Comment[nl]=Kies hier de gewenste plug-ins en stel ze in:
- Comment[nn]=Vel og set opp programtillegga:
-@@ -80,3 +85,4 @@
- Comment[uk]=Виберіть на налаштуйте Ваші втулки:
- Comment[uz]=Плагинларни танлаш ва мослаш:
- Comment[xx]=xxChoose and configure your plugins:xx
-+Comment[zh_CN]=选择并配置您的插件：
 diff -urN -x CVS kdegraphics.orig/kview/kimageviewer/kimageviewer.desktop kdegraphics/kview/kimageviewer/kimageviewer.desktop
---- kdegraphics.orig/kview/kimageviewer/kimageviewer.desktop	Sat Jan 10 08:18:22 2004
-+++ kdegraphics/kview/kimageviewer/kimageviewer.desktop	Sat Feb  7 13:44:21 2004
-@@ -22,6 +22,7 @@
- Comment[hi]=एम्बेडेबल चित्र प्रदर्शक अवयव
+--- kdegraphics.orig/kview/kimageviewer/kimageviewer.desktop	Sun Feb 29 16:28:19 2004
++++ kdegraphics/kview/kimageviewer/kimageviewer.desktop	Mon May  3 15:04:43 2004
+@@ -4,9 +4,10 @@
+ X-KDE-Derived=KParts/ReadWritePart
+ Comment=Embeddable Image Viewer Component
+ Comment[af]=Inlegbare Beeld Aansig Komponent
++Comment[ar]=مكون عارض الصور القابل للدمج
+ Comment[bg]=Модул за преглед на изображения
+ Comment[bs]=Ugradiva komponenta za pregled slika
+-Comment[ca]=Component visualitzador de imatges encastable
++Comment[ca]=Component visualitzador d'imatges encastable
+ Comment[cs]=Komponenta pro zobrazování obrázků
+ Comment[cy]=Cydran Mewnadeiladadwy Gwelydd Delweddau
+ Comment[da]=Indlejrbar billedviserkomponent
+@@ -19,7 +20,7 @@
+ Comment[fr]=Composant afficheur d'images incorporable
+ Comment[gl]=Componente de visualización integrable
+ Comment[he]=רכיב מציג תמונות בר-הטבעה
+-Comment[hi]=एम्बेडेबल चित्र प्रदर्शक अवयव
++Comment[hi]=एम्बेडेबल छवि प्रदर्शक अवयव
  Comment[hr]=Umetljiva komponenta za gledanje slika
  Comment[hu]=Beágyazható képnézegető komponens
-+Comment[is]=Ívefjanleg myndsjá
- Comment[it]=Componente integrabile per la visualizzazione di immagini
- Comment[ja]=埋め込み可能なイメージビューアコンポーネント
- Comment[lt]=Įdedamas piešinių peržiūros komponentas
+ Comment[is]=Ívefjanleg myndsjá
 diff -urN -x CVS kdegraphics.orig/kview/kimageviewer/kimageviewercanvas.desktop kdegraphics/kview/kimageviewer/kimageviewercanvas.desktop
---- kdegraphics.orig/kview/kimageviewer/kimageviewercanvas.desktop	Sat Jan 10 08:18:24 2004
-+++ kdegraphics/kview/kimageviewer/kimageviewercanvas.desktop	Sat Feb  7 13:44:23 2004
-@@ -19,6 +19,7 @@
- Comment[hi]=एम्बेडेबल चित्र प्रदर्शक केनवास (विजेट जो चित्र दिखाता है)
+--- kdegraphics.orig/kview/kimageviewer/kimageviewercanvas.desktop	Sun Feb 29 16:28:21 2004
++++ kdegraphics/kview/kimageviewer/kimageviewercanvas.desktop	Mon May  3 15:04:45 2004
+@@ -3,9 +3,10 @@
+ X-KDE-ServiceType=KImageViewer/Canvas
+ Comment=Embeddable Image Viewer Canvas (widget that shows an image)
+ Comment[af]=Inlegbare Beeld Aansig Kanvas (gui-element wat vertoon 'n Beeld)
++Comment[ar]= مساحة رسم لعرض الصور قابلة للدمج (كائن يعرض صورة)
+ Comment[bg]=Модул за преглед на изображения (полето, в което се показва самото изображение)
+ Comment[bs]=Ugradiva pozadina za pregled slika (grafički element koji prikazuje slike)
+-Comment[ca]=Llenç visualitzador de imatges encastable (estri que mostra una imatge)
++Comment[ca]=Llenç visualitzador d'imatges encastable (estri que mostra una imatge)
+ Comment[cs]=Pohltitelná komponenta pro zobrazování obrázků
+ Comment[cy]=Cynfas Mewnadeiladadwy Gwelydd Delweddau (celfigyn sy'n dangos delwedd)
+ Comment[da]=Indlejrbar billedviserlærred (kontrol der viser et billede)
+@@ -16,7 +17,7 @@
+ Comment[fi]=Upotettava kuviennäyttökomponentti (komponentti joka näyttää kuvan)
+ Comment[fr]=Composant afficheur d'images incorporable (widget qui affiche une image)
+ Comment[he]=רכיב מציג תמונות בר-הטבעה (פריט המציג תמונה)
+-Comment[hi]=एम्बेडेबल चित्र प्रदर्शक केनवास (विजेट जो चित्र दिखाता है)
++Comment[hi]=एम्बेडेबल छवि प्रदर्शक केनवास (विजेट जो छवि दिखाता है)
  Comment[hr]=Umetljivo platno za pregled slika (widget koji pokazuje sliku)
  Comment[hu]=Beágyazható képnézegető objektum (képmegjelenítő)
-+Comment[is]=Ívefjanleg myndsjá (græja sem birtir mynd)
- Comment[it]=Componente integrabile per la visualizzazione di immagini (widget che mostra un'immagine)
- Comment[ja]=埋め込み可能なイメージビューアキャンバス (画像を表示するウィジェット)
- Comment[lt]=Įdedamas piešinių peržiūros paveikslas (valdiklis, kuris rodo paveikslėlį)
+ Comment[is]=Ívefjanleg myndsjá (græja sem birtir mynd)
 diff -urN -x CVS kdegraphics.orig/kview/kview.desktop kdegraphics/kview/kview.desktop
---- kdegraphics.orig/kview/kview.desktop	Thu Jan 15 08:57:57 2004
-+++ kdegraphics/kview/kview.desktop	Sat Feb  7 13:44:25 2004
-@@ -30,6 +30,7 @@
- GenericName[hi]=चित्र प्रदर्शक
+--- kdegraphics.orig/kview/kview.desktop	Mon Mar 29 15:01:59 2004
++++ kdegraphics/kview/kview.desktop	Mon May  3 15:04:47 2004
+@@ -13,7 +13,7 @@
+ GenericName[ar]=عارض صور
+ GenericName[bg]=Преглед на изображения
+ GenericName[bs]=Preglednik slika
+-GenericName[ca]=Visualitzador de imatges
++GenericName[ca]=Visualitzador d'imatges
+ GenericName[cs]=Prohlížeč obrázků
+ GenericName[cy]=Gwelydd Delweddau
+ GenericName[da]=Billedfremviser
+@@ -28,7 +28,7 @@
+ GenericName[ga]=Amharcán Íomhánna
+ GenericName[gl]=Visor de imaxes
+ GenericName[he]=מציג תמונות
+-GenericName[hi]=चित्र प्रदर्शक
++GenericName[hi]=छवि प्रदर्शक
  GenericName[hr]=Preglednik slika
  GenericName[hu]=Képnézegető
-+GenericName[is]=Myndaskoðari
- GenericName[it]=Visualizzatore di immagini
- GenericName[ja]=イメージビューア
- GenericName[lo]=ເຄື່ອງມືສະແດງພາບ
-@@ -37,6 +38,7 @@
- GenericName[lv]=Attēlu Skatītājs
- GenericName[mt]=Werrej tal-istampi
- GenericName[nb]=Bildefremviser
-+GenericName[nds]=Bildkieker
- GenericName[nl]=Afbeeldingenweergaveprogramma
- GenericName[nn]=Biletvisar
- GenericName[nso]=Molebeledi wa Ponagalo
-@@ -51,6 +53,7 @@
- GenericName[sr]=Приказивач слика
- GenericName[ss]=Sibuki semfanekiso
- GenericName[sv]=Bildvisare
-+GenericName[tg]=Намоишдиҳандаи тасвир
- GenericName[th]=เครื่องมือแสดงภาพ
- GenericName[tr]=Resim Göstericisi
- GenericName[uk]=Переглядач зображень
+ GenericName[is]=Myndaskoðari
+@@ -69,7 +69,7 @@
+ MimeType=image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/x-bmp;image/png;image/x-ico;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-greymap;image/tiff;image/jp2
+ Name=KView
+ Name[af]=K-bekyk
+-Name[ar]=كفيو
++Name[ar]=برنامج KView
+ Name[cy]=KGweld
+ Name[eo]=Rigardilo
+ Name[hi]=के-व्यू
 diff -urN -x CVS kdegraphics.orig/kview/kviewcanvas/config/kviewcanvasconfig.desktop kdegraphics/kview/kviewcanvas/config/kviewcanvasconfig.desktop
---- kdegraphics.orig/kview/kviewcanvas/config/kviewcanvasconfig.desktop	Fri Jan 16 08:01:44 2004
-+++ kdegraphics/kview/kviewcanvas/config/kviewcanvasconfig.desktop	Sat Feb  7 13:44:27 2004
+--- kdegraphics.orig/kview/kviewcanvas/config/kviewcanvasconfig.desktop	Sun Feb 29 16:28:25 2004
++++ kdegraphics/kview/kviewcanvas/config/kviewcanvasconfig.desktop	Mon May  3 15:04:49 2004
 @@ -13,6 +13,7 @@
  X-KDE-CfgDlgHierarchy=Viewer
  
  Name=Viewer
-+Name[bs]=Preglednik
++Name[ar]=العارض
+ Name[bs]=Preglednik
  Name[ca]=Visualitzador
  Name[cs]=Prohlížeč
- Name[cy]=Gwelydd
-@@ -26,7 +27,9 @@
- Name[gl]=Visor
- Name[hi]=प्रदर्शक
- Name[hu]=Nézegető
-+Name[is]=Birtir
- Name[it]=Visualizzatore
-+Name[ja]=ビューア
- Name[nb]=Fremviser
- Name[nl]=Weergaveprogramma
- Name[nn]=Framvisar
-@@ -43,8 +46,10 @@
- Name[uz]=Кўрувчи
- Name[wa]=Håyneu
+@@ -50,6 +51,7 @@
  Name[xx]=xxViewerxx
-+Name[zh_CN]=查看器
+ Name[zh_CN]=查看器
  Comment=General KViewCanvas Configuration
++Comment[ar]=اعدادات KViewCanvas العامة
  Comment[bg]=Общи настройки на KViewCanvas
-+Comment[bs]=Opšte KViewCanvas postavke
+ Comment[bs]=Opšte KViewCanvas postavke
  Comment[ca]=Configuració general de KViewCanvas
- Comment[cs]=Obecné nastavení KView
- Comment[cy]=Ffurfweddiad Cyffredinol KGweldCynfas
-@@ -58,7 +63,9 @@
+@@ -63,7 +65,7 @@
+ Comment[fi]=Yleiset KViewCanvas asetukset
+ Comment[fr]=Configuration générale de KViewCanvas
  Comment[gl]=Configuración xeral dos lenzos de KView
- Comment[hi]=सामान्य के-व्यू-केनवास कॉन्फिगरेशन
+-Comment[hi]=सामान्य के-व्यू-केनवास कॉन्फिगरेशन
++Comment[hi]=सामान्य के-व्यू-केनवास कॉन्फ़िगरेशन
  Comment[hu]=A KViewCanvas általános beállításai
-+Comment[is]=Almennar stillingar KViewCanvas
+ Comment[is]=Almennar stillingar KViewCanvas
  Comment[it]=Configurazione generale per KViewCanvas
-+Comment[ja]=KViewCanvasの一般的な設定
- Comment[nb]=Generelt oppsett av KViewCanvas
- Comment[nl]=Algemene KViewCanvas instellingen
- Comment[nn]=Generelt oppsett av KViewCanvas
-@@ -72,3 +79,4 @@
- Comment[sv]=Allmän inställning av Kviews duk
- Comment[uk]=Загальні параметри KViewCanvas
- Comment[xx]=xxGeneral KViewCanvas Configurationxx
-+Comment[zh_CN]=KViewCanvas 常规配置
 diff -urN -x CVS kdegraphics.orig/kview/kviewcanvas/kviewcanvas.desktop kdegraphics/kview/kviewcanvas/kviewcanvas.desktop
---- kdegraphics.orig/kview/kviewcanvas/kviewcanvas.desktop	Thu Jan 15 08:57:59 2004
-+++ kdegraphics/kview/kviewcanvas/kviewcanvas.desktop	Sat Feb  7 13:44:29 2004
-@@ -19,6 +19,7 @@
- Name[hi]=के-व्यू चित्र प्रदर्शक विजेट
+--- kdegraphics.orig/kview/kviewcanvas/kviewcanvas.desktop	Sun Feb 29 16:28:27 2004
++++ kdegraphics/kview/kviewcanvas/kviewcanvas.desktop	Mon May  3 15:04:51 2004
+@@ -2,8 +2,9 @@
+ Type=Service
+ Name=KView Image Viewer Widget
+ Name[af]=K-bekyk Beeld Aansig Gui-element
++Name[ar]=كائن عارض الصور KView 
+ Name[bs]=KView predglednik slika - grafički element
+-Name[ca]=Estri visualitzador de imatges KView
++Name[ca]=Estri visualitzador d'imatges KView
+ Name[cs]=Komponenta prohlížeče obrázků KView
+ Name[cy]=Celfigyn Gwelydd Delweddau KGweld
+ Name[da]=KView-billedviserkontrol
+@@ -16,7 +17,7 @@
+ Name[fr]=Widget visualisateur d'images KView
+ Name[gl]=Widget do Visor de Imaxes KView
+ Name[he]=פריט מציג תמונות ל-KView
+-Name[hi]=के-व्यू चित्र प्रदर्शक विजेट
++Name[hi]=के-व्यू छवि प्रदर्शक विजेट
  Name[hr]=KView widget za pregled slika
  Name[hu]=KView képnézegető grafikus elem
-+Name[is]=KView myndbirtigræja
- Name[it]=Widget visualizzatore immagini KView
- Name[ja]=KView イメージビューアウィジェット
- Name[lt]=KView paveikslėlių žiūriklio valdiklis
+ Name[is]=KView myndbirtigræja
 diff -urN -x CVS kdegraphics.orig/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop kdegraphics/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop
---- kdegraphics.orig/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	Fri Jan 16 08:01:46 2004
-+++ kdegraphics/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	Sat Feb  7 13:44:31 2004
-@@ -29,6 +29,7 @@
- Name[hi]=प्लगइन्स
- Name[hr]=Umetci
- Name[hu]=Bővítőmodulok
-+Name[is]=Íforrit
- Name[it]=Plugin
- Name[ja]=プラグイン
- Name[lo]=ລງບ
-@@ -43,14 +44,16 @@
- Name[sr]=Додаци
- Name[ss]=Ema- Plugin
- Name[sv]=Insticksprogram
--Name[tg]=Модульҳо
-+Name[tg]=Мутассалкунандаҳо
- Name[tr]=Eklentiler
- Name[uk]=Втулки
- Name[uz]=Плагинлар
- Name[wa]=Tchôke-divins
+--- kdegraphics.orig/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	Fri Mar  5 13:51:26 2004
++++ kdegraphics/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	Mon May  3 15:04:53 2004
+@@ -13,6 +13,7 @@
+ X-KDE-CfgDlgHierarchy=Viewer
+ 
+ Name=Plugins
++Name[ar]=البرامج المساعدة
+ Name[be]=Дапаўненьні
+ Name[bg]=Приставки
+ Name[bs]=Dodaci
+@@ -54,6 +55,7 @@
  Name[xx]=xxPluginsxx
-+Name[zh_CN]=插件
+ Name[zh_CN]=插件
  Comment=Choose and configure your plugins:
++Comment[ar]=اختيار وإعداد برامجك المساعدة
  Comment[bg]=Избор и конфигуриране на приставки:
-+Comment[bs]=Izaberite i podesite vaše dodatke:
+ Comment[bs]=Izaberite i podesite vaše dodatke:
  Comment[ca]=Escolliu i configureu els connectors:
- Comment[cs]=Zvolte a nastavte si moduly:
- Comment[cy]=Dewis a ffurfweddu eich ategion:
-@@ -64,7 +67,9 @@
+@@ -67,7 +69,7 @@
+ Comment[fi]=Valitse ja muokkaa liitännäisten asetuksia:
+ Comment[fr]=Choisir et configurer vos modules externes
  Comment[gl]=Elixe e configura os plugins:
- Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फिगर करें:
+-Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फिगर करें:
++Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फ़िगर करें:
  Comment[hu]=A bővítőmodulok beállítása:
-+Comment[is]=Velja og stilla íforrit:
+ Comment[is]=Velja og stilla íforrit:
  Comment[it]=Scegli e configura i tuoi plugin:
-+Comment[ja]=設定するプラグインを選択します：
- Comment[nb]=Velg og sett opp programtilleggene:
- Comment[nl]=Kies hier de gewenste plug-ins en stel ze in:
- Comment[nn]=Vel og set opp programtillegga:
-@@ -80,3 +85,4 @@
- Comment[uk]=Виберіть на налаштуйте Ваші втулки:
- Comment[uz]=Плагинларни танлаш ва мослаш:
- Comment[xx]=xxChoose and configure your plugins:xx
-+Comment[zh_CN]=选择并配置您的插件：
 diff -urN -x CVS kdegraphics.orig/kview/kviewviewer/kviewviewer.desktop kdegraphics/kview/kviewviewer/kviewviewer.desktop
---- kdegraphics.orig/kview/kviewviewer/kviewviewer.desktop	Fri Jan 16 08:01:48 2004
-+++ kdegraphics/kview/kviewviewer/kviewviewer.desktop	Sat Feb  7 13:44:33 2004
-@@ -20,6 +20,7 @@
- Comment[hi]=केडीई चित्र प्रदर्शक पार्ट
+--- kdegraphics.orig/kview/kviewviewer/kviewviewer.desktop	Mon Mar 29 15:02:01 2004
++++ kdegraphics/kview/kviewviewer/kviewviewer.desktop	Mon May  3 15:04:55 2004
+@@ -3,8 +3,9 @@
+ Icon=kview
+ Comment=KDE Image Viewer Part
+ Comment[af]=Kde Beeld Aansig Deel
++Comment[ar]=عارض جزء الصور ل KDE
+ Comment[bs]=KDE Part - Preglednik slika
+-Comment[ca]=Peça de KDE visualitzadora de imatges
++Comment[ca]=Peça de KDE visualitzadora d'imatges
+ Comment[cs]=Komponenta prohlížeče obrázků KDE
+ Comment[cy]=Rhan Gwelydd Delweddau KDE 
+ Comment[da]=KDE Billedviserdel
+@@ -17,7 +18,7 @@
+ Comment[fr]=Composant d'affichage d'images de KDE
+ Comment[gl]=Visor de imaxes integrado de KDE
+ Comment[he]=רכיב מציג תמונות ל-KDE
+-Comment[hi]=केडीई चित्र प्रदर्शक पार्ट
++Comment[hi]=केडीई छवि प्रदर्शक पार्ट
  Comment[hr]=KDE komponenta za pregledavanje slika
  Comment[hu]=KDE képnézegető objektum
-+Comment[is]=Myndbirtir KDE
- Comment[it]=Componente KDE per la visualizzazione di immagini
- Comment[ja]=KDEイメージビューアパート
- Comment[lt]=KDE paveikslėlių žiūriklio dalis
-@@ -48,6 +49,7 @@
+ Comment[is]=Myndbirtir KDE
+@@ -51,8 +52,9 @@
  Comment[zu]=Ingxenye Yombukisi Wesithombe se-KDE
  MimeType=image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/x-bmp;image/png;image/x-ico;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-greymap;image/tiff;image/jp2
  Name=KView Image Viewer
-+Name[bs]=KView predglednik slika
- Name[ca]=Estri visualitzador de imatges KView
++Name[ar]=عارض KView للصور
+ Name[bs]=KView predglednik slika
+-Name[ca]=Estri visualitzador de imatges KView
++Name[ca]=Estri visualitzador d'imatges KView
  Name[cs]=Prohlížeč obrázků KView
  Name[cy]=Celfigyn Gwelydd Delweddau KGweld
-@@ -61,7 +63,9 @@
+ Name[da]=KView-billedfremviser
+@@ -63,7 +65,7 @@
+ Name[fi]=KView-kuvakatsoja
+ Name[fr]=Visualisateur d'images KView
  Name[gl]=Visor de imaxes KView
- Name[hi]=के-व्यू चित्र प्रदर्शक
+-Name[hi]=के-व्यू चित्र प्रदर्शक
++Name[hi]=के-व्यू छवि प्रदर्शक
  Name[hu]=KView képnézegető
-+Name[is]=KView myndbirtirinn
+ Name[is]=KView myndbirtirinn
  Name[it]=Visualizzatore immagini KView
-+Name[ja]=KView イメージビューア
- Name[nb]=Bildeviseren KView
- Name[nl]=KView afbeeldingenweergave
- Name[nn]=Biletvisaren KView
-@@ -77,6 +81,7 @@
- Name[uk]=Переглядач зображень KView
- Name[wa]=KView Håyneu d' imådjes
- Name[xx]=xxKView Image Viewerxx
-+Name[zh_CN]=KView 图像查看器
- ServiceTypes=KImageViewer/Viewer,KParts/ReadWritePart,Browser/View
- InitialPreference=3
- X-KDE-Library=libkviewviewer
 diff -urN -x CVS kdegraphics.orig/kview/modules/browser/kviewbrowser.desktop kdegraphics/kview/modules/browser/kviewbrowser.desktop
---- kdegraphics.orig/kview/modules/browser/kviewbrowser.desktop	Thu Jan 15 08:58:03 2004
-+++ kdegraphics/kview/modules/browser/kviewbrowser.desktop	Sat Feb  7 13:44:35 2004
-@@ -30,6 +30,7 @@
+--- kdegraphics.orig/kview/modules/browser/kviewbrowser.desktop	Fri Mar  5 13:51:28 2004
++++ kdegraphics/kview/modules/browser/kviewbrowser.desktop	Mon May  3 15:04:57 2004
+@@ -14,6 +14,7 @@
+ 
+ Name=Browser
+ Name[af]=Blaaier
++Name[ar]=المتصفح
+ Name[bg]=Браузър
+ Name[bs]=Preglednik
+ Name[ca]=Fullejador
+@@ -30,6 +31,7 @@
+ Name[gl]=Explorador
  Name[he]=דפדפן
  Name[hi]=ब्राउज़र
++Name[hr]=Preglednik
  Name[hu]=Böngésző
-+Name[is]=Flakkari
+ Name[is]=Flakkari
  Name[ja]=ブラウザー
- Name[lt]=Naršyklė
- Name[nb]=Leser
-@@ -73,6 +74,7 @@
+@@ -62,6 +64,7 @@
+ Name[zu]=Umcingi
+ Comment=Enables you to browse through all of the images in the current directory.
+ Comment[af]=Aktiveer jy na blaai deur alle van die beelde in die huidige gids.
++Comment[ar]=يمكنك من تصفَح كل الصور في الدليل الحالي.
+ Comment[bg]=Преглед на изображенията в текущата директория
+ Comment[bs]=Omogućuje vam da pregledate sve slike u trenutnom direktoriju.
+ Comment[ca]=Us permet navegar entre totes les imatges del directori actual.
+@@ -76,7 +79,7 @@
+ Comment[fr]=Vous permet de naviguer parmi les images dans le dossier courant.
+ Comment[gl]=Activa o erowse through all of the images in the current directory.
  Comment[he]=מאפשר לך לעיין בכל התמונות שבספריה הנוכחית
- Comment[hi]=वर्तमान डिरेक्ट्री के सभी चित्रों को ब्राउज़ करने में आपको सक्षम बनाता है.
+-Comment[hi]=वर्तमान डिरेक्ट्री के सभी चित्रों को ब्राउज़ करने में आपको सक्षम बनाता है.
++Comment[hi]=वर्तमान डिरेक्ट्री के सभी छविों को ब्राउज़ करने में आपको सक्षम बनाता है.
  Comment[hu]=Lehetővé teszi az aktuális könyvtárban található képek áttekintését, böngészését.
-+Comment[is]=Gerir þér kleyft að flakka í öllum myndunum í þessari möppu.
+ Comment[is]=Gerir þér kleyft að flakka í öllum myndunum í þessari möppu.
  Comment[it]=Permette di navigare tra le immagini nella directory corrente.
- Comment[ja]=現在のディレクトリの全ての画像をブラウズできるようになります。
- Comment[lt]=Leidžia jums naršyti visuose paveikslėliuose esamame aplanke.
 diff -urN -x CVS kdegraphics.orig/kview/modules/effects/kvieweffects.desktop kdegraphics/kview/modules/effects/kvieweffects.desktop
---- kdegraphics.orig/kview/modules/effects/kvieweffects.desktop	Fri Jan 16 08:01:50 2004
-+++ kdegraphics/kview/modules/effects/kvieweffects.desktop	Sat Feb  7 13:44:37 2004
-@@ -13,6 +13,7 @@
+--- kdegraphics.orig/kview/modules/effects/kvieweffects.desktop	Sun Feb 29 16:28:35 2004
++++ kdegraphics/kview/modules/effects/kvieweffects.desktop	Mon May  3 15:04:59 2004
+@@ -12,6 +12,7 @@
+ X-KDE-PluginInfo-EnabledByDefault=false
  
  Name=Effects
++Name[ar]=مؤثرات
  Name[bg]=Ефекти
-+Name[bs]=Efekti
+ Name[bs]=Efekti
  Name[ca]=Efectes
- Name[cs]=Efekty
- Name[cy]=Effeithiau
-@@ -26,7 +27,9 @@
- Name[gl]=Efectos
- Name[hi]=प्रभाव
- Name[hu]=Effektusok
-+Name[is]=Brellur
- Name[it]=Effetti
-+Name[ja]=効果
- Name[nb]=Effekter
- Name[nl]=Effecten
- Name[nn]=Effektar
-@@ -44,8 +47,10 @@
- Name[uz]=Эффектлар
- Name[wa]=Efets
+@@ -51,9 +52,10 @@
  Name[xx]=xxEffectsxx
-+Name[zh_CN]=特效
+ Name[zh_CN]=特效
  Comment=Provides some image effects
++Comment[ar]=يقدم بعض مؤثرات الصور
  Comment[bg]=Визуални ефекти при зареждане на изображенията
-+Comment[bs]=Pruža neke efekte za slike
- Comment[ca]=Proporciona alguns efectes de imatges
+ Comment[bs]=Pruža neke efekte za slike
+-Comment[ca]=Proporciona alguns efectes de imatges
++Comment[ca]=Proporciona alguns efectes d'imatges
  Comment[cs]=Poskytuje několik efektů pro obrázky
  Comment[cy]=Darparu rhai effeithiau delwedd
-@@ -59,7 +64,9 @@
+ Comment[da]=Sørger for nogle billedeffekter
+@@ -64,7 +66,7 @@
+ Comment[fi]=Tarjoaa joitain kuvatehosteita
+ Comment[fr]=Fournit des images sur les images
  Comment[gl]=Proporciona algúns efectos para as imaxes
- Comment[hi]=चित्र में प्रभाव उत्पन्न करता है
+-Comment[hi]=चित्र में प्रभाव उत्पन्न करता है
++Comment[hi]=छवि में प्रभाव उत्पन्न करता है
  Comment[hu]=Képeffektusok használata
-+Comment[is]=Býður uppá ýmsar myndbrellur
+ Comment[is]=Býður uppá ýmsar myndbrellur
  Comment[it]=Provvede alcuni effetti per le immagini
-+Comment[ja]=画像効果を提供します
- Comment[nb]=Utfører noen effekter på bilder
- Comment[nl]=Biedt enkele effecten om afbeeldingen te bewerken
- Comment[nn]=Utfører nokre effektar på bilete
-@@ -76,3 +83,4 @@
- Comment[uk]=Надає деякі ефекти зображень
- Comment[uz]=Расм эффектлари
- Comment[xx]=xxProvides some image effectsxx
-+Comment[zh_CN]=提供某些图像特效
 diff -urN -x CVS kdegraphics.orig/kview/modules/presenter/config/kviewpresenterconfig.desktop kdegraphics/kview/modules/presenter/config/kviewpresenterconfig.desktop
---- kdegraphics.orig/kview/modules/presenter/config/kviewpresenterconfig.desktop	Fri Jan 16 08:01:52 2004
-+++ kdegraphics/kview/modules/presenter/config/kviewpresenterconfig.desktop	Sat Feb  7 13:44:39 2004
-@@ -11,6 +11,7 @@
+--- kdegraphics.orig/kview/modules/presenter/config/kviewpresenterconfig.desktop	Sun Feb 29 16:28:37 2004
++++ kdegraphics/kview/modules/presenter/config/kviewpresenterconfig.desktop	Mon May  3 15:05:01 2004
+@@ -10,6 +10,7 @@
+ X-KDE-ParentComponents=kviewpresenter
  
  Name=Name
++Name[ar]=اسم
  Name[bg]=Име
-+Name[bs]=Ime
+ Name[bs]=Ime
  Name[ca]=Nom
- Name[cy]=Enw
- Name[da]=Navn
-@@ -22,7 +23,9 @@
- Name[gl]=Nome
- Name[hi]=नाम
- Name[hu]=Név
-+Name[is]=Heiti
- Name[it]=Nome
-+Name[ja]=名前
- Name[nb]=Navn
- Name[nl]=Naam
- Name[nn]=Namn
-@@ -39,8 +42,10 @@
- Name[uz]=Номи
- Name[wa]=No
+@@ -46,6 +47,7 @@
  Name[xx]=xxNamexx
-+Name[zh_CN]=名称
+ Name[zh_CN]=名称
  Comment=Comment
++Comment[ar]=تعليق
  Comment[bg]=Коментар
-+Comment[bs]=Komentar
+ Comment[bs]=Komentar
  Comment[ca]=Comentari
- Comment[cy]=Sylwad
- Comment[da]=Kommentar
-@@ -52,7 +57,9 @@
- Comment[gl]=Comentario
- Comment[hi]=टिप्पणी
- Comment[hu]=Megjegyzés
-+Comment[is]=Athugasemd
- Comment[it]=Commento
-+Comment[ja]=コメント
- Comment[nb]=Kommentar
- Comment[nl]=Omschrijving
- Comment[nn]=Kommentar
-@@ -70,3 +77,4 @@
- Comment[uz]=Изоҳ
- Comment[wa]=Rawete
- Comment[xx]=xxCommentxx
-+Comment[zh_CN]=注释
 diff -urN -x CVS kdegraphics.orig/kview/modules/presenter/kviewpresenter.desktop kdegraphics/kview/modules/presenter/kviewpresenter.desktop
---- kdegraphics.orig/kview/modules/presenter/kviewpresenter.desktop	Thu Jan 15 08:58:09 2004
-+++ kdegraphics/kview/modules/presenter/kviewpresenter.desktop	Sat Feb  7 13:44:41 2004
-@@ -64,6 +64,7 @@
+--- kdegraphics.orig/kview/modules/presenter/kviewpresenter.desktop	Sun Feb 29 16:28:39 2004
++++ kdegraphics/kview/modules/presenter/kviewpresenter.desktop	Mon May  3 15:05:03 2004
+@@ -12,6 +12,7 @@
+ X-KDE-PluginInfo-EnabledByDefault=true
+ 
+ Name=Presenter
++Name[ar]=المقدّم
+ Name[bg]=Презентация
+ Name[bs]=Prezentator
+ Name[ca]=Presentador
+@@ -26,6 +27,7 @@
+ Name[gl]=Escaparate
+ Name[he]=מצגות
+ Name[hi]=प्रस्तुतकर्ता
++Name[hr]=Prezentator
+ Name[hu]=Bemutató
+ Name[ja]=プレゼンター
+ Name[lt]=Pristatytojas
+@@ -51,9 +53,10 @@
+ Name[zh_TW]=簡報
+ Name[zu]=Umnikeli
+ Comment=Creates an imagelist and enables you to create a slideshow
++Comment[ar]=ينشئ قائمة صور ويمكنك من استعراض الصور تلقائيا
+ Comment[bg]=Създаване на списък с изображения и слайдшоу от тях
+ Comment[bs]=Pravi listu slika i omogućuje vam da napravite slide show
+-Comment[ca]=Crea una llista de imatges i us permet crear un passi de diapositives
++Comment[ca]=Crea una llista d'imatges i us permet crear un passi de diapositives
+ Comment[cs]=Vytvoří seznam obrázků a umožní vám z nich vytvořit slideshow.
+ Comment[cy]=Creu rhestr delweddau ac alluogi i chi greu sioe haenluniau
+ Comment[da]=Laver en billedliste og giver dig muligheden for at lave et diasshow
+@@ -65,7 +68,7 @@
+ Comment[fr]=Crée une liste d'images et vous permet de créer un diaporama
+ Comment[gl]=Crea unha lista de imaxes e te permite crear unha moviola
  Comment[he]=יוצר רשימת תמונות ומאפשר לך ליצור מצגת שקופיות
- Comment[hi]=एक चित्र-सूची बनाता है तथा आपको एक स्लाइड-शो तैयार करने में सक्षम बनाता है
+-Comment[hi]=एक चित्र-सूची बनाता है तथा आपको एक स्लाइड-शो तैयार करने में सक्षम बनाता है
++Comment[hi]=एक छवि-सूची बनाता है तथा आपको एक स्लाइड-शो तैयार करने में सक्षम बनाता है
  Comment[hu]=Képsorozat összeállítását és bemutatását teszi lehetővé
-+Comment[is]=Býr til myndlista og gerir þér kleyft að búa til myndsýningu
+ Comment[is]=Býr til myndlista og gerir þér kleyft að búa til myndsýningu
  Comment[it]=Crea una lista di immagini e permette di creare una presentazione
- Comment[ja]=画像リストを作成し、スライドショーを作成します
- Comment[lt]=Sukuria paveikslėlių sąrašą ir leidžia jums sukurti skaidrių peržiūrą
 diff -urN -x CVS kdegraphics.orig/kview/modules/scale/kview_scale.desktop kdegraphics/kview/modules/scale/kview_scale.desktop
---- kdegraphics.orig/kview/modules/scale/kview_scale.desktop	Thu Jan 15 08:58:11 2004
-+++ kdegraphics/kview/modules/scale/kview_scale.desktop	Sat Feb  7 13:44:43 2004
-@@ -18,6 +18,7 @@
- Name[hi]=स्केल
- Name[hr]=Skala
- Name[hu]=Nagyítás
-+Name[is]=Skala
- Name[it]=Riscala
- Name[ja]=スケール
- Name[lt]=Mąstelis
-@@ -63,6 +64,7 @@
+--- kdegraphics.orig/kview/modules/scale/kview_scale.desktop	Sun Feb 29 16:28:41 2004
++++ kdegraphics/kview/modules/scale/kview_scale.desktop	Mon May  3 15:05:05 2004
+@@ -1,6 +1,7 @@
+ [Desktop Entry]
+ Name=Scale
+ Name[af]=Skaal
++Name[ar]=تكبير أو تصغير
+ Name[bg]=Мащабиране
+ Name[bs]=Skaliraj
+ Name[ca]=Escala
+@@ -50,6 +51,7 @@
+ Name[zu]=Isikali
+ Comment=Filter to scale the image
+ Comment[af]=Filter na skaal die beeld
++Comment[ar]=فلتر لتكبير أو تصغير الصورة 
+ Comment[bg]=Филтър за мащабиране на изображения
+ Comment[bs]=Filter za skaliranje slike
+ Comment[ca]=Filtre per escalar la imatge
+@@ -65,7 +67,8 @@
+ Comment[fr]=Filtre pour zoomer une image
+ Comment[gl]=Filtro para redimensionar a imaxe
  Comment[he]=מסנן לשינוי קנה המידה של התמונה
- Comment[hi]=चित्र का आकार बदलने का फिल्टर
+-Comment[hi]=चित्र का आकार बदलने का फिल्टर
++Comment[hi]=छवि का आकार बदलने का फिल्टर
++Comment[hr]=Filter za promjenu veličine slike
  Comment[hu]=Képméretező szűrő
-+Comment[is]=Sía sem skalar myndina
+ Comment[is]=Sía sem skalar myndina
  Comment[it]=Filtro per ridimensionare l'immagine
- Comment[ja]=イメージをスケールするフィルタ
- Comment[lt]=Filtras paveikslėliui didinti ar mažinti
 diff -urN -x CVS kdegraphics.orig/kview/modules/scanner/kviewscanner.desktop kdegraphics/kview/modules/scanner/kviewscanner.desktop
---- kdegraphics.orig/kview/modules/scanner/kviewscanner.desktop	Thu Jan 15 08:58:13 2004
-+++ kdegraphics/kview/modules/scanner/kviewscanner.desktop	Sat Feb  7 13:44:45 2004
-@@ -27,6 +27,7 @@
+--- kdegraphics.orig/kview/modules/scanner/kviewscanner.desktop	Mon Mar 29 15:02:03 2004
++++ kdegraphics/kview/modules/scanner/kviewscanner.desktop	Mon May  3 15:05:07 2004
+@@ -13,6 +13,7 @@
+ 
+ Name=Scanner
+ Name[af]=Skandeerder
++Name[ar]=الماسح الضوئي
+ Name[bg]=Скенер
+ Name[bs]=Skener
+ Name[ca]=Escànner
+@@ -26,6 +27,7 @@
+ Name[gl]=Escáner
  Name[he]=סורק
  Name[hi]=स्केनर
++Name[hr]=Skener
  Name[hu]=Lapolvasó
-+Name[is]=Skanni
+ Name[is]=Skanni
  Name[ja]=スキャナー
- Name[lt]=Skaneris
- Name[nb]=Skanner
-@@ -70,6 +71,7 @@
+@@ -57,6 +59,7 @@
+ Name[zu]=Umhloli
+ Comment=Open images from your scanner into KView
+ Comment[af]=Open beelde van jou skandeerder binnein K-bekyk
++Comment[ar]=يفتح الصور الموجودة على ماسحك الضوئي في برنامج KView
+ Comment[bg]=Сканиране и отваряне на изображения от скенера
+ Comment[bs]=Otvara slike sa skenera u KView
+ Comment[ca]=Obre les imatges de l'escànner a KView
+@@ -71,7 +74,7 @@
+ Comment[fr]=Ouvre des images de votre scanner dans KView
+ Comment[gl]=Obre as imaxes de  KView dende o teu escáner
  Comment[he]=פתיחת תמונות מהסורק שלך ב-KView
- Comment[hi]=आपके स्केनर से के-व्यू में चित्र खोलता है
+-Comment[hi]=आपके स्केनर से के-व्यू में चित्र खोलता है
++Comment[hi]=आपके स्केनर से के-व्यू में छवि खोलता है
  Comment[hu]=Kép beolvasása lapolvasóról a KView-ba
-+Comment[is]=Senda myndir frá skannanum í KView
+ Comment[is]=Senda myndir frá skannanum í KView
  Comment[it]=Apre le immagini provenienti dallo scanner in KView
- Comment[ja]=スキャナから画像を開きKViewに転送します
- Comment[lt]=Atveria paveikslėlius iš jūsų skanerio į KView
 diff -urN -x CVS kdegraphics.orig/kview/modules/template/kviewtemplate.desktop kdegraphics/kview/modules/template/kviewtemplate.desktop
---- kdegraphics.orig/kview/modules/template/kviewtemplate.desktop	Thu Jan 15 08:58:15 2004
-+++ kdegraphics/kview/modules/template/kviewtemplate.desktop	Sat Feb  7 13:44:47 2004
-@@ -30,6 +30,7 @@
- Name[he]=תבנית
- Name[hi]=टेम्पलेट
- Name[hu]=Sablon
-+Name[is]=Snið
- Name[it]=Modello
- Name[ja]=テンプレート
- Name[lt]=Šablonas
-@@ -73,6 +74,7 @@
+--- kdegraphics.orig/kview/modules/template/kviewtemplate.desktop	Fri Apr  2 14:09:51 2004
++++ kdegraphics/kview/modules/template/kviewtemplate.desktop	Sat Apr 17 14:36:46 2004
+@@ -77,6 +77,7 @@
+ Comment[gl]=Unha máis longa descrición do que pode facer a extensión (plugin)
  Comment[he]=תיאור מפורט יותר לגבי מה שהתוסף עושה
  Comment[hi]=प्लगइन के बारे में लंबा वर्णन कि वह क्या करता है
++Comment[hr]=Duži opis umetka
  Comment[hu]=Ez a bővítőmodul részletesebb leírása
-+Comment[is]=hér ætti að vera smá lýsing á hvað þetta gerir
+ Comment[is]=hér ætti að vera smá lýsing á hvað þetta gerir
  Comment[it]=Una descrizione più lunga di quello che fa il plugin
- Comment[ja]=ここにより詳細なプラグインの記述をします
- Comment[lt]=Ilgesnis aprašymas, ką daro priedas
-diff -urN -x CVS kdegraphics.orig/libkscan/scanservice.desktop kdegraphics/libkscan/scanservice.desktop
---- kdegraphics.orig/libkscan/scanservice.desktop	Thu Jan 15 08:58:17 2004
-+++ kdegraphics/libkscan/scanservice.desktop	Sat Feb  7 13:44:49 2004
-@@ -22,7 +22,7 @@
- Name[hi]=केडीई स्केन सर्विस
- Name[hr]=KDE skan servis
- Name[hu]=KDE lapolvasó szolgáltatás
--Name[is]=KDE myndlesaraÃ¾jÃ³nusta
-+Name[is]=KDE myndlesaraþjónusta
- Name[it]=Servizio di scansione di KDE
- Name[ja]=KDE スキャンサービス
- Name[ko]=KDE 스캔 서비스
+diff -urN -x CVS kdegraphics.orig/libkscan/massscandialog.cpp kdegraphics/libkscan/massscandialog.cpp
+--- kdegraphics.orig/libkscan/massscandialog.cpp	Mon Feb 24 13:51:07 2003
++++ kdegraphics/libkscan/massscandialog.cpp	Wed Apr 14 19:47:55 2004
+@@ -1,5 +1,5 @@
+ /* This file is part of the KDE Project
+-   Copyright (C) 2000 Klaas Freitag <freitag@suse.de>  
++   Copyright (C) 2000 Klaas Freitag <freitag@suse.de>
+ 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+@@ -16,7 +16,7 @@
+    the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+    Boston, MA 02111-1307, USA.
+ 
+-   $Id$
++   $Id$
+ */
+ 
+ #include <qlayout.h>
+@@ -25,10 +25,10 @@
+ #include <qgroupbox.h>
+ #include <qframe.h>
+ 
+-#include <qpushbutton.h>
+-
+ #include <klocale.h>
+ #include <kdebug.h>
++#include <kpushbutton.h>
++#include <kstdguiitem.h>
+ 
+ #include "massscandialog.h"
+ 
+@@ -41,11 +41,11 @@
+    QVBoxLayout *bigdad = new QVBoxLayout( this, 5 );
+    // QHBoxLayout *hl1= new QHBoxLayout( );      // Caption
+    QHBoxLayout *l_but  = new QHBoxLayout( 10 );  // Buttons
+- 	
++
+  	/* Caption */
+  	QLabel *l1 = new QLabel( i18n( "<B>Mass Scanning</B>" ), this);
+    bigdad->addWidget( l1, 1);
+- 	
++
+  	/* Scan parameter information */
+  	QGroupBox *f1 = new QGroupBox( i18n("Scan Parameter"), this );
+  	f1->setFrameStyle( QFrame::Box | QFrame::Sunken );
+@@ -53,7 +53,7 @@
+  	f1->setLineWidth( 1 );
+    QVBoxLayout *l_main = new QVBoxLayout( f1, f1->frameWidth()+3, 3 );
+  	bigdad->addWidget( f1, 6 );
+- 	
++
+    scanopts = i18n("Scanning <B>%s</B> with <B>%d</B> dpi");
+  	l_scanopts = new QLabel( scanopts, f1 );
+  	l_main->addWidget( l_scanopts );
+@@ -61,7 +61,7 @@
+    tofolder = i18n("Storing new images in folder <B>%s</B>");
+  	l_tofolder = new QLabel( tofolder, f1 );
+  	l_main->addWidget( l_tofolder );
+- 	
++
+  	/* Scan Progress information */
+  	QGroupBox *f2 = new QGroupBox( i18n("Scan Progress"), this );
+  	f2->setFrameStyle( QFrame::Box | QFrame::Sunken );
+@@ -91,7 +91,7 @@
+    QPushButton *b_cancel = new QPushButton( i18n("Stop"), this, "ButtCancel" );
+    connect( b_cancel, SIGNAL(clicked()), this, SLOT(slStopScan()) );
+ 
+-   QPushButton *b_finish = new QPushButton( i18n("Close"), this, "ButtFinish" );
++   QPushButton *b_finish = new KPushButton( KStdGuiItem::close(), this, "ButtFinish" );
+    connect( b_finish, SIGNAL(clicked()), this, SLOT(slFinished()) );
+ 
+    l_but->addWidget( b_start );
