@@ -23,7 +23,7 @@ Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
-BuildRequires:	kdelibs-devel >= %{version}
+BuildRequires:	kdelibs-devel >= 9:%{version}
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
