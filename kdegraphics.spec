@@ -46,7 +46,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_prefix		/usr/X11R6
 %define		_htmldir	/usr/share/doc/kde/HTML
 
-%define		no_install_post_chrpath		0
+%define		no_install_post_chrpath		1
+%define		_with_pixmapsubdirs		1
 
 %description
 Graphic applications for the K Desktop Environment.
@@ -461,6 +462,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_includedir}/*.h
 %attr(755,root,root) %{_libdir}/libkscan.so
+%attr(755,root,root) %{_libdir}/lib*.la
 
 #################################################
 #             KDVI
@@ -468,9 +470,9 @@ rm -rf $RPM_BUILD_ROOT
 %files kdvi -f kdvi.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kdvi
-%attr(755,root,root) %{_libdir}/libkdvi.??
-%{_datadir}/apps/kdvi
+%attr(755,root,root) %{_libdir}/libkdvi.so
 %{_applnkdir}/Graphics/Viewers/kdvi.desktop
+%{_datadir}/apps/kdvi
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kdvi.png}
 %{_pixmapsdir}/kdvi.png
 
@@ -481,9 +483,9 @@ rm -rf $RPM_BUILD_ROOT
 # TODO -f kfax.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
-%attr(755,root,root) %{_libdir}/libkfax.??
-%{_datadir}/apps/kfax
+%attr(755,root,root) %{_libdir}/libkfax.so
 %{_applnkdir}/Graphics/Viewers/kfax.desktop
+%{_datadir}/apps/kfax
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kfax.png}
 %{_pixmapsdir}/kfax.png
 
@@ -493,8 +495,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kfract -f kfract.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfract
-%{_datadir}/apps/kfract
 %{_applnkdir}/Graphics/kfract.desktop
+%{_datadir}/apps/kfract
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kfract.png}
 %{_pixmapsdir}/kfract.png
 
@@ -504,9 +506,9 @@ rm -rf $RPM_BUILD_ROOT
 %files kghostview -f kghostview.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
-%attr(755,root,root) %{_libdir}/libkghostview.*
-%{_datadir}/apps/kghostview
+%attr(755,root,root) %{_libdir}/libkghostview.so
 %{_applnkdir}/Graphics/Viewers/kghostview.desktop
+%{_datadir}/apps/kghostview
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kghostview.png}
 %{_pixmapsdir}/kghostview.png
 
@@ -516,8 +518,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kiconedit -f kiconedit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kiconedit
-%{_datadir}/apps/kiconedit
 %{_applnkdir}/Graphics/kiconedit.desktop
+%{_datadir}/apps/kiconedit
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kiconedit.png}
 %{_pixmapsdir}/kiconedit.png
 
@@ -527,8 +529,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kpaint -f kpaint.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpaint
-%{_datadir}/apps/kpaint
 %{_applnkdir}/Graphics/kpaint.desktop
+%{_datadir}/apps/kpaint
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kpaint.png}
 %{_pixmapsdir}/kpaint.png
 
@@ -538,8 +540,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kruler -f kruler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kruler
-%{_datadir}/apps/kruler
 %{_applnkdir}/Graphics/kruler.desktop
+%{_datadir}/apps/kruler
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kruler.png}
 %{_pixmapsdir}/kruler.png
 
@@ -560,11 +562,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kview
 %attr(755,root,root) %{_bindir}/kviewshell
-%attr(755,root,root) %{_libdir}/kview.??
-%attr(755,root,root) %{_libdir}/libkviewpart.??
-%attr(755,root,root) %{_libdir}/libkviewerpart.??
-%attr(755,root,root) %{_libdir}/libkmultipage.*
-%attr(755,root,root) %{_libdir}/libkpagetest.??
+%attr(755,root,root) %{_libdir}/kview.so
+%attr(755,root,root) %{_libdir}/libkviewpart.so
+%attr(755,root,root) %{_libdir}/libkviewerpart.so
+%attr(755,root,root) %{_libdir}/libkmultipage.*.*
+%attr(755,root,root) %{_libdir}/libkpagetest.so
 %{_datadir}/apps/kview*
 %{_applnkdir}/Graphics/Viewers/kview.desktop
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kview*}
@@ -578,7 +580,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
 %attr(755,root,root) %{_libdir}/libkscan.so.*.*.*
-%attr(755,root,root) %{_libdir}/libkscan.la
 %{_datadir}/apps/kooka
 %{_datadir}/services/scanservice.desktop
 %{_applnkdir}/Graphics/kooka.desktop
@@ -600,7 +601,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kcolorchooser
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
-%attr(755,root,root) %{_libdir}/kcolorchooser.??
+%attr(755,root,root) %{_libdir}/kcolorchooser.so
 %{_applnkdir}/Graphics/kcolorchooser.desktop
 
 #################################################
@@ -609,7 +610,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kuickshow -f kuickshow.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kuickshow
-%attr(755,root,root) %{_libdir}/kuickshow.??
+%attr(755,root,root) %{_libdir}/kuickshow.so
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kuickshow.png}
@@ -623,7 +624,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kio_kamera.??
 %attr(755,root,root) %{_libdir}/kde3/libkcm_kamera.??
 %{_datadir}/services/kamera.protocol
-%{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
 %{_pixmapsdir}/*/*/actions/camera_test.*
+%{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
 %{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/*/camera.png}
 %{_pixmapsdir}/camera.png
