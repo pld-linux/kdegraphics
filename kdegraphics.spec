@@ -34,6 +34,7 @@ BuildRequires:	sane-backends-devel
 BuildRequires:	sed
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
+BuildRequires:	libieee1284-devel
 Requires:	kdelibs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -296,6 +297,7 @@ Summary:	Povary Modeler
 Summary(pl):	Povary Modeler
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
+Requires:	povray
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
