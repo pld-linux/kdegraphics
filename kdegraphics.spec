@@ -3,7 +3,7 @@
 #   for some reason it checks for kpsewhich from tetex.
 %define		_ver		3.0.3
 #define		_sub_ver
-%define		_rel		0.2
+%define		_rel		1
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -368,25 +368,28 @@ cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-%find_lang kcmkamera --with-kde
-%find_lang kdvi --with-kde
-%find_lang kfax --with-kde
-#%find_lang kfile_pdf --with-kde
-#%find_lang kfile_png --with-kde
-#%find_lang kfile_ps --with-kde
-#cat kfile_pdf.lang kfile_png.lang kfile_ps.lang >>%{name}.lang
-%find_lang kfract --with-kde
-%find_lang kghostview --with-kde
-%find_lang kiconedit --with-kde
-%find_lang kpaint --with-kde
-%find_lang kruler --with-kde
-%find_lang ksnapshot --with-kde
-%find_lang kview --with-kde
-#%find_lang kviewshell --with-kde
-#cat kviewshell.lang >> kview.lang
-%find_lang kooka --with-kde
-%find_lang kcoloredit --with-kde
-%find_lang kuickshow --with-kde
+%find_lang kcmkamera	--with-kde
+%find_lang kcoloredit	--with-kde
+%find_lang kdvi	--with-kde
+%find_lang kfax	--with-kde
+%find_lang kfile_pdf	--with-kde
+%find_lang kfile_png	--with-kde
+%find_lang kfile_ps	--with-kde
+%find_lang kpixmap2bitmap	--with-kde
+cat kpixmap2bitmap.lang kfile_pdf.lang kfile_png.lang kfile_ps.lang >> %{name}.lang
+%find_lang kfract	--with-kde
+%find_lang kghostview	--with-kde
+%find_lang kiconedit	--with-kde
+%find_lang kooka	--with-kde
+%find_lang libkscan	--with-kde
+cat libkscan.lang >> kooka.lang
+%find_lang kpaint	--with-kde
+%find_lang kruler	--with-kde
+%find_lang ksnapshot	--with-kde
+%find_lang kuickshow	--with-kde
+%find_lang kview	--with-kde
+%find_lang kviewshell	--with-kde
+cat kviewshell.lang >> kview.lang
 
 %post   devel -p /sbin/ldconfig
 %postun devel -p /sbin/ldconfig
@@ -415,7 +418,7 @@ bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.??
 %{_datadir}/services/kfile_*.desktop
