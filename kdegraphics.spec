@@ -246,8 +246,8 @@ wy¶wietlaæ pliki faksów u¿ywane przez pakiety do wysy³ania i
 odbierania faksów mgetty/sendfax oraz hylafax. Mo¿na wy¶wietliæ tak¿e
 pierwsz± (lub jedyn±) stronê plików w stylu "PC-Research" (DigiFAX)
 stworzonych przez sterowniki dfaxhigh i dfaxlow z ghostscripta. Pliki
-wej¶ciowe mog± u¿ywaæ dowolnego popularnego kodowania, takiego jak
-G3 (1- i 2-wymiarowego) lub G4. KFax ma wbudowan± natywn± mo¿liwo¶æ
+wej¶ciowe mog± u¿ywaæ dowolnego popularnego kodowania, takiego jak G3
+(1- i 2-wymiarowego) lub G4. KFax ma wbudowan± natywn± mo¿liwo¶æ
 wydruku do postscriptu.
 
 %description kfax -l pt_BR
@@ -432,8 +432,8 @@ single window. The images can then be saved in a variety of formats.
 
 %description ksnapshot -l pl
 KSnapshot to prosta aplikacja do robienia zrzutów ekranu. Potrafi
-przechwytywaæ obraz ca³ego pulpitu lub tylko pojedynczego okna.
-Obrazy mog± byæ nastêpnie zapisane w wielu formatach.
+przechwytywaæ obraz ca³ego pulpitu lub tylko pojedynczego okna. Obrazy
+mog± byæ nastêpnie zapisane w wielu formatach.
 
 %description ksnapshot -l pt_BR
 Programa de captura de tela.
@@ -505,21 +505,22 @@ slajdów.
 Visualizador de imagens poderoso para KDE.
 
 %package kviewshell
-Summary:	TODO
-Summary(pl):	TODO
+Summary:	KDE generic framework for graphics viewers
+Summary(pl):	Szkielet dla przegl±darek grafiki
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{_minlibsevr}
 Conflicts:	kdegraphics-kview < 9:3.2.90.040514
 
 %description kviewshell
-KDE is a powerful Open Source graphical desktop environment for Unix workstations. It combines ease of use, contemporary functionality, and outstanding graphical design with the technological superiority of the Unix operating system. 
+KDE generic framework for graphics viewers allowing them to be
+embedded in KDE applications.
 
 %description kviewshell -l pl
-TODO.
+Szkielet KDE dla przegl±darek grafiki pozwala na zagnie¿dzanie w
+aplikacjach KDE.
 
 %prep
-%setup -q -D
-
+%setup -q
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
@@ -555,8 +556,8 @@ TODO.
 	kamera/kcontrol/kamera.desktop
 
 %build
-cp /usr/share/automake/config.sub admin
-export UNSERMAKE=/usr/share/unsermake/unsermake
+cp %{_datadir}/automake/config.sub admin
+export UNSERMAKE=%{_datadir}/unsermake/unsermake
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
@@ -567,7 +568,7 @@ export UNSERMAKE=/usr/share/unsermake/unsermake
 %{__make}
 
 %install
-rm -rf $RPM_BUILD_ROOT 
+rm -rf $RPM_BUILD_ROOT
 rm -rf *.lang
 
 %{__make} install \
