@@ -1,10 +1,6 @@
-# TODO:
-#   pdf plugin requires pdfinfo from xpdf to show pdf info.
-#   for some reason it checks for kpsewhich from tetex.
 
 %define		_state		unstable
 %define		_ver		3.3.0
-%define		_snap		rc2
 
 %define		_minlibsevr	9:3.3.0
 %define		_minbaseevr	9:3.3.0
@@ -15,12 +11,12 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.%{_snap}.1
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-# Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{_ver}-%{_snap}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/3.3/src/%{name}-%{version}.tar.bz2
+#Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{_ver}-%{_snap}.tar.bz2
 # Source0-md5:
 Patch0:		kde-common-PLD.patch
 BuildRequires:	ed
@@ -560,9 +556,7 @@ TODO.
 
 %build
 cp /usr/share/automake/config.sub admin
-
 export UNSERMAKE=/usr/share/unsermake/unsermake
-
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
@@ -573,7 +567,8 @@ export UNSERMAKE=/usr/share/unsermake/unsermake
 %{__make}
 
 %install
-rm -rf $RPM_BUILD_ROOT *.lang
+rm -rf $RPM_BUILD_ROOT 
+rm -rf *.lang
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
