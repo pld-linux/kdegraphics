@@ -2,8 +2,8 @@
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
 
-%define         _state          unstable                                        
-%define         _kdever         kde-3.1-beta1       
+%define         _state          unstable
+%define         _kdever         kde-3.1-beta2
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -486,7 +486,7 @@ mv $ALD/{Graphics/{kdvi,kfax,kghostview,kuickshow,kview}.desktop,Graphics/Viewer
 %postun kview -p /sbin/ldconfig
 
 %clean
-%{!?_without_clean:rm -rf $RPM_BUILD_ROOT}
+rm -rf $RPM_BUILD_ROOT}
 
 #################################################
 #             DEVEL
