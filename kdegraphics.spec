@@ -108,8 +108,8 @@ Summary:	kdegraphics development files
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-
+Requires:	%{name}-kooka = %{version}
+Requires:	%{name}-kview = %{version}
 
 %description devel
 kdegraphics development files.
