@@ -65,15 +65,3 @@ diff -uNr kdegraphics-3.2.0/ksvg/impl.orig/SVGHelperImpl.h kdegraphics-3.2.0/ksv
  		}
  	}
  
-diff -uNr kdegraphics-3.2.0/ksvg/impl.orig/SVGList.h kdegraphics-3.2.0/ksvg/impl/SVGList.h
---- kdegraphics-3.2.0/ksvg/impl.orig/SVGList.h	2004-01-17 13:52:40.000000000 +0100
-+++ kdegraphics-3.2.0/ksvg/impl/SVGList.h	2004-02-20 14:05:48.000000000 +0100
-@@ -48,7 +48,7 @@
- {
- public:
- 	SVGList() { m_impl.setAutoDelete(false); }
--	SVGList(const SVGList &) { *this = other; }
-+	SVGList(const SVGList &other) { *this = other; }
- 	~SVGList() { clear(); }
- 
- 	SVGList<T> &operator=(const SVGList<T> &other)
