@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define		_snap		030406
+%define		_snap		030418
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -452,11 +452,9 @@ rm -rf $RPM_BUILD_ROOT
 
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 
-install -d $ALD/Settings/KDE
+mv $ALD/{Settings,KDE-Settings}
 
-mv $ALD/{Settings/[!K]*,Settings/KDE}
-
-cd $ALD/Settings/KDE/Peripherals
+cd $ALD/KDE-Settings/Peripherals
 cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
     > kamera.desktop.tmp
 mv -f kamera.desktop.tmp kamera.desktop
@@ -485,9 +483,6 @@ cd -
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-#################################################
-#             DEVEL
-#################################################
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
@@ -495,18 +490,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libkmultipage.so
 %{_libdir}/libkimageviewer.so
 
-#################################################
-#             DAEMONWATCHER
-#################################################
 %files daemonwatcher
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kded_daemonwatcher.la
 %attr(755,root,root) %{_libdir}/kde3/kded_daemonwatcher.so
 %{_datadir}/services/kded/daemonwatcher.desktop
 
-#################################################
-#             KAMERA
-#################################################
 %files kamera -f kamera.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_kamera.la
@@ -514,20 +503,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/kio_kamera.la
 %attr(755,root,root) %{_libdir}/kde3/kio_kamera.so
 %{_datadir}/services/kamera.protocol
-%{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
+%{_applnkdir}/KDE-Settings/Peripherals/kamera.desktop
 %{_pixmapsdir}/*/*/*/camera*
 
-#################################################
-#             KCOLORCHOOSER
-#################################################
 %files kcolorchooser
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %{_desktopdir}/kcolorchooser.desktop
 
-#################################################
-#             KCOLOREDIT
-#################################################
 %files kcoloredit -f kcoloredit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcoloredit
@@ -535,9 +518,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kcoloredit.desktop
 %{_pixmapsdir}/[!l]*/*/*/kcoloredit.*
 
-#################################################
-#             KDVI
-#################################################
 %files kdvi -f kdvi.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kdvi
@@ -547,10 +527,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kdvi.desktop
 %{_pixmapsdir}/*/*/*/kdvi.*
 
-#################################################
-#             KFAX
-#################################################
-#%files kfax -f kfax.lang
 %files kfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
@@ -560,30 +536,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kfax.desktop
 %{_pixmapsdir}/*/*/*/kfax.*
 
-#################################################
-#             KFILE
-#################################################
 %files kfile
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
 %{_datadir}/services/kfile_*.desktop
 
-#################################################
-#             KGAMMA
-#################################################
 %files kgamma -f kgamma.lang 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/xf86gammacfg
 %{_libdir}/kde3/libkcm_kgamma.la
 %attr(755,root,root) %{_libdir}/kde3/libkcm_kgamma.so
 %{_datadir}/apps/kgamma
-%{_applnkdir}/Settings/KDE/Peripherals/kgamma.desktop
+%{_applnkdir}/KDE-Settings/Peripherals/kgamma.desktop
 %{_pixmapsdir}/*/*/apps/kgamma_red.png
 
-#################################################
-#             KGHOSTVIEW
-#################################################
 %files kghostview -f kghostview.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
@@ -593,9 +560,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kghostview.desktop
 %{_pixmapsdir}/*/*/*/kghostview.*
 
-#################################################
-#             KICONEDIT
-#################################################
 %files kiconedit -f kiconedit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kiconedit
@@ -603,9 +567,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kiconedit.desktop
 %{_pixmapsdir}/*/*/*/kiconedit.*
 
-#################################################
-#             KOOKA
-#################################################
 %files kooka -f kooka.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
@@ -617,9 +578,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kooka.desktop
 %{_pixmapsdir}/*/*/actions/palette*
 
-#################################################
-#             KPAINT
-#################################################
 %files kpaint -f kpaint.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpaint
@@ -627,9 +585,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kpaint.desktop
 %{_pixmapsdir}/*/*/*/kpaint.*
 
-#################################################
-#             KPOVMODELER
-#################################################
 %files kpovmodeler -f kpovmodeler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpovmodeler
@@ -639,9 +594,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kpovmodeler.desktop
 %{_pixmapsdir}/[!l]*/*/*/kpovmodeler*
 
-#################################################
-#             KRULER
-#################################################
 %files kruler -f kruler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kruler
@@ -649,18 +601,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kruler.desktop
 %{_pixmapsdir}/*/*/apps/kruler.*
 
-#################################################
-#             KSNAPSHOT
-#################################################
 %files ksnapshot -f ksnapshot.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ksnapshot
 %{_desktopdir}/ksnapshot.desktop
 %{_pixmapsdir}/*/*/apps/ksnapshot.*
 
-#################################################
-#             KUICKSHOW
-#################################################
 %files kuickshow -f kuickshow.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kuickshow
@@ -670,9 +616,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kuickshow.desktop
 %{_pixmapsdir}/[!l]*/*/*/kuickshow.*
 
-#################################################
-#             KVIEW
-#################################################
 %files kview -f kview.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kview
@@ -693,9 +636,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kview.desktop
 %{_pixmapsdir}/*/*/*/kview*
 
-#################################################
-#             MRML
-#################################################
 %files mrml
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mrmlsearch
@@ -710,4 +650,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/mrml.protocol
 %{_datadir}/services/mrml_part.desktop
 %{_datadir}/apps/konqueror/servicemenus/mrml-servicemenu.desktop
-%{_applnkdir}/Settings/KDE/System/kcmkmrml.desktop
+%{_applnkdir}/KDE-Settings/System/kcmkmrml.desktop
