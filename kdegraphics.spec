@@ -5,8 +5,8 @@ Version:	2.1.1
 Release:	1
 Group:          X11/KDE/Graphics
 Group(pl):      X11/KDE/Grafika
-Copyright:      GPL
-Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/generic/tar/src/%{name}-%{version}.tar.bz2
+License:      GPL
+Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/src/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-2.1-doc.patch
 BuildRequires:	kdelibs-devel >= 2.1
 BuildRequires:	qt-devel >= 2.2
