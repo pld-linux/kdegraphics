@@ -34,6 +34,7 @@ BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
 BuildRequires:	sed
+BuildRequires:	perl
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
 BuildRequires:	libieee1284-devel
@@ -130,7 +131,7 @@ Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¼nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Obsoletes:	%{name}-mrml < 3.1-6 
+Obsoletes:	%{name}-mrml < 3.1-6
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
@@ -231,10 +232,10 @@ Obsoletes:	kdegraphics-kfract
 
 %description kfile
 This package adds a fold to konqueror "file properities"
-dialog window with file enhanced informations. 
+dialog window with file enhanced informations.
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" 
+Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku"
 konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
 o pliku.
 
@@ -421,11 +422,8 @@ kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
 for plik in `find ./ -name \*.desktop` ; do
-	if [ -d $plik ]; then
 		echo $plik
-		sed -e "s/[nb]/[no]/g" > $plik.1
-		mv -f $plik.1 $plik
-	fi
+		perl -pi -e "s/\[nb\]/\[no\]/g" $plik
 done
 
 %configure \
