@@ -14,7 +14,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -462,7 +462,6 @@ Summary:	Internationalization and localization files for kamera
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla programu kamera
 Group:		X11/Applications
 Requires:	%{name}-kamera = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kamera-i18n
@@ -476,7 +475,6 @@ Summary:	Internationalization and localization files for kcoloredit
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kcoloredita
 Group:		X11/Applications
 Requires:	%{name}-kcoloredit = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kcoloredit-i18n
@@ -490,7 +488,6 @@ Summary:	Internationalization and localization files for kdvi
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kdvi
 Group:		X11/Applications
 Requires:	%{name}-kdvi = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kview-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
@@ -505,7 +502,6 @@ Summary:	Internationalization and localization files for kgamma
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kgamma
 Group:		X11/Applications
 Requires:	%{name}-kgamma = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kgamma-i18n
@@ -519,7 +515,6 @@ Summary:	Internationalization and localization files for kghostview
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kghostview
 Group:		X11/Applications
 Requires:	%{name}-kghostview = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kghostview-i18n
@@ -533,7 +528,6 @@ Summary:	Internationalization and localization files for kiconedit
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kiconedita
 Group:		X11/Applications
 Requires:	%{name}-kiconedit = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kiconedit-i18n
@@ -547,7 +541,6 @@ Summary:	Internationalization and localization files for kooka
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kooki
 Group:		X11/Applications
 Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kooka-i18n
@@ -561,7 +554,6 @@ Summary:	Internationalization and localization files for kpaint
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kpainta
 Group:		X11/Applications
 Requires:	%{name}-kpaint = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kpaint-i18n
@@ -575,7 +567,6 @@ Summary:	Internationalization and localization files for kpdf
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kpdf
 Group:		X11/Applications
 Requires:	%{name}-kpdf = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kpdf-i18n
@@ -589,7 +580,6 @@ Summary:	Internationalization and localization files for kpovmodeler
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kpovmodelera
 Group:		X11/Applications
 Requires:	%{name}-kpovmodeler = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kpovmodeler-i18n
@@ -603,7 +593,6 @@ Summary:	Internationalization and localization files for kruler
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla krulera
 Group:		X11/Applications
 Requires:	%{name}-kruler = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kruler-i18n
@@ -617,7 +606,6 @@ Summary:	Internationalization and localization files for ksnapshot
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla ksnapshota
 Group:		X11/Applications
 Requires:	%{name}-ksnapshot = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description ksnapshot-i18n
@@ -631,7 +619,6 @@ Summary:	Internationalization and localization files for kuickshow
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kuickshow
 Group:		X11/Applications
 Requires:	%{name}-kuickshow = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kuickshow-i18n
@@ -645,7 +632,6 @@ Summary:	Internationalization and localization files for kview
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kview
 Group:		X11/Applications
 Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kview-i18n
@@ -659,7 +645,6 @@ Summary:	Internationalization and localization files for ksvg
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla ksvg
 Group:		X11/Applications
 Requires:	%{name}-ksvg = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 
 %description ksvg-i18n
 Internationalization and localization files for ksvg.
@@ -672,7 +657,6 @@ Summary:	Internationalization and localization files for kfax
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfaksa
 Group:		X11/Applications
 Requires:	%{name}-kfax = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kview-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
@@ -687,7 +671,6 @@ Summary:	Internationalization and localization files for kmrml
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmrml
 Group:		X11/Applications
 Requires:	%{name}-kmrml = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kmrml-i18n
@@ -701,7 +684,6 @@ Summary:	Internationalization and localization files for kfile
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfile'a
 Group:		X11/Applications
 Requires:	%{name}-kfile = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	konqueror-i18n >= 9:%{version}
 
 %description kfile-i18n
