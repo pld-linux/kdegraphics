@@ -12,7 +12,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1.1
+Release:	1.2
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -20,7 +20,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 # Source0-md5:	14afcd5713481b19a5a9908e522445de
 # generated from kde-i18n
 Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	9282e5514824d27a8d8f6924aebeeda4
+# Source1-md5:	60e0b8d78230d8ad18d8aeab583702b6
 Patch0:		%{name}-no_glut.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
@@ -438,7 +438,6 @@ done
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,Settings/KDE,Utilities}
 
 %{__make} install \
@@ -464,7 +463,7 @@ cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
 mv -f kamera.desktop.tmp kamera.desktop
 cd -
 
-#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 #%find_lang kcmkamera		--with-kde
 %find_lang kamera		--with-kde
