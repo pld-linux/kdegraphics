@@ -6,7 +6,6 @@
 %define		_state		snapshots
 %define		_ver		3.2.91
 %define		_snap		040630
-%define		_packager	adgor
 
 %define		_minlibsevr	9:3.2.91.040629
 %define		_minbaseevr	9:3.2.91.040629
@@ -22,9 +21,7 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 %if ! %{with cvs}
-#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
-##%% Source0-md5:	8b503b8d6bb9c84162b6b1d88f300ee6
+Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{_snap}.tar.bz2
 %else
 Source0:	kdesource.tar.gz
 %endif
