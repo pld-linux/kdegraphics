@@ -4,7 +4,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	2.2.2
-Release:	1
+Release:	2
 Epoch:		7
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -29,7 +29,7 @@ Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	_prefix		/usr/X11R6
-%define		_htmldir	%{_datadir}/doc/kde/HTML
+%define         _htmldir        /usr/share/doc/kde/HTML
 
 %description
 Graphic applications for the K Desktop Environment.
