@@ -24,6 +24,7 @@ BuildRequires:	ed
 BuildRequires:	unsermake >= 040511
 BuildRequires:	automake
 BuildRequires:	autoconf
+BuildRequires:	fontconfig-devel
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
