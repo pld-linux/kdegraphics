@@ -1,17 +1,26 @@
+%define		_ver		3.0
+#define		_sub_ver
+%define		_rel		1
+
+%{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
+%{!?_sub_ver:	%define	_version	%{_ver}}
+%{?_sub_ver:	%define	_release	0.%{_sub_ver}.%{_rel}}
+%{!?_sub_ver:	%define	_release	%{_rel}}
+%{!?_sub_ver:	%define	_ftpdir	stable}
+%{?_sub_ver:	%define	_ftpdir	unstable/kde-%{version}%{_sub_ver}}
+
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	2.2.2
-Release:	2
+Version:	%{_version}
+Release:	%{_release}
 Epoch:		7
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
-Patch0:		%{name}-kamera.patch
-BuildRequires:	kdelibs-devel >= 2.1
-BuildRequires:	qt-devel >= 2.2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
+BuildRequires:	kdelibs-devel >= %{_version}
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
@@ -22,7 +31,6 @@ BuildRequires:	zlib-devel
 BuildRequires:	sane-backends-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libxml2-devel
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -133,7 +141,6 @@ Summary:	KDE fractal generator
 Summary(pl):	Generator fraktali dla KDE
 Summary(pt_BR):	Gerador de fractais
 Group:		X11/Applications/Graphics
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
 %description kfract
@@ -150,7 +157,6 @@ Summary:	KDE Postscript viewer
 Summary(pl):	Przegl±darka postscriptu dla KDE
 Summary(pt_BR):	Programa de visualização de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
 %description kghostview
@@ -167,7 +173,6 @@ Summary:	KDE Icon Editor
 Summary(pl):	Edytor ikon w ¶rodowisku KDE
 Summary(pt_BR):	Editor de ícones
 Group:		X11/Applications/Graphics
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
 %description kiconedit
@@ -184,7 +189,6 @@ Summary:	KDE Painter
 Summary(pl):	Program graficzny KDE
 Summary(pt_BR):	Editor básico de imagens bitmap
 Group:		X11/Applications/Graphics
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
 %description kpaint
@@ -201,7 +205,6 @@ Summary:	KRuler
 Summary(pl):	Linijka dla KDE
 Summary(pt_BR):	Régua de pixels para a tela
 Group:		X11/Applications/Graphics
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
 %description kruler
@@ -220,7 +223,6 @@ Summary:	KDE Snap Shot
 Summary(pl):	Program do przechwytywania ekranu dla KDE
 Summary(pt_BR):	Programa de captura de tela
 Group:		X11/Applications/Graphics
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
 %description ksnapshot
@@ -237,7 +239,6 @@ Summary:	KDE graphics file viewer
 Summary(pl):	Przegl±darka plików graficznych dla KDE
 Summary(pt_BR):	Visualizador de imagens
 Group:		X11/Applications/Graphics
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
 %description kview
@@ -295,7 +296,6 @@ Wybieracz kolorów.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -347,6 +347,11 @@ mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/kde3/kfile_*.??
+%{_datadir}/services/kfile_*.desktop
 
 %files devel
 %defattr(644,root,root,755)
@@ -449,7 +454,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkpagetest.??
 %{_datadir}/apps/kview*
 %{_applnkdir}/Graphics/kview.desktop
-%{_pixmapsdir}/*/*/apps/kview.*
+%{_pixmapsdir}/*/*/apps/kview*
 
 #################################################
 #             KOOKA
@@ -461,7 +466,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkscan.la
 %{_datadir}/apps/kooka
 %{_datadir}/services/scanservice.desktop
-%{_applnkdir}/Utilities/kooka.desktop
+%{_applnkdir}/Graphics/kooka.desktop
 %{_pixmapsdir}/*/*/actions/palette*
 
 #################################################
