@@ -34,6 +34,11 @@ BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
+BuildRequires:	kpathsea
+BuildRequires:	lcms-devel
+BuildRequires:	OpenEXR >= 1.1.0
+BuildRequires:	xpdf-tools
+BuildRequires:	OpenGL-devel
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libieee1284-devel
 BuildRequires:	libjpeg-devel
@@ -563,14 +568,14 @@ export UNSERMAKE=/usr/share/unsermake/unsermake
 %{__make}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	kde_htmldir=%{_kdedocdir}
+#{__make} install \
+#	DESTDIR=$RPM_BUILD_ROOT \
+#	kde_htmldir=%{_kdedocdir}
 
-mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
-	$RPM_BUILD_ROOT%{_desktopdir}/kde
+#mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
+#	$RPM_BUILD_ROOT%{_desktopdir}/kde
 
 # Debian manpages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
