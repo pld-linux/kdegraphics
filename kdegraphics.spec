@@ -4,22 +4,22 @@
 #
 
 %define         _state          snapshots
-%define         _ver		3.2
-%define		_snap		030613
+%define         _ver		3.1.90
+%define		_snap		030618
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	%{_ver}
-Release:	0.%{_snap}.1
-Epoch:		8
+Version:	%{_ver}.%{_snap}
+Release:	1
+Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	e35240762acf6d79f09ebf7431ac0075
+# Source0-md5:	0476c518c4f31f9ec6517a97be62013f
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
@@ -38,14 +38,12 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
 BuildRequires:	libieee1284-devel
-Requires:	kdelibs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_htmldir	%{_docdir}/kde/HTML
 %define		_icondir	%{_datadir}/icons
 
-%define		_noautoreqdep	libGL.so.1 libGLU.so.1
-
+%define 	_noautoreqdep			libGL.so.1 libGLU.so.1
 %define		no_install_post_chrpath		1
 
 %description
@@ -114,8 +112,8 @@ Summary:	kdegraphics development files
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
-Requires:	%{name}-kooka = %{version}
-Requires:	%{name}-kview = %{version}
+Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
+Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
 
 %description devel
 kdegraphics development files.
@@ -132,7 +130,7 @@ Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Obsoletes:	%{name}-mrml < 3.1-6
+Obsoletes:	%{name}-mrml < 8:3.1-6
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
@@ -191,7 +189,7 @@ Summary:	KDE DVI viewer
 Summary(pl):	Przegl±darka plików DVI dla KDE
 Summary(pt_BR):	Programa de exibição de DVIs
 Group:		X11/Applications/Graphics
-Requires:	%{name}-kview = %{version}-%{release}
+Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -209,7 +207,7 @@ Summary:	KDE Fax viewer
 Summary(pl):	Przegl±darka faksów dla KDE
 Summary(pt_BR):	Programa de visualização de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
-Requires:	%{name}-kview = %{version}-%{release}
+Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
