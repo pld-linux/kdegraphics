@@ -285,7 +285,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kpaint -f kpaint.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/kpaint.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/kpaint.kdelnk
 
 %attr(755,root,root) %{_bindir}/kpaint
 
@@ -304,7 +304,7 @@ rm -rf $RPM_BUILD_ROOT
 %files ksnapshot -f ksnapshot.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/ksnapshot.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/ksnapshot.kdelnk
 
 %attr(755,root,root) %{_bindir}/ksnapshot
 
@@ -323,7 +323,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kview -f kview.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/kview.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/kview.kdelnk
 
 %attr(755,root,root) %{_bindir}/kview
 
@@ -348,7 +348,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kiconedit -f kiconedit.lang
 %defattr(644,root,root,755)
 
-%config(missingok) /etc/X11/kde/applnk/Graphics/kiconedit.kdelnk
+#%config(missingok) /etc/X11/kde/applnk/Graphics/kiconedit.kdelnk
 
 %attr(755,root,root) %{_bindir}/kiconedit
 
