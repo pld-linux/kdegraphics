@@ -383,6 +383,7 @@ Summary:	KDE graphics file viewer
 Summary(pl):	Przegl±darka plików graficznych dla KDE
 Summary(pt_BR):	Visualizador de imagens
 Group:		X11/Applications/Graphics
+Requires:	%{name}-kview = %{version}
 Requires:	kdelibs >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
