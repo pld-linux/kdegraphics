@@ -1,0 +1,11 @@
+--- kdegraphics-3.2.0/kpovmodeler/pmvariant.cpp.orig	2002-12-30 20:55:16.000000000 +0100
++++ kdegraphics-3.2.0/kpovmodeler/pmvariant.cpp	2004-02-20 12:25:18.236922312 +0100
+@@ -311,7 +311,7 @@
+       m_dataType = PMVariant::ObjectPointer;
+    }
+    else
+-      ( ( PMObject* ) m_pData ) = obj;
++      m_pData = obj;
+ }
+ 
+ int PMVariant::intData( ) const
