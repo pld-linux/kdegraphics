@@ -243,7 +243,7 @@ Requires:	kdelibs = %{version}
 %description kview
 A graphics files viewer for KDE.
 
-%description kfax -l pl
+%description kview -l pl
 Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3).
 
 %description kview -l pt_BR
