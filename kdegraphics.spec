@@ -1,5 +1,5 @@
 
-%define		_state		unstable
+%define		_state		stable
 %define		_ver		3.3.0
 
 %define		_minlibsevr	9:3.3.0
@@ -16,8 +16,8 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/3.3/src/%{name}-%{version}.tar.bz2
+# Source0-md5:	7bb9843f7b03cd2716079ac83b9c9304
 #Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{_ver}-%{_snap}.tar.bz2
-# Source0-md5:
 Patch0:		kde-common-PLD.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
