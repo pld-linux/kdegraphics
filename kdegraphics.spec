@@ -23,6 +23,8 @@ Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
+# generated from kde-i18n
+Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-gphoto2.patch
 BuildRequires:	kdelibs-devel >= %{_version}
 BuildRequires:	XFree86-devel >= 3.3.6
@@ -348,6 +350,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,KDE}
 mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
 mv $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE}
+
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%
 
 %find_lang kdvi --with-kde
 %find_lang kfract --with-kde
