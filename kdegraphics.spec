@@ -12,7 +12,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -33,7 +33,6 @@ BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libungif-devel
-BuildRequires:  libusb-static
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
