@@ -568,14 +568,14 @@ export UNSERMAKE=/usr/share/unsermake/unsermake
 %{__make}
 
 %install
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
-#{__make} install \
-#	DESTDIR=$RPM_BUILD_ROOT \
-#	kde_htmldir=%{_kdedocdir}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	kde_htmldir=%{_kdedocdir}
 
-#mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
-#	$RPM_BUILD_ROOT%{_desktopdir}/kde
+mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
+	$RPM_BUILD_ROOT%{_desktopdir}/kde
 
 # Debian manpages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
