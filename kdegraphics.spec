@@ -53,7 +53,7 @@ Graphic applications for the K Desktop Environment.
 Included with this package are:
 
 - Kamera - digital camera support
-- KColorEdit - color calette editor
+- KColorEdit - color palette editor
 - KColorChooser - color chooser
 - KDVI - displays TeX's device independent (.dvi) files,
 - KFax - displays fax files,
@@ -86,7 +86,7 @@ Pakiet zawiera:
 - Kamera - obs³uga kamer cyfrowych
 - KDVI - przegl±darka plików DVI,
 - KColorEdit - edytor palety kolorów
-- KColorChooser - wybóe koloru
+- KColorChooser - wybór koloru
 - KFax - program do wy¶wietlania faksów,
 - KFract - generator fraktali,
 - KGhostview - program do ogl±dania postscriptu (.ps),
@@ -128,7 +128,7 @@ bibliotecas do kdegraphics.
 
 %package daemonwatcher
 Summary:	KDED Daemon Watcher
-Summary(pl):	Stra¼nik demona KDED
+Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Obsoletes:	%{name}-mrml < 3.1-6 
@@ -155,17 +155,17 @@ Obs³uga kamer cyfrowych.
 
 %package kcolorchooser
 Summary:	Color chooser
-Summary(pl):	Wybieracz kolrów
+Summary(pl):	Program do wybierania kolorów
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
 %description kcolorchooser
-Color chooser
+Color chooser.
 
 %description kcolorchooser -l pl
-Wybieracz kolorów.
+Program do wybierania kolorów.
 
 %package kcoloredit
 Summary:	Color palette editor
@@ -216,7 +216,7 @@ Obsoletes:	kdegraphics-kfract
 A Fax viewer for KDE.
 
 %description kfax -l pl
-Program ten umo¿liwia przegl±danie plików faksowych (G3)
+Program ten umo¿liwia przegl±danie plików faksowych (G3).
 
 %description kfax -l pt_BR
 Programa de visualização de faxes (formato TIFF).
@@ -230,17 +230,17 @@ Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
 %description kfile
-This package adds a fold to konqueror "file properities"
+This package adds a fold to konqueror "file properties"
 dialog window with file enhanced informations. 
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" 
+Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" 
 konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
 o pliku.
 
 %package kgamma
 Summary:	A monitor calibration tool
-Summary(pl):	Narzedzie do kalibracji monitora
+Summary(pl):	Narzêdzie do kalibracji monitora
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
 Obsoletes:	kdegraphics
@@ -262,10 +262,10 @@ Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
 %description kghostview
-Postscript files (.ps) viewer for KDE
+Postscript files (.ps) viewer for KDE.
 
 %description kghostview -l pl
-Program ten umo¿liwia przegl±danie plików postscriptowych (.ps)
+Program ten umo¿liwia przegl±danie plików postscriptowych (.ps).
 
 %description kghostview -l pt_BR
 Programa de visualização de arquivos Postscript e PDF.
@@ -326,7 +326,7 @@ Editor básico de imagens bitmap.
 
 %package kpovmodeler
 Summary:	Povary Modeler
-Summary(pl):	Povary Modeler
+Summary(pl):	Modeler Povary
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
 Requires:	povray
@@ -337,7 +337,7 @@ Obsoletes:	kdegraphics-kfract
 Modeler for POV-Ray scenes.
 
 %description kpovmodeler -l pl
-Modeler for POV-Ray scenes.
+Modeler do scen POV-Raya.
 
 %package kruler
 Summary:	KRuler
@@ -407,7 +407,7 @@ Obsoletes:	kdegraphics-kfract
 A graphics files viewer for KDE.
 
 %description kview -l pl
-Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3).
+Program ten umo¿liwia ogl±danie ró¿nych plików graficznych.
 
 %description kview -l pt_BR
 Visualizador de imagens poderoso para KDE.
