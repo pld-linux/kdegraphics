@@ -2,7 +2,7 @@
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
 
-%define         _state          unstable
+%define         _state          stable
 %define         _ver		3.1
 
 Summary:	K Desktop Environment - Graphic Applications
