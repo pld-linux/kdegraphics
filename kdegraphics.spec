@@ -7,7 +7,7 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040506
+%define		_snap		040508
 %define		_packager	adgor
 
 %define		_minlibsevr	9:3.2.90-040503
