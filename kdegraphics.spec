@@ -7,8 +7,9 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040414
-#
+%define		_snap		040424
+%define		_packager	adgor
+
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
@@ -20,9 +21,8 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
-#Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
-Source0:	%{name}-%{_snap}.tar.bz2
-# Source0-md5:	8b503b8d6bb9c84162b6b1d88f300ee6
+Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
+##%% Source0-md5:	8b503b8d6bb9c84162b6b1d88f300ee6
 #Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 ##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 Patch0:		%{name}-vcategories.patch
@@ -716,7 +716,7 @@ Internationalization and localization files for kfile.
 Pliki umiêdzynarodawiaj±ce dla kfile'a.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{_snap}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1014,7 +1014,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kolourpaint
 %{_datadir}/apps/kolourpaint
 %{_desktopdir}/kde/kolourpaint.desktop
-%{_iconsdir}/*/*/*/kolourpaint.*
+%{_iconsdir}/*/*/*/kolourpaint.png
 #%{_mandir}/man1/kolourpaint.1*
 
 %files kooka -f kooka_en.lang
