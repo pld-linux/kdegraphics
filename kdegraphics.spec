@@ -3,8 +3,8 @@
 #   for some reason it checks for kpsewhich from tetex.
 #
 
-%define		_state		snapshots
-%define		_ver		3.1.94
+%define		_state		unstable
+%define		_ver		3.1.95
 %define		_snap		040110
 
 Summary:	K Desktop Environment - Graphic Applications
@@ -12,14 +12,14 @@ Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	%{_ver}.%{_snap}
-Release:	3
+Version:	%{_ver}
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	a7d3d2b5c6b5288a144404255022076f	
+Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
+# Source0-md5:	01d4c9769df288841cba3a0247f0fe25
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	ed
 BuildRequires:	gettext-devel
@@ -440,7 +440,7 @@ Umo¿liwia zaawansowane wyszukiwanie plików graficznych
 z indeksowaniem plików.
 
 %prep
-%setup -q -n %{name}-%{_snap}
+%setup -q -n %{name}-%{version}
 %patch0 -p1
 
 %build
