@@ -3,7 +3,7 @@
 #   for some reason it checks for kpsewhich from tetex.
 %define		_ver		3.0.2
 #define		_sub_ver
-%define		_rel		0.1
+%define		_rel		1
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -24,8 +24,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
-Source1:	kde-i18n-%{name}-%{version}.tar.bz2
-Patch0:		%{name}-gphoto2.patch
+#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 BuildRequires:	kdelibs-devel >= %{_version}
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	imlib-devel
@@ -340,7 +339,6 @@ Obs³uga kamer cyfrowych.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -350,7 +348,9 @@ if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
         CPPFLAGS="`pkg-config libpng12 --cflags`"
 fi
 
-autoconf
+#autoconf
+%{__make} -f Makefile.cvs
+
 %configure \
 	--enable-final
 %{__make}
@@ -363,14 +363,14 @@ install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,KDE}
 mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
 mv $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE}
 
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang kdvi --with-kde
-%find_lang kfax --with-kde
-%find_lang kfile_pdf --with-kde
-%find_lang kfile_png --with-kde
-%find_lang kfile_ps --with-kde
-cat kfile_pdf.lang kfile_png.lang kfile_ps.lang >>%{name}.lang
+#%find_lang kfax --with-kde
+#%find_lang kfile_pdf --with-kde
+#%find_lang kfile_png --with-kde
+#%find_lang kfile_ps --with-kde
+#cat kfile_pdf.lang kfile_png.lang kfile_ps.lang >>%{name}.lang
 %find_lang kfract --with-kde
 %find_lang kghostview --with-kde
 %find_lang kiconedit --with-kde
@@ -378,8 +378,8 @@ cat kfile_pdf.lang kfile_png.lang kfile_ps.lang >>%{name}.lang
 %find_lang kruler --with-kde
 %find_lang ksnapshot --with-kde
 %find_lang kview --with-kde
-%find_lang kviewshell --with-kde
-cat kviewshell.lang >> kview.lang
+#%find_lang kviewshell --with-kde
+#cat kviewshell.lang >> kview.lang
 %find_lang kooka --with-kde
 %find_lang kcoloredit --with-kde
 %find_lang kuickshow --with-kde
@@ -435,7 +435,8 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KFAX
 #################################################
-%files kfax -f kfax.lang
+%files kfax
+# TODO -f kfax.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %attr(755,root,root) %{_libdir}/libkfax.??
