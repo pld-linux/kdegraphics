@@ -6,7 +6,7 @@
 %bcond_without	i18n    # don't build i18n packages per module
 #
 %define		_state		stable
-%define		_ver		3.2.1
+%define		_ver		3.2.2
 ##%define		_snap		040110
 
 Summary:	K Desktop Environment - Graphic Applications
@@ -20,10 +20,10 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	http://download.kde.org/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	5a1676b46efdd64be2f9e9604f04b176
+# Source0-md5:	d74038c154a5ecd924a50b57d4c79c43
 %if %{with i18n}
 Source1:        kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	92d1eed3f6a9c9989f53ef550a6baf26
+# Source1-md5:	af477656fd40cd24f8b3d3effe4e5b27
 %endif
 Patch0:		%{name}-3.2branch.diff
 Patch1:		%{name}-vcategories.patch
