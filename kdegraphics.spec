@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	3
+Release:	4
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -522,6 +522,15 @@ indeksowaniem plików.
 %patch100 -p1
 %patch0 -p1
 %patch1 -p1
+
+for f in `find . -name *.desktop | xargs grep -l '^Terminal=0'`; do
+	%{__sed} -i -e 's/^Terminal=0/Terminal=false/' $f
+done
+for f in `find . -name *.desktop | xargs grep -l '^Type=Application'`; do
+	if ! grep '^Encoding=' $f >/dev/null; then
+		%{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' $f
+	fi
+done
 
 %build
 cp -f %{_datadir}/automake/config.sub admin
