@@ -25,6 +25,7 @@ BuildRequires:	glut-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libgphoto2-devel
+BuildRequires:	libieee1284-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
@@ -33,10 +34,8 @@ BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
-BuildRequires:	sed >= 4.0
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
-BuildRequires:	libieee1284-devel
 Requires:	kdelibs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -423,8 +422,8 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 for plik in `find ./ -name \*.desktop` ; do
 	if [ -d $plik ]; then
 		echo $plik
-		sed -e "s/[nb]/[no]/g" > $plik.1
-		mv -f $plik.1 $plik
+		sed -e 's/\[nb\]/[no]/g' $plik > ${plik}.1
+		mv -f ${plik}.1 $plik
 	fi
 done
 
