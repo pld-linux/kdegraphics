@@ -19,6 +19,8 @@ Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	5a0a32e314422e2ce051290c08390367
 Patch0:		kde-common-PLD.patch
+BuildRequires:	OpenEXR-devel >= 1.1.0
+BuildRequires:	OpenGL-devel
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
@@ -26,8 +28,6 @@ BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	kpathsea
 BuildRequires:	lcms-devel
-BuildRequires:	OpenEXR >= 1.1.0
-BuildRequires:	OpenGL-devel
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libieee1284-devel
 BuildRequires:	libjpeg-devel
@@ -42,7 +42,6 @@ BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 #BuildRequires:	unsermake
-BuildRequires:	OpenEXR-devel
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
