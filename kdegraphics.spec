@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.92
-%define		_snap		031014
+%define		_snap		031024
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -19,7 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	d61969f361417a517ed83efa98d4d85e
+# Source0-md5:	494c0119052899c3ba79a374e16a4876
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
@@ -426,7 +426,7 @@ Visualizador de imagens poderoso para KDE.
 Summary:	Advanced Search
 Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
-Requires:	konqueror >= 9:%{version}
+Requires:	kdebase-core >= 9:%{version}
 Obsoletes:	kdegraphics
 
 %description mrml
