@@ -4,8 +4,8 @@
 #
 
 %define		_state		snapshots
-%define		_ver		3.1.93
-%define		_snap		031114
+%define		_ver		3.1.94
+%define		_snap		031204
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -19,7 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	e9f870fe0a3d5ca014b22185850ec942
+# Source0-md5:	213a03584cbdc11cb4053bcb7058f175
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	ed
 BuildRequires:	gettext-devel
@@ -461,10 +461,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	kde_appsdir=%{_applnkdir} \
 	kde_htmldir=%{_kdedocdir}
 
-mv $RPM_BUILD_ROOT%{_applnkdir}/Settings/Peripherals/kamera.desktop \
+mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
 	$RPM_BUILD_ROOT%{_desktopdir}/kde
 
 %find_lang kamera		--with-kde
@@ -565,7 +564,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/kcm_kgamma.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kgamma.so
 %{_datadir}/apps/kgamma
-%{_applnkdir}/.hidden/kgamma.desktop
+%{_datadir}/applnk/.hidden/kgamma.desktop
 %{_iconsdir}/*/*/apps/kgamma.png
 
 %files kghostview -f kghostview.lang
