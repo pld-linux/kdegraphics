@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.93
-%define		_snap		031103
+%define		_snap		031105
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -19,7 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	7bf84a20cbfd7a44c5464b06bf2472c1
+# Source0-md5:	48016cdbbac3614dd420d9622aa1dacf
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
@@ -34,13 +34,14 @@ BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
 BuildRequires:	fribidi-devel >= 0.10.4
+BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sed >= 4.0
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
 BuildRequires:	libieee1284-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define 	_noautoreqdep			libGL.so.1 libGLU.so.1
+%define 	_noautoreqdep	libGL.so.1 libGLU.so.1
 
 %description
 Graphic applications for the K Desktop Environment.
@@ -460,7 +461,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	kde_appsdir=%{_applnkdir} \
-	kde_htmldir=%{_docdir}/kde/HTML
+	kde_htmldir=%{_kdedocdir}
 
 mv $RPM_BUILD_ROOT%{_applnkdir}/Settings/Peripherals/kamera.desktop \
 	$RPM_BUILD_ROOT%{_desktopdir}/kde
