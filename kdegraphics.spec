@@ -1,9 +1,9 @@
 
-%define		_state		stable
-%define		_ver		3.3.2
+%define		_state		unstable
+%define		_ver		3.3.91
 
-%define		_minlibsevr	9:3.3.2
-%define		_minbaseevr	9:3.3.2
+%define		_minlibsevr	9:3.3.91
+%define		_minbaseevr	9:3.3.91
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -16,7 +16,7 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	03092b8be2f7054d71895b8fd58ad26e
+# Source0-md5:	e819ff09157f1bf83c6a1ac70ab41439
 Patch0:		kde-common-PLD.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
@@ -522,18 +522,17 @@ aplikacjach KDE.
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	kdvi/kdvi.desktop \
 	kfax/kfax.desktop \
-	kpdf/kpdf/kpdf.desktop \
 	kview/kview.desktop \
 	kuickshow/src/kuickshow.desktop \
 	kghostview/kghostview.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Scanning;/' \
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;PDFViewer;/' \
 	-e 's/Terminal=0/Terminal=false/' \
+	kpdf/shell/kpdf.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Scanning;/' \
 	kooka/kooka.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	kcoloredit/kcolorchooser.desktop \
 	kcoloredit/kcoloredit.desktop \
 	ksnapshot/ksnapshot.desktop \
@@ -555,7 +554,9 @@ done
 
 %build
 cp %{_datadir}/automake/config.sub admin
-export UNSERMAKE=%{_datadir}/unsermake/unsermake
+
+#export UNSERMAKE=%{_datadir}/unsermake/unsermake
+
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
@@ -666,7 +667,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kdvi
 %{_libdir}/kde3/kdvipart.la
 %attr(755,root,root) %{_libdir}/kde3/kdvipart.so
-%{_datadir}/apps/kdvi/
+%{_datadir}/apps/kdvi
+%{_datadir}/config.kcfg/kdvi.kcfg
 %{_desktopdir}/kde/kdvi.desktop
 %{_iconsdir}/*/*/*/kdvi.*
 %{_mandir}/man1/kdvi.1*
@@ -706,7 +708,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkghostviewlib.so.*.*.*
 %{_libdir}/kde3/libkghostviewpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
+%{_datadir}/apps/kconf_update/kghostview.upd
+%attr(755,root,root) %{_datadir}/apps/kconf_update/update-to-xt-names.pl
 %{_datadir}/apps/kghostview
+%{_datadir}/config.kcfg/kghostview.kcfg
 %{_desktopdir}/kde/kghostview.desktop
 %{_iconsdir}/*/*/*/kghostview.*
 %{_mandir}/man1/kghostview.1*
@@ -744,7 +749,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kolourpaint
 %{_desktopdir}/kde/kolourpaint.desktop
 %{_iconsdir}/*/*/*/kolourpaint.png
-#%{_mandir}/man1/kolourpaint.1*
+%{_mandir}/man1/kolourpaint.1*
 
 %files kooka -f kooka.lang
 %defattr(644,root,root,755)
@@ -765,6 +770,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkpdfpart.so
 %{_datadir}/apps/kpdf
 %{_datadir}/apps/kpdfpart
+%{_datadir}/config.kcfg/kpdf.kcfg
 %{_datadir}/services/kpdf_part.desktop
 %{_desktopdir}/kde/kpdf.desktop
 %{_iconsdir}/*/*/*/kpdf.png
@@ -859,8 +865,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkviewcanvas.so
 %{_libdir}/kde3/libkviewviewer.la
 %attr(755,root,root) %{_libdir}/kde3/libkviewviewer.so
+%{_libdir}/libphotobook.la
+%attr(755,root,root) %{_libdir}/libphotobook.so
 %{_datadir}/apps/kview
 %{_datadir}/apps/kviewviewer
+%{_datadir}/apps/photobookui.rc
 %{_datadir}/services/kconfiguredialog/kviewcanvasconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewgeneralconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewpluginsconfig.desktop
@@ -870,8 +879,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kviewviewer.desktop
 %{_datadir}/servicetypes/kimageviewer.desktop
 %{_datadir}/servicetypes/kimageviewercanvas.desktop
+%{_datadir}/services/photobook.desktop
 %{_desktopdir}/kde/kview.desktop
 %{_iconsdir}/*/*/*/kview.png
+%{_iconsdir}/crystalsvg/16x16/apps/photobook.png
+
 %{_mandir}/man1/kview.1*
 
 %files kviewshell
@@ -883,5 +895,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kviewerpart.so
 %{_datadir}/apps/kviewerpart
 %{_datadir}/apps/kviewshell
+%{_datadir}/config.kcfg/kviewshell.kcfg
 %{_iconsdir}/*/*/*/kviewshell.png
 %{_mandir}/man1/kviewshell.1*
