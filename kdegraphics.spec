@@ -134,7 +134,7 @@ Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
-Obsoletes:	%{name}-kmrml < 8:3.1-6
+Obsoletes:	%{name}-mrml < 8:3.1-6
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
