@@ -512,7 +512,7 @@ Requires:	kdelibs >= %{_minlibsevr}
 Conflicts:	kdegraphics-kview < 9:3.2.90.040514
 
 %description kviewshell
-TODO.
+KDE is a powerful Open Source graphical desktop environment for Unix workstations. It combines ease of use, contemporary functionality, and outstanding graphical design with the technological superiority of the Unix operating system. 
 
 %description kviewshell -l pl
 TODO.
