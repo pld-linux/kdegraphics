@@ -26,7 +26,8 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
 Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 # Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 %endif
-Patch0:		%{name}-vcategories.patch
+Patch0:		%{name}-3.2branch.diff
+Patch1:		%{name}-vcategories.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
@@ -713,6 +714,7 @@ Pliki umiêdzynarodawiaj±ce dla kfile'a.
 %prep
 %setup -q 
 %patch0 -p1
+%patch1 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
