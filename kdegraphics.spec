@@ -22,7 +22,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.
 # generated from kde-i18n
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Source2:	%{name}-extra_icons.tar.bz2
-Patch0:		%{name}-fix-gs-configure.patch 
+Patch0:		%{name}-fix-gs-configure.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	awk
 BuildRequires:	gettext-devel
@@ -480,7 +480,6 @@ rm -rf $RPM_BUILD_ROOT
 #             KFAX
 #################################################
 %files kfax -f kfax.lang
-# TODO -f kfax.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %attr(755,root,root) %{_libdir}/libkfax.so
