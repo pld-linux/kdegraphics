@@ -27,6 +27,7 @@ BuildRequires:	glut-devel
 BuildRequires:	gphoto2-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{version}
+BuildRequires:	libieee1284-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
@@ -39,7 +40,6 @@ BuildRequires:	sed
 BuildRequires:	perl
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
-BuildRequires:	libieee1284-devel
 Requires:	kdelibs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -434,13 +434,11 @@ done
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,Settings/KDE,Utilities}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	RUN_KAPPFINDER=no
-
 
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 mv $ALD/{Settings/[!K]*,Settings/KDE}
@@ -462,14 +460,6 @@ cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-%find_lang kcmkamera		--with-kde
-%find_lang kamera		--with-kde
-cat kcmkamera.lang >> kamera.lang
-
-%find_lang kcoloredit		--with-kde
-%find_lang kdvi			--with-kde
-%find_lang kfax		--with-kde
-
 > kfile.lang
 programs="kfile_bmp kfile_gif kfile_ico kfile_jpeg kfile_pdf kfile_png kfile_ps kfile_tga kfile_tiff kfile_xbm desktop_kdegraphics"
 for i in $programs; do
@@ -477,27 +467,32 @@ for i in $programs; do
         cat $i.lang >>  kfile.lang
 done
 
-%find_lang kghostview		--with-kde
-%find_lang kiconedit		--with-kde
+%find_lang kview		--with-kde
+programs="kview_scale kviewshell kviewbrowserplugin kviewpresenterplugin kviewscannerplugin kviewtemplateplugin"
+for i in $programs; do
+	%find_lang $i --with-kde
+	cat $i.lang >> kview.lang
+done
+
+%find_lang kcmkamera		--with-kde
+%find_lang kamera		--with-kde
+cat kcmkamera.lang >> kamera.lang
+
 %find_lang kooka		--with-kde
 %find_lang libkscan		--with-kde
 cat libkscan.lang >> kooka.lang
+
+%find_lang kcoloredit		--with-kde
+%find_lang kdvi			--with-kde
+%find_lang kfax			--with-kde
+%find_lang kmrml                --with-kde
 %find_lang kpaint		--with-kde
 %find_lang kpovmodeler		--with-kde
 %find_lang kruler		--with-kde
 %find_lang ksnapshot		--with-kde
 %find_lang kuickshow		--with-kde
-
-%find_lang kview		--with-kde
-%find_lang kview_scale		--with-kde
-%find_lang kviewshell		--with-kde
-%find_lang kviewbrowserplugin   --with-kde
-%find_lang kviewpresenterplugin --with-kde
-%find_lang kviewscannerplugin   --with-kde
-%find_lang kviewtemplateplugin  --with-kde
-cat kview_scale.lang kviewshell.lang  kviewbrowserplugin.lang kviewpresenterplugin.lang kviewscannerplugin.lang kviewtemplateplugin.lang  >> kview.lang
-
-%find_lang kmrml                --with-kde
+%find_lang kghostview		--with-kde
+%find_lang kiconedit		--with-kde
 
 %clean
 rm -rf $RPM_BUILD_ROOT
