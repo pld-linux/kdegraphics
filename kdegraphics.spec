@@ -3,8 +3,9 @@
 #   for some reason it checks for kpsewhich from tetex.
 #
 
-%define         _state          stable
-%define         _ver		3.1.1
+%define         _state          snapshots
+%define         _ver		3.2
+%define		_snap		030329
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -12,13 +13,12 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.2
+Release:	0.%{_snap}.1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# generated from kde-i18n
-#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
+Source0:	http://team.pld.org.pl/~djurban/kde/%{name}-%{_snap}.tar.bz2
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
 BuildRequires:	glut-devel
@@ -40,9 +40,9 @@ BuildRequires:	libieee1284-devel
 Requires:	kdelibs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreqdep	libGL.so.1 libGLU.so.1
+%define		_htmldir	%{_docdir}/kde/HTML
 
-%define		_htmldir	/usr/share/doc/kde/HTML
+%define		_noautoreqdep	libGL.so.1 libGLU.so.1
 
 %define		no_install_post_chrpath		1
 
@@ -223,7 +223,7 @@ Programa de visualização de faxes (formato TIFF).
 %package kfile
 Summary:	Graphic formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach graficznych
-Group:		X11/Development/Libraries
+Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
@@ -236,6 +236,20 @@ dialog window with file enhanced informations.
 Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" 
 konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
 o pliku.
+
+%package kgamma
+Summary:	A monitor calibration tool
+Summary(pl):	Narzedzie do kalibracji monitora
+Group:		X11/Applications/Graphics
+Requires:	kdelibs >= %{version}
+Obsoletes:	kdegraphics
+Obsoletes:	kdegraphics-kfract
+
+%description kgamma
+A monitor calibration tool.
+
+%description kgamma -l pl
+Narzêdzie do kalibracji monitora.
 
 %package kghostview
 Summary:	KDE Postscript viewer
@@ -413,7 +427,7 @@ Umo¿liwia zaawansowane wyszukiwanie plików graficznych
 z indeksowaniem plików.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_snap}
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
@@ -426,33 +440,21 @@ for plik in `find ./ -name *.desktop` ; do
 	sed -ie 's/\[nb\]/\[no\]/g' $plik
 	fi
 done
-				
 
-%configure \
-	--enable-final
+%configure
+
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,Settings/KDE,Utilities}
-
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	RUN_KAPPFINDER=no
-
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
-mv $ALD/{Settings/[!K]*,Settings/KDE}
-mv $ALD/{Graphics/More/*.desktop,Graphics}
-mv $ALD/{Graphics/{kdvi,kfax,kghostview,kuickshow,kview}.desktop,Graphics/Viewers}
-mv $ALD/{Graphics/{kcolorchooser,kruler}.desktop,Utilities}
 
-cd $ALD/Utilities
-cat kcolorchooser.desktop |sed -e 's/Icon=[^$]\+/Icon=colors/' \
-    > kcolorchooser.desktop.tmp
-mv -f kcolorchooser.desktop.tmp kcolorchooser.desktop
-cd -
+install -d $ALD/Settings/KDE
+
+mv $ALD/{Settings/[!K]*,Settings/KDE}
 
 cd $ALD/Settings/KDE/Peripherals
 cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
@@ -460,33 +462,25 @@ cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
 mv -f kamera.desktop.tmp kamera.desktop
 cd -
 
-#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+cd $RPM_BUILD_ROOT%{_desktopdir}
+cat kcolorchooser.desktop |sed -e 's/Icon=[^$]\+/Icon=colors/' \
+    > kcolorchooser.desktop.tmp
+mv -f kcolorchooser.desktop.tmp kcolorchooser.desktop
+cd -
 
-#%find_lang kcmkamera		--with-kde
 %find_lang kamera		--with-kde
 %find_lang kcoloredit		--with-kde
+%find_lang kgamma		--with-kde
 %find_lang kdvi			--with-kde
-#%find_lang kfax		--with-kde
-#%find_lang kfile_pdf		--with-kde
-#%find_lang kfile_png		--with-kde
-#%find_lang kfile_ps		--with-kde
-#%find_lang kpixmap2bitmap	--with-kde
-#cat kpixmap2bitmap.lang kfile_pdf.lang kfile_png.lang kfile_ps.lang \
-#    >> %{name}.lang
-#%find_lang kfract		--with-kde
 %find_lang kghostview		--with-kde
 %find_lang kiconedit		--with-kde
 %find_lang kooka		--with-kde
-#%find_lang libkscan		--with-kde
-#cat libkscan.lang >> kooka.lang
 %find_lang kpaint		--with-kde
 %find_lang kpovmodeler		--with-kde
 %find_lang kruler		--with-kde
 %find_lang ksnapshot		--with-kde
 %find_lang kuickshow		--with-kde
 %find_lang kview		--with-kde
-#%find_lang kviewshell		--with-kde
-#cat kviewshell.lang >> kview.lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -499,7 +493,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*.h
 %{_libdir}/libkscan.so
 %{_libdir}/libkmultipage.so
-%{_libdir}/libkviewsupport.so
+%{_libdir}/libkimageviewer.so
 
 #################################################
 #             DAEMONWATCHER
@@ -529,7 +523,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kcolorchooser
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
-%{_applnkdir}/Utilities/kcolorchooser.desktop
+%{_desktopdir}/kcolorchooser.desktop
 
 #################################################
 #             KCOLOREDIT
@@ -538,7 +532,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_datadir}/apps/kcoloredit
-%{_applnkdir}/Graphics/kcoloredit.desktop
+%{_desktopdir}/kcoloredit.desktop
 %{_pixmapsdir}/[!l]*/*/*/kcoloredit.*
 
 #################################################
@@ -550,7 +544,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/kdvipart.la
 %attr(755,root,root) %{_libdir}/kde3/kdvipart.so
 %{_datadir}/apps/kdvi/
-%{_applnkdir}/Graphics/Viewers/kdvi.desktop
+%{_desktopdir}/kdvi.desktop
 %{_pixmapsdir}/*/*/*/kdvi.*
 
 #################################################
@@ -563,7 +557,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/kfaxpart.la
 %attr(755,root,root) %{_libdir}/kde3/kfaxpart.so
 %{_datadir}/apps/kfax/
-%{_applnkdir}/Graphics/Viewers/kfax.desktop
+%{_desktopdir}/kfax.desktop
 %{_pixmapsdir}/*/*/*/kfax.*
 
 #################################################
@@ -576,6 +570,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kfile_*.desktop
 
 #################################################
+#             KGAMMA
+#################################################
+%files kgamma -f kgamma.lang 
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/xf86gammacfg
+%{_libdir}/kde3/libkcm_kgamma.la
+%attr(755,root,root) %{_libdir}/kde3/libkcm_kgamma.so
+%{_datadir}/apps/kgamma
+%{_applnkdir}/Settings/KDE/Peripherals/kgamma.desktop
+%{_pixmapsdir}/*/*/apps/kgamma_red.png
+
+#################################################
 #             KGHOSTVIEW
 #################################################
 %files kghostview -f kghostview.lang
@@ -584,7 +590,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/libkghostviewpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kghostview
-%{_applnkdir}/Graphics/Viewers/kghostview.desktop
+%{_desktopdir}/kghostview.desktop
 %{_pixmapsdir}/*/*/*/kghostview.*
 
 #################################################
@@ -594,7 +600,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kiconedit
 %{_datadir}/apps/kiconedit
-%{_applnkdir}/Graphics/kiconedit.desktop
+%{_desktopdir}/kiconedit.desktop
 %{_pixmapsdir}/*/*/*/kiconedit.*
 
 #################################################
@@ -608,7 +614,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kooka
 %{_datadir}/config/kookarc
 %{_datadir}/services/scanservice.desktop
-%{_applnkdir}/Graphics/kooka.desktop
+%{_desktopdir}/kooka.desktop
 %{_pixmapsdir}/*/*/actions/palette*
 
 #################################################
@@ -618,7 +624,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpaint
 %{_datadir}/apps/kpaint
-%{_applnkdir}/Graphics/kpaint.desktop
+%{_desktopdir}/kpaint.desktop
 %{_pixmapsdir}/*/*/*/kpaint.*
 
 #################################################
@@ -630,7 +636,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/libkpovmodelerpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.so
 %{_datadir}/apps/kpovmodeler
-%{_applnkdir}/Graphics/kpovmodeler.desktop
+%{_desktopdir}/kpovmodeler.desktop
 %{_pixmapsdir}/[!l]*/*/*/kpovmodeler*
 
 #################################################
@@ -640,7 +646,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kruler
 %{_datadir}/apps/kruler
-%{_applnkdir}/Utilities/kruler.desktop
+%{_desktopdir}/kruler.desktop
 %{_pixmapsdir}/*/*/apps/kruler.*
 
 #################################################
@@ -649,7 +655,7 @@ rm -rf $RPM_BUILD_ROOT
 %files ksnapshot -f ksnapshot.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ksnapshot
-%{_applnkdir}/Graphics/ksnapshot.desktop
+%{_desktopdir}/ksnapshot.desktop
 %{_pixmapsdir}/*/*/apps/ksnapshot.*
 
 #################################################
@@ -661,7 +667,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kuickshow.la
 %attr(755,root,root) %{_libdir}/kuickshow.so
 %{_datadir}/apps/kuickshow
-%{_applnkdir}/Graphics/Viewers/kuickshow.desktop
+%{_desktopdir}/kuickshow.desktop
 %{_pixmapsdir}/[!l]*/*/*/kuickshow.*
 
 #################################################
@@ -675,10 +681,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kview.so
 %{_libdir}/libkmultipage.la
 %attr(755,root,root) %{_libdir}/libkmultipage.so.*
-%{_libdir}/libkpagetest.la
-%attr(755,root,root) %{_libdir}/libkpagetest.so
-%{_libdir}/libkviewsupport.la
-%attr(755,root,root) %{_libdir}/libkviewsupport.so.*
+%{_libdir}/libkimageviewer.la
+%attr(755,root,root) %{_libdir}/libkimageviewer.so.*
 %{_libdir}/kde3/kview*.la
 %attr(755,root,root) %{_libdir}/kde3/kview*.so
 %{_libdir}/kde3/libkview*.la
@@ -686,7 +690,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kview*
 %{_datadir}/services/kview*
 %{_datadir}/servicetypes/kimageviewer*
-%{_applnkdir}/Graphics/Viewers/kview.desktop
+%{_desktopdir}/kview.desktop
 %{_pixmapsdir}/*/*/*/kview*
 
 #################################################
