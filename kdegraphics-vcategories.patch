@@ -5,7 +5,7 @@
  DocPath=kdvi/index.html
  X-KDE-StartupNotify=true
 -Categories=Qt;KDE;Graphics
-+Categories=Qt;KDE;Graphics;Viewer
++Categories=Qt;KDE;Graphics;X-Viewer
 --- kdegraphics-030329/kfax/kfax.desktop~	Fri Jan 10 00:47:21 2003
 +++ kdegraphics-030329/kfax/kfax.desktop	Tue Apr  1 23:03:23 2003
 @@ -62,4 +62,4 @@
@@ -13,7 +13,7 @@
  X-KDE-StartupNotify=true
  X-DCOP-ServiceType=Multi
 -Categories=Qt;KDE;Graphics
-+Categories=Qt;KDE;Graphics;Viewer
++Categories=Qt;KDE;Graphics;X-Viewer
 --- kdegraphics-030329/kghostview/kghostview.desktop~	Fri Jan 10 00:47:21 2003
 +++ kdegraphics-030329/kghostview/kghostview.desktop	Tue Apr  1 23:04:52 2003
 @@ -65,4 +65,4 @@
@@ -21,7 +21,7 @@
  X-KDE-StartupNotify=true
  X-DCOP-ServiceType=Multi
 -Categories=Qt;KDE;Graphics
-+Categories=Qt;KDE;Graphics;Viewer
++Categories=Qt;KDE;Graphics;X-Viewer
 --- kdegraphics-030329/kuickshow/src/kuickshow.desktop~	Sat Mar  1 00:55:35 2003
 +++ kdegraphics-030329/kuickshow/src/kuickshow.desktop	Tue Apr  1 23:06:36 2003
 @@ -67,4 +67,4 @@
@@ -29,7 +29,7 @@
  GenericName[zu]=Umbonisi Womfanekiso
  X-DCOP-ServiceType=Multi
 -Categories=Qt;KDE;Graphics
-+Categories=Qt;KDE;Graphics;Viewer
++Categories=Qt;KDE;Graphics;X-Viewer
 --- kdegraphics-030329/kview/kview.desktop~	Sat Mar  8 01:10:00 2003
 +++ kdegraphics-030329/kview/kview.desktop	Tue Apr  1 23:07:49 2003
 @@ -70,4 +70,4 @@
@@ -37,4 +37,4 @@
  X-KDE-StartupNotify=true
  X-DCOP-ServiceType=Multi
 -Categories=Qt;KDE;Graphics
-+Categories=Qt;KDE;Graphics;Viewer
++Categories=Qt;KDE;Graphics;X-Viewer
