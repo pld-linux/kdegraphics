@@ -1,6 +1,11 @@
 # TODO:
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
+#
+# Conditional build:
+# _with_pixmapsubdirs - leave different depth/resolution icons
+#
+%define		_with_pixmapsubdirs	1
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(ko):	K µ¥½ºÅ©Å¾ È¯°æ - ±×·¡ÇÈ ÀÀ¿ëÇÁ·Î±×·¥
@@ -9,15 +14,17 @@ Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Summary(zh_CN):	KDEÍ¼ÐÎÓ¦ÓÃ³ÌÐò
 Name:		kdegraphics
 Version:	3.0.4
-Release:	2
+Release:	3
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Source2:	%{name}-extra_icons.tar.bz2
 Patch0:		%{name}-fix-gs-configure.patch 
 BuildRequires:	XFree86-devel >= 3.3.6
+BuildRequires:	awk
 BuildRequires:	gettext-devel
 BuildRequires:	gphoto2-devel
 BuildRequires:	imlib-devel
@@ -369,7 +376,31 @@ cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' > kamera.desktop.tmp
 mv -f kamera.desktop.tmp kamera.desktop
 cd -
 
+# create in toplevel %%{_pixmapsdir} links to icons
+for i in $RPM_BUILD_ROOT%{_pixmapsdir}/hicolor/48x48/apps/{kdvi,kfax,kfract,kghostview,kiconedit,kpaint,kruler,ksnapshot,kview}.png
+do
+%if %{?_with_pixmapsubdirs:1}%{!?_with_pixmapsubdirs:0}
+	ln -sf `echo $i | sed "s:^$RPM_BUILD_ROOT%{_pixmapsdir}/::"` $RPM_BUILD_ROOT%{_pixmapsdir}
+%else
+	cp -af $i $RPM_BUILD_ROOT%{_pixmapsdir}
+%endif
+done
+
+bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_pixmapsdir}
+
+%if %{!?_with_pixmapsubdirs:1}%{?_with_pixmapsubdirs:0}
+# moved
+rm -f $RPM_BUILD_ROOT%{_pixmapsdir}/*color/??x??/*/{kdvi,kfax,kfract,kghostview,kiconedit,kpaint,kruler,ksnapshot,kview}.png
+# resized
+rm -f $RPM_BUILD_ROOT%{_pixmapsdir}/*color/??x??/*/{camera,kcoloredit,kuickshow}.png
+%endif
+
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+
+for f in `find $RPM_BUILD_ROOT%{_applnkdir} -name '.directory' -o -name '*.desktop'` ; do
+	awk -v F=$f '/^Icon=/ && !/\.xpm$/ && !/\.png$/ { $0 = $0 ".png";} { print $0; } END { if(F == ".directory") print "Type=Directory"; }' < $f > $f.tmp
+	mv -f $f{.tmp,}
+done
 
 %find_lang kcmkamera	--with-kde
 %find_lang kcoloredit	--with-kde
@@ -440,7 +471,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkdvi.??
 %{_datadir}/apps/kdvi
 %{_applnkdir}/Graphics/Viewers/kdvi.desktop
-%{_pixmapsdir}/*/*/apps/kdvi.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kdvi.png}
+%{_pixmapsdir}/kdvi.png
 
 #################################################
 #             KFAX
@@ -452,7 +484,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkfax.??
 %{_datadir}/apps/kfax
 %{_applnkdir}/Graphics/Viewers/kfax.desktop
-%{_pixmapsdir}/*/*/apps/kfax.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kfax.png}
+%{_pixmapsdir}/kfax.png
 
 #################################################
 #             KFRACT
@@ -462,7 +495,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kfract
 %{_datadir}/apps/kfract
 %{_applnkdir}/Graphics/kfract.desktop
-%{_pixmapsdir}/*/*/apps/kfract.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kfract.png}
+%{_pixmapsdir}/kfract.png
 
 #################################################
 #             KGHOSTVIEW
@@ -473,7 +507,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkghostview.*
 %{_datadir}/apps/kghostview
 %{_applnkdir}/Graphics/Viewers/kghostview.desktop
-%{_pixmapsdir}/*/*/apps/kghostview.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kghostview.png}
+%{_pixmapsdir}/kghostview.png
 
 #################################################
 #             KICONEDIT
@@ -483,7 +518,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kiconedit
 %{_datadir}/apps/kiconedit
 %{_applnkdir}/Graphics/kiconedit.desktop
-%{_pixmapsdir}/*/*/apps/kiconedit.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kiconedit.png}
+%{_pixmapsdir}/kiconedit.png
 
 #################################################
 #             KPAINT
@@ -493,7 +529,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kpaint
 %{_datadir}/apps/kpaint
 %{_applnkdir}/Graphics/kpaint.desktop
-%{_pixmapsdir}/*/*/apps/kpaint.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kpaint.png}
+%{_pixmapsdir}/kpaint.png
 
 #################################################
 #             KRULER
@@ -503,7 +540,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kruler
 %{_datadir}/apps/kruler
 %{_applnkdir}/Graphics/kruler.desktop
-%{_pixmapsdir}/*/*/apps/kruler.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kruler.png}
+%{_pixmapsdir}/kruler.png
 
 #################################################
 #             KSNAPSHOT
@@ -512,7 +550,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ksnapshot
 %{_applnkdir}/Graphics/ksnapshot.desktop
-%{_pixmapsdir}/*/*/apps/ksnapshot.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/ksnapshot.png}
+%{_pixmapsdir}/ksnapshot.png
 
 #################################################
 #             KVIEW
@@ -528,7 +567,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkpagetest.??
 %{_datadir}/apps/kview*
 %{_applnkdir}/Graphics/Viewers/kview.desktop
-%{_pixmapsdir}/*/*/apps/kview*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kview*}
+%{!?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kviews*}
+%{_pixmapsdir}/kview*
 
 #################################################
 #             KOOKA
@@ -550,7 +591,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_applnkdir}/Graphics/kcoloredit.desktop
-%{_pixmapsdir}/*/*/apps/kcoloredit.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kcoloredit.png}
+%{_pixmapsdir}/kcoloredit.png
 
 #################################################
 #             KCOLORCHOOSER
@@ -570,7 +612,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kuickshow.??
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
-%{_pixmapsdir}/*/*/apps/kuickshow.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kuickshow.png}
+%{_pixmapsdir}/kuickshow.png
 
 #################################################
 #             KAMERA
@@ -582,6 +625,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kamera.protocol
 %{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
 %{_pixmapsdir}/*/*/actions/camera_test.*
-%{_pixmapsdir}/*/*/apps/camera.*
-%{_pixmapsdir}/*/*/devices/camera.*
-%{_pixmapsdir}/*/*/filesystems/camera.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/*/camera.png}
+%{_pixmapsdir}/camera.png
