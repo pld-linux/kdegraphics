@@ -140,10 +140,10 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kdvi
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Graphics/kdvi.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdekdvi
-%attr(755, root, root) /usr/X11R6/bin/kdvi
+%attr(755,root,root) /usr/X11R6/bin/kdvi
 %lang(en) /usr/X11R6/share/kde/doc/HTML/en/kdvi
 %lang(fi) /usr/X11R6/share/kde/doc/HTML/fi/kdvi
 /usr/X11R6/share/kde/apps/kdvi/
@@ -171,10 +171,10 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kfax
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Graphics/KFax.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdeKFax
-%attr(755, root, root) /usr/X11R6/bin/kfax
+%attr(755,root,root) /usr/X11R6/bin/kfax
 %lang(en) /usr/X11R6/share/kde/doc/HTML/en/kfax
 /usr/X11R6/share/kde/apps/kfax/
 /usr/X11R6/share/kde/icons/mini/kfax.xpm
@@ -195,7 +195,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kfract
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Graphics/kfract.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdekfract
 %attr(755,root,root) /usr/X11R6/bin/kfract
@@ -208,10 +208,10 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kghostview
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Graphics/kghostview.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdekghostview
-%attr(755, root, root) /usr/X11R6/bin/kghostview
+%attr(755,root,root) /usr/X11R6/bin/kghostview
 %lang(en) /usr/X11R6/share/kde/doc/HTML/en/kghostview
 /usr/X11R6/share/kde/icons/mini/kghostview.xpm
 /usr/X11R6/share/kde/icons/kghostview.xpm
@@ -239,10 +239,10 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kpaint
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Graphics/kpaint.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdekpaint
-%attr(755, root, root) /usr/X11R6/bin/kpaint
+%attr(755,root,root) /usr/X11R6/bin/kpaint
 %lang(en) /usr/X11R6/share/kde/doc/HTML/en/kpaint
 /usr/X11R6/share/kde/apps/kpaint
 /usr/X11R6/share/kde/icons/mini/kpaint.xpm
@@ -270,10 +270,10 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kview
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Graphics/kview.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdekview
-%attr(755, root, root) /usr/X11R6/bin/kview
+%attr(755,root,root) /usr/X11R6/bin/kview
 %lang(en) /usr/X11R6/share/kde/doc/HTML/en/kview
 /usr/X11R6/share/kde/apps/kview/
 /usr/X11R6/share/kde/icons/mini/kview.xpm
