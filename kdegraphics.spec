@@ -44,6 +44,7 @@ BuildRequires:	libxml2-progs
 BuildRequires:	lockdev-devel
 BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
+BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	_noautoreqdep	libGL.so.1 libGLU.so.1
