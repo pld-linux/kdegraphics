@@ -38,6 +38,7 @@ BuildRequires:	sane-backends-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	gphoto2-lib-devel
+BuildRequires:	libxml2-progs
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
