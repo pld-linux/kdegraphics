@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define		_snap		030423
+%define		_snap		030503
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -143,7 +143,7 @@ Uruchamia demony na ¿±danie lub restartuje je po awarii.
 Summary:	Digital camera support
 Summary(pl):	Obs³uga kamer cyfrowych
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -172,7 +172,7 @@ Summary:	Color palette editor
 Summary(pl):	Edytor palety kolorów
 Summary(pt_BR):	Editor de cores
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -190,7 +190,7 @@ Summary:	KDE DVI viewer
 Summary(pl):	Przegl±darka plików DVI dla KDE
 Summary(pt_BR):	Programa de exibição de DVIs
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	%{name}-kview = %{version}-%{release}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -208,7 +208,7 @@ Summary:	KDE Fax viewer
 Summary(pl):	Przegl±darka faksów dla KDE
 Summary(pt_BR):	Programa de visualização de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	%{name}-kview = %{version}-%{release}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -225,7 +225,7 @@ Programa de visualização de faxes (formato TIFF).
 Summary:	Graphic formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach graficznych
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	konqueror >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -242,7 +242,7 @@ o pliku.
 Summary:	A monitor calibration tool
 Summary(pl):	Narzêdzie do kalibracji monitora
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -257,7 +257,7 @@ Summary:	KDE Postscript viewer
 Summary(pl):	Przegl±darka postscriptu dla KDE
 Summary(pt_BR):	Programa de visualização de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -275,7 +275,7 @@ Summary:	KDE Icon Editor
 Summary(pl):	Edytor ikon w ¶rodowisku KDE
 Summary(pt_BR):	Editor de ícones
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -293,7 +293,7 @@ Summary:	Scanning tool
 Summary(pl):	Narzêdzie do skanowania
 Summary(pt_BR):	Um programa de rasterização de imagens, baseado no SANE e libkscan
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -311,7 +311,7 @@ Summary:	KDE Painter
 Summary(pl):	Program graficzny KDE
 Summary(pt_BR):	Editor básico de imagens bitmap
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -328,7 +328,7 @@ Editor básico de imagens bitmap.
 Summary:	Povary Modeler
 Summary(pl):	Modeler Povary
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Requires:	povray
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
@@ -344,7 +344,7 @@ Summary:	KRuler
 Summary(pl):	Linijka dla KDE
 Summary(pt_BR):	Régua de pixels para a tela
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -364,7 +364,7 @@ Summary:	KDE Snap Shot
 Summary(pl):	Program do przechwytywania ekranu dla KDE
 Summary(pt_BR):	Programa de captura de tela
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -381,7 +381,7 @@ Programa de captura de tela.
 Summary:	Image viewer/browser
 Summary(pl):	Przegl±darka obrazków
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Provides:	kuickshow
 Obsoletes:	kuickshow
 Obsoletes:	kdegraphics
@@ -398,8 +398,7 @@ Summary:	KDE graphics file viewer
 Summary(pl):	Przegl±darka plików graficznych dla KDE
 Summary(pt_BR):	Visualizador de imagens
 Group:		X11/Applications/Graphics
-Requires:	%{name}-kview = %{version}
-Requires:	kdelibs >= %{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -416,7 +415,7 @@ Visualizador de imagens poderoso para KDE.
 Summary:	Advanced Search
 Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= %{version}
+Requires:	konqueror >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -450,15 +449,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-ALD=$RPM_BUILD_ROOT%{_applnkdir}
-
-mv $ALD/{Settings,KDE-Settings}
-
-cd $ALD/KDE-Settings/Peripherals
-cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
-    > kamera.desktop.tmp
-mv -f kamera.desktop.tmp kamera.desktop
-cd -
+mv $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE-Settings}
 
 cd $RPM_BUILD_ROOT%{_desktopdir}
 cat kcolorchooser.desktop |sed -e 's/Icon=[^$]\+/Icon=colors/' \
