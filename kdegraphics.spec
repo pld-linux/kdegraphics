@@ -3,15 +3,15 @@ Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	2.2.1
-Release:	2
+Version:	2.2.2
+Release:	0.1
 Epoch:		7
 License:	GPL
 Group:		X11/Applications/Graphics
 Group(de):	X11/Applikationen/Grafik
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/Aplicações/Gráficos
-Source0:	ftp://ftp.kde.org/pub/kde/stable/2.2.1/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-cast.patch
 BuildRequires:	kdelibs-devel >= 2.1
 BuildRequires:	qt-devel >= 2.2
