@@ -44,7 +44,7 @@ BuildRequires:	lockdev-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
-BuildRequires:	unsermake
+#BuildRequires:	unsermake
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
