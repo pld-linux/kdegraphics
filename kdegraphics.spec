@@ -94,7 +94,7 @@ Incluídos neste pacote:
 
 %package devel
 Summary:	kdegraphics development files
-Summary(pl):	Pliki developerskie kdegraphics
+Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
 
@@ -102,7 +102,7 @@ Group:		X11/Development/Libraries
 kdegraphics development files.
 
 %description devel -l pl
-Pliki developerskie kdegraphics.
+Pliki dla programistów kdegraphics.
 
 %description devel -l pt_BR
 Arquivos de inclusão para compilação de aplicações que usem as
