@@ -11,13 +11,13 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/3.3/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	7bb9843f7b03cd2716079ac83b9c9304
-#Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{_ver}-%{_snap}.tar.bz2
+Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
@@ -521,6 +521,7 @@ aplikacjach KDE.
 
 %prep
 %setup -q
+%patch100 -p1
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
