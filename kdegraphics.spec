@@ -9,7 +9,7 @@ Summary(pt_BR):	K Desktop Environment - Aplica珲es gr醘icas
 Summary(zh_CN):	KDE图形应用程序
 Name:		kdegraphics
 Version:	3.0.4
-Release:	1
+Release:	2
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -38,6 +38,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
 %define		_htmldir	/usr/share/doc/kde/HTML
+
+%define		no_install_post_chrpath		0
 
 %description
 Graphic applications for the K Desktop Environment.
