@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	5
+Release:	6
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -121,6 +121,19 @@ Pliki dla programistów kdegraphics.
 %description devel -l pt_BR
 Arquivos de inclusão para compilação de aplicações que usem as
 bibliotecas do kdegraphics.
+
+%package daemonwatcher
+Summary:	KDED Daemon Watcher
+Summary(pl):	Stra¼nik demona KDED
+Group:		X11/Applications
+Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-mrml < 3.1-6 
+
+%description daemonwatcher
+Starts daemons on demand and restarts them on failure.
+
+%description daemonwatcher -l pl
+Uruchamia demony na ¿±danie lub restartuje je po awarii.
 
 %package kamera
 Summary:	Digital camera support
@@ -463,24 +476,6 @@ cd -
 #%find_lang kviewshell		--with-kde
 #cat kviewshell.lang >> kview.lang
 
-%post   kcolorchooser -p /sbin/ldconfig
-%postun kcolorchooser -p /sbin/ldconfig
-
-%post   kdvi -p /sbin/ldconfig
-%postun kdvi -p /sbin/ldconfig
-
-%post   kfax -p /sbin/ldconfig
-%postun kfax -p /sbin/ldconfig
-
-%post   kghostview -p /sbin/ldconfig
-%postun kghostview -p /sbin/ldconfig
-
-%post   kooka -p /sbin/ldconfig
-%postun kooka -p /sbin/ldconfig
-
-%post   kview -p /sbin/ldconfig
-%postun kview -p /sbin/ldconfig
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -490,16 +485,28 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
-%attr(755,root,root) %{_libdir}/libkscan.so
-%attr(755,root,root) %{_libdir}/libkviewsupport.so
+%{_libdir}/libkscan.so
+%{_libdir}/libkmultipage.so
+%{_libdir}/libkviewsupport.so
+
+#################################################
+#             DAEMONWATCHER
+#################################################
+%files daemonwatcher
+%defattr(644,root,root,755)
+%{_libdir}/kde3/kded_daemonwatcher.la
+%attr(755,root,root) %{_libdir}/kde3/kded_daemonwatcher.so
+%{_datadir}/services/kded/daemonwatcher.desktop
 
 #################################################
 #             KAMERA
 #################################################
 %files kamera -f kamera.lang
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/kde3/kcm_kamera.*
-%attr(755,root,root) %{_libdir}/kde3/kio_kamera.*
+%{_libdir}/kde3/kcm_kamera.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_kamera.so
+%{_libdir}/kde3/kio_kamera.la
+%attr(755,root,root) %{_libdir}/kde3/kio_kamera.so
 %{_datadir}/services/kamera.protocol
 %{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
 %{_pixmapsdir}/*/*/*/camera*
@@ -510,7 +517,6 @@ rm -rf $RPM_BUILD_ROOT
 %files kcolorchooser
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
-#%attr(755,root,root) %{_libdir}/kcolorchooser.??
 %{_applnkdir}/Utilities/kcolorchooser.desktop
 
 #################################################
@@ -529,7 +535,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kdvi -f kdvi.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kdvi
-%attr(755,root,root) %{_libdir}/kde3/kdvipart.*
+%{_libdir}/kde3/kdvipart.la
+%attr(755,root,root) %{_libdir}/kde3/kdvipart.so
 %{_datadir}/apps/kdvi/
 %{_applnkdir}/Graphics/Viewers/kdvi.desktop
 %{_pixmapsdir}/*/*/*/kdvi.*
@@ -541,7 +548,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
-%attr(755,root,root) %{_libdir}/kde3/kfaxpart.*
+%{_libdir}/kde3/kfaxpart.la
+%attr(755,root,root) %{_libdir}/kde3/kfaxpart.so
 %{_datadir}/apps/kfax/
 %{_applnkdir}/Graphics/Viewers/kfax.desktop
 %{_pixmapsdir}/*/*/*/kfax.*
@@ -551,18 +559,9 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 %files kfile
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/kde3/kfile_*.??
+%{_libdir}/kde3/kfile_*.la
+%attr(755,root,root) %{_libdir}/kde3/kfile_*.so
 %{_datadir}/services/kfile_*.desktop
-
-#################################################
-#             KFRACT
-#################################################
-#%files kfract -f kfract.lang
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{_bindir}/kfract
-#%{_datadir}/apps/kfract/
-#%{_applnkdir}/Graphics/kfract.desktop
-#%{_pixmapsdir}/*/*/apps/kfract.*
 
 #################################################
 #             KGHOSTVIEW
@@ -570,7 +569,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kghostview -f kghostview.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
-%attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.*
+%{_libdir}/kde3/libkghostviewpart.la
+%attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kghostview
 %{_applnkdir}/Graphics/Viewers/kghostview.desktop
 %{_pixmapsdir}/*/*/*/kghostview.*
@@ -591,8 +591,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kooka -f kooka.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
+%{_libdir}/libkscan.la
 %attr(755,root,root) %{_libdir}/libkscan.so.*
-%attr(755,root,root) %{_libdir}/libkscan.la
 %{_datadir}/apps/kooka
 %{_datadir}/config/kookarc
 %{_datadir}/services/scanservice.desktop
@@ -615,7 +615,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kpovmodeler -f kpovmodeler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpovmodeler
-%attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.*
+%{_libdir}/kde3/libkpovmodelerpart.la
+%attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.so
 %{_datadir}/apps/kpovmodeler
 %{_applnkdir}/Graphics/kpovmodeler.desktop
 %{_pixmapsdir}/[!l]*/*/*/kpovmodeler*
@@ -645,7 +646,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kuickshow -f kuickshow.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kuickshow
-%attr(755,root,root) %{_libdir}/kuickshow.??
+%{_libdir}/kuickshow.la
+%attr(755,root,root) %{_libdir}/kuickshow.so
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
 %{_pixmapsdir}/[!l]*/*/*/kuickshow.*
@@ -657,17 +659,18 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kview
 %attr(755,root,root) %{_bindir}/kviewshell
-%attr(755,root,root) %{_libdir}/kview.*
-%attr(755,root,root) %{_libdir}/libkmultipage.*
-%attr(755,root,root) %{_libdir}/libkpagetest.*
-%attr(755,root,root) %{_libdir}/libkviewsupport.la
+%{_libdir}/kview.la
+%attr(755,root,root) %{_libdir}/kview.so
+%{_libdir}/libkmultipage.la
+%attr(755,root,root) %{_libdir}/libkmultipage.so.*
+%{_libdir}/libkpagetest.la
+%attr(755,root,root) %{_libdir}/libkpagetest.so
+%{_libdir}/libkviewsupport.la
 %attr(755,root,root) %{_libdir}/libkviewsupport.so.*
-%attr(755,root,root) %{_libdir}/kde3/kview_browserplugin.*
-%attr(755,root,root) %{_libdir}/kde3/kview_presenterplugin.*
-%attr(755,root,root) %{_libdir}/kde3/kview_scannerplugin.*
-%attr(755,root,root) %{_libdir}/kde3/kviewerpart.*
-%attr(755,root,root) %{_libdir}/kde3/libkviewcanvas.*
-%attr(755,root,root) %{_libdir}/kde3/libkviewviewer.*
+%{_libdir}/kde3/kview*.la
+%attr(755,root,root) %{_libdir}/kde3/kview*.so
+%{_libdir}/kde3/libkview*.la
+%attr(755,root,root) %{_libdir}/kde3/libkview*.so
 %{_datadir}/apps/kview*
 %{_datadir}/services/kview*
 %{_datadir}/servicetypes/kimageviewer*
@@ -681,14 +684,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mrmlsearch
 %attr(755,root,root) %{_libdir}/mrmlsearch.*
-%attr(755,root,root) %{_libdir}/kde3/kcm_kmrml.*
-# ???
-%attr(755,root,root) %{_libdir}/kde3/kded_daemonwatcher.*
-%attr(755,root,root) %{_libdir}/kde3/kio_mrml.*
-%attr(755,root,root) %{_libdir}/kde3/libkmrmlpart.*
+%{_libdir}/kde3/kcm_kmrml.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_kmrml.so
+%{_libdir}/kde3/kio_mrml.la
+%attr(755,root,root) %{_libdir}/kde3/kio_mrml.so
+%{_libdir}/kde3/libkmrmlpart.la
+%attr(755,root,root) %{_libdir}/kde3/libkmrmlpart.so
 %{_datadir}/mimelnk/text/mrml.desktop
-# ???
-%{_datadir}/services/kded/daemonwatcher.desktop
 %{_datadir}/services/mrml.protocol
 %{_datadir}/services/mrml_part.desktop
 %{_datadir}/apps/konqueror/servicemenus/mrml-servicemenu.desktop
