@@ -1,25 +1,22 @@
 
-%define		_state		unstable
-%define		_ver		3.3.92
-%define		_snap		050217
+%define		_state		stable
+%define		_ver		3.4.0
 
-%define		_minlibsevr	9:3.3.92.050217
-%define		_minbaseevr	9:3.3.92.050217
+%define		_minlibsevr	9:3.4.0
+%define		_minbaseevr	9:3.4.0
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	%{_ver}.%{_snap}
-#Version:	%{_ver}
-Release:	1
+Version:	%{_ver}
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:        http://ftp.pld-linux.org/software/kde/%{name}-%{_snap}.tar.bz2
-#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-#%% Source0-md5:	e819ff09157f1bf83c6a1ac70ab41439
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
+# Source0-md5:	e819ff09157f1bf83c6a1ac70ab41439
 Patch0:		kde-common-PLD.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
@@ -521,8 +518,7 @@ Szkielet KDE dla przegl±darek grafiki pozwala na zagnie¿d¿nie w
 aplikacjach KDE.
 
 %prep
-%setup -q -n %{name}-%{_snap}
-#%setup -q
+%setup -q
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
