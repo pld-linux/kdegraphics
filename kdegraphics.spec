@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.90
-%define		_snap		030618
+%define		_snap		030623
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -19,7 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	0476c518c4f31f9ec6517a97be62013f
+# Source0-md5:	10d1805fff0f40c0fa36c5d2e4205a18	
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
