@@ -1,0 +1,10 @@
+--- kdegraphics-3.0.3/kfax/kfax.cpp--	2002-09-03 15:54:02.000000000 +0200
++++ kdegraphics-3.0.3/kfax/kfax.cpp	2002-09-03 15:54:08.000000000 +0200
+@@ -255,6 +255,7 @@ TopLevel::~TopLevel (){
+ 
+   delete file;
+   delete help;
++  delete view;
+   delete options;
+ }
+ 
