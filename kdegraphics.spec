@@ -3,12 +3,12 @@
 #   for some reason it checks for kpsewhich from tetex.
 
 %define		_state		snapshots
-%define		_ver		3.2.90
-%define		_snap		040525
+%define		_ver		3.2.91
+%define		_snap		040630
 %define		_packager	adgor
 
-%define		_minlibsevr	9:3.2.90-040524
-%define		_minbaseevr	9:3.2.90-040524
+%define		_minlibsevr	9:3.2.91.040629
+%define		_minbaseevr	9:3.2.91.040629
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -23,8 +23,8 @@ Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{version}.tar.bz2
 Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
 ##%% Source0-md5:	8b503b8d6bb9c84162b6b1d88f300ee6
-Patch0:		%{name}-vcategories.patch
-Patch1:		kde-common-QTDOCDIR.patch
+Patch0:		kde-common-PLD.patch
+Patch1:		%{name}-vcategories.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
