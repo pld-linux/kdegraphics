@@ -8,19 +8,15 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplica珲es gr醘icas
 Summary(zh_CN):	KDE图形应用程序
 Name:		kdegraphics
-Version:	3.0.3
-Release:	5
+Version:	3.0.4
+Release:	1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
-Patch0:		post-3.0.3-kdegraphics-kghostview.diff
-Patch1:		%{name}-kfax-fix-mem-leak.patch 
-Patch2:		%{name}-fix-kooka-mem-leak.patch
-Patch3:		%{name}-fix-kamera-crash.patch
-Patch4: 	%{name}-fix-gs-configure.patch 
+Patch0:		%{name}-fix-gs-configure.patch 
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
 BuildRequires:	gphoto2-devel
@@ -342,10 +338,6 @@ Obs硊ga kamer cyfrowych.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
