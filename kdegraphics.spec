@@ -5,7 +5,7 @@
 
 %define		_state		snapshots
 %define		_ver		3.1.94
-%define		_snap		031204
+%define		_snap		040110
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -18,8 +18,8 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	213a03584cbdc11cb4053bcb7058f175
+Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{_snap}.tar.bz2
+# Source0-md5:	a7d3d2b5c6b5288a144404255022076f	
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	ed
 BuildRequires:	gettext-devel
@@ -615,6 +615,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kpovmodeler -f kpovmodeler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpovmodeler
+%{_libdir}/libkpovmodeler.la
+%attr(755,root,root) %{_libdir}/libkpovmodeler.so.*
 %{_libdir}/kde3/libkpovmodelerpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.so*
 %{_datadir}/apps/kpovmodeler
