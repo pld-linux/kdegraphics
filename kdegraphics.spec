@@ -6,7 +6,7 @@ Release:	1
 Group:		X11/KDE/Graphics
 Group(pl):	X11/KDE/Grafika
 License:	GPL
-Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/stable/2.2.1/src/%{name}-%{version}.tar.bz2
 BuildRequires:	kdelibs-devel >= 2.1
 BuildRequires:	qt-devel >= 2.2
 BuildRequires:	XFree86-devel >= 3.3.6
