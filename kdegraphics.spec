@@ -6,10 +6,10 @@
 %define		_state		stable
 %define		_ver		3.1.5
 
-Summary:	K Desktop Environment - Graphic Applications
+Summary:	K Desktop Environment - graphic applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
-Summary(pl):	K Desktop Environment - Aplikacje graficzne
-Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
+Summary(pl):	K Desktop Environment - aplikacje graficzne
+Summary(pt_BR):	K Desktop Environment - aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
 Release:	0.1
@@ -133,9 +133,10 @@ Arquivos de inclusão para compilação de aplicações que usem as
 bibliotecas do kdegraphics.
 
 %package daemonwatcher
-Summary:	KDED Daemon Watcher
+Summary:	KDED daemon watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
+Requires:	%{name}-kmrml-messages
 Requires:	kdelibs >= 8:%{version}
 #Obsoletes:	%{name}-mrml < 3.1-6
 Obsoletes:	kdegraphics
@@ -212,7 +213,7 @@ Program do przegl±dania plików DVI.
 Programa de exibição de DVIs.
 
 %package kfax
-Summary:	KDE Fax viewer
+Summary:	KDE fax viewer
 Summary(pl):	Przegl±darka faksów dla KDE
 Summary(pt_BR):	Programa de visualização de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
@@ -247,7 +248,7 @@ konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
 o pliku.
 
 %package kghostview
-Summary:	KDE Postscript viewer
+Summary:	KDE postscript viewer
 Summary(pl):	Przegl±darka postscriptu dla KDE
 Summary(pt_BR):	Programa de visualização de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
@@ -265,7 +266,7 @@ Program ten umo¿liwia przegl±danie plików postscriptowych (.ps).
 Programa de visualização de arquivos Postscript e PDF.
 
 %package kiconedit
-Summary:	KDE Icon Editor
+Summary:	KDE icon editor
 Summary(pl):	Edytor ikon w ¶rodowisku KDE
 Summary(pt_BR):	Editor de ícones
 Group:		X11/Applications/Graphics
@@ -280,7 +281,21 @@ KDE Icon editor.
 Edytor ikon dla KDE.
 
 %description kiconedit -l pt_BR
-Editor de ícones, lida inclusive com arquivos .ICO.
+Editor de ícones, lida inclusive com arquivos .ICO .
+
+%package kmrml-messages
+Summary:	International files for daemonwatcher and mrml
+Summary(pl):	Pliki z t³umaczeniami dla daemonwatchera i mrmla
+Group:		X11/Applications/Graphics
+Obsoletes:	kdegraphics
+Obsoletes:	kdegraphics-kfract
+Obsoletes:	kdegraphics-kmrml
+
+%description kmrml-messages
+International files for daemonwatcher and mrml.
+
+%description kmrml-messages -l pl
+Pliki z t³umaczeniami dla daemonwatchera i mrmla.
 
 %package kooka
 Summary:	Scanning tool
@@ -301,7 +316,7 @@ Narzêdzie do skanowania.
 Um programa de rasterização de imagens, baseado no SANE e libkscan.
 
 %package kpaint
-Summary:	KDE Painter
+Summary:	KDE painter
 Summary(pl):	Program graficzny KDE
 Summary(pt_BR):	Editor básico de imagens bitmap
 Group:		X11/Applications/Graphics
@@ -319,7 +334,7 @@ A (very) simple painting program for KDE.
 Editor básico de imagens bitmap.
 
 %package kpovmodeler
-Summary:	Povary Modeler
+Summary:	Povary modeler
 Summary(pl):	Modeler Povary
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= 8:%{version}
@@ -348,13 +363,13 @@ measure distances on your screen.
 
 %description kruler -l pl
 KRuler jest prost± aplikacj±, z tylko jednym celem w ¿yciu: mierzenie
-odleg³o¶ci na twoim ekranie.
+odleg³o¶ci na ekranie.
 
 %description kruler -l pt_BR
 Régua de pixels para a tela.
 
 %package ksnapshot
-Summary:	KDE Snap Shot
+Summary:	KDE snapshot
 Summary(pl):	Program do przechwytywania ekranu dla KDE
 Summary(pt_BR):	Programa de captura de tela
 Group:		X11/Applications/Graphics
@@ -401,16 +416,17 @@ Obsoletes:	kdegraphics-kfract
 A graphics files viewer for KDE.
 
 %description kview -l pl
-Program ten umo¿liwia ogl±danie ró¿nych plików graficznych.
+Program, który umo¿liwia ogl±danie ró¿nych plików graficznych.
 
 %description kview -l pt_BR
 Visualizador de imagens poderoso para KDE.
 
 %package mrml
-Summary:	Advanced Search
+Summary:	Advanced search
 Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= 8:%{version}
+Requires:	%{name}-kmrml-messages
 Requires:	kdelibs >= 8:%{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
@@ -522,10 +538,7 @@ cat kview{brows,present,scann}erplugin.lang >> kview.lang
 cat kviewshell.lang >> kview.lang
 
 # kmrml.mo is used by both: mrml and daemonwatcher
-%find_lang 	kmrml
-mv -f kmrml.lang daemonwatcher.lang
 %find_lang 	kmrml			--with-kde
-mv -f kmrml.lang mrml.lang
 
 # kcoloredit.mo is used by both: kcoloredit and kcolorchooser
 %find_lang	kcoloredit
@@ -658,6 +671,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/kiconedit.*
 
 #################################################
+#             KMRML-MESSAGES
+#################################################
+%files kmrml-messages -f kmrml.lang
+%defattr(644,root,root,755)
+
+#################################################
 #             KOOKA
 #################################################
 %files kooka -f kooka.lang
@@ -765,7 +784,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             MRML
 #################################################
-%files mrml -f mrml.lang
+%files mrml
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mrmlsearch
 %attr(755,root,root) %{_libdir}/mrmlsearch.*
