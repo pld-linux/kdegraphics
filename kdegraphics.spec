@@ -1,9 +1,9 @@
 # TODO:
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
-%define		_ver		3.0.2
+%define		_ver		3.0.3
 #define		_sub_ver
-%define		_rel		1
+%define		_rel		0.1
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -25,20 +25,20 @@ Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
-BuildRequires:	kdelibs-devel >= %{_version}
 BuildRequires:	XFree86-devel >= 3.3.6
+BuildRequires:	gettext-devel
+BuildRequires:	gphoto2-lib-devel
 BuildRequires:	imlib-devel
+BuildRequires:	kdelibs-devel >= %{_version}
+BuildRequires:	libjpeg-devel
+BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	libjpeg-devel
 BuildRequires:	libungif-devel
-BuildRequires:	libpng-devel >= 1.0.8
-BuildRequires:	zlib-devel
-BuildRequires:	sane-backends-devel
-BuildRequires:	gettext-devel
 BuildRequires:	libxml2-devel
-BuildRequires:	gphoto2-lib-devel
 BuildRequires:	libxml2-progs
+BuildRequires:	sane-backends-devel
+BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
