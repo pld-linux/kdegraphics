@@ -15,7 +15,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	2
+Release:	3
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -134,7 +134,7 @@ Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
-Obsoletes:	%{name}-mrml < 8:3.1-6
+Obsoletes:	kdegraphics-mrml < 8:3.1-6
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
@@ -434,6 +434,7 @@ Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= 9:%{version}
 Obsoletes:	kdegraphics
+Obsoletes:	kdegraphics-mrml
 
 %description kmrml
 This package provides graphics files advanced search with file
