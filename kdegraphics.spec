@@ -3,7 +3,7 @@
 #   for some reason it checks for kpsewhich from tetex.
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-rc4
+%define         _kdever         kde-3.1-rc5
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.1
-Release:	1
+Release:	2
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
