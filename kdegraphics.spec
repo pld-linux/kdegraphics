@@ -873,6 +873,9 @@ done
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post	kghostview	-p /sbin/ldconfig
+%postun	kghostview	-p /sbin/ldconfig
+
 %post	kooka		-p /sbin/ldconfig
 %postun	kooka		-p /sbin/ldconfig
 
@@ -986,7 +989,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
 %{_libdir}/libkghostviewlib.la
-%attr(755,root,root) %{_libdir}/libkghostviewlib.so.*
+%attr(755,root,root) %{_libdir}/libkghostviewlib.so.*.*.*
 %{_libdir}/kde3/libkghostviewpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kghostview
