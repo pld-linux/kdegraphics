@@ -3,8 +3,10 @@
 #   for some reason it checks for kpsewhich from tetex.
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
+Summary(ko):	K µ¥½ºÅ©Å¾ È¯°æ - ±×·¡ÇÈ ÀÀ¿ëÇÁ·Î±×·¥
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
+Summary(zh_CN):	KDEÍ¼ÐÎÓ¦ÓÃ³ÌÐò
 Name:		kdegraphics
 Version:	3.0.3
 Release:	5
@@ -15,6 +17,10 @@ Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.
 # generated from kde-i18n
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		post-3.0.3-kdegraphics-kghostview.diff
+Patch1:		%{name}-kfax-fix-mem-leak.patch 
+Patch2:		%{name}-fix-kooka-mem-leak.patch
+Patch3:		%{name}-fix-kamera-crash.patch
+Patch4: 	%{name}-fix-gs-configure.patch 
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
 BuildRequires:	gphoto2-devel
@@ -100,6 +106,7 @@ Incluídos neste pacote:
 
 %package devel
 Summary:	kdegraphics development files
+Summary(ko):	kdegraphics °ü·Ã °³¹ß¿¡ ÇÊ¿äÇÑ ÆÄÀÏ
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
@@ -301,7 +308,7 @@ Group:		X11/Applications/Graphics
 Requires:	kdelibs = %{version}
 
 %description kcolorchooser
-Color chooser
+Color chooser.
 
 %description kcolorchooser -l pl
 Wybieracz kolorów.
@@ -335,6 +342,10 @@ Obs³uga kamer cyfrowych.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -431,7 +442,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kdvi
 %attr(755,root,root) %{_libdir}/libkdvi.??
-%{_datadir}/apps/kdvi/
+%{_datadir}/apps/kdvi
 %{_applnkdir}/Graphics/Viewers/kdvi.desktop
 %{_pixmapsdir}/*/*/apps/kdvi.*
 
@@ -443,7 +454,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %attr(755,root,root) %{_libdir}/libkfax.??
-%{_datadir}/apps/kfax/
+%{_datadir}/apps/kfax
 %{_applnkdir}/Graphics/Viewers/kfax.desktop
 %{_pixmapsdir}/*/*/apps/kfax.*
 
@@ -453,7 +464,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kfract -f kfract.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfract
-%{_datadir}/apps/kfract/
+%{_datadir}/apps/kfract
 %{_applnkdir}/Graphics/kfract.desktop
 %{_pixmapsdir}/*/*/apps/kfract.*
 
