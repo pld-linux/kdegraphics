@@ -27,6 +27,7 @@ Source0:	%{name}-%{_snap}.tar.bz2
 ##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 Patch0:		%{name}-vcategories.patch
 Patch1:		kde-common-QTDOCDIR.patch
+Patch2:		%{name}-gcc34.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
@@ -715,6 +716,7 @@ Pliki umiêdzynarodawiaj±ce dla kfile'a.
 %setup -q -n %{name}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
