@@ -16,7 +16,7 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	d74038c154a5ecd924a50b57d4c79c43
+# Source0-md5:	af7092f2afc5a8565eb5017ecee6b67e
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-vcategories.patch
 Patch1:		%{name}-gcc34.patch
