@@ -15,7 +15,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	3
+Release:	4
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -822,6 +822,8 @@ do
         %find_lang kfile_${i} --with-kde
         cat kfile_${i}.lang >> kfile.lang
 done
+
+%find_lang desktop_kdegraphics --with-kde
 %endif
 
 files="kamera \
@@ -847,7 +849,17 @@ for i in $files; do
         mv ${i}.lang.1 ${i}.lang
 done
 
-%find_lang desktop_kdegraphics --with-kde
+
+durne=`ls -1 *.lang|grep -v _en`
+
+for i in $durne; 
+do
+	echo $i >> control
+	grep -v en\/ $i|grep -v apidocs >> ${i}.1
+	if [ -f ${i}.1 ] ; then
+		mv ${i}.1 ${i}
+	fi
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
