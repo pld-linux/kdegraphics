@@ -1,9 +1,9 @@
 # TODO:
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
-%define		_ver		3.0.1
+%define		_ver		3.0.2
 #define		_sub_ver
-%define		_rel		2
+%define		_rel		0.1
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
