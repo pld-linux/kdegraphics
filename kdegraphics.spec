@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define		_snap		030503
+%define		_snap		030509
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -474,6 +474,12 @@ cd -
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post	kooka		-p /sbin/ldconfig
+%postun	kooka		-p /sbin/ldconfig
+
+%post	kview		-p /sbin/ldconfig
+%postun	kview		-p /sbin/ldconfig
+
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
@@ -562,7 +568,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
 %{_libdir}/libkscan.la
-%attr(755,root,root) %{_libdir}/libkscan.so.*
+%attr(755,root,root) %{_libdir}/libkscan.so.*.*.*
 %{_datadir}/apps/kooka
 %{_datadir}/config/kookarc
 %{_datadir}/services/scanservice.desktop
@@ -614,9 +620,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kview.la
 %attr(755,root,root) %{_libdir}/kview.so
 %{_libdir}/libkmultipage.la
-%attr(755,root,root) %{_libdir}/libkmultipage.so.*
+%attr(755,root,root) %{_libdir}/libkmultipage.so.*.*.*
 %{_libdir}/libkimageviewer.la
-%attr(755,root,root) %{_libdir}/libkimageviewer.so.*
+%attr(755,root,root) %{_libdir}/libkimageviewer.so.*.*.*
 %{_libdir}/kde3/kview*.la
 %attr(755,root,root) %{_libdir}/kde3/kview*.so
 %{_libdir}/kde3/libkview*.la
