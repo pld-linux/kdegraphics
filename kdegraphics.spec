@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	2
+Release:	3
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -525,36 +525,31 @@ aplikacjach KDE.
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
-	kdvi/kdvi.desktop
-
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
-	kfax/kfax.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
-	kpdf/kpdf/kpdf.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Scanning;/' \
-	kooka/kooka.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
-	kview/kview.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	kcoloredit/kcolorchooser.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	kcoloredit/kcoloredit.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	ksnapshot/ksnapshot.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	kruler/kruler.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
-	kuickshow/src/kuickshow.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	kolourpaint/kolourpaint.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	kiconedit/kiconedit.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
+	-e 's/Terminal=0/Terminal=false/' \
+	kdvi/kdvi.desktop \
+	kfax/kfax.desktop \
+	kpdf/kpdf/kpdf.desktop \
+	kview/kview.desktop \
+	kuickshow/src/kuickshow.desktop \
 	kghostview/kghostview.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Scanning;/' \
+	-e 's/Terminal=0/Terminal=false/' \
+	kooka/kooka.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	-e 's/Terminal=0/Terminal=false/' \
+	kcoloredit/kcolorchooser.desktop \
+	kcoloredit/kcoloredit.desktop \
+	ksnapshot/ksnapshot.desktop \
+	kruler/kruler.desktop \
+	kolourpaint/kolourpaint.desktop \
+	kiconedit/kiconedit.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	-e '/\[Desktop Entry\]/aEncoding=UTF-8' \
 	kpovmodeler/kpovmodeler.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;X-KDE-settings-peripherals/' \
 	kamera/kcontrol/kamera.desktop
+%{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' \
+	kgamma/kcmkgamma/kgamma.desktop
 
 %build
 cp %{_datadir}/automake/config.sub admin
