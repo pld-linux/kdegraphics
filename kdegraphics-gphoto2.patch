@@ -1,0 +1,31 @@
+diff -urN kdegraphics-3.0.orig/configure.in kdegraphics-3.0/configure.in
+--- kdegraphics-3.0.orig/configure.in	Sun Mar 24 23:04:26 2002
++++ kdegraphics-3.0/configure.in	Wed Apr 10 18:32:47 2002
+@@ -69,7 +69,7 @@
+ dnl Checks for typedefs, structures, and compiler characteristics.
+ AC_HEADER_TIME
+ 
+-CXXFLAGS="$CXXFLAGS -DQT_CLEAN_NAMESPACE -DQT_NO_ASCII_CAST"
++CXXFLAGS="$CXXFLAGS -DQT_CLEAN_NAMESPACE -DQT_NO_ASCII_CAST `gphoto2-config --cflags`"
+ dnl KDE_FIND_GPHOTO2 - Find gphoto2 libraries and include files
+ dnl
+ dnl Adapted from kdebase/nsplugins/configure.in.in
+@@ -83,7 +83,8 @@
+ gphoto2_includes=
+ gphoto2_libraries=
+ 
+-
++CFLAGS="$CFLAGS `gphoto2-config --cflags`"
++LIBS="$LIBS `gphoto2-config --libs`"
+ 
+ # Process user input to configure
+ AC_ARG_WITH(kamera,
+@@ -150,7 +151,7 @@
+ LIBS="-lgphoto2_port -lgphoto2 $LIBS"
+ #
+ ac_cv_gphoto2_libraries="none"
+-AC_TRY_LINK([#include <gphoto2.h>],[gp_init(0);],
++AC_TRY_LINK([#include <gphoto2.h>],[gp_port_open(0);],
+ [
+ # libgphoto2 is in the standard search path.
+ ac_cv_gphoto2_libraries=
