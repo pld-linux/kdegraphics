@@ -3,14 +3,14 @@
 #   for some reason it checks for kpsewhich from tetex.
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-rc2
+%define         _kdever         kde-3.1-rc3
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	3.0.98
+Version:	3.0.99
 Release:	1
 Epoch:		8
 License:	GPL
@@ -408,7 +408,8 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_applnkdir}/{Settings/KDE,Graphics/Viewers}
+
+install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,Settings/KDE,Utilities}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -419,6 +420,14 @@ ALD=$RPM_BUILD_ROOT%{_applnkdir}
 mv $ALD/{Settings/[!K]*,Settings/KDE}
 mv $ALD/{Graphics/More/*.desktop,Graphics}
 mv $ALD/{Graphics/{kdvi,kfax,kghostview,kuickshow,kview}.desktop,Graphics/Viewers}
+mv $ALD/{Graphics/{kcolorchooser,kruler}.desktop,Utilities}
+
+cd $ALD/Utilities
+cat kcolorchooser.desktop |sed 's/Icon=[^$]\+/Icon=colors/' \
+    > kcolorchooser.desktop.tmp
+cat kcolorchooser.desktop.tmp > kcolorchooser.desktop
+rm kcolorchooser.desktop.tmp
+cd -
 
 #cd $ALD/Settings/KDE/Peripherals
 #cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' > kamera.desktop.tmp
@@ -500,7 +509,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
 #%attr(755,root,root) %{_libdir}/kcolorchooser.??
-%{_applnkdir}/Graphics/kcolorchooser.desktop
+%{_applnkdir}/Utilities/kcolorchooser.desktop
 
 #################################################
 #             KCOLOREDIT
@@ -616,7 +625,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kruler
 %{_datadir}/apps/kruler
-%{_applnkdir}/Graphics/kruler.desktop
+%{_applnkdir}/Utilities/kruler.desktop
 %{_pixmapsdir}/*/*/apps/kruler.*
 
 #################################################
