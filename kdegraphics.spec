@@ -8,7 +8,7 @@ Group:       X11/KDE/Graphics
 Copyright:   GPL
 Requires:    qt >= 1.40, kdelibs = %{version}
 Vendor:      The KDE Team
-BuildRoot:   /tmp/%{name}-%{version}-root
+BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
 Graphic applications for the K Desktop Environment.
