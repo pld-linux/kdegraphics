@@ -985,6 +985,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kghostview -f kghostview_en.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
+%{_libdir}/libkghostviewlib.la
+%attr(755,root,root) %{_libdir}/libkghostviewlib.so.*
 %{_libdir}/kde3/libkghostviewpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kghostview
