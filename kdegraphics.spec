@@ -1,3 +1,4 @@
+%bcond_without	protections	# remove protections against fair use (printing and copying)
 
 %define		_state		stable
 %define		_kdever		3.4
@@ -18,6 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	5a0a32e314422e2ce051290c08390367
+Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-devel
@@ -519,6 +521,7 @@ aplikacjach KDE.
 
 %prep
 %setup -q
+%patch100 -p1
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
@@ -560,6 +563,7 @@ cp %{_datadir}/automake/config.sub admin
 	--disable-rpath \
 	--enable-final \
 	--with-qt-libraries=%{_libdir} \
+	--enable-kpdf-drm=%{!?with_protections:no}%{?with_protections:yes} \
 %if "%{_lib}" == "lib64"
 	--enable-libsuffix=64 \
 %endif
