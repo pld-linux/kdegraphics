@@ -7,7 +7,7 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040216
+%define		_snap		040225
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
