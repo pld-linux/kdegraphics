@@ -12,7 +12,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.3
+Release:	0.4
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -21,6 +21,8 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 # generated from kde-i18n
 Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
 # Source1-md5:	2d1c3dd73adfd314e3a8b61e669fc30c
+Source2:	%{name}-extra_icons.tar.bz2
+# Source2-md5:	b7b2fcb2871a40b413041b59fa77ee3b
 Patch0:		%{name}-no_glut.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
@@ -135,7 +137,7 @@ Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= 8:%{version}
-Obsoletes:	%{name}-mrml < 3.1-6
+#Obsoletes:	%{name}-mrml < 3.1-6
 Obsoletes:	kdegraphics
 
 %description daemonwatcher
@@ -149,6 +151,7 @@ Summary:	Digital camera support
 Summary(pl):	Obs³uga kamer cyfrowych
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= 8:%{version}
+Requires:	kdebase-core >= 8:%{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -167,7 +170,7 @@ Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
 %description kcolorchooser
-Color chooser
+Color chooser.
 
 %description kcolorchooser -l pl
 Program do wybierania kolorów.
@@ -407,6 +410,7 @@ Visualizador de imagens poderoso para KDE.
 Summary:	Advanced Search
 Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
+Requires:	kdebase-core >= 8:%{version}
 Requires:	kdelibs >= 8:%{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
@@ -465,6 +469,11 @@ cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
 mv -f kamera.desktop.tmp kamera.desktop
 cd -
 
+bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_pixmapsdir}
+for i in {kdvi,kfax,kghostview,kiconedit,kpaint,kruler,ksnapshot,kview}.png; do
+	ln -s crystalsvg/48x48/apps/$i $RPM_BUILD_ROOT%{_pixmapsdir}/$i
+done
+
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang	kamera			--with-kde
@@ -483,7 +492,7 @@ cat kcmkamera.lang >> kamera.lang
 %find_lang	kfile_tga		--with-kde
 %find_lang	kfile_tiff		--with-kde
 %find_lang	kfile_xbm		--with-kde
-cat kfile_{bmp,ico,jpeg,pdf,png,ps,tga,tiff,xbm}.lang >> kfile.lang
+cat kfile_{bmp,ico,jpeg,pdf,png,ps,tga,tiff,xbm}.lang > kfile.lang
 %find_lang	kghostview		--with-kde
 %find_lang	kiconedit		--with-kde
 %find_lang	kooka			--with-kde
@@ -553,7 +562,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kio_kamera.so
 %{_datadir}/services/kamera.protocol
 %{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
-%{_pixmapsdir}/*/*/*/camera*
+%{_pixmapsdir}/*/*/*/camera*.png
+%{_pixmapsdir}/camera.png
 
 #################################################
 #             KCOLORCHOOSER
@@ -572,7 +582,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_datadir}/apps/kcoloredit
 %{_applnkdir}/Graphics/kcoloredit.desktop
-%{_pixmapsdir}/[!l]*/*/*/kcoloredit.*
+%{_pixmapsdir}/[!l]*/*/*/kcoloredit.png
+%{_pixmapsdir}/kcoloredit.png
 %{_mandir}/man1/kcoloredit.*
 
 #################################################
@@ -585,7 +596,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kdvipart.so
 %{_datadir}/apps/kdvi/
 %{_applnkdir}/Graphics/Viewers/kdvi.desktop
-%{_pixmapsdir}/*/*/*/kdvi.*
+%{_pixmapsdir}/*/*/*/kdvi.png
+%{_pixmapsdir}/kdvi.png
 %{_mandir}/man1/kdvi.*
 
 #################################################
@@ -598,7 +610,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kfaxpart.so
 %{_datadir}/apps/kfax/
 %{_applnkdir}/Graphics/Viewers/kfax.desktop
-%{_pixmapsdir}/*/*/*/kfax.*
+%{_pixmapsdir}/*/*/*/kfax.png
+%{_pixmapsdir}/kfax.png
 %{_mandir}/man1/kfax.*
 
 #################################################
@@ -620,7 +633,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kghostview
 %{_applnkdir}/Graphics/Viewers/kghostview.desktop
-%{_pixmapsdir}/*/*/*/kghostview.*
+%{_pixmapsdir}/*/*/*/kghostview.png
+%{_pixmapsdir}/kghostview.png
 %{_mandir}/man1/kghostview.*
 
 #################################################
@@ -631,7 +645,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kiconedit
 %{_datadir}/apps/kiconedit
 %{_applnkdir}/Graphics/kiconedit.desktop
-%{_pixmapsdir}/*/*/*/kiconedit.*
+%{_pixmapsdir}/*/*/*/kiconedit.png
+%{_pixmapsdir}/kiconedit.png
 %{_mandir}/man1/kiconedit.*
 
 #################################################
@@ -657,7 +672,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kpaint
 %{_datadir}/apps/kpaint
 %{_applnkdir}/Graphics/kpaint.desktop
-%{_pixmapsdir}/*/*/*/kpaint.*
+%{_pixmapsdir}/*/*/*/kpaint.png
+%{_pixmapsdir}/kpaint.png
 %{_mandir}/man1/kpaint.*
 
 #################################################
@@ -670,7 +686,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.so
 %{_datadir}/apps/kpovmodeler
 %{_applnkdir}/Graphics/kpovmodeler.desktop
-%{_pixmapsdir}/[!l]*/*/*/kpovmodeler*
+%{_pixmapsdir}/[!l]*/*/*/kpovmodeler*.png
+%{_pixmapsdir}/kpovmodeler.png
 %{_mandir}/man1/kpovmodeler.*
 
 #################################################
@@ -681,7 +698,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kruler
 %{_datadir}/apps/kruler
 %{_applnkdir}/Utilities/kruler.desktop
-%{_pixmapsdir}/*/*/apps/kruler.*
+%{_pixmapsdir}/*/*/apps/kruler.png
+%{_pixmapsdir}/kruler.png
 %{_mandir}/man1/kruler.*
 
 #################################################
@@ -691,7 +709,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ksnapshot
 %{_applnkdir}/Graphics/ksnapshot.desktop
-%{_pixmapsdir}/*/*/apps/ksnapshot.*
+%{_pixmapsdir}/*/*/apps/ksnapshot.png
+%{_pixmapsdir}/ksnapshot.png
 %{_mandir}/man1/ksnapshot.*
 
 #################################################
@@ -704,7 +723,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kuickshow.so
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
-%{_pixmapsdir}/[!l]*/*/*/kuickshow.*
+%{_pixmapsdir}/[!l]*/*/*/kuickshow.png
+%{_pixmapsdir}/kuickshow.png
 %{_mandir}/man1/kuickshow.*
 
 #################################################
@@ -730,7 +750,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kview*
 %{_datadir}/servicetypes/kimageviewer*
 %{_applnkdir}/Graphics/Viewers/kview.desktop
-%{_pixmapsdir}/*/*/*/kview*
+%{_pixmapsdir}/*/*/*/kview*.png
+%{_pixmapsdir}/kview.png
 %{_mandir}/man1/kview*
 
 #################################################
