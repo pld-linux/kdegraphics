@@ -1,14 +1,15 @@
+%define		REV	20000418
 Summary:	K Desktop Environment - Graphic Applications
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Name:		kdegraphics
-Version:	1.1.2
+Version:	2.0pre_%{REV}
 Release:	1
 Group:          X11/KDE/Graphics
 Group(pl):      X11/KDE/Grafika
 Copyright:      GPL
 Source:		ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/bz2/%{name}-%{version}.tar.bz2
 BuildRequires:	kdelibs-devel = %{version}
-BuildRequires:	qt-devel >= 1.44
+BuildRequires:	qt-devel >= 2.1.0
 BuildRequires:	XFree86-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
@@ -165,7 +166,7 @@ Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3)
 
 %build
 export KDEDIR=%{_prefix}
-CXXFLAGS="$RPM_OPT_FLAGS -Wall -fno-rtti" \
+CXXFLAGS="$RPM_OPT_FLAGS -Wall" \
 CFLAGS="$RPM_OPT_FLAGS -Wall" \
 ./configure %{_target_platform} \
 	--prefix=$KDEDIR \
