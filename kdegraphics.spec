@@ -7,7 +7,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.0.3
-Release:	3
+Release:	4
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -558,7 +558,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kuickshow -f kuickshow.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kuickshow
-%{_libdir}/kuickshow.??
+%attr(755,root,root) %{_libdir}/kuickshow.??
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
 %{_pixmapsdir}/*/*/apps/kuickshow.*
@@ -568,8 +568,8 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 %files kamera -f kcmkamera.lang
 %defattr(644,root,root,755)
-%{_libdir}/kde3/kio_kamera.??
-%{_libdir}/kde3/libkcm_kamera.??
+%attr(755,root,root) %{_libdir}/kde3/kio_kamera.??
+%attr(755,root,root) %{_libdir}/kde3/libkcm_kamera.??
 %{_datadir}/services/kamera.protocol
 %{_applnkdir}/Settings/KDE/Peripherals/kamera.desktop
 %{_pixmapsdir}/*/*/actions/camera_test.*
