@@ -1,17 +1,17 @@
-Summary:     K Desktop Environment - Graphic Applications
-Summary(pl): K Desktop Environment - Aplikacje graficzne
-Name:        kdegraphics
-Version:     1.1.1
-Release:     2
+Summary:	K Desktop Environment - Graphic Applications
+Summary(pl):	K Desktop Environment - Aplikacje graficzne
+Name:		kdegraphics
+Version:	1.1.1
+Release:	3
 #ftp://ftp.kde.org/
 #patch = pub/kde/stable/%{version}/distribution/tar/generic/source/bz2/
-Source:	     %{name}-%{version}.tar.bz2
-Group:       X11/KDE/Graphics
-Group(pl):   X11/KDE/Grafika
-Copyright:   GPL
-Requires:    qt >= 1.44, kdelibs = %{version}
-Vendor:      The KDE Team
-BuildRoot:   /tmp/%{name}-%{version}-root
+Source:		%{name}-%{version}.tar.bz2
+Group:		X11/KDE/Graphics
+Group(pl):	X11/KDE/Grafika
+Copyright:	GPL
+Requires:	qt >= 1.44, kdelibs = %{version}
+Vendor:		The KDE Team
+BuildRoot:	/tmp/%{name}-%{version}-root
 
 %define _prefix	/usr/X11R6
 
@@ -150,7 +150,7 @@ Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3)
 
 %build
 export KDEDIR=%{_prefix}
-CXXFLAGS="$RPM_OPT_FLAGS -Wall -fno-rtti -fno-exceptions" \
+CXXFLAGS="$RPM_OPT_FLAGS -Wall" \
 CFLAGS="$RPM_OPT_FLAGS -Wall" \
 ./configure %{_target_platform} \
 	--prefix=$KDEDIR \
