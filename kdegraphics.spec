@@ -2,8 +2,8 @@
 Summary:	K Desktop Environment - Graphic Applications
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Name:		kdegraphics
-Version:	2.0pre_%{REV}
-Release:	1
+Version:	2.0
+Release:	1.pre_%{REV}
 Group:          X11/KDE/Graphics
 Group(pl):      X11/KDE/Grafika
 Copyright:      GPL
@@ -17,7 +17,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libungif-devel
 BuildRequires:	libpng-devel
 BuildRequires:	zlib-devel
-Requires:	qt >= 1.44
+Requires:	qt >= 2.0
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
