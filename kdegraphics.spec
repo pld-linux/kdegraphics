@@ -19,8 +19,6 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 # Source0-md5:	5a0a32e314422e2ce051290c08390367
 Patch0:		kde-common-PLD.patch
 # ftp://ftp.kde.org/pub/kde/security_patches/
-Patch1:		post-%{_ver}-%{name}.diff
-Patch2:		post-%{_ver}-%{name}-3.diff
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
@@ -522,8 +520,6 @@ aplikacjach KDE.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p0
-%patch2 -p0
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
 	-e 's/Terminal=0/Terminal=false/' \
