@@ -551,6 +551,11 @@ aplikacjach KDE.
 	kamera/kcontrol/kamera.desktop
 %{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' \
 	kgamma/kcmkgamma/kgamma.desktop
+for f in `find . -name *.desktop`; do
+	if grep -q '\[ven\]' $f; then
+		sed -i -e 's/\[ven\]/[ve]/' $f
+	fi
+done
 
 %build
 cp %{_datadir}/automake/config.sub admin
