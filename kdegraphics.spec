@@ -4,7 +4,7 @@
 #
 
 %define         _state          stable
-%define         _ver		3.1.2
+%define         _ver		3.1.3
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -12,17 +12,18 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	0.1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5: 05a791e5b685e35d3e05d23d2d467678
+# Source0-md5:	14afcd5713481b19a5a9908e522445de
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-no_glut.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
+BuildRequires:	gphoto2
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libgphoto2-devel
@@ -32,6 +33,7 @@ BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libungif-devel
+BuildRequires:  libusb-static
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
