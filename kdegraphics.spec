@@ -190,6 +190,21 @@ make RUN_KAPPFINDER=no prefix=$RPM_BUILD_ROOT$KDEDIR install
 %find_lang ksnapshot
 %find_lang kiconedit
 
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
+%post kview
+/sbin/ldconfig
+
+%postun kview
+/sbin/ldconfig
+
+%post kghostview
+/sbin/ldconfig
+
+%postun kghostview
+/sbin/ldconfig
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -364,9 +379,37 @@ rm -rf $RPM_BUILD_ROOT
 
 #####################################################
 %files
+#### katalog ####
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/katalog
+
+%{_datadir}/apps/katalog
 
 %{_datadir}/icons/hicolor/48x48/apps/katalog.*
 
 %{_datadir}/icons/locolor/16x16/apps/katalog.*
+
+#### kpixmap2bitmap ####
+%attr(755,root,root) %{_bindir}/kpixmap2bitmap
+
+#### libminimagick ####
+%attr(644,root,root) %{_includedir}/magick/*.h
+
+%attr(755,root,root) %{_libdir}/libminimagick.la
+%attr(755,root,root) %{_libdir}/libminimagick.so.*.*.*
+
+#### pixie ####
+%attr(755,root,root) %{_bindir}/pixie
+
+%attr(644,root,root) %{_includedir}/ifplugin.h
+
+%attr(755,root,root) %{_libdir}/libkif_kdeeffects.la
+%attr(755,root,root) %{_libdir}/libkif_kdeeffects.so.*.*.*
+%attr(755,root,root) %{_libdir}/libkif_magick.la
+%attr(755,root,root) %{_libdir}/libkif_magick.so.*.*.*
+%attr(755,root,root) %{_libdir}/libkifplugin.la
+%attr(755,root,root) %{_libdir}/libkifplugin.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpixie_color.la
+%attr(755,root,root) %{_libdir}/libpixie_color.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpixie_thumb.la
+%attr(755,root,root) %{_libdir}/libpixie_thumb.so.*.*.*
