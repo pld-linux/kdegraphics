@@ -320,9 +320,9 @@ A (very) simple painting program for KDE.
 Editor básico de imagens bitmap.
 
 %package kpdf
-Summary:	
-Summary(pl):	Kpdf is an xpdf wrapper for KDE
-Group:		Kpdf udostêpni± mo¿liwo¶ci xpdf w KDE
+Summary:	Kpdf is an xpdf wrapper for KDE	
+Summary(pl):	Kpdf udostêpni± mo¿liwo¶ci xpdf w KDE
+Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= 9:%{version}
 Obsoletes:	kdegraphics
 
