@@ -1,9 +1,9 @@
 
 %define		_state		stable
-%define		_ver		3.3.2
+%define		_ver		3.4.0
 
-%define		_minlibsevr	9:3.3.2
-%define		_minbaseevr	9:3.3.2
+%define		_minlibsevr	9:3.4.0
+%define		_minbaseevr	9:3.4.0
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -11,12 +11,12 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	2
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	03092b8be2f7054d71895b8fd58ad26e
+# Source0-md5:	5a0a32e314422e2ce051290c08390367
 Patch0:		kde-common-PLD.patch
 # ftp://ftp.kde.org/pub/kde/security_patches/
 Patch1:		post-%{_ver}-%{name}.diff
@@ -29,7 +29,6 @@ BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	kpathsea
 BuildRequires:	lcms-devel
 BuildRequires:	OpenEXR >= 1.1.0
-BuildRequires:	xpdf-tools
 BuildRequires:	OpenGL-devel
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libieee1284-devel
@@ -44,7 +43,7 @@ BuildRequires:	lockdev-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
-BuildRequires:	unsermake
+#BuildRequires:	unsermake
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -377,16 +376,16 @@ bibliotek SANE.
 Um programa de rasterização de imagens, baseado no SANE e libkscan.
 
 %package kpdf
-Summary:	Kpdf is an xpdf wrapper for KDE
-Summary(pl):	Kpdf - program udostêpniaj±cy mo¿liwo¶ci xpdf w KDE
+Summary:	Kpdf is an xpdf based pdf viewer for KDE
+Summary(pl):	Kpdf - program bazuj±cy na xpdf do przegl±dania plików pdf w KDE
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kpdf
-Kpdf is an xpdf wrapper for KDE.
+Kpdf is an xpdf based pdf viewer for KDE.
 
 %description kpdf -l pl
-Kpdf udostêpnia mo¿liwo¶ci xpdf w KDE.
+Program bazuj±cy na xpdf do przegl±dania plików pdf w KDE.
 
 %package kpovmodeler
 Summary:	Povary Modeler
@@ -560,7 +559,9 @@ done
 
 %build
 cp %{_datadir}/automake/config.sub admin
-export UNSERMAKE=%{_datadir}/unsermake/unsermake
+
+#export UNSERMAKE=%{_datadir}/unsermake/unsermake
+
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
@@ -671,7 +672,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kdvi
 %{_libdir}/kde3/kdvipart.la
 %attr(755,root,root) %{_libdir}/kde3/kdvipart.so
-%{_datadir}/apps/kdvi/
+%{_datadir}/apps/kdvi
+%{_datadir}/config.kcfg/kdvi.kcfg
+%{_datadir}/services/kdvimultipage.desktop
 %{_desktopdir}/kde/kdvi.desktop
 %{_iconsdir}/*/*/*/kdvi.*
 %{_mandir}/man1/kdvi.1*
@@ -711,7 +714,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkghostviewlib.so.*.*.*
 %{_libdir}/kde3/libkghostviewpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
+%{_datadir}/apps/kconf_update/kghostview.upd
+%attr(755,root,root) %{_datadir}/apps/kconf_update/update-to-xt-names.pl
 %{_datadir}/apps/kghostview
+%{_datadir}/config.kcfg/kghostview.kcfg
 %{_desktopdir}/kde/kghostview.desktop
 %{_iconsdir}/*/*/*/kghostview.*
 %{_mandir}/man1/kghostview.1*
@@ -749,7 +755,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kolourpaint
 %{_desktopdir}/kde/kolourpaint.desktop
 %{_iconsdir}/*/*/*/kolourpaint.png
-#%{_mandir}/man1/kolourpaint.1*
+%{_mandir}/man1/kolourpaint.1*
 
 %files kooka -f kooka.lang
 %defattr(644,root,root,755)
@@ -770,6 +776,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkpdfpart.so
 %{_datadir}/apps/kpdf
 %{_datadir}/apps/kpdfpart
+%{_datadir}/config.kcfg/kpdf.kcfg
 %{_datadir}/services/kpdf_part.desktop
 %{_desktopdir}/kde/kpdf.desktop
 %{_iconsdir}/*/*/*/kpdf.png
@@ -846,8 +853,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewgeneralconfig.so
 %{_libdir}/kde3/kcm_kviewpluginsconfig.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewpluginsconfig.so
-%{_libdir}/kde3/kcm_kviewpresenterconfig.la
-%attr(755,root,root) %{_libdir}/kde3/kcm_kviewpresenterconfig.so
+#%{_libdir}/kde3/kcm_kviewpresenterconfig.la
+#%attr(755,root,root) %{_libdir}/kde3/kcm_kviewpresenterconfig.so
 %{_libdir}/kde3/kcm_kviewviewerpluginsconfig.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewviewerpluginsconfig.so
 %{_libdir}/kde3/kview.la
@@ -864,19 +871,25 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkviewcanvas.so
 %{_libdir}/kde3/libkviewviewer.la
 %attr(755,root,root) %{_libdir}/kde3/libkviewviewer.so
+%{_libdir}/libphotobook.la
+%attr(755,root,root) %{_libdir}/libphotobook.so
 %{_datadir}/apps/kview
 %{_datadir}/apps/kviewviewer
+%{_datadir}/apps/photobookui.rc
 %{_datadir}/services/kconfiguredialog/kviewcanvasconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewgeneralconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewpluginsconfig.desktop
-%{_datadir}/services/kconfiguredialog/kviewpresenterconfig.desktop
+#%{_datadir}/services/kconfiguredialog/kviewpresenterconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewviewerpluginsconfig.desktop
 %{_datadir}/services/kviewcanvas.desktop
 %{_datadir}/services/kviewviewer.desktop
 %{_datadir}/servicetypes/kimageviewer.desktop
 %{_datadir}/servicetypes/kimageviewercanvas.desktop
+%{_datadir}/services/photobook.desktop
 %{_desktopdir}/kde/kview.desktop
 %{_iconsdir}/*/*/*/kview.png
+%{_iconsdir}/crystalsvg/*/apps/photobook.png
+
 %{_mandir}/man1/kview.1*
 
 %files kviewshell
@@ -884,9 +897,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kviewshell
 %{_libdir}/libkmultipage.la
 %attr(755,root,root) %{_libdir}/libkmultipage.so.*.*.*
+%{_libdir}/kde3/emptymultipagepart.la
+%attr(755,root,root) %{_libdir}/kde3/emptymultipagepart.so
 %{_libdir}/kde3/kviewerpart.la
 %attr(755,root,root) %{_libdir}/kde3/kviewerpart.so
 %{_datadir}/apps/kviewerpart
 %{_datadir}/apps/kviewshell
+%{_datadir}/config.kcfg/kviewshell.kcfg
+%{_datadir}/services/emptymultipage.desktop
+%{_datadir}/servicetypes/kmultipage.desktop
 %{_iconsdir}/*/*/*/kviewshell.png
 %{_mandir}/man1/kviewshell.1*
