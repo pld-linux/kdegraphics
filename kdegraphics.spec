@@ -12,7 +12,7 @@ Summary(pl):	K Desktop Environment - aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
