@@ -706,8 +706,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libkghostviewlib.la
 %attr(755,root,root) %{_libdir}/libkghostviewlib.so.*.*.*
 %{_libdir}/kde3/libkghostviewpart.la
-%{_libdir}/libkghostviewlib.so.0.0.0
-%{_libdir}/libkghostviewlib.la
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kghostview
 %{_desktopdir}/kde/kghostview.desktop
