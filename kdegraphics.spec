@@ -131,7 +131,7 @@ Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Obsoletes:	%{name}-mrml < 3.1-6 
+Obsoletes:	%{name}-mrml < 3.1-6
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
@@ -231,10 +231,10 @@ Obsoletes:	kdegraphics-kfract
 
 %description kfile
 This package adds a fold to konqueror "file properties"
-dialog window with file enhanced informations. 
+dialog window with file enhanced informations.
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" 
+Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku"
 konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
 o pliku.
 
@@ -415,7 +415,7 @@ z indeksowaniem plików.
 
 %prep
 %setup -q
-%patch0 -p1 
+%patch0 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
