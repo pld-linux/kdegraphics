@@ -1,53 +1,1203 @@
-diff -urN -x CVS kdegraphics.orig/kdvi/dviwin.cpp kdegraphics/kdvi/dviwin.cpp
---- kdegraphics.orig/kdvi/dviwin.cpp	Sun Apr 11 11:12:08 2004
-+++ kdegraphics/kdvi/dviwin.cpp	Fri Jun  4 19:35:02 2004
-@@ -1135,7 +1135,14 @@
- 	// to understand both.
- 	QFileInfo fi1(dviFile->filename);
- 	QFileInfo fi2(fi1.dir(),cp.mid(i+1));
-+
-+	//Sometimes the filename is passed without the .tex extension,
-+	//better add it when necessary.
-+	if ( !fi2.exists() )
-+		fi2.setFile(fi2.absFilePath() + ".tex");
-+
- 	QString TeXfile;
-+
- 	if ( fi2.exists() )
- 	  TeXfile = fi2.absFilePath();
- 	else {
-diff -urN -x CVS kdegraphics.orig/ksvg/ecma/ksvg_lookup.h kdegraphics/ksvg/ecma/ksvg_lookup.h
---- kdegraphics.orig/ksvg/ecma/ksvg_lookup.h	Sun Aug 17 13:49:23 2003
-+++ kdegraphics/ksvg/ecma/ksvg_lookup.h	Fri Jun  4 18:53:16 2004
-@@ -24,6 +24,7 @@
- #include <kjs/object.h>
- #include <kjs/lookup.h>
- #include <kjs/interpreter.h> // for ExecState
-+#include "ksvg_scriptinterpreter.h"
+diff -urN -x CVS kdegraphics.orig/kgamma/kcmkgamma/xvidextwrap.cpp kdegraphics/kgamma/kcmkgamma/xvidextwrap.cpp
+--- kdegraphics.orig/kgamma/kcmkgamma/xvidextwrap.cpp	Thu Aug 21 22:57:58 2003
++++ kdegraphics/kgamma/kcmkgamma/xvidextwrap.cpp	Thu Aug 19 10:37:05 2004
+@@ -32,6 +32,7 @@
+ #include <sstream>
+ #else
+ #include <strstream.h>
++#define istringstream istrstream
+ #endif
  
- class KSVGScriptInterpreter;
+ #include <kdebug.h>
+@@ -77,7 +78,7 @@
+       
+     while (getline(in, s,'\n')) {
+       words.clear();
+-      stringstream ss(s);
++      istringstream ss(s.c_str());
+       while (ss >> buf) words.push_back(buf);  // Split "s" into words
  
-diff -urN -x CVS kdegraphics.orig/ksvg/ecma/ksvg_scriptinterpreter.h kdegraphics/ksvg/ecma/ksvg_scriptinterpreter.h
---- kdegraphics.orig/ksvg/ecma/ksvg_scriptinterpreter.h	Sat May 10 11:32:50 2003
-+++ kdegraphics/ksvg/ecma/ksvg_scriptinterpreter.h	Fri Jun  4 18:53:16 2004
-@@ -100,7 +100,7 @@
- 	{
- 		ClassCtor* ctor = new ClassCtor(exec); // create the ClassCtor instance
- 		KJS::Object newObject(new KSVGBridge<ClassCtor>(exec, ctor)); // create the bridge around it
--		exec->interpreter()->globalObject().put(exec, propertyName, newObject, Internal);
-+		exec->interpreter()->globalObject().put(exec, propertyName, newObject, KJS::Internal);
- 		return newObject;
- 	}
+       if ( !words.empty() ) {
+@@ -163,3 +164,7 @@
+   mingamma = (min < 0.1) ? 0.1 : min;
+   maxgamma = (max > 10.0) ? 10.0 : max;
  }
-diff -urN -x CVS kdegraphics.orig/ksvg/impl/SVGList.h kdegraphics/ksvg/impl/SVGList.h
---- kdegraphics.orig/ksvg/impl/SVGList.h	Tue Dec  9 14:42:26 2003
-+++ kdegraphics/ksvg/impl/SVGList.h	Fri Jun  4 18:46:27 2004
-@@ -48,7 +48,7 @@
- {
- public:
- 	SVGList() { m_impl.setAutoDelete(false); }
--	SVGList(const SVGList &) { *this = other; }
-+	SVGList(const SVGList &other) { *this = other; }
- 	~SVGList() { clear(); }
++
++#ifdef istringstream
++#undef istringstream
++#endif
+diff -urN -x CVS kdegraphics.orig/kgamma/xf86gammacfg/xf86gammacfg.cpp kdegraphics/kgamma/xf86gammacfg/xf86gammacfg.cpp
+--- kdegraphics.orig/kgamma/xf86gammacfg/xf86gammacfg.cpp	Thu Jan 23 21:44:27 2003
++++ kdegraphics/kgamma/xf86gammacfg/xf86gammacfg.cpp	Thu Aug 19 10:37:05 2004
+@@ -30,6 +30,7 @@
+ #include <sstream>
+ #else
+ #include <strstream.h>
++#define istringstream istrstream
+ #endif
  
- 	SVGList<T> &operator=(const SVGList<T> &other)
+ using namespace std;
+@@ -69,7 +70,7 @@
+           while (getline(in, s,'\n')) {
+             if (!cpyonly) {
+               words.clear();
+-              std::stringstream ss(s);
++              std::istringstream ss(s.c_str());
+               while (ss >> buf) words.push_back(buf);
+ 
+               if ( !words.empty() ) {
+@@ -123,3 +124,7 @@
+ 
+   return success;
+ }
++
++#ifdef istringstream
++#undef istringstream
++#endif
+diff -urN -x CVS kdegraphics.orig/kolourpaint/BUGS kdegraphics/kolourpaint/BUGS
+--- kdegraphics.orig/kolourpaint/BUGS	Wed Aug  4 19:43:02 2004
++++ kdegraphics/kolourpaint/BUGS	Sat Aug 14 14:03:27 2004
+@@ -90,6 +90,30 @@
+ 
+     This is a Qt bug.
+ 
++21. It is not always possible to copy and paste between 2 instances of
++    KolourPaint running different Qt versions.  See
++    QDataStream::setVersion().
++
++22. The Emboss, Blur and Sharpen effects give different results depending
++    on _both_:
++    
++    a) The KDE version KolourPaint was compiled with
++       (due to KImageEffect not supporting strength settings for these
++        effects in KDE 3.0, KolourPaint repeats these effects in order to
++        simulate strength)
++        
++    b) The KDE version KolourPaint is running under
++       (e.g. for the same function calls, KDE 3.2's effects are slower but
++        give better results than those in KDE 3.0)
++
++23. Changing tool options while in the middle of a drawing option may
++    confuse KolourPaint.  For instance:
++    
++    a) With the brush tools, the cursor incorrectly appears.
++
++    b) With the rectangle-based tools, the temporary pixmap does not resize
++       when the line width increases.
++       
+ 
+ Issue with XFree86 <= 3.3.6 with the "Emulate3Buttons" Option
+ =============================================================
+@@ -129,33 +153,52 @@
+ ================================================
+ 
+ KolourPaint 1.2 runs best on KDE 3.3 and Qt 3.3.  It will compile and run
+-on earlier KDE and Qt 3.x releases but you may encounter the following
+-problems:
++on earlier KDE and Qt 3.x releases but you may encounter the problems
++listed below.
++
++
++[COMPILE-TIME] - Means that this problem will be caused by compiling
++                 against an early Qt and/or KDE.  Recompiling KolourPaint
++                 against newer libraries is the solution.
++[RUNTIME] - Means that this problem will be caused by running under an
++            early Qt and/or KDE.  Upgrading those libraries will solve this
++            problem.  There is no need to recompile KolourPaint.
+ 
+ 
+ KDE = 3.0
+ ---------
+ 
+-1. Due to the lack of KImageIO::typeForMime(), KolourPaint can only support
+-   a limited number of output formats (you'll only notice this if you've
+-   installed more KImageIO formats, which is highly unlikely).
++1. [COMPILE-TIME]
++   Due to the lack of KImageIO::typeForMime(), KolourPaint can only support
++   a limited number of output formats (you'll only notice this if you have
++   more KImageIO formats than a standard KDE 3._3_ install).
+ 
+-2. The Resize / Scale Dialog's percentage input fields are missing the
+-   spinbox arrows.
+-
+-3. The keyboard modifiers may get out of sync with reality in certain
++3. [COMPILE-TIME]
++   The keyboard modifiers may get out of sync with reality in certain
+    corner cases.
+ 
+-4. The "Settings / Toolbars" submenu is not available.
++4. [COMPILE-TIME]
++   The "Settings / Toolbars" submenu is not available.
++
++6. [COMPILE-TIME] (yes, the number is out of order)
++   The widget for selecting saving options in the file dialog does not line
++   up with the "Location" and "Filter" combo boxes.
++
++5. [COMPILE-TIME]
++   The "Settings / Configure Toolbars..." menu item is not available.  This
++   is to protect you from destroying all the standard actions in the Main
++   Toolbar due to action merging not working for toolbars.
+ 
+-5. The "Settings / Configure Toolbars..." dialog does not allow you to
+-   configure the Main Toolbar.
++2. [RUNTIME] (yes, the number is out of order)
++   The Resize / Scale Dialog's percentage input fields are missing the
++   spinbox arrows.
+ 
+ 
+ KDE = 3.1
+ ---------
+ 
+-1. The Tool Box buttons are not clearly rendered in early versions of the
++1. [RUNTIME]
++   The Tool Box buttons are not clearly rendered in early versions of the
+    Keramik style (such as the one included in KDE 3.1).  It may be hard to
+    see what tool is currently selected.  Either upgrade to KDE >= 3.2 or
+    use another style such as HighColor Classic or Plastik.
+@@ -164,24 +207,32 @@
+ KDE <= 3.1
+ ----------
+ 
+-1. The "Settings / Show Statusbar" menu is not available.
++2. [COMPILE-TIME]
++   The "Settings / Show Statusbar" menu item is not available.
+ 
+-2. The filedialog filter combobox is editable as part of a workaround for a
++3. [COMPILE-TIME]
++   The filedialog filter combobox is editable as part of a workaround for a
+    Qt bug (which normally causes a filedialog destruction crash).
+ 
+-3. Alpha channel checks will be performed when opening and pasting images
++4. [COMPILE-TIME]
++   Alpha channel checks will be performed when opening and pasting images
+    even if the appropriate "Do not show this message again" checkbox has
+    been ticked (i.e. slower).  Unwanted notifications of low screen depth
+    and alpha channel may also be given.
+ 
++5. [COMPILE-TIME]
++   The "Settings / Full Screen Mode" menu item is not available.
++
+ 
+ KDE <= 3.2
+ ----------
+ 
+-1. Some images (usually small ones) are incorrectly positioned and may be
++1. [RUNTIME]
++   Some images (usually small ones) are incorrectly positioned and may be
+    cut off when saving in the EPS format.
+ 
+-2. Support for the formats:
++2. [RUNTIME]
++   Support for the formats:
+ 
+       * Truevision Targa Image
+       * Portable Graymap Image
+@@ -189,20 +240,14 @@
+ 
+    is very buggy and should not be considered as working at all.
+ 
+-3. Moving the mouse over the drawing area takes an unnecessarily large
++3. [RUNTIME]
++   Moving the mouse over the drawing area takes an unnecessarily large
+    amount of CPU due to unneeded status bar updates.
+ 
+ 
+ Qt <= 3.2
+ ---------
+ 
+-1. The thumbnail will flicker near or above the toolbars before appearing
++1. [COMPILE-TIME]
++   The thumbnail will flicker near or above the toolbars before appearing
+    in its rightful place.
+-
+-
+-All versions of Qt
+-------------------
+-
+-1. It is not always possible to copy and paste between 2 instances of
+-   KolourPaint running different Qt versions.  See
+-   QDataStream::setVersion().
+diff -urN -x CVS kdegraphics.orig/kolourpaint/NEWS kdegraphics/kolourpaint/NEWS
+--- kdegraphics.orig/kolourpaint/NEWS	Wed Aug  4 19:43:02 2004
++++ kdegraphics/kolourpaint/NEWS	Thu Aug 19 08:50:10 2004
+@@ -1,20 +1,18 @@
+ 
+-This is the master NEWS file kept in CVS _HEAD_ only.  It contains change
+-information for _all_ past and present branches.
+-
+-In contrast, NEWS in branches only contains the changes between releases
+-tagged on the mainline up to (and including) the forkpoint and of course,
+-its changes.
+-
+-
+-KolourPaint 1.2 Series (KDE_3_3_BRANCH, kolourpaint_1_2_kde_3_0_branch)
++KolourPaint 1.2 Series (KDE_3_3_BRANCH)
+ ======================
+ 
+-Version 1.0.2 (2004/08/18)  [changes compared to 1.0.2]
++   * Fix remaining untranslatable strings (closing KDE Bug #85785)
++   * Update docs (README, NEWS, ...)
++
++Version 1.2 "ByFiat Everytime" (2004/08/18)
+    * Add up to 500 levels of Undo/Redo (minimum of 10 levels, maximum of
+      500 as long as the total history size < 16MB)
+    * Add freehand resizing of image
+    * Add freehand smooth scaling of selections
++   * [also in 1.0 branch] New icons (Kristof Borrey)
++   * [also in 1.0 branch] Prefer Crystal SVG text icons over KolourPaint's
++   * [also in 1.0 branch] Add documentation in the KDE Help Centre
+    * Add drag scrolling
+    * Add "More Effects" dialog:
+      - Balance (Brightness, Contrast, Gamma)
+@@ -40,6 +38,12 @@
+      - Allow redoing of selection operation if border deselected (Bug #5b)
+      - Don't print to STDERR when undoing a selection border create
+        operation and border has already been deselected
++     - [also in 1.0 branch] When pulling a selection from the document,
++       only set the bits of the document to the background colour where the
++       transparent selection is opaque in the same place (this is only
++       noticeable with colour similarity turned on).  Now moving a
++       selection away and then back to its original place is always a NOP
++       as it should be.
+    * Selections can be deselected using Esc or clicking on icon in Tool Box
+    * Accidental drag detection when deselecting selections or text boxes
+    * Prevent selection from being moved completely offscreen (at least 1
+@@ -48,7 +52,8 @@
+    * Improve Text Tool usability:
+      - Allow single click creation of text box with a sane default size
+      - Allow freehand resizing of text boxes
+-     - Add Opaque/Transparent widget to be consistent with selection
++     - Add Opaque/Transparent selector for greater usability and
++       consistency with selections
+      - Minimum size is now 7x7 document pixels (1x1 - not 4x4 - border)
+      - Text cursor doesn't overlap border anymore
+      - When dropping text, paste at drop point
+@@ -71,10 +76,13 @@
+    * Thumbnail fixes:
+      - Reduce flicker when appearing (Bug #2)
+      - More reasonable minimum size (actually enforce it)
++     - [also in 1.0 branch] Use deleteLater()
++     - [also in 1.0 branch] Save geometry even if it's closed very quickly
++       after a geometry change
+    * Restore last used tool and tool options on startup
+-   * Add Zoom In/Out buttons to main toolbar
+    * Add Export, Copy To File, Paste From File, Paste in New Window,
+      Full Screen Mode
++   * Add Zoom In/Out buttons to main toolbar
+    * Rename Crop options in an attempt to reduce confusion:
+      - "Autocrop" --> "Remove Internal Border" when selection active
+      - "Crop Outside Selection" --> "Set as Image (Crop)"
+@@ -97,52 +105,29 @@
+      regarding spinboxes and enter key
+    * Colour Picker disallows trying to pick colour outside of image
+    * Make sure colour palette contains valid and visible colours at 8-bit
++   * [also in 1.0 branch] Fix (big) memory leak on kpSelection destruction
++     (Albert Astals Cid)
++   * Don't leak image dialogs' memory
++   * [also in 1.0 branch] Don't let C++ destruct the mask bitmap before its
++     painter when dbl-clicking the color eraser does NOP (avoids
++     QPaintDevice and X error)
++   * [also in 1.0 branch] Check for QImageDrag::canDecode() before calling
++     QImageDrag::decode() (prevents X and valgrind errors)
++   * [also in 1.0 branch] Fix compilation problem with QT_NO_ASCII_CAST
++     (Waldo Bastian)
++   * [also in 1.0 branch] Decrease application preference to below that of
++     a viewer (Stephan Kulow)
+    * Remember dialog dimensions
+    * Remove double dialog margins
+-   * Don't leak image dialogs' memory
++   * Fix missing i18n()'s
++   * Fix some untranslatable strings
++   * [also in 1.0 branch] Corrected several strings
+    * Remove unused icons
+ 
+ 
+ KolourPaint 1.0 Series (kolourpaint_1_0_branch)
+ ======================
+ 
+-Version 1.0.3 - coming soon (expected release date: 2004/08/18)
+-
+-Version 1.0.2 (2004/04/29)
+-   * New icons (Kristof Borrey)
+-   * Added documentation in the KDE Help Centre
+-   * Make the brush tool draw something at size 1x1;
+-     works around Qt <3.2 bug: drawing 1x1 ellipses does not work
+-     (brush_1x1_kolourpaint-1.0.1.diff)
+-   * Fix thumbnail-related crashes with Qt/KDE 3.0
+-     - Crash on thumbnail close with accelerator (pending events in event
+-       loop)
+-     - Crash on mainwindow close if the thumbnail was ever closed
+-       (QDockWindow didn't remove itself from QMainWindow::dockWindows()
+-       list)
+-   * Save thumbnail geometry even if it's closed very quickly after a
+-     geometry change
+-   * When pulling a selection from the document, only set the bits of the
+-     document to the background colour where the transparent selection is
+-     opaque in the same place (this is only noticeable with colour
+-     similarity turned on).  Now moving a selection away and then back to
+-     its original place is always a NOP as it should be.
+-   * Fix (big) memory leak on kpSelection destruction (Albert Astals Cid)
+-   * Don't let C++ destruct the mask bitmap before its painter when
+-     dbl-clicking the color eraser does NOP (avoids QPaintDevice and X
+-     error)
+-   * Corrected several strings
+-   * Fix compilation problem with QT_NO_ASCII_CAST (Waldo Bastian)
+-   * Decrease application preference to below that of a viewer (Stephan
+-     Kulow)
+-
+-Version 1.0.1 (2004/03/06)
+-   * Backport to KDE 3.0 & 3.1; KolourPaint 1.0.1 should be functionally
+-     the same as KolourPaint 1.0 if compiled under KDE 3.2
+-   * Check for QImageDrag::canDecode() before calling QImageDrag::decode()
+-     (prevents X and valgrind errors)
+-   * Prefer Crystal SVG text icons over KolourPaint's ones
+-
+ Version 1.0 "Seagull" (2004/02/29)
+    * First stable release
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/README kdegraphics/kolourpaint/README
+--- kdegraphics.orig/kolourpaint/README	Wed Aug  4 19:43:02 2004
++++ kdegraphics/kolourpaint/README	Sat Aug 14 06:35:43 2004
+@@ -6,7 +6,6 @@
+ 
+ 
+ For licensing and warranty information, read COPYING.
+-For installation instructions, read INSTALL (but not with KDE releases).
+ For known problems with this release of KolourPaint, read BUGS.
+ For what changes have been made, read NEWS.
+ For information on what features are planned or unfinished, read TODO.
+@@ -62,8 +61,7 @@
+   - Balance (Brightness, Contrast, Gamma)
+   - Clear, Emboss, Flatten, Flip, Invert (with choice of channels)
+   - Reduce Colours, Reduce to Greyscale, Resize, Rotate
+-  - Scale, Set as Image (Crop), Skew (with preview), Smooth Scale
+-  - Soften & Sharpen
++  - Scale, Set as Image (Crop), Skew, Smooth Scale, Soften & Sharpen
+ 
+ * Close-up Editing
+   - Zoom (from 0.01x to 16x)
+@@ -91,7 +89,7 @@
+ 
+ If you have any questions about compiling, installing or using KolourPaint,
+ don't be afraid to contact us using the above email address.  Email sent
+-to this address is not publically archived.  We try to support all versions
++to this address is not publicly archived.  We try to support all versions
+ of KolourPaint and even issues with 3rd party binary packages.
+ 
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/TODO kdegraphics/kolourpaint/TODO
+--- kdegraphics.orig/kolourpaint/TODO	Wed Aug  4 19:43:02 2004
++++ kdegraphics/kolourpaint/TODO	Thu Aug 19 08:50:10 2004
+@@ -2,6 +2,9 @@
+ Before each release of KolourPaint and/or KDE, grep sources for
+ "SYNC" & "sync:" and check that those assumptions still hold.
+ 
++Before each KDE 3.0 backport release of KolourPaint, grep sources for
++"COMPAT".
++
+ Look in BUGS, patches/, grep sources for "OPT", "HACK" & "TODO" and look
+ here:
+ 
+@@ -9,8 +12,6 @@
+ KolourPaint 1.2
+ ~~~~~~~~~~~~~~~
+ 
+-Apply i18n fixes in HEAD & KDE_3_3_BRANCH after KDE 3.3 releases
+-
+ 
+ KolourPaint 1.4
+ ~~~~~~~~~~~~~~~
+@@ -308,8 +309,6 @@
+ 
+ multicolumn KToolBar's (Bug #3)
+ 
+-Report KImageIO bugs: targa and PNM don't work at all
+-
+ fix edit/paste may disappear due to klipper - Bug #85456
+ 
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/kpdocument.cpp kdegraphics/kolourpaint/kpdocument.cpp
+--- kdegraphics.orig/kolourpaint/kpdocument.cpp	Tue Aug 10 11:26:17 2004
++++ kdegraphics/kolourpaint/kpdocument.cpp	Thu Aug 19 08:50:10 2004
+@@ -242,9 +242,30 @@
+ 
+ 
+     QPixmap newPixmap = kpPixmapFX::convertToPixmapAsLosslessAsPossible (image,
+-        kpPixmapFX::WarnAboutLossInfo (parent,
+-            i18n ("image \"%1\"").arg (prettyFilenameForURL (url)),
+-            "docOpen"));
++        kpPixmapFX::WarnAboutLossInfo (
++             i18n ("The image \"%1\""
++                   " may have more colors than the current screen mode."
++                   " In order to display it, some colors may be changed."
++                   " Try increasing your screen depth to at least %2bpp."
++
++                   "\nIt also"
++
++                   " contains translucency which is not fully"
++                   " supported. The translucency data will be"
++                   " approximated with a 1-bit transparency mask.")
++                 .arg (prettyFilenameForURL (url)),
++             i18n ("The image \"%1\""
++                   " may have more colors than the current screen mode."
++                   " In order to display it, some colors may be changed."
++                   " Try increasing your screen depth to at least %2bpp.")
++                 .arg (prettyFilenameForURL (url)),
++             i18n ("The image \"%1\""
++                   " contains translucency which is not fully"
++                   " supported. The translucency data will be"
++                   " approximated with a 1-bit transparency mask.")
++                .arg (prettyFilenameForURL (url)),
++            "docOpen",
++            parent));
+ 
+ 
+ #if DEBUG_KP_DOCUMENT && 1
+diff -urN -x CVS kdegraphics.orig/kolourpaint/kpmainwindow_edit.cpp kdegraphics/kolourpaint/kpmainwindow_edit.cpp
+--- kdegraphics.orig/kolourpaint/kpmainwindow_edit.cpp	Wed Aug  4 12:55:18 2004
++++ kdegraphics/kolourpaint/kpmainwindow_edit.cpp	Thu Aug 19 08:50:10 2004
+@@ -61,9 +61,27 @@
+ // private
+ kpPixmapFX::WarnAboutLossInfo kpMainWindow::pasteWarnAboutLossInfo ()
+ {
+-    return kpPixmapFX::WarnAboutLossInfo (this,
+-        i18n ("image to be pasted"),
+-        "paste");
++    return kpPixmapFX::WarnAboutLossInfo (
++               i18n ("The image to be pasted"
++                     " may have more colors than the current screen mode."
++                     " In order to display it, some colors may be changed."
++                     " Try increasing your screen depth to at least %1bpp."
++
++                     "\nIt also"
++
++                     " contains translucency which is not fully"
++                     " supported. The translucency data will be"
++                     " approximated with a 1-bit transparency mask."),
++               i18n ("The image to be pasted"
++                     " may have more colors than the current screen mode."
++                     " In order to display it, some colors may be changed."
++                     " Try increasing your screen depth to at least %1bpp."),
++               i18n ("The image to be pasted"
++                     " contains translucency which is not fully"
++                     " supported. The translucency data will be"
++                     " approximated with a 1-bit transparency mask."),
++               "paste",
++               this);
+ }
+ 
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/pixmapfx/kpeffectsdialog.cpp kdegraphics/kolourpaint/pixmapfx/kpeffectsdialog.cpp
+--- kdegraphics.orig/kolourpaint/pixmapfx/kpeffectsdialog.cpp	Wed Aug  4 10:42:36 2004
++++ kdegraphics/kolourpaint/pixmapfx/kpeffectsdialog.cpp	Thu Aug 19 08:50:10 2004
+@@ -61,7 +61,8 @@
+                                   const char *name)
+     : kpToolPreviewDialog (kpToolPreviewDialog::Preview,
+                            true/*reserve top row*/,
+-                           QString::null/*actionName*/,
++                           QString::null/*caption*/,
++                           QString::null/*afterActionText (no Dimensions Group Box)*/,
+                            actOnSelection,
+                            parent,
+                            name),
+diff -urN -x CVS kdegraphics.orig/kolourpaint/pixmapfx/kppixmapfx.cpp kdegraphics/kolourpaint/pixmapfx/kppixmapfx.cpp
+--- kdegraphics.orig/kolourpaint/pixmapfx/kppixmapfx.cpp	Wed Aug  4 11:03:37 2004
++++ kdegraphics/kolourpaint/pixmapfx/kppixmapfx.cpp	Thu Aug 19 08:50:10 2004
+@@ -281,11 +281,11 @@
+ 
+ 
+     const QString colorDepthTranslucencyDontAskAgain =
+-        wali.dontAskAgainPrefix () + "_ColorDepthTranslucency";
++        wali.m_dontAskAgainPrefix + "_ColorDepthTranslucency";
+     const QString colorDepthDontAskAgain =
+-        wali.dontAskAgainPrefix () + "_ColorDepth";
++        wali.m_dontAskAgainPrefix + "_ColorDepth";
+     const QString translucencyDontAskAgain =
+-        wali.dontAskAgainPrefix () + "_Translucency";
++        wali.m_dontAskAgainPrefix + "_Translucency";
+ 
+ #if DEBUG_KP_PIXMAP_FX && 1
+     QTime timer;
+@@ -335,22 +335,8 @@
+ 
+     if (moreColorsThanDisplay && hasAlphaChannel)
+     {
+-        KMessageBox::information (wali.parent (),
+-            i18n ("The %1 "
+-                  // sync: moreColorsThanDisplayMessage
+-                  "may have more colors than the current screen mode. "
+-                  "In order to display it, some colors may be changed. "
+-                  "Try increasing your screen "
+-                  "depth to at least %2bpp."
+-
+-                  "\nIt also "
+-
+-                  // sync: hasAlphaChannelMessage
+-                  "contains translucency which is not "
+-                  "fully supported. "
+-                  "The translucency data will be "
+-                  "approximated with a 1-bit transparency mask.")
+-                .arg (wali.itemName ())
++        KMessageBox::information (wali.m_parent,
++            wali.m_moreColorsThanDisplayAndHasAlphaChannelMessage
+                 .arg (screenDepthNeeded),
+             QString::null,  // or would you prefer "Low Screen Depth and Image Contains Transparency"? :)
+             colorDepthTranslucencyDontAskAgain);
+@@ -363,28 +349,16 @@
+     }
+     else if (moreColorsThanDisplay)
+     {
+-        KMessageBox::information (wali.parent (),
+-            i18n ("The %1 "
+-                  // sync: moreColorsThanDisplayMessage
+-                  "may have more colors than the current screen mode. "
+-                  "In order to display it, some colors may be changed. "
+-                  "Try increasing your screen "
+-                  "depth to at least %2bpp.")
+-                .arg (wali.itemName ())
++        KMessageBox::information (wali.m_parent,
++            wali.m_moreColorsThanDisplayMessage
+                 .arg (screenDepthNeeded),
+             i18n ("Low Screen Depth"),
+             colorDepthDontAskAgain);
+     }
+     else if (hasAlphaChannel)
+     {
+-        KMessageBox::information (wali.parent (),
+-            i18n ("The %1 "
+-                  // sync: hasAlphaChannelMessage
+-                  "contains translucency which is not "
+-                  "fully supported. "
+-                  "The translucency data will be "
+-                  "approximated with a 1-bit transparency mask.")
+-                .arg (wali.itemName ()),
++        KMessageBox::information (wali.m_parent,
++            wali.m_hasAlphaChannelMessage,
+             i18n ("Image Contains Translucency"),
+             translucencyDontAskAgain);
+     }
+diff -urN -x CVS kdegraphics.orig/kolourpaint/pixmapfx/kppixmapfx.h kdegraphics/kolourpaint/pixmapfx/kppixmapfx.h
+--- kdegraphics.orig/kolourpaint/pixmapfx/kppixmapfx.h	Sun Aug  1 05:19:46 2004
++++ kdegraphics/kolourpaint/pixmapfx/kppixmapfx.h	Thu Aug 19 08:50:10 2004
+@@ -98,30 +98,63 @@
+     //
+     // Dialog info for warning about data loss with convertToPixmap().
+     //
+-    class WarnAboutLossInfo
++    struct WarnAboutLossInfo
+     {
+-    public:
+-        WarnAboutLossInfo ()
+-            : m_isValid (false),
+-              m_parent (0)
++        // <moreColorsThanDisplayAndHasAlphaChannelMessage>:
++        //
++        //     i18n ("The (image \"example.jpg\"|image from the clipboard)"
++        //           " may have more colors than the current screen mode."
++        //           " In order to display it, some colors may be changed."
++        //           " Try increasing your screen depth to at least %1bpp."
++        //
++        //           "\nIt also"
++        //
++        //           " contains translucency which is not fully"
++        //           " supported. The translucency data will be"
++        //           " approximated with a 1-bit transparency mask.")
++        //
++        // <moreColorsThanDisplayMessage>:
++        //     i18n ("The (image \"example.jpg\"|image from the clipboard)"
++        //           " may have more colors than the current screen mode."
++        //           " In order to display it, some colors may be changed."
++        //           " Try increasing your screen depth to at least %1bpp.")
++        //
++        // <hasAlphaChannelMessage>:
++        //     i18n ("The (image \"example.jpg\"|image from the clipboard)"
++        //           " contains translucency which is not fully"
++        //           " supported. The translucency data will be"
++        //           " approximated with a 1-bit transparency mask.")
++        //
++        // <dontAskAgainPrefix>:
++        //
++        //     Don'tAskAgain ID for dialog.
++        //
++        // <parent>:
++        //
++        //     Dialog parent
++        //
++        WarnAboutLossInfo (const QString &moreColorsThanDisplayAndHasAlphaChannelMessage,
++                const QString &moreColorsThanDisplayMessage,
++                const QString &hasAlphaChannelMessage,
++                const QString &dontAskAgainPrefix,
++                QWidget *parent)
++            :
++                m_moreColorsThanDisplayAndHasAlphaChannelMessage (
++                    moreColorsThanDisplayAndHasAlphaChannelMessage),
++                m_moreColorsThanDisplayMessage (
++                    moreColorsThanDisplayMessage),
++                m_hasAlphaChannelMessage (
++                    hasAlphaChannelMessage),
++                m_dontAskAgainPrefix (
++                    dontAskAgainPrefix),
++                m_parent (parent),
++                m_isValid (true)
+         {
+         }
+ 
+-
+-       /*
+-        * <parent>                 dialog parent
+-        * <itemName>               source of the original image e.g.
+-        *                          i18n ("image \"example.jpg\"") or
+-        *                          i18n ("image from the clipboard")
+-        * <dontAskAgainPrefix>     e.g. "docOpen" or "clipboardPaste"
+-        */
+-        WarnAboutLossInfo (QWidget *parent,
+-                           const QString &itemName,
+-                           const QString &dontAskAgainPrefix)
+-            : m_isValid (true),
+-              m_parent (parent),
+-              m_itemName (itemName),
+-              m_dontAskAgainPrefix (dontAskAgainPrefix)
++        WarnAboutLossInfo ()
++            : m_parent (0),
++              m_isValid (false)
+         {
+         }
+ 
+@@ -131,14 +164,14 @@
+ 
+ 
+         bool isValid () const { return m_isValid; }
+-        QWidget *parent () const { return m_parent; }
+-        QString itemName () const { return m_itemName; }
+-        QString dontAskAgainPrefix () const { return m_dontAskAgainPrefix; }
+ 
+-    private:
+-        bool m_isValid;
++
++        QString m_moreColorsThanDisplayAndHasAlphaChannelMessage,
++                m_moreColorsThanDisplayMessage,
++                m_hasAlphaChannelMessage;
++        QString m_dontAskAgainPrefix;
+         QWidget *m_parent;
+-        QString m_itemName, m_dontAskAgainPrefix;
++        bool m_isValid;
+     };
+ 
+     //
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptool.cpp kdegraphics/kolourpaint/tools/kptool.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptool.cpp	Wed Aug  4 10:56:31 2004
++++ kdegraphics/kolourpaint/tools/kptool.cpp	Thu Aug 19 08:50:11 2004
+@@ -1384,76 +1384,20 @@
+  * User Notifications
+  */
+ 
+-// private
+-int kpTool::calcMouseButton (bool otherMouseButton) const
+-{
+-    if (!otherMouseButton)
+-        return m_mouseButton;
+-    else
+-        return 1 - m_mouseButton;
+-}
+ 
+-// public
+-QString kpTool::mouseButtonText (bool otherMouseButton, bool sentenceStart) const
++// public static
++QString kpTool::cancelUserMessage (int mouseButton)
+ {
+-    int mb = calcMouseButton (otherMouseButton);
+-
+-    if (mb == 0)
+-    {
+-        if (sentenceStart)
+-            return i18n ("Left");
+-        else
+-            return i18n ("left");
+-    }
++    if (mouseButton == 0)
++        return i18n ("Right click to cancel.");
+     else
+-    {
+-        if (sentenceStart)
+-            return i18n ("Right");
+-        else
+-            return i18n ("right");
+-    }
++        return i18n ("Left click to cancel.");
+ }
+ 
+ // public
+-QString kpTool::mouseClickText (bool otherMouseButton, bool sentenceStart) const
++QString kpTool::cancelUserMessage () const
+ {
+-    int mb = calcMouseButton (otherMouseButton);
+-
+-    if (mb == 0)
+-    {
+-        if (sentenceStart)
+-            return i18n ("Left click");
+-        else
+-            return i18n ("left click");
+-    }
+-    else
+-    {
+-        if (sentenceStart)
+-            return i18n ("Right click");
+-        else
+-            return i18n ("right click");
+-    }
+-}
+-
+-// public
+-QString kpTool::mouseDragText (bool otherMouseButton, bool sentenceStart) const
+-{
+-    int mb = calcMouseButton (otherMouseButton);
+-
+-    if (mb == 0)
+-    {
+-        if (sentenceStart)
+-            return i18n ("Left drag");
+-        else
+-            return i18n ("left drag");
+-    }
+-    else
+-    {
+-        if (sentenceStart)
+-            return i18n ("Right drag");
+-        else
+-            return i18n ("right drag");
+-    }
++    return cancelUserMessage (m_mouseButton);
+ }
+ 
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptool.h kdegraphics/kolourpaint/tools/kptool.h
+--- kdegraphics.orig/kolourpaint/tools/kptool.h	Sun Aug  1 04:22:58 2004
++++ kdegraphics/kolourpaint/tools/kptool.h	Thu Aug 19 08:50:11 2004
+@@ -331,13 +331,11 @@
+      * User Notifications (Status Bar)
+      */
+ 
+-private:
+-    int calcMouseButton (bool otherMouseButton = false) const;
+-
+ public:
+-    QString mouseButtonText (bool otherMouseButton = false, bool sentenceStart = false) const;
+-    QString mouseClickText (bool otherMouseButton = false, bool sentenceStart = false) const;
+-    QString mouseDragText (bool otherMouseButton = false, bool sentenceStart = false) const;
++    // Returns "(Left|Right) click to cancel." where Left or Right is chosen
++    // depending on which one is the _opposite_ of <mouseButton>
++    static QString cancelUserMessage (int mouseButton);
++    QString cancelUserMessage () const;
+ 
+     QString userMessage () const;
+     void setUserMessage (const QString &userMessage = QString::null);
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolairspray.cpp kdegraphics/kolourpaint/tools/kptoolairspray.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolairspray.cpp	Sun Jul 11 09:07:10 2004
++++ kdegraphics/kolourpaint/tools/kptoolairspray.cpp	Thu Aug 19 08:50:11 2004
+@@ -137,11 +137,8 @@
+ 
+     // use a timer instead of reimplementing draw() (we don't draw all the time)
+     m_timer->start (25);
+-    
+-    setUserMessage (i18n ("%1 to cancel.")
+-                        .arg (mouseClickText (true/*other mouse button*/,
+-                                              true/*start of sentence*/)));
+-    
++
++    setUserMessage (cancelUserMessage ());
+ }
+ 
+ void kpToolAirSpray::draw (const QPoint &thisPoint, const QPoint &, const QRect &)
+@@ -227,7 +224,7 @@
+ 
+     // don't delete - it's up to the commandHistory
+     m_currentCommand = 0;
+-    
++
+     setUserMessage (haventBegunDrawUserMessage ());
+ }
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolcolorpicker.cpp kdegraphics/kolourpaint/tools/kptoolcolorpicker.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolcolorpicker.cpp	Fri Jul 30 13:24:35 2004
++++ kdegraphics/kolourpaint/tools/kptoolcolorpicker.cpp	Thu Aug 19 08:50:11 2004
+@@ -85,9 +85,8 @@
+ void kpToolColorPicker::beginDraw ()
+ {
+     m_oldColor = color (m_mouseButton);
+-    setUserMessage (i18n ("%1 to cancel.")
+-                        .arg (mouseClickText (true/*other mouse button*/,
+-                                              true/*start of sentence*/)));
++
++    setUserMessage (cancelUserMessage ());
+ }
+ 
+ // virtual
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolfloodfill.cpp kdegraphics/kolourpaint/tools/kptoolfloodfill.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolfloodfill.cpp	Sun Jul 11 09:07:10 2004
++++ kdegraphics/kolourpaint/tools/kptoolfloodfill.cpp	Thu Aug 19 08:50:11 2004
+@@ -114,9 +114,7 @@
+ 
+     QApplication::restoreOverrideCursor ();
+ 
+-    setUserMessage (i18n ("%1 to cancel.")
+-                        .arg (mouseClickText (true/*other mouse button*/,
+-                                              true/*start of sentence*/)));
++    setUserMessage (cancelUserMessage ());
+ }
+ 
+ // virtual
+@@ -206,7 +204,7 @@
+     if (!doc)
+         return;
+ 
+-    
++
+     if (m_fillEntirePixmap)
+     {
+         doc->fill (kpFloodFill::color ());
+@@ -241,7 +239,7 @@
+     if (!doc)
+         return;
+ 
+-    
++
+     if (m_fillEntirePixmap)
+     {
+         doc->fill (kpFloodFill::colorToChange ());
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolpen.cpp kdegraphics/kolourpaint/tools/kptoolpen.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolpen.cpp	Sat Jul 24 08:14:33 2004
++++ kdegraphics/kolourpaint/tools/kptoolpen.cpp	Thu Aug 19 08:50:11 2004
+@@ -220,9 +220,7 @@
+     // to avoid confusion
+     viewManager ()->invalidateTempPixmap ();
+ 
+-    setUserMessage (i18n ("%1 to cancel.")
+-                        .arg (mouseClickText (true/*other mouse button*/,
+-                                              true/*start of sentence*/)));
++    setUserMessage (cancelUserMessage ());
+ }
+ 
+ // virtual
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolpolygon.cpp kdegraphics/kolourpaint/tools/kptoolpolygon.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolpolygon.cpp	Sun Jul 11 09:07:10 2004
++++ kdegraphics/kolourpaint/tools/kptoolpolygon.cpp	Thu Aug 19 08:50:11 2004
+@@ -469,43 +469,13 @@
+ 
+     if (!endedShape)
+     {
+-        const QString mct = mouseClickText (true/*other mouse button*/,
+-                                            true/*start sentence*/);
+         switch (m_mode)
+         {
+         case Line:
+-            setUserMessage (i18n ("%1 to cancel.").arg (mct));
+-            break;
+-
+         case Curve:
+-            /*if (m_points.size () == 2)
+-            {*/
+-                setUserMessage (i18n ("%1 to cancel.").arg (mct));
+-            /*}
+-            else if (m_points.size () == 3)
+-            {
+-                setUserMessage (i18n ("Dragging first control point. %1 to cancel.")
+-                                    .arg (mct));
+-            }
+-            else if (m_points.size () == 4)
+-            {
+-                setUserMessage (i18n ("Dragging last control point. %1 to cancel.")
+-                                    .arg (mct));
+-            }
+-            else
+-            {
+-                kdError () << "kpToolPolygon::beginDraw() #points" << endl;
+-                setUserMessage ();
+-            }*/
+-
+-            break;
+-
+         case Polygon:
+-            setUserMessage (i18n ("%1 to cancel.").arg (mct));
+-            break;
+-
+         case Polyline:
+-            setUserMessage (i18n ("%1 to cancel.").arg (mct));
++            setUserMessage (cancelUserMessage ());
+             break;
+ 
+         default:
+@@ -744,10 +714,14 @@
+             }
+             else
+             {
+-                setUserMessage (i18n ("%1 another line or %2 to finish.")
+-                                    .arg (mouseDragText (false/*this mouse button*/,
+-                                                         true/*start sentence*/),
+-                                          mouseClickText (true/*other mouse button*/)));
++                if (m_mouseButton == 0)
++                {
++                    setUserMessage (i18n ("Left drag another line or right click to finish."));
++                }
++                else
++                {
++                    setUserMessage (i18n ("Right drag another line or left click to finish."));
++                }
+             }
+ 
+             break;
+@@ -755,17 +729,25 @@
+         case Curve:
+             if (m_points.size () == 2)
+             {
+-                setUserMessage (i18n ("%1 to set the first control point or %2 to finish.")
+-                                    .arg (mouseDragText (false/*this mouse button*/,
+-                                                         true/*start sentence*/),
+-                                          mouseClickText (true/*other mouse button*/)));
++                if (m_mouseButton == 0)
++                {
++                    setUserMessage (i18n ("Left drag to set the first control point or right click to finish."));
++                }
++                else
++                {
++                    setUserMessage (i18n ("Right drag to set the first control point or left click to finish."));
++                }
+             }
+             else if (m_points.size () == 3)
+             {
+-                setUserMessage (i18n ("%1 to set the last control point or %2 to finish.")
+-                                    .arg (mouseDragText (false/*this mouse button*/,
+-                                                         true/*start sentence*/),
+-                                          mouseClickText (true/*other mouse button*/)));
++                if (m_mouseButton == 0)
++                {
++                    setUserMessage (i18n ("Left drag to set the last control point or right click to finish."));
++                }
++                else
++                {
++                    setUserMessage (i18n ("Right drag to set the last control point or left click to finish."));
++                }
+             }
+             else
+             {
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolpreviewdialog.cpp kdegraphics/kolourpaint/tools/kptoolpreviewdialog.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolpreviewdialog.cpp	Wed Aug  4 10:52:25 2004
++++ kdegraphics/kolourpaint/tools/kptoolpreviewdialog.cpp	Thu Aug 19 08:50:11 2004
+@@ -48,14 +48,15 @@
+ 
+ kpToolPreviewDialog::kpToolPreviewDialog (Features features,
+                                           bool reserveTopRow,
+-                                          const QString &actionName,
++                                          const QString &caption,
++                                          const QString &afterActionText,
+                                           bool actOnSelection,
+                                           kpMainWindow *parent,
+                                           const char *name)
+     : KDialogBase (parent, name, true/*modal*/,
+-                   QString::null,
++                   caption,
+                    KDialogBase::Ok | KDialogBase::Cancel),
+-      m_actionName (actionName),
++      m_afterActionText (afterActionText),
+       m_actOnSelection (actOnSelection),
+       m_mainWindow (parent),
+       m_dimensionsGroupBox (0),
+@@ -64,9 +65,6 @@
+       m_previewPixmapLabel (0),
+       m_gridLayout (0)
+ {
+-    setCaption (captionFromActionName ());
+-
+-
+     QWidget *baseWidget = new QWidget (this);
+     setMainWidget (baseWidget);
+ 
+@@ -123,15 +121,6 @@
+ 
+ 
+ // private
+-QString kpToolPreviewDialog::captionFromActionName () const
+-{
+-    if (m_actOnSelection)
+-        return i18n ("%1 Selection").arg (m_actionName);
+-    else
+-        return i18n ("%1 Image").arg (m_actionName);
+-}
+-
+-// private
+ void kpToolPreviewDialog::createDimensionsGroupBox ()
+ {
+     m_dimensionsGroupBox = new QGroupBox (i18n ("Dimensions"), mainWidget ());
+@@ -152,8 +141,7 @@
+     }
+     QLabel *originalDimensionsLabel = new QLabel (originalDimensions, m_dimensionsGroupBox);
+ 
+-    QLabel *afterTransformLabel = new QLabel (i18n ("After %1:").arg (m_actionName),
+-                                              m_dimensionsGroupBox);
++    QLabel *afterTransformLabel = new QLabel (m_afterActionText, m_dimensionsGroupBox);
+     m_afterTransformDimensionsLabel = new QLabel (m_dimensionsGroupBox);
+ 
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolpreviewdialog.h kdegraphics/kolourpaint/tools/kptoolpreviewdialog.h
+--- kdegraphics.orig/kolourpaint/tools/kptoolpreviewdialog.h	Wed Aug  4 10:52:25 2004
++++ kdegraphics/kolourpaint/tools/kptoolpreviewdialog.h	Thu Aug 19 08:50:11 2004
+@@ -57,14 +57,16 @@
+     // You must call slotUpdate() in your constructor
+     kpToolPreviewDialog (Features features,
+                          bool reserveTopRow,
+-                         const QString &actionName,  // e.g. "Skew"
++                         // e.g. "Skew (Image|Selection)"
++                         const QString &caption,
++                         // (in the Dimensions Group Box) e.g. "After Skew:"
++                         const QString &afterActionText,
+                          bool actOnSelection,
+                          kpMainWindow *parent,
+                          const char *name = 0);
+     virtual ~kpToolPreviewDialog ();
+ 
+ private:
+-    QString captionFromActionName () const;
+     void createDimensionsGroupBox ();
+     void createPreviewGroupBox ();
+ 
+@@ -107,7 +109,7 @@
+     virtual void slotUpdateWithWaitCursor ();
+ 
+ protected:
+-    QString m_actionName;
++    QString m_afterActionText;
+     bool m_actOnSelection;
+     kpMainWindow *m_mainWindow;
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolrectangle.cpp kdegraphics/kolourpaint/tools/kptoolrectangle.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolrectangle.cpp	Sun Jul 11 09:07:10 2004
++++ kdegraphics/kolourpaint/tools/kptoolrectangle.cpp	Thu Aug 19 08:50:11 2004
+@@ -440,10 +440,7 @@
+ 
+ void kpToolRectangle::beginDraw ()
+ {
+-    setUserMessage (i18n ("%1 to cancel.")
+-                        .arg (mouseClickText (true/*other mouse button*/,
+-                                              true/*start of sentence*/)));
+-
++    setUserMessage (cancelUserMessage ());
+ }
+ 
+ void kpToolRectangle::updateShape ()
+@@ -600,7 +597,7 @@
+     kpDocument *doc = document ();
+     if (!doc)
+         return;
+-    
++
+     // store Undo info
+     if (!m_oldPixmapPtr)
+     {
+@@ -624,7 +621,7 @@
+     kpDocument *doc = document ();
+     if (!doc)
+         return;
+-    
++
+     if (m_oldPixmapPtr)
+     {
+         doc->setPixmapAt (*m_oldPixmapPtr, m_rect.topLeft ());
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolresizescale.cpp kdegraphics/kolourpaint/tools/kptoolresizescale.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolresizescale.cpp	Wed Aug  4 10:43:09 2004
++++ kdegraphics/kolourpaint/tools/kptoolresizescale.cpp	Thu Aug 19 08:50:11 2004
+@@ -108,30 +108,35 @@
+ // public virtual [base kpCommand]
+ QString kpToolResizeScaleCommand::name () const
+ {
+-    QString opName;
+-
+-    switch (m_type)
+-    {
+-    case Resize:
+-        opName = i18n ("Resize");
+-        break;
+-    case Scale:
+-        opName = i18n ("Scale");
+-        break;
+-    case SmoothScale:
+-        opName = i18n ("Smooth Scale");
+-        break;
+-    }
+-
+     if (m_actOnSelection)
+     {
+         if (m_actOnTextSelection)
+-            return i18n ("Text: %1 Box").arg (opName);
++        {
++            if (m_type == Resize)
++                return i18n ("Text: Resize Box");
++        }
+         else
+-            return i18n ("Selection: %1").arg (opName);
++        {
++            if (m_type == Scale)
++                return i18n ("Selection: Scale");
++            else if (m_type == SmoothScale)
++                return i18n ("Selection: Smooth Scale");
++        }
+     }
+     else
+-        return opName;
++    {
++        switch (m_type)
++        {
++        case Resize:
++            return i18n ("Resize");
++        case Scale:
++            return i18n ("Scale");
++        case SmoothScale:
++            return i18n ("Smooth Scale");
++        }
++    }
++
++    return QString::null;
+ }
+ 
+ // public virtual [base kpCommand]
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolrotate.cpp kdegraphics/kolourpaint/tools/kptoolrotate.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolrotate.cpp	Thu Jul 29 15:10:31 2004
++++ kdegraphics/kolourpaint/tools/kptoolrotate.cpp	Thu Aug 19 08:50:11 2004
+@@ -236,7 +236,9 @@
+                                         const char *name)
+     : kpToolPreviewDialog (kpToolPreviewDialog::AllFeatures,
+                            false/*don't reserve top row*/,
+-                           i18n ("Rotate"), actOnSelection, mainWindow, name)
++                           actOnSelection ? i18n ("Rotate Selection") : i18n ("Rotate Image"),
++                           i18n ("After Rotate:"),
++                           actOnSelection, mainWindow, name)
+ {
+     // Too confusing - disable for now
+     s_lastAngleRadioButtonID = 3;
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolselection.cpp kdegraphics/kolourpaint/tools/kptoolselection.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolselection.cpp	Wed Aug  4 10:49:35 2004
++++ kdegraphics/kolourpaint/tools/kptoolselection.cpp	Thu Aug 19 08:50:11 2004
+@@ -335,9 +335,7 @@
+ 
+     if (m_dragType != SelectText)
+     {
+-        setUserMessage (i18n ("%1 to cancel.")
+-                            .arg (mouseClickText (true/*other mouse button*/,
+-                                                  true/*start of sentence*/)));
++        setUserMessage (cancelUserMessage ());
+     }
+ }
+ 
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolskew.cpp kdegraphics/kolourpaint/tools/kptoolskew.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolskew.cpp	Thu Jul 29 15:11:21 2004
++++ kdegraphics/kolourpaint/tools/kptoolskew.cpp	Thu Aug 19 08:50:11 2004
+@@ -222,7 +222,9 @@
+                                     const char *name)
+     : kpToolPreviewDialog (kpToolPreviewDialog::AllFeatures,
+                            false/*don't reserve top row*/,
+-                           i18n ("Skew"), actOnSelection, parent, name)
++                           actOnSelection ? i18n ("Skew Selection") : i18n ("Skew Image"),
++                           i18n ("After Skew:"),
++                           actOnSelection, parent, name)
+ {
+     // Too confusing - disable for now
+     s_lastHorizontalAngle = s_lastVerticalAngle = 0;
