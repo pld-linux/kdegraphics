@@ -2,8 +2,12 @@
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
 
-%define		_state		stable
-%define		_ver		3.2.3
+%define		_state		unstable
+%define		_ver		3.3.0
+%define		_snap		rc2
+
+%define		_minlibsevr	9:3.3.0
+%define		_minbaseevr	9:3.3.0
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -11,22 +15,24 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	4
+Release:	0.%{_snap}.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	af7092f2afc5a8565eb5017ecee6b67e
-Patch100:	%{name}-branch.diff
-Patch0:		%{name}-vcategories.patch
-Patch1:		%{name}-gcc34.patch
-BuildRequires:	automake
-BuildRequires:	autoconf
-BuildRequires:	fontconfig-devel
+# Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{_ver}-%{_snap}.tar.bz2
+# Source0-md5:
+Patch0:		kde-common-PLD.patch
+BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
-BuildRequires:	kdelibs-devel >= 9:%{version}
+BuildRequires:	kdelibs-devel >= %{_minlibsevr}
+BuildRequires:	kpathsea
+BuildRequires:	lcms-devel
+BuildRequires:	OpenEXR >= 1.1.0
+BuildRequires:	xpdf-tools
+BuildRequires:	OpenGL-devel
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libieee1284-devel
 BuildRequires:	libjpeg-devel
@@ -39,11 +45,13 @@ BuildRequires:	libxml2-progs
 BuildRequires:	lockdev-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
-BuildRequires:	unsermake >= 040511
+BuildRequires:	rpmbuild(macros) >= 1.129
+BuildRequires:	unsermake
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	_noautoreqdep	libGL.so.1 libGLU.so.1
+
 
 %description
 Graphic applications for the K Desktop Environment.
@@ -111,10 +119,12 @@ Summary:	kdegraphics development files
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
-Requires:	kdelibs-devel >= 9:%{version}
+Requires:	kdelibs-devel >= %{_minlibsevr}
+Requires:	%{name}-kghostview = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
 Requires:	%{name}-ksvg = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
+Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
 
 %description devel
 kdegraphics development files.
@@ -130,8 +140,8 @@ bibliotecas do kdegraphics.
 Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
-Requires:	kdelibs >= 9:%{version}
-Obsoletes:	kdegraphics-mrml < 8:3.1-6
+Requires:	kdelibs >= %{_minlibsevr}
+Conflicts:	kdegraphics-mrml < 8:3.1-6
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
@@ -143,8 +153,7 @@ Uruchamia demony na ¿±danie lub restartuje je po awarii.
 Summary:	Digital camera support
 Summary(pl):	Obs³uga kamer cyfrowych
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kamera
 kamera is an IO slave and a KControl panel module which allows you to
@@ -166,8 +175,7 @@ aparatu przez URL kamera:/.
 Summary:	Color chooser
 Summary(pl):	Program do wybierania kolorów
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdelibs >= %{_minlibsevr}
 
 %description kcolorchooser
 Color chooser.
@@ -180,8 +188,7 @@ Summary:	Color palette editor
 Summary(pl):	Edytor palety kolorów
 Summary(pt_BR):	Editor de cores
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kcoloredit
 KColorEdit is a palette files editor. It can be used for editing color
@@ -199,9 +206,8 @@ Summary:	KDE DVI viewer
 Summary(pl):	Przegl±darka plików DVI dla KDE
 Summary(pt_BR):	Programa de exibição de DVIs
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
+Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
 
 %description kdvi
 KDVI is a plugin for the KViewshell program which allows KViewshell to
@@ -223,9 +229,8 @@ Summary:	KDE Fax viewer
 Summary(pl):	Przegl±darka faksów dla KDE
 Summary(pt_BR):	Programa de visualização de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
+Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
 
 %description kfax
 KFax is a Fax file viewer capable of displaying and printing all
@@ -257,7 +262,6 @@ Summary:	Graphic formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach graficznych
 Group:		X11/Applications/Graphics
 Requires:	konqueror >= %{version}
-Obsoletes:	kdegraphics
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
@@ -271,8 +275,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	A monitor calibration tool
 Summary(pl):	Narzêdzie do kalibracji monitora
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kgamma
 A monitor calibration tool.
@@ -285,9 +288,8 @@ Summary:	KDE Postscript viewer
 Summary(pl):	Przegl±darka postscriptu dla KDE
 Summary(pt_BR):	Programa de visualização de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
 Requires:	ghostscript
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kghostview
 KGhostView displays and prints PostScript (.ps, .eps) and Portable
@@ -316,8 +318,7 @@ Summary:	KDE Icon Editor
 Summary(pl):	Edytor ikon dla ¶rodowiska KDE
 Summary(pt_BR):	Editor de ícones
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kiconedit
 KDE Icon editor.
@@ -328,13 +329,44 @@ Edytor ikon dla KDE.
 %description kiconedit -l pt_BR
 Editor de ícones, lida inclusive com arquivos .ICO.
 
+%package kmrml
+Summary:	Advanced Search
+Summary(pl):	Zaawansowane wyszukiwanie
+Group:		X11/Applications/Graphics
+Requires:	kdebase-core >= %{_minbaseevr}
+Obsoletes:	kdegraphics-mrml
+
+%description kmrml
+This package provides graphics files advanced search with file
+indexing.
+
+%description kmrml -l pl
+Ten pakiet umo¿liwia zaawansowane wyszukiwanie plików graficznych z
+indeksowaniem plików.
+
+%package kolourpaint
+Summary:	KDE Painter
+Summary(pl):	Program graficzny KDE
+Summary(pt_BR):	Editor básico de imagens bitmap
+Group:		X11/Applications/Graphics
+Requires:	kdebase-core >= %{_minbaseevr}
+Obsoletes:	kdegraphics-kpaint
+
+%description kolourpaint
+A (very) simple painting program for KDE.
+
+%description kolourpaint -l pl
+(Bardzo) prosty program do rysowania pod KDE.
+
+%description kolourpaint -l pt_BR
+Editor básico de imagens bitmap.
+
 %package kooka
 Summary:	Scanning tool
 Summary(pl):	Narzêdzie do skanowania
 Summary(pt_BR):	Um programa de rasterização de imagens, baseado no SANE e libkscan
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kooka
 Kooka is a KDE application that enables easy scanning using SANE
@@ -347,29 +379,11 @@ bibliotek SANE.
 %description kooka -l pt_BR
 Um programa de rasterização de imagens, baseado no SANE e libkscan.
 
-%package kpaint
-Summary:	KDE Painter
-Summary(pl):	Program graficzny KDE
-Summary(pt_BR):	Editor básico de imagens bitmap
-Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
-
-%description kpaint
-A (very) simple painting program for KDE.
-
-%description kpaint -l pl
-(Bardzo) prosty program do rysowania pod KDE.
-
-%description kpaint -l pt_BR
-Editor básico de imagens bitmap.
-
 %package kpdf
 Summary:	Kpdf is an xpdf wrapper for KDE
 Summary(pl):	Kpdf - program udostêpniaj±cy mo¿liwo¶ci xpdf w KDE
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kpdf
 Kpdf is an xpdf wrapper for KDE.
@@ -381,9 +395,8 @@ Kpdf udostêpnia mo¿liwo¶ci xpdf w KDE.
 Summary:	Povary Modeler
 Summary(pl):	Modeler Povary
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	povray
-Obsoletes:	kdegraphics
 
 %description kpovmodeler
 Modeler for POV-Ray scenes.
@@ -396,8 +409,7 @@ Summary:	KRuler
 Summary(pl):	Linijka dla KDE
 Summary(pt_BR):	Régua de pixels para a tela
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kruler
 KRuler is a very simple application, with only one aim in life. To
@@ -415,8 +427,7 @@ Summary:	KDE Snap Shot
 Summary(pl):	Program do przechwytywania ekranu dla KDE
 Summary(pt_BR):	Programa de captura de tela
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description ksnapshot
 KSnapshot is a simple application for taking screenshots. It is
@@ -435,8 +446,7 @@ Programa de captura de tela.
 Summary:	Scalable Vector Graphics for KDE
 Summary(pl):	Skalowalna grafika wektorowa (SVG) dla KDE
 Group:		X11/Applications/Graphics
-#Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdelibs >= %{_minlibsevr}
 
 %description ksvg
 KSVG is a KDE implementation of the Scalable Vector Graphics
@@ -450,10 +460,9 @@ wektorowej (SVG - Scalable Vector Graphics).
 Summary:	Image viewer/browser
 Summary(pl):	Przegl±darka obrazków
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Provides:	kuickshow
 Obsoletes:	kuickshow
-Obsoletes:	kdegraphics
 
 %description kuickshow
 KuickShow is a comfortable image browser/viewer. It displays a
@@ -474,9 +483,7 @@ Summary:	KDE graphics file viewer
 Summary(pl):	Przegl±darka plików graficznych dla KDE
 Summary(pt_BR):	Visualizador de imagens
 Group:		X11/Applications/Graphics
-#Requires:	kdebase-core >= 9:%{version}
-Requires:	kdelibs >= 9:%{version}
-Obsoletes:	kdegraphics
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kview
 KView is an image viewer for the KDE desktop. You can view graphics of
@@ -501,53 +508,72 @@ slajdów.
 %description kview -l pt_BR
 Visualizador de imagens poderoso para KDE.
 
-%package kmrml
-Summary:	Advanced Search
-Summary(pl):	Zaawansowane wyszukiwanie
+%package kviewshell
+Summary:	TODO
+Summary(pl):	TODO
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
-Obsoletes:	kdegraphics-mrml
+Requires:	kdelibs >= %{_minlibsevr}
+Conflicts:	kdegraphics-kview < 9:3.2.90.040514
 
-%description kmrml
-This package provides graphics files advanced search with file
-indexing.
+%description kviewshell
+TODO.
 
-%description kmrml -l pl
-Ten pakiet umo¿liwia zaawansowane wyszukiwanie plików graficznych z
-indeksowaniem plików.
+%description kviewshell -l pl
+TODO.
 
 %prep
-%setup -q
-%patch100 -p1
-%patch0 -p1
-%patch1 -p1
+%setup -q -D
 
-for f in `find . -name *.desktop | xargs grep -l '^Terminal=0'`; do
-	%{__sed} -i -e 's/^Terminal=0/Terminal=false/' $f
-done
-for f in `find . -name *.desktop | xargs grep -l '^Type=Application'`; do
-	if ! grep '^Encoding=' $f >/dev/null; then
-		%{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' $f
-	fi
-done
+%patch0 -p1
+
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
+	kdvi/kdvi.desktop
+
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
+	kfax/kfax.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
+	kpdf/kpdf/kpdf.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Scanning;/' \
+	kooka/kooka.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
+	kview/kview.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	kcoloredit/kcolorchooser.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	kcoloredit/kcoloredit.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	ksnapshot/ksnapshot.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	kruler/kruler.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
+	kuickshow/src/kuickshow.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	kolourpaint/kolourpaint.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	kiconedit/kiconedit.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
+	kghostview/kghostview.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
+	kpovmodeler/kpovmodeler.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;X-KDE-settings-peripherals/' \
+	kamera/kcontrol/kamera.desktop
 
 %build
-cp -f %{_datadir}/automake/config.sub admin
-export kde_htmldir=%{_kdedocdir}
-export kde_libs_htmldir=%{_kdedocdir}
-export UNSERMAKE=%{_datadir}/unsermake/unsermake
+cp /usr/share/automake/config.sub admin
+
+export UNSERMAKE=/usr/share/unsermake/unsermake
+
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
-	--with-qt-libraries=%{_libdir} \
 	--disable-rpath \
-	--enable-final
+	--enable-final \
+	--with-qt-libraries=%{_libdir}
 
 %{__make}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT *.lang
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -561,8 +587,26 @@ mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install debian/man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
+%find_lang kamera	--with-kde
+%find_lang kcoloredit	--with-kde
+%find_lang kgamma	--with-kde
+%find_lang kdvi		--with-kde
+%find_lang kghostview	--with-kde
+%find_lang kiconedit	--with-kde
+%find_lang kolourpaint	--with-kde
+%find_lang kooka	--with-kde
+%find_lang kpdf		--with-kde
+%find_lang kpovmodeler	--with-kde
+%find_lang kruler	--with-kde
+%find_lang ksnapshot	--with-kde
+%find_lang kuickshow	--with-kde
+%find_lang kview	--with-kde
+
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post	kghostview	-p /sbin/ldconfig
+%postun	kghostview	-p /sbin/ldconfig
 
 %post	kooka		-p /sbin/ldconfig
 %postun	kooka		-p /sbin/ldconfig
@@ -572,6 +616,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	kview		-p /sbin/ldconfig
 %postun	kview		-p /sbin/ldconfig
+
+%post	kviewshell	-p /sbin/ldconfig
+%postun	kviewshell	-p /sbin/ldconfig
 
 %files devel
 %defattr(644,root,root,755)
@@ -591,7 +638,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kded_daemonwatcher.so
 %{_datadir}/services/kded/daemonwatcher.desktop
 
-%files kamera
+%files kamera -f kamera.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_kamera.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kamera.so
@@ -600,7 +647,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kamera.protocol
 %{_desktopdir}/kde/kamera.desktop
 %{_iconsdir}/*/*/*/camera*
-%{_kdedocdir}/en/kamera
 
 %files kcolorchooser
 %defattr(644,root,root,755)
@@ -609,16 +655,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/crystalsvg/*/apps/kcolorchooser.png
 %{_mandir}/man1/kcolorchooser.1*
 
-%files kcoloredit
+%files kcoloredit -f kcoloredit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_datadir}/apps/kcoloredit
 %{_desktopdir}/kde/kcoloredit.desktop
 %{_iconsdir}/[!l]*/*/*/kcoloredit.*
 %{_mandir}/man1/kcoloredit.1*
-%{_kdedocdir}/en/kcoloredit
 
-%files kdvi
+%files kdvi -f kdvi.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kdvi
 %{_libdir}/kde3/kdvipart.la
@@ -627,7 +672,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kdvi.desktop
 %{_iconsdir}/*/*/*/kdvi.*
 %{_mandir}/man1/kdvi.1*
-%{_kdedocdir}/en/kdvi
 
 %files kfax
 %defattr(644,root,root,755)
@@ -641,23 +685,27 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kfile
 %defattr(644,root,root,755)
+%{_libdir}/kde3/gsthumbnail.la
+%attr(755,root,root) %{_libdir}/kde3/gsthumbnail.so
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
+%{_datadir}/services/gsthumbnail.desktop
 %{_datadir}/services/kfile_*.desktop
 
-%files kgamma
+%files kgamma -f kgamma.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/xf86gammacfg
 %{_libdir}/kde3/kcm_kgamma.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kgamma.so
 %{_datadir}/apps/kgamma
-%{_datadir}/applnk/.hidden/kgamma.desktop
 %{_iconsdir}/*/*/apps/kgamma.png
 %{_kdedocdir}/en/kgamma
 
-%files kghostview
+%files kghostview -f kghostview.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
+%{_libdir}/libkghostviewlib.la
+%attr(755,root,root) %{_libdir}/libkghostviewlib.so.*.*.*
 %{_libdir}/kde3/libkghostviewpart.la
 %{_libdir}/libkghostviewlib.so.0.0.0
 %{_libdir}/libkghostviewlib.la
@@ -666,18 +714,43 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kghostview.desktop
 %{_iconsdir}/*/*/*/kghostview.*
 %{_mandir}/man1/kghostview.1*
-%{_kdedocdir}/en/kghostview
 
-%files kiconedit
+%files kiconedit -f kiconedit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kiconedit
 %{_datadir}/apps/kiconedit
 %{_desktopdir}/kde/kiconedit.desktop
 %{_iconsdir}/*/*/*/kiconedit.*
 %{_mandir}/man1/kiconedit.1*
-%{_kdedocdir}/en/kiconedit
 
-%files kooka
+%files kmrml
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/mrmlsearch
+%{_libdir}/libkdeinit_mrmlsearch.la
+%attr(755,root,root) %{_libdir}/libkdeinit_mrmlsearch.so
+%{_libdir}/kde3/kcm_kmrml.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_kmrml.so
+%{_libdir}/kde3/kio_mrml.la
+%attr(755,root,root) %{_libdir}/kde3/kio_mrml.so
+%{_libdir}/kde3/libkmrmlpart.la
+%attr(755,root,root) %{_libdir}/kde3/libkmrmlpart.so
+%{_libdir}/kde3/mrmlsearch.la
+%attr(755,root,root) %{_libdir}/kde3/mrmlsearch.so
+%{_datadir}/mimelnk/text/mrml.desktop
+%{_datadir}/services/mrml.protocol
+%{_datadir}/services/mrml_part.desktop
+%{_datadir}/apps/konqueror/servicemenus/mrml-servicemenu.desktop
+%{_desktopdir}/kde/kcmkmrml.desktop
+
+%files kolourpaint -f kolourpaint.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/kolourpaint
+%{_datadir}/apps/kolourpaint
+%{_desktopdir}/kde/kolourpaint.desktop
+%{_iconsdir}/*/*/*/kolourpaint.png
+#%{_mandir}/man1/kolourpaint.1*
+
+%files kooka -f kooka.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
 %{_libdir}/libkscan.la
@@ -688,18 +761,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kooka.desktop
 %{_iconsdir}/*/*/actions/palette*
 %{_mandir}/man1/kooka.1*
-%{_kdedocdir}/en/kooka
 
-%files kpaint
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/kpaint
-%{_datadir}/apps/kpaint
-%{_desktopdir}/kde/kpaint.desktop
-%{_iconsdir}/*/*/*/kpaint.*
-%{_mandir}/man1/kpaint.1*
-%{_kdedocdir}/en/kpaint
-
-%files kpdf
+%files kpdf -f kpdf.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpdf
 %{_libdir}/kde3/libkpdfpart.la
@@ -709,9 +772,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kpdf_part.desktop
 %{_desktopdir}/kde/kpdf.desktop
 %{_iconsdir}/*/*/*/kpdf.png
-%{_kdedocdir}/en/kpdf
 
-%files kpovmodeler
+%files kpovmodeler -f kpovmodeler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpovmodeler
 %{_libdir}/libkpovmodeler.la
@@ -722,24 +784,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kpovmodeler.desktop
 %{_iconsdir}/[!l]*/*/*/kpovmodeler*
 %{_mandir}/man1/kpovmodeler.1*
-%{_kdedocdir}/en/kpovmodeler
 
-%files kruler
+%files kruler -f kruler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kruler
 %{_datadir}/apps/kruler
 %{_desktopdir}/kde/kruler.desktop
 %{_iconsdir}/*/*/apps/kruler.*
 %{_mandir}/man1/kruler.1*
-%{_kdedocdir}/en/kruler
 
-%files ksnapshot
+%files ksnapshot -f ksnapshot.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ksnapshot
 %{_desktopdir}/kde/ksnapshot.desktop
 %{_iconsdir}/*/*/apps/ksnapshot.*
 %{_mandir}/man1/ksnapshot.1*
-%{_kdedocdir}/en/ksnapshot
 
 %files ksvg
 %defattr(644,root,root,755)
@@ -761,7 +820,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/svgthumbnail.desktop
 %{_datadir}/servicetypes/ksvgrenderer.desktop
 
-%files kuickshow
+%files kuickshow -f kuickshow.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kuickshow
 %{_libdir}/libkdeinit_kuickshow.la
@@ -772,16 +831,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kuickshow.desktop
 %{_iconsdir}/[!l]*/*/*/kuickshow.*
 %{_mandir}/man1/kuickshow.1*
-%{_kdedocdir}/en/kuickshow
 
-%files kview
+%files kview -f kview.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kview
-%attr(755,root,root) %{_bindir}/kviewshell
 %{_libdir}/libkdeinit_kview.la
 %attr(755,root,root) %{_libdir}/libkdeinit_kview.so
-%{_libdir}/libkmultipage.la
-%attr(755,root,root) %{_libdir}/libkmultipage.so.*.*.*
 %{_libdir}/libkimageviewer.la
 %attr(755,root,root) %{_libdir}/libkimageviewer.so.*.*.*
 %{_libdir}/kde3/kcm_kviewcanvasconfig.la
@@ -804,15 +859,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kview_presenterplugin.so
 %{_libdir}/kde3/kview_scannerplugin.la
 %attr(755,root,root) %{_libdir}/kde3/kview_scannerplugin.so
-%{_libdir}/kde3/kviewerpart.la
-%attr(755,root,root) %{_libdir}/kde3/kviewerpart.so
 %{_libdir}/kde3/libkviewcanvas.la
 %attr(755,root,root) %{_libdir}/kde3/libkviewcanvas.so
 %{_libdir}/kde3/libkviewviewer.la
 %attr(755,root,root) %{_libdir}/kde3/libkviewviewer.so
 %{_datadir}/apps/kview
-%{_datadir}/apps/kviewerpart
-%{_datadir}/apps/kviewshell
 %{_datadir}/apps/kviewviewer
 %{_datadir}/services/kconfiguredialog/kviewcanvasconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewgeneralconfig.desktop
@@ -824,26 +875,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/kimageviewer.desktop
 %{_datadir}/servicetypes/kimageviewercanvas.desktop
 %{_desktopdir}/kde/kview.desktop
-%{_iconsdir}/*/*/*/kview*.png
+%{_iconsdir}/*/*/*/kview.png
 %{_mandir}/man1/kview.1*
-%{_mandir}/man1/kviewshell.1*
-%{_kdedocdir}/en/kview
 
-%files kmrml
+%files kviewshell
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mrmlsearch
-%{_libdir}/libkdeinit_mrmlsearch.la
-%attr(755,root,root) %{_libdir}/libkdeinit_mrmlsearch.so
-%{_libdir}/kde3/kcm_kmrml.la
-%attr(755,root,root) %{_libdir}/kde3/kcm_kmrml.so
-%{_libdir}/kde3/kio_mrml.la
-%attr(755,root,root) %{_libdir}/kde3/kio_mrml.so
-%{_libdir}/kde3/libkmrmlpart.la
-%attr(755,root,root) %{_libdir}/kde3/libkmrmlpart.so
-%{_libdir}/kde3/mrmlsearch.la
-%attr(755,root,root) %{_libdir}/kde3/mrmlsearch.so
-%{_datadir}/mimelnk/text/mrml.desktop
-%{_datadir}/services/mrml.protocol
-%{_datadir}/services/mrml_part.desktop
-%{_datadir}/apps/konqueror/servicemenus/mrml-servicemenu.desktop
-%{_desktopdir}/kde/kcmkmrml.desktop
+%attr(755,root,root) %{_bindir}/kviewshell
+%{_libdir}/libkmultipage.la
+%attr(755,root,root) %{_libdir}/libkmultipage.so.*.*.*
+%{_libdir}/kde3/kviewerpart.la
+%attr(755,root,root) %{_libdir}/kde3/kviewerpart.so
+%{_datadir}/apps/kviewerpart
+%{_datadir}/apps/kviewshell
+%{_iconsdir}/*/*/*/kviewshell.png
+%{_mandir}/man1/kviewshell.1*
