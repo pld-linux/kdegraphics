@@ -2,7 +2,7 @@ Summary:     K Desktop Environment - Graphic Applications
 Summary(pl): K Desktop Environment - Aplikacje graficzne
 Name:        kdegraphics
 Version:     1.0
-Release:     4
+Release:     7
 Source:      ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{version}.tar.gz
 Group:       X11/KDE/Graphics
 Copyright:   GPL
@@ -279,6 +279,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/X11R6/share/kde/icons/kview.xpm
 
 %changelog
+* Wed Dec  8 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+  [1.0-7]
+- recompiled against libstdc++.so.2.9.
+
 * Sat Oct 24 1998 Jacek Konieczny <jajcus@zeus.polsl.gliwice.pl>
   [1.0-4]
 - created new spec based on kdebase.spec
