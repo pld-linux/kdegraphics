@@ -4,8 +4,8 @@
 #
 
 %define         _state          snapshots
-%define         _ver		3.1.92
-%define		_snap		031024
+%define         _ver		3.1.93
+%define		_snap		031103
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -19,7 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	494c0119052899c3ba79a374e16a4876
+# Source0-md5:	7bf84a20cbfd7a44c5464b06bf2472c1
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
@@ -41,7 +41,6 @@ BuildRequires:	libieee1284-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define 	_noautoreqdep			libGL.so.1 libGLU.so.1
-%define		no_install_post_chrpath		1
 
 %description
 Graphic applications for the K Desktop Environment.
@@ -109,6 +108,7 @@ Summary:	kdegraphics development files
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
+Requires:	kdelibs-devel >= 9:%{version}
 Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
 Requires:	%{name}-ksvg = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
@@ -446,11 +446,11 @@ for f in `find . -name *.desktop` ; do
 	sed -i 's/\[nb\]/\[no\]/g' $f
 done
 
-#echo KDE_OPTIONS=nofinal >> ksvg/core/Makefile.am
-
 %{__make} -f admin/Makefile.common cvs
 
-%configure
+%configure \
+	--disable-rpath \
+	--enable-final
 
 %{__make}
 
@@ -473,6 +473,7 @@ mv $RPM_BUILD_ROOT%{_applnkdir}/Settings/Peripherals/kamera.desktop \
 %find_lang kiconedit		--with-kde
 %find_lang kooka		--with-kde
 %find_lang kpaint		--with-kde
+%find_lang kpdf			--with-kde
 %find_lang kpovmodeler		--with-kde
 %find_lang kruler		--with-kde
 %find_lang ksnapshot		--with-kde
@@ -599,7 +600,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kpaint.desktop
 %{_iconsdir}/*/*/*/kpaint.*
 
-%files kpdf
+%files kpdf -f kpdf.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpdf
 %{_libdir}/kde3/libkpdfpart.la
