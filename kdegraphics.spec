@@ -165,7 +165,7 @@ Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3)
 %setup -q -n %name
 
 %build
-make -f Makefile.cvs
+%{__make} -f Makefile.cvs
 export KDEDIR=%{_prefix}
 CXXFLAGS="$RPM_OPT_FLAGS -Wall" \
 CFLAGS="$RPM_OPT_FLAGS -Wall" \
@@ -174,12 +174,12 @@ CFLAGS="$RPM_OPT_FLAGS -Wall" \
 	--with-qt-dir=%{_prefix} \
  	--with-install-root=$RPM_BUILD_ROOT \
  	--with-pam="yes"
-make KDEDIR=$KDEDIR
+%{__make} KDEDIR=$KDEDIR
 
 %install
 rm -rf $RPM_BUILD_ROOT
 export KDEDIR=%{_prefix}
-make RUN_KAPPFINDER=no prefix=$RPM_BUILD_ROOT$KDEDIR install
+%{__make} RUN_KAPPFINDER=no prefix=$RPM_BUILD_ROOT$KDEDIR install
 
 %find_lang kdvi
 %find_lang kfax
