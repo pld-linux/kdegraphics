@@ -18,7 +18,7 @@ BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
 BuildRequires:	gphoto2-lib-devel
 BuildRequires:	imlib-devel
-BuildRequires:	kdelibs-devel >= %{_version}
+BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
