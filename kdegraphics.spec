@@ -134,7 +134,7 @@ Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
-Obsoletes:	%{name}-mrml < 8:3.1-6
+Obsoletes:	%{name}-kmrml < 8:3.1-6
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
@@ -428,18 +428,18 @@ Program ten umo¿liwia ogl±danie ró¿nych plików graficznych.
 %description kview -l pt_BR
 Visualizador de imagens poderoso para KDE.
 
-%package mrml
+%package kmrml
 Summary:	Advanced Search
 Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= 9:%{version}
 Obsoletes:	kdegraphics
 
-%description mrml
+%description kmrml
 This package provides graphics files advanced search with file
 indexing.
 
-%description mrml -l pl
+%description kmrml -l pl
 Ten pakiet umo¿liwia zaawansowane wyszukiwanie plików graficznych z
 indeksowaniem plików.
 
@@ -1122,7 +1122,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/kview.1*
 %{_mandir}/man1/kviewshell.1*
 
-%files mrml
+%files kmrml
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mrmlsearch
 %{_libdir}/libkdeinit_mrmlsearch.la
