@@ -19,7 +19,6 @@ Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	5a0a32e314422e2ce051290c08390367
 Patch0:		kde-common-PLD.patch
-# ftp://ftp.kde.org/pub/kde/security_patches/
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
@@ -523,18 +522,16 @@ aplikacjach KDE.
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	kdvi/kdvi.desktop \
 	kfax/kfax.desktop \
-	kpdf/kpdf/kpdf.desktop \
 	kview/kview.desktop \
 	kuickshow/src/kuickshow.desktop \
 	kghostview/kghostview.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;PDFViewer;/' \
+	kpdf/shell/kpdf.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Scanning;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	kooka/kooka.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	kcoloredit/kcolorchooser.desktop \
 	kcoloredit/kcoloredit.desktop \
 	ksnapshot/ksnapshot.desktop \
@@ -544,8 +541,6 @@ aplikacjach KDE.
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;/' \
 	-e '/\[Desktop Entry\]/aEncoding=UTF-8' \
 	kpovmodeler/kpovmodeler.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;X-KDE-settings-peripherals/' \
-	kamera/kcontrol/kamera.desktop
 %{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' \
 	kgamma/kcmkgamma/kgamma.desktop
 for f in `find . -name *.desktop`; do
@@ -580,9 +575,6 @@ rm -rf *.lang
 	DESTDIR=$RPM_BUILD_ROOT \
 	kde_libs_htmldir=%{_kdedocdir} \
 	kde_htmldir=%{_kdedocdir}
-
-mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
-	$RPM_BUILD_ROOT%{_desktopdir}/kde
 
 # Debian manpages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
