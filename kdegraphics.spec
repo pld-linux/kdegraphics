@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -270,7 +270,7 @@ Summary(pl):	Przegl±darka postscriptu dla KDE
 Summary(pt_BR):	Programa de visualização de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= 9:%{version}
-Requires:	ghostview
+Requires:	ghostscript
 Obsoletes:	kdegraphics
 
 %description kghostview
