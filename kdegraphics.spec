@@ -7,8 +7,11 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040424
+%define		_snap		040506
 %define		_packager	adgor
+
+%define		_minlibsevr	9:3.2.90-040503
+%define		_minbaseevr	9:3.2.90-040503
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -27,12 +30,12 @@ Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
 ##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 Patch0:		%{name}-vcategories.patch
 Patch1:		kde-common-QTDOCDIR.patch
-Patch2:		%{name}-gcc34.patch
+#Patch2:		%{name}-gcc34.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
-BuildRequires:	kdelibs-devel >= 9:%{version}
+BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libieee1284-devel
 BuildRequires:	libjpeg-devel
@@ -117,7 +120,7 @@ Summary:	kdegraphics development files
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
-Requires:	kdelibs-devel >= 9:%{version}
+Requires:	kdelibs-devel >= %{_minlibsevr}
 Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
 Requires:	%{name}-ksvg = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
@@ -136,7 +139,7 @@ bibliotecas do kdegraphics.
 Summary:	KDED Daemon Watcher
 Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
-Requires:	kdelibs >= 9:%{version}
+Requires:	kdelibs >= %{_minlibsevr}
 Obsoletes:	kdegraphics-mrml < 8:3.1-6
 
 %description daemonwatcher
@@ -149,7 +152,7 @@ Uruchamia demony na ¿±danie lub restartuje je po awarii.
 Summary:	Digital camera support
 Summary(pl):	Obs³uga kamer cyfrowych
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kamera
@@ -162,7 +165,7 @@ Obs³uga kamer cyfrowych.
 Summary:	Color chooser
 Summary(pl):	Program do wybierania kolorów
 Group:		X11/Applications/Graphics
-Requires:	kdelibs >= 9:%{version}
+Requires:	kdelibs >= %{_minlibsevr}
 Obsoletes:	kdegraphics
 
 %description kcolorchooser
@@ -176,7 +179,7 @@ Summary:	Color palette editor
 Summary(pl):	Edytor palety kolorów
 Summary(pt_BR):	Editor de cores
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kcoloredit
@@ -193,7 +196,7 @@ Summary:	KDE DVI viewer
 Summary(pl):	Przegl±darka plików DVI dla KDE
 Summary(pt_BR):	Programa de exibição de DVIs
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
 Obsoletes:	kdegraphics
 
@@ -211,7 +214,7 @@ Summary:	KDE Fax viewer
 Summary(pl):	Przegl±darka faksów dla KDE
 Summary(pt_BR):	Programa de visualização de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
 Obsoletes:	kdegraphics
 
@@ -243,7 +246,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	A monitor calibration tool
 Summary(pl):	Narzêdzie do kalibracji monitora
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kgamma
@@ -257,7 +260,7 @@ Summary:	KDE Postscript viewer
 Summary(pl):	Przegl±darka postscriptu dla KDE
 Summary(pt_BR):	Programa de visualização de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kghostview
@@ -274,7 +277,7 @@ Summary:	KDE Icon Editor
 Summary(pl):	Edytor ikon dla ¶rodowiska KDE
 Summary(pt_BR):	Editor de ícones
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kiconedit
@@ -291,7 +294,7 @@ Summary:	KDE Painter
 Summary(pl):	Program graficzny KDE
 Summary(pt_BR):	Editor básico de imagens bitmap
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kpaint
 
@@ -309,7 +312,7 @@ Summary:	Scanning tool
 Summary(pl):	Narzêdzie do skanowania
 Summary(pt_BR):	Um programa de rasterização de imagens, baseado no SANE e libkscan
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kooka
@@ -326,7 +329,7 @@ Um programa de rasterização de imagens, baseado no SANE e libkscan.
 Summary:	Kpdf is an xpdf wrapper for KDE	
 Summary(pl):	Kpdf - program udostêpniaj±cy mo¿liwo¶ci xpdf w KDE
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kpdf
@@ -339,7 +342,7 @@ Kpdf udostêpnia mo¿liwo¶ci xpdf w KDE.
 Summary:	Povary Modeler
 Summary(pl):	Modeler Povary
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	povray
 Obsoletes:	kdegraphics
 
@@ -354,7 +357,7 @@ Summary:	KRuler
 Summary(pl):	Linijka dla KDE
 Summary(pt_BR):	Régua de pixels para a tela
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description kruler
@@ -373,7 +376,7 @@ Summary:	KDE Snap Shot
 Summary(pl):	Program do przechwytywania ekranu dla KDE
 Summary(pt_BR):	Programa de captura de tela
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 
 %description ksnapshot
@@ -389,7 +392,7 @@ Programa de captura de tela.
 Summary:	Scalable Vector Graphics for KDE
 Summary(pl):	Skalowalna grafika wektorowa (SVG) dla KDE
 Group:		X11/Applications/Graphics
-#Requires:	kdebase-core >= 9:%{version}
+Requires:	kdelibs >= %{_minlibsevr}
 Obsoletes:	kdegraphics
 
 %description ksvg
@@ -404,7 +407,7 @@ wektorowej (SVG - Scalable Vector Graphics).
 Summary:	Image viewer/browser
 Summary(pl):	Przegl±darka obrazków
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Provides:	kuickshow
 Obsoletes:	kuickshow
 Obsoletes:	kdegraphics
@@ -420,8 +423,8 @@ Summary:	KDE graphics file viewer
 Summary(pl):	Przegl±darka plików graficznych dla KDE
 Summary(pt_BR):	Visualizador de imagens
 Group:		X11/Applications/Graphics
-#Requires:	kdebase-core >= 9:%{version}
-Requires:	kdelibs >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
+#Requires:	kdelibs >= %{_minlibsevr}
 Obsoletes:	kdegraphics
 
 %description kview
@@ -437,7 +440,7 @@ Visualizador de imagens poderoso para KDE.
 Summary:	Advanced Search
 Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-mrml
 
@@ -448,6 +451,8 @@ indexing.
 %description kmrml -l pl
 Ten pakiet umo¿liwia zaawansowane wyszukiwanie plików graficznych z
 indeksowaniem plików.
+
+# <i18n stuff>
 
 %package i18n
 Summary:	Common internationalization and localization files for kdegraphics
@@ -719,7 +724,7 @@ Pliki umiêdzynarodawiaj±ce dla kfile'a.
 %setup -q -n %{name}-%{_snap}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
@@ -975,8 +980,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kfile
 %defattr(644,root,root,755)
+%{_libdir}/kde3/gsthumbnail.la
+%attr(755,root,root) %{_libdir}/kde3/gsthumbnail.so
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
+%{_datadir}/services/gsthumbnail.desktop
 %{_datadir}/services/kfile_*.desktop
 
 %files kgamma -f kgamma_en.lang
