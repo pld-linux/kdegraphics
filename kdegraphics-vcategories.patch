@@ -1,3 +1,10 @@
+--- kdegraphics-030904/kamera/kcontrol/kamera.desktop~	2003-09-04 15:36:04.000000000 +0200
++++ kdegraphics-030904/kamera/kcontrol/kamera.desktop	2003-09-04 16:52:35.000000000 +0200
+@@ -143,3 +143,4 @@
+ Icon=camera
+ Exec=kcmshell kamera
+ DocPath=kamera/index.html
++Categories=Qt;KDE;X-KDE-settings-peripherals
 --- kdegraphics-030329/kdvi/kdvi.desktop~	Wed Jan 22 00:43:40 2003
 +++ kdegraphics-030329/kdvi/kdvi.desktop	Tue Apr  1 23:03:57 2003
 @@ -71,4 +71,4 @@
