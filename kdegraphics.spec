@@ -1,13 +1,12 @@
 Summary:	K Desktop Environment - Graphic Applications
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Name:		kdegraphics
-Version:	2.1.1
+Version:	2.2.1
 Release:	1
-Group:          X11/KDE/Graphics
-Group(pl):      X11/KDE/Grafika
-License:      GPL
+Group:		X11/KDE/Graphics
+Group(pl):	X11/KDE/Grafika
+License:	GPL
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/src/%{name}-%{version}.tar.bz2
-Patch0:		%{name}-2.1-doc.patch
 BuildRequires:	kdelibs-devel >= 2.1
 BuildRequires:	qt-devel >= 2.2
 BuildRequires:	XFree86-devel >= 3.3.6
@@ -15,8 +14,11 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libungif-devel
-BuildRequires:	libpng >= 1.0.8
+BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	zlib-devel
+BuildRequires:	sane-backends-devel
+BuildRequires:	gettext-devel
+BuildRequires:	libxml2-devel
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -151,18 +153,6 @@ A (very) simple painting program for KDE.
 (Bardzo) prosty program do rysowania pod KDE.
 
 
-%package kpixmap2bitmap
-Summary:	KDE pixmap2bitmap
-Summary(pl):	Program graficzny KDE
-Group:		X11/KDE/Graphics
-Group(pl):	X11/KDE/Grafika
-Requires:	qt >= 2.2
-Requires:	kdelibs = %{version}
-
-%description kpixmap2bitmap
-KDE pixmap2bitmap
-
-
 %package kruler
 Summary:	KRuler
 Group:		X11/KDE/Graphics
@@ -205,26 +195,55 @@ A graphics files viewer for KDE.
 Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3).
 
 
-%package pixie
-Summary:	An image manager for KDE
+%package kooka
+Summary:	Scanning tool
+Summary(pl):	Narzêdzie do skanowania
 Group:		X11/KDE/Graphics
 Group(pl):	X11/KDE/Grafika
-Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
-%description pixie
-An image manager for KDE.
+%description kooka
+Scanning tool
+
+%description -l pl kooka
+Narzêdzie do skanowania
+
+
+%package kcoloredit
+Summary:	Color palette editor
+Summary(pl):	Edytor palety kolorów
+Group:		X11/KDE/Graphics
+Group(pl):	X11/KDE/Grafika
+Requires:	kdelibs = %{version}
+
+%description kcoloredit
+Color palette editor
+
+%description -l pl kcoloredit
+Edytor palety kolorów
+
+
+%package kcolorchooser
+Summary:	Color chooser
+Summary(pl):	Wybieracz kolrów
+Group:		X11/KDE/Graphics
+Group(pl):	X11/KDE/Grafika
+Requires:	kdelibs = %{version}
+
+%description kcolorchooser
+Color chooser
+
+%description -l pl kcolorchooser
+Wybieracz kolorów
 
 %prep
 %setup -q
-%patch -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
-%{__make} -f Makefile.cvs
-%configure \
+%configure2_13 \
 	--enable-final
 %{__make}
 
@@ -232,8 +251,10 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 rm -rf $RPM_BUILD_ROOT
 %{__make} RUN_KAPPFINDER=no DESTDIR=$RPM_BUILD_ROOT$ install
 
+install -d $RPM_BUILD_ROOT%{_applnkdir}/Graphics/Viewers
+mv $RPM_BUILD_ROOT%{_applnkdir}/Graphics{,/Viewers}/kghostview.desktop
+
 %find_lang kdvi --with-kde
-%find_lang kfax --with-kde
 %find_lang kfract --with-kde
 %find_lang kghostview --with-kde
 %find_lang kiconedit --with-kde
@@ -241,7 +262,6 @@ rm -rf $RPM_BUILD_ROOT
 %find_lang kruler --with-kde
 %find_lang ksnapshot --with-kde
 %find_lang kview --with-kde
-%find_lang pixie --with-kde
 
 %post devel -p /sbin/ldconfig
 %postun devel -p /sbin/ldconfig
@@ -258,8 +278,14 @@ rm -rf $RPM_BUILD_ROOT
 %post kview -p /sbin/ldconfig
 %postun kview -p /sbin/ldconfig
 
-%post pixie -p /sbin/ldconfig
-%postun pixie -p /sbin/ldconfig
+%post kooka -p /sbin/ldconfig
+%postun kooka -p /sbin/ldconfig
+
+%post kcoloredit -p /sbin/ldconfig
+%postun kcoloredit -p /sbin/ldconfig
+
+%post kcolorchooser -p /sbin/ldconfig
+%postun kcolorchooser -p /sbin/ldconfig
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -267,7 +293,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
-%{_includedir}/mini-magick/*.h
+%attr(755,root,root) %{_libdir}/libkscan.so
 
 #################################################
 #             KDVI
@@ -283,7 +309,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KFAX
 #################################################
-%files kfax -f kfax.lang
+%files kfax 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %attr(755,root,root) %{_libdir}/libkfax.??
@@ -309,7 +335,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kghostview
 %attr(755,root,root) %{_libdir}/libkghostview.*
 %{_datadir}/apps/kghostview
-%{_applnkdir}/Graphics/kghostview.desktop
+%{_applnkdir}/Graphics/Viewers/kghostview.desktop
 %{_pixmapsdir}/*/*/apps/kghostview.*
 
 #################################################
@@ -331,15 +357,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kpaint
 %{_applnkdir}/Graphics/kpaint.desktop
 %{_pixmapsdir}/*/*/apps/kpaint.*
-
-#################################################
-#             KPIXMAP2BITMAP
-#################################################
-%files kpixmap2bitmap
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/kpixmap2bitmap
-%{_applnkdir}/Graphics/kpixmap2bitmap.desktop
-%{_pixmapsdir}/*/*/apps/kpixmap2bitmap.*
 
 #################################################
 #             KRULER
@@ -372,19 +389,37 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkviewerpart.??
 %attr(755,root,root) %{_libdir}/libkmultipage.*
 %attr(755,root,root) %{_libdir}/libkpagetest.??
-%{_datadir}/apps/kview
+%{_datadir}/apps/kview*
 %{_applnkdir}/Graphics/kview.desktop
 %{_pixmapsdir}/*/*/apps/kview.*
 
 #################################################
-#             PIXIE
+#             KOOKA
 #################################################
-%files pixie -f pixie.lang
+%files kooka
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/pixie
-%attr(755,root,root) %{_libdir}/libkif_kdeeffects.*
-%attr(755,root,root) %{_libdir}/libkif_magick.*
-%attr(755,root,root) %{_libdir}/libkifplugin.*
-%attr(755,root,root) %{_libdir}/libpixie_color.*
-%attr(755,root,root) %{_libdir}/libpixie_thumb.*
-%attr(755,root,root) %{_libdir}/libminimagick.*
+%attr(755,root,root) %{_bindir}/kooka
+%attr(755,root,root) %{_libdir}/libkscan.so.*.*.*
+%attr(755,root,root) %{_libdir}/libkscan.la
+%{_datadir}/apps/kooka
+%{_datadir}/services/scanservice.desktop
+%{_applnkdir}/Utilities/kooka.desktop
+%{_pixmapsdir}/*/*/actions/palette*
+
+#################################################
+#             KCOLOREDIT
+#################################################
+%files kcoloredit
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/kcoloredit
+%{_applnkdir}/Graphics/kcoloredit.desktop
+%{_pixmapsdir}/*/*/apps/kcoloredit.*
+
+#################################################
+#             KCOLORCHOOSER
+#################################################
+%files kcolorchooser
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/kcolorchooser
+%attr(755,root,root) %{_libdir}/kcolorchooser.??
+%{_applnkdir}/Graphics/kcolorchooser.desktop
