@@ -8,10 +8,20 @@ Release:	2
 Epoch:		7
 License:	GPL
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Patch0:		%{name}-kamera.patch
 BuildRequires:	kdelibs-devel >= 2.1
 BuildRequires:	qt-devel >= 2.2
 BuildRequires:	XFree86-devel >= 3.3.6
@@ -84,12 +94,19 @@ IncluÌdos neste pacote:
 Summary:	kdegraphics development files
 Summary(pt_BR):	Arquivos de inclus„o para compilaÁ„o de aplicaÁıes com kdegraphics
 Group:		X11/Development/Libraries
-Group(de):	X11/Entwicklung/Libraries
+Group(cs):	X11/V˝vojovÈ prost¯edky/Knihovny
+Group(da):	X11/Udvikling/Biblioteker
+Group(de):	X11/Entwicklung/Bibliotheken
 Group(es):	X11/Desarrollo/Bibliotecas
 Group(fr):	X11/Development/Librairies
+Group(it):	X11/Sviluppo/Librerie
+Group(ja):	X11/≥´»Ø/•È•§•÷•È•Í
+Group(no):	X11/Applikasjoner/Biblioteker
 Group(pl):	X11/Programowanie/Biblioteki
 Group(pt_BR):	X11/Desenvolvimento/Bibliotecas
+Group(pt):	X11/Desenvolvimento/Bibliotecas
 Group(ru):	X11/Ú¡⁄“¡¬œ‘À¡/‚…¬Ã…œ‘≈À…
+Group(sv):	X11/Utveckling/Bibliotek
 Group(uk):	X11/Úœ⁄“œ¬À¡/‚¶¬Ã¶œ‘≈À…
 
 %description devel
@@ -104,9 +121,18 @@ Summary:	KDE DVI viewer
 Summary(pl):	Przegl±darka plikÛw DVI dla KDE
 Summary(pt_BR):	Programa de exibiÁ„o de DVIs
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -124,9 +150,18 @@ Summary:	KDE Fax viewer
 Summary(pl):	Przegl±darka faksÛw dla KDE
 Summary(pt_BR):	Programa de visualizaÁ„o de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -144,9 +179,18 @@ Summary:	KDE fractal generator
 Summary(pl):	Generator fraktali dla KDE
 Summary(pt_BR):	Gerador de fractais
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -164,9 +208,18 @@ Summary:	KDE Postscript viewer
 Summary(pl):	Przegl±darka postscriptu dla KDE
 Summary(pt_BR):	Programa de visualizaÁ„o de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -184,9 +237,18 @@ Summary:	KDE Icon Editor
 Summary(pl):	Edytor ikon w ∂rodowisku KDE
 Summary(pt_BR):	Editor de Ìcones
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -204,9 +266,18 @@ Summary:	KDE Painter
 Summary(pl):	Program graficzny KDE
 Summary(pt_BR):	Editor b·sico de imagens bitmap
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -223,9 +294,18 @@ Editor b·sico de imagens bitmap.
 Summary:	KRuler
 Summary(pt_BR):	RÈgua de pixels para a tela
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -241,9 +321,18 @@ Summary:	KDE Snap Shot
 Summary(pl):	Program do przechwytywania ekranu dla KDE
 Summary(pt_BR):	Programa de captura de tela
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -261,9 +350,18 @@ Summary:	KDE graphics file viewer
 Summary(pl):	Przegl±darka plikÛw graficznych dla KDE
 Summary(pt_BR):	Visualizador de imagens
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	qt >= 2.2
 Requires:	kdelibs = %{version}
 
@@ -281,9 +379,18 @@ Summary:	Scanning tool
 Summary(pl):	NarzÍdzie do skanowania
 Summary(pt_BR):	Um programa de rasterizaÁ„o de imagens, baseado no SANE e libkscan
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	kdelibs = %{version}
 
 %description kooka
@@ -300,9 +407,18 @@ Summary:	Color palette editor
 Summary(pl):	Edytor palety kolorÛw
 Summary(pt_BR):	Editor de cores
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	kdelibs = %{version}
 
 %description kcoloredit
@@ -318,9 +434,18 @@ Editor de cores do KDE.
 Summary:	Color chooser
 Summary(pl):	Wybieracz kolrÛw
 Group:		X11/Applications/Graphics
+Group(cs):	X11/Aplikace/Grafika
+Group(da):	X11/Programmer/Grafik
 Group(de):	X11/Applikationen/Grafik
+Group(es):	X11/Aplicaciones/Gr·ficos
+Group(fr):	X11/Applications/Graphiques
+Group(it):	X11/Applicazioni/Immagini
+Group(ja):	X11/•¢•◊•Í•±°º•∑•Á•Û/•∞•È•’•£•√•Ø•π
+Group(no):	X11/Applikasjoner/Grafikk
 Group(pl):	X11/Aplikacje/Grafika
 Group(pt):	X11/AplicaÁıes/Gr·ficos
+Group(ru):	X11/“…Ãœ÷≈Œ…—/Á“¡∆…À¡
+Group(sv):	X11/Till‰mpningar/Grafik
 Requires:	kdelibs = %{version}
 
 %description kcolorchooser
@@ -331,6 +456,7 @@ Wybieracz kolorÛw
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
