@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.92
-%define		_snap		031006
+%define		_snap		031014
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -19,7 +19,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{name}-%{_snap}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	129b2d244e02cfa718f8e0d6656cb6a4
+# Source0-md5:	d61969f361417a517ed83efa98d4d85e
 Patch0:		%{name}-vcategories.patch
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
@@ -426,7 +426,7 @@ Visualizador de imagens poderoso para KDE.
 Summary:	Advanced Search
 Summary(pl):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
-Requires:	konqueror >= %{version}
+Requires:	konqueror >= 9:%{version}
 Obsoletes:	kdegraphics
 
 %description mrml
@@ -442,16 +442,15 @@ z indeksowaniem plików.
 
 %build
 
-for plik in `find ./ -name *.desktop` ; do
-	echo $plik
-	sed -i -e "s/\[nb\]/\[no\]/g" $plik
+for f in `find . -name *.desktop` ; do
+	sed -i 's/\[nb\]/\[no\]/g' $f
 done
 
-echo KDE_OPTIONS=nofinal >> ksvg/core/Makefile.am
+#echo KDE_OPTIONS=nofinal >> ksvg/core/Makefile.am
 
 %{__make} -f admin/Makefile.common cvs
 
-%configure --enable-final
+%configure
 
 %{__make}
 
@@ -486,17 +485,11 @@ rm -rf $RPM_BUILD_ROOT
 %post	kooka		-p /sbin/ldconfig
 %postun	kooka		-p /sbin/ldconfig
 
-%post	kuickshow	-p /sbin/ldconfig
-%postun	kuickshow	-p /sbin/ldconfig
-
 %post	ksvg		-p /sbin/ldconfig
 %postun	ksvg		-p /sbin/ldconfig
 
 %post	kview		-p /sbin/ldconfig
 %postun	kview		-p /sbin/ldconfig
-
-%post	mrml		-p /sbin/ldconfig
-%postun	mrml		-p /sbin/ldconfig
 
 %files devel
 %defattr(644,root,root,755)
