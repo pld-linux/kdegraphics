@@ -5,7 +5,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define		_snap		030512
+%define		_snap		030516
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -546,7 +546,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkcm_kgamma.so
 %{_datadir}/apps/kgamma
 %{_applnkdir}/KDE-Settings/Peripherals/kgamma.desktop
-%{_pixmapsdir}/*/*/apps/kgamma_red.png
+%{_pixmapsdir}/*/*/apps/kgamma.png
 
 %files kghostview -f kghostview.lang
 %defattr(644,root,root,755)
