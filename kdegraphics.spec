@@ -346,7 +346,9 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 #%{__make} -f Makefile.cvs
 
 %configure \
-	--enable-final
+	--enable-final \
+	--disable-rpath
+
 %{__make}
 
 %install
