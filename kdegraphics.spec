@@ -12,13 +12,13 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	0.10
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
-#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
 BuildRequires:	glut-devel
@@ -458,7 +458,7 @@ cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
 mv -f kamera.desktop.tmp kamera.desktop
 cd -
 
-#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 #%find_lang kcmkamera		--with-kde
 %find_lang kamera		--with-kde
