@@ -7,7 +7,7 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040225
+%define		_snap		040327
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -25,6 +25,7 @@ Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
 #Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 ##%% Source1-md5:	efcfc2a186e7fea5922f153ebc841e0d
 Patch0:		%{name}-vcategories.patch
+Patch1:		kde-common-QTDOCDIR.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	gettext-devel
@@ -712,6 +713,7 @@ Pliki umiêdzynarodawiaj±ce dla kfile'a.
 %prep
 %setup -q -n %{name}
 %patch0 -p1
+%patch1 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
@@ -734,18 +736,25 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	kde_htmldir=%{_kdedocdir}
 
+# Workaround for doc caches (unsermake bug?)
+cd doc
+for i in `find . -name index.cache.bz2`; do
+	install -c -p -m 644 $i $RPM_BUILD_ROOT%{_kdedocdir}/en/$i
+done
+cd -	 
+
 mv $RPM_BUILD_ROOT%{_datadir}/applnk/Settings/Peripherals/kamera.desktop \
 	$RPM_BUILD_ROOT%{_desktopdir}/kde
 
 # Debian manpages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
-install debian/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
+install debian/man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 %if %{with i18n}
 if [ -f "%{SOURCE1}" ] ; then
         bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
         for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
-                if [ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ] ; then
+                if [ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ]; then
                         rm -f $f
                 fi
         done
@@ -762,7 +771,7 @@ fi
 %find_lang kghostview	--with-kde
 %find_lang kiconedit	--with-kde
 %find_lang kooka	--with-kde
-%find_lang kpaint	--with-kde
+#%find_lang kpaint	--with-kde
 %find_lang kpdf		--with-kde
 %find_lang kpovmodeler	--with-kde
 %find_lang kruler	--with-kde
@@ -834,7 +843,6 @@ files="\
 	kghostview \
 	kiconedit \
 	kooka \
-	kpaint \
 	kpdf \
 	kpovmodeler \
 	kruler \
@@ -851,7 +859,6 @@ for i in $files; do
 done
 
 durne=`ls -1 *.lang|grep -v _en`
-
 for i in $durne; do
 	echo $i >> control
 	grep -v en\/ $i|grep -v apidocs >> ${i}.1
@@ -1002,13 +1009,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/*/*/actions/palette*
 %{_mandir}/man1/kooka.1*
 
-%files kpaint -f kpaint_en.lang
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/kpaint
-%{_datadir}/apps/kpaint
-%{_desktopdir}/kde/kpaint.desktop
-%{_iconsdir}/*/*/*/kpaint.*
-%{_mandir}/man1/kpaint.1*
+#%files kpaint
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{_bindir}/kpaint
+#%{_datadir}/apps/kpaint
+#%{_desktopdir}/kde/kpaint.desktop
+#%{_iconsdir}/*/*/*/kpaint.*
+#%{_mandir}/man1/kpaint.1*
 
 %files kpdf -f kpdf_en.lang
 %defattr(644,root,root,755)
