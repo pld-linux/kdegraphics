@@ -4,7 +4,7 @@
 #
 
 %define		_state		stable
-%define		_ver		3.1.4
+%define		_ver		3.1.5
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -12,15 +12,15 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	0.1
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	c695c8574efca207c445dcef0bb4ae43
+# Source0-md5:	ba16a4a71381d57928325bc55ce7fe4c
 # generated from kde-i18n
-Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	2d1c3dd73adfd314e3a8b61e669fc30c
+Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+# Source1-md5:	00f1a8965389d1fab25fa6feba809d63
 Source2:	%{name}-extra_icons.tar.bz2
 # Source2-md5:	b7b2fcb2871a40b413041b59fa77ee3b
 Patch0:		%{name}-no_glut.patch
