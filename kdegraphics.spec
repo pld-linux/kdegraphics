@@ -3,7 +3,7 @@
 #   for some reason it checks for kpsewhich from tetex.
 %define		_ver		3.0.1
 #define		_sub_ver
-%define		_rel		1
+%define		_rel		2
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -50,13 +50,19 @@ Graphic applications for the K Desktop Environment.
 
 Included with this package are:
 
+- Kamera - digital camera support
+- KColorEdit - color calette editor
+- KColorChooser - color chooser
 - KDVI - displays TeX's device independent (.dvi) files,
 - KFax - displays fax files,
 - KFract - a fractal generator,
 - KGhostview - displays postscript (.ps) files,
 - KIconedit - icon editor,
+- Kooka - a scanning tool
 - KPaint - a simple drawing program,
+- KRuler - a screen ruler
 - KSnapshot - screen capture,
+- KuickShow - an image viewer
 - KView - displays numerous graphic file formats.
 
 %description -l es
@@ -74,14 +80,20 @@ Incluidos en este paquete:
 Aplikacje graficzne dla KDE.
 
 Pakiet zawiera:
-- KDVI - Przegl±darka plików DVI,
-- KFax - Program do wy¶wietlania faksów,
-- KFract - Generator fraktali,
-- KGhostview - Program do ogl±dania postscriptu (.ps),
-- KIconedit - Program do edycji ikon dla KDE,
-- KPaint - Prosty program do grafiki rastrowej,
+
+- Kamera - obs³uga kamer cyfrowych
+- KDVI - przegl±darka plików DVI,
+- KColorEdit - edytor palety kolorów
+- KColorChooser - wybóe koloru
+- KFax - program do wy¶wietlania faksów,
+- KFract - generator fraktali,
+- KGhostview - program do ogl±dania postscriptu (.ps),
+- KIconedit - program do edycji ikon dla KDE,
+- KPaint - prosty program do grafiki rastrowej,
+- KRuler - linijka ekranowa
 - KSnapshot - program do przechwytywania wygl±du ekranu,
-- KView - Przegl±darka plików graficznych.
+- KuickShow - przegl±darka plików graficznych.
+- KView - przegl±darka plików graficznych.
 
 %description -l pt_BR
 Aplicações gráficas para o KDE.
@@ -354,6 +366,11 @@ mv $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE}
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang kdvi --with-kde
+%find_lang kfax --with-kde
+%find_lang kfile_pdf --with-kde
+%find_lang kfile_png --with-kde
+%find_lang kfile_ps --with-kde
+cat kfile_pdf.lang kfile_png.lang kfile_ps.lang >>%{name}.lang
 %find_lang kfract --with-kde
 %find_lang kghostview --with-kde
 %find_lang kiconedit --with-kde
@@ -361,6 +378,8 @@ bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 %find_lang kruler --with-kde
 %find_lang ksnapshot --with-kde
 %find_lang kview --with-kde
+%find_lang kviewshell --with-kde
+cat kviewshell.lang >> kview.lang
 %find_lang kooka --with-kde
 %find_lang kcoloredit --with-kde
 %find_lang kuickshow --with-kde
@@ -416,7 +435,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KFAX
 #################################################
-%files kfax
+%files kfax -f kfax.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %attr(755,root,root) %{_libdir}/libkfax.??
