@@ -1,6 +1,10 @@
 # TODO:
 #   pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
+#
+# Conditional build:
+# _with_ra		- use it if You're building for Ra dist 
+#
 
 %define         _state          stable
 %define         _ver		3.1
@@ -23,7 +27,11 @@ BuildRequires:	gettext-devel
 BuildRequires:	glut-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{version}
+%if %{?_with_ra:1}0
+BuildRequires:	gphoto2-devel
+%else
 BuildRequires:	libgphoto2-devel
+%endif
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
