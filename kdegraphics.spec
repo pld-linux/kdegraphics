@@ -7,7 +7,7 @@ Release:	1
 Group:          X11/KDE/Graphics
 Group(pl):      X11/KDE/Grafika
 Copyright:      GPL
-Source:		ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/bz2/%{name}-%{version}.tar.bz2
+Source:		ftp://ftp.kde.org/pub/kde/snapshots/current/%{name}-%{REV}.tar.bz2
 BuildRequires:	kdelibs-devel = %{version}
 BuildRequires:	qt-devel >= 2.1.0
 BuildRequires:	XFree86-devel
@@ -162,7 +162,7 @@ A graphics files viewer for KDE.
 Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3)
 
 %prep
-%setup -q
+%setup -q -n %name
 
 %build
 export KDEDIR=%{_prefix}
