@@ -16,7 +16,7 @@ Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	e819ff09157f1bf83c6a1ac70ab41439
+# Source0-md5:	5a0a32e314422e2ce051290c08390367
 Patch0:		kde-common-PLD.patch
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
@@ -26,7 +26,6 @@ BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	kpathsea
 BuildRequires:	lcms-devel
 BuildRequires:	OpenEXR >= 1.1.0
-BuildRequires:	xpdf-tools
 BuildRequires:	OpenGL-devel
 BuildRequires:	libgphoto2-devel
 BuildRequires:	libieee1284-devel
@@ -374,16 +373,16 @@ bibliotek SANE.
 Um programa de rasterização de imagens, baseado no SANE e libkscan.
 
 %package kpdf
-Summary:	Kpdf is an xpdf wrapper for KDE
-Summary(pl):	Kpdf - program udostêpniaj±cy mo¿liwo¶ci xpdf w KDE
+Summary:	Kpdf is an xpdf based pdf viewer for KDE
+Summary(pl):	Kpdf - program bazuj±cy na xpdf do przegl±dania plików pdf w KDE
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kpdf
-Kpdf is an xpdf wrapper for KDE.
+Kpdf is an xpdf based pdf viewer for KDE.
 
 %description kpdf -l pl
-Kpdf udostêpnia mo¿liwo¶ci xpdf w KDE.
+Program bazuj±cy na xpdf do przegl±dania plików pdf w KDE.
 
 %package kpovmodeler
 Summary:	Povary Modeler
