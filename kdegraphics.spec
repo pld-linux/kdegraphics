@@ -3,7 +3,7 @@
 #   for some reason it checks for kpsewhich from tetex.
 %define		_ver		3.0
 #define		_sub_ver
-%define		_rel		2
+%define		_rel		3
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -36,6 +36,7 @@ BuildRequires:	zlib-devel
 BuildRequires:	sane-backends-devel
 BuildRequires:	gettext-devel
 BuildRequires:	libxml2-devel
+BuildRequires:	gphoto2-lib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -507,7 +508,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KCOLOREDIT
 #################################################
-%files kcoloredit -f kcooloredit.lang
+%files kcoloredit -f kcoloredit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_applnkdir}/Graphics/kcoloredit.desktop
@@ -527,7 +528,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 %files kuickshow -f kuickshow.lang
 %defattr(644,root,root,755)
-%{_bindir}/kuickshow
+%attr(755,root,root) %{_bindir}/kuickshow
 %{_libdir}/kuickshow.??
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/kuickshow.desktop
@@ -541,7 +542,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/kio_kamera.??
 %{_libdir}/kde3/libkcm_kamera.??
 %{_datadir}/services/kamera.protocol
-%{_applnkdir}/KDE/Settings/Peripheral/kamera.desktop
+%{_applnkdir}/KDE/Settings/Peripherals/kamera.desktop
 %{_pixmapsdir}/*/*/actions/camera_test.*
 %{_pixmapsdir}/*/*/apps/camera.*
 %{_pixmapsdir}/*/*/devices/camera.*
