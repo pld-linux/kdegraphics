@@ -7,7 +7,6 @@
 #
 %define		_state		stable
 %define		_ver		3.2.2
-##%define		_snap		040110
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -827,7 +826,6 @@ do
         cat kfile_${i}.lang >> kfile.lang
 done
 
-%find_lang desktop_kdegraphics --with-kde
 %endif
 
 files="kamera \
@@ -878,7 +876,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun	kview		-p /sbin/ldconfig
 
 %if %{with i18n}
-%files i18n -f desktop_kdegraphics.lang
 %files kamera-i18n -f kamera.lang
 %files kcoloredit-i18n -f kcoloredit.lang
 %files kdvi-i18n -f kdvi.lang
