@@ -694,6 +694,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/kcm_kgamma.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kgamma.so
 %{_datadir}/apps/kgamma
+%{_desktopdir}/kde/kgamma.desktop
 %{_iconsdir}/*/*/apps/kgamma.png
 
 %files kghostview -f kghostview.lang
