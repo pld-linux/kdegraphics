@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.1
-Release:	2
+Release:	3
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -518,7 +518,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_datadir}/apps/kcoloredit
 %{_applnkdir}/Graphics/kcoloredit.desktop
-%{_pixmapsdir}/*/*/apps/kcoloredit.*
+%{_pixmapsdir}/[!l]*/*/*/kcoloredit.*
 
 #################################################
 #             KDVI
@@ -529,7 +529,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kdvipart.*
 %{_datadir}/apps/kdvi/
 %{_applnkdir}/Graphics/Viewers/kdvi.desktop
-%{_pixmapsdir}/*/*/apps/kdvi.*
+%{_pixmapsdir}/*/*/*/kdvi.*
 
 #################################################
 #             KFAX
@@ -541,7 +541,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kfaxpart.*
 %{_datadir}/apps/kfax/
 %{_applnkdir}/Graphics/Viewers/kfax.desktop
-%{_pixmapsdir}/*/*/apps/kfax.*
+%{_pixmapsdir}/*/*/*/kfax.*
 
 #################################################
 #             KFILE
@@ -570,7 +570,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.*
 %{_datadir}/apps/kghostview
 %{_applnkdir}/Graphics/Viewers/kghostview.desktop
-%{_pixmapsdir}/*/*/apps/kghostview.*
+%{_pixmapsdir}/*/*/*/kghostview.*
 
 #################################################
 #             KICONEDIT
@@ -580,7 +580,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kiconedit
 %{_datadir}/apps/kiconedit
 %{_applnkdir}/Graphics/kiconedit.desktop
-%{_pixmapsdir}/*/*/apps/kiconedit.*
+%{_pixmapsdir}/*/*/*/kiconedit.*
 
 #################################################
 #             KOOKA
@@ -604,7 +604,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kpaint
 %{_datadir}/apps/kpaint
 %{_applnkdir}/Graphics/kpaint.desktop
-%{_pixmapsdir}/*/*/apps/kpaint.*
+%{_pixmapsdir}/*/*/*/kpaint.*
 
 #################################################
 #             KPOVMODELER
@@ -615,7 +615,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.*
 %{_datadir}/apps/kpovmodeler
 %{_applnkdir}/Graphics/kpovmodeler.desktop
-%{_pixmapsdir}/*/*/*/kpovmodeler*
+%{_pixmapsdir}/[!l]*/*/*/kpovmodeler*
 
 #################################################
 #             KRULER
@@ -645,7 +645,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kuickshow.??
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
-%{_pixmapsdir}/*/*/apps/kuickshow.*
+%{_pixmapsdir}/[!l]*/*/*/kuickshow.*
 
 #################################################
 #             KVIEW
@@ -669,7 +669,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kview*
 %{_datadir}/servicetypes/kimageviewer*
 %{_applnkdir}/Graphics/Viewers/kview.desktop
-%{_pixmapsdir}/*/*/apps/kview*
+%{_pixmapsdir}/*/*/*/kview*
 
 #################################################
 #             MRML
