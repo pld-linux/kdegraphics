@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	2
+Release:	3
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -20,8 +20,6 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-vcategories.patch
 Patch1:		%{name}-gcc34.patch
-BuildRequires:	ed
-BuildRequires:	unsermake >= 040511
 BuildRequires:	automake
 BuildRequires:	autoconf
 BuildRequires:	fontconfig-devel
@@ -39,8 +37,9 @@ BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	lockdev-devel
-BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
+BuildRequires:	sane-backends-devel
+BuildRequires:	unsermake >= 040511
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -156,7 +155,12 @@ configure your camera model and port type from a list in KControl,
 then start accessing the camera contents with a kamera:/ URL.
 
 %description kamera -l pl
-Obs³uga kamer cyfrowych.
+kamera to modu³ IO slave oraz panelu KControl umo¿liwiaj±cy dostêp do
+folderów i zdjêæ w dowolnym aparacie cyfrowym obs³ugiwanym przez
+biblioteki gPhoto2. Je¶li mamy obs³ugiwany aparat, mo¿na zacz±æ u¿ywaæ
+go w wiêkszo¶ci aplikacji KDE w dwóch krokach: wybraæ model i port
+aparatu z listy w KControl, a nastêpnie odwo³ywaæ siê do zawarto¶ci
+aparatu przez URL kamera:/.
 
 %package kcolorchooser
 Summary:	Color chooser
@@ -184,7 +188,8 @@ KColorEdit is a palette files editor. It can be used for editing color
 palettes and for color choosing and naming.
 
 %description kcoloredit -l pl
-Edytor palety kolorów.
+KColorEdit to edytor plików palety kolorów. Mo¿e byæ u¿ywany do edycji
+palet kolorów oraz wybierania i nazywania kolorów.
 
 %description kcoloredit -l pt_BR
 Editor de cores do KDE.
@@ -205,7 +210,10 @@ system. KDVI supports many extensions of the DVI standard, for
 instance the inclusion of PostScript graphics or hyperlinks.
 
 %description kdvi -l pl
-Program do przegl±dania plików DVI.
+KDVI to wtyczka dla programu KViewshell umo¿liwiaj±ca mu ogl±danie
+plików DVI (.dvi) stworzonych przez system sk³adu TeX. KDVI obs³uguje
+wiele rozszerzeñ standardu DVI, na przyk³ad do³±czanie grafiki
+postscriptowej i hiper³±cza.
 
 %description kdvi -l pt_BR
 Programa de exibição de DVIs.
@@ -222,7 +230,7 @@ Obsoletes:	kdegraphics
 %description kfax
 KFax is a Fax file viewer capable of displaying and printing all
 common fax file formats. In particular the fax files used by popular
-the mgetty/sendfax and hylafx fax send and receive packages can be
+the mgetty/sendfax and hylafax fax send and receive packages can be
 displayed. The first (or only) page of a "PC-Research"-style (DigiFAX)
 files produced by the ghostscript dfaxhigh or dfaxlow drivers can also
 be displayed. (who is still using this format?) Input files using any
@@ -231,7 +239,15 @@ can be displayed. KFax has built in native postscript printing
 capabilities.
 
 %description kfax -l pl
-Program ten umo¿liwia przegl±danie plików faksowych (G3).
+KFax to przegl±darka plików faksowych potrafi±ca wy¶wietlaæ i drukowaæ
+wszystkie popularne formaty plików faksowych. W szczególno¶ci mo¿na
+wy¶wietlaæ pliki faksów u¿ywane przez pakiety do wysy³ania i
+odbierania faksów mgetty/sendfax oraz hylafax. Mo¿na wy¶wietliæ tak¿e
+pierwsz± (lub jedyn±) stronê plików w stylu "PC-Research" (DigiFAX)
+stworzonych przez sterowniki dfaxhigh i dfaxlow z ghostscripta. Pliki
+wej¶ciowe mog± u¿ywaæ dowolnego popularnego kodowania, takiego jak
+G3 (1- i 2-wymiarowego) lub G4. KFax ma wbudowan± natywn± mo¿liwo¶æ
+wydruku do postscriptu.
 
 %description kfax -l pt_BR
 Programa de visualização de faxes (formato TIFF).
@@ -283,7 +299,14 @@ and this application can be used to preview material intended for
 printing or for reading documents online.
 
 %description kghostview -l pl
-Program ten umo¿liwia przegl±danie plików postscriptowych (.ps).
+KGhostView wy¶wietla i drukuje pliki w formacie PostScript (.ps, .eps)
+oraz Portable Document Format (.pdf). Jest to port KDE programu
+GhostView Tima Theisena, u¿ywaj±cego Alladin Ghostscripta do
+przegl±dania dokumentów przygotowanych w jêzyku opisu strony
+PostScript Adobe'a. PostScript to g³ówny jêzyk opisu strony u¿ywany do
+drukowania w systemach uniksowych, a tej aplikacji mo¿na u¿ywaæ do
+podgl±du materia³ów przeznaczonych do druku oraz do czytania
+dokumentów online.
 
 %description kghostview -l pt_BR
 Programa de visualização de arquivos Postscript e PDF.
@@ -318,7 +341,8 @@ Kooka is a KDE application that enables easy scanning using SANE
 libraries.
 
 %description kooka -l pl
-Narzêdzie do skanowania.
+Kooka to aplikacja KDE umo¿liwiaj±ca ³atwe skanowanie przy u¿yciu
+bibliotek SANE.
 
 %description kooka -l pt_BR
 Um programa de rasterização de imagens, baseado no SANE e libkscan.
@@ -400,7 +424,9 @@ capable of capturing images of either the whole desktop or just a
 single window. The images can then be saved in a variety of formats.
 
 %description ksnapshot -l pl
-Program do przechwytywania ekranu dla KDE.
+KSnapshot to prosta aplikacja do robienia zrzutów ekranu. Potrafi
+przechwytywaæ obraz ca³ego pulpitu lub tylko pojedynczego okna.
+Obrazy mog± byæ nastêpnie zapisane w wielu formatach.
 
 %description ksnapshot -l pt_BR
 Programa de captura de tela.
@@ -433,12 +459,15 @@ Obsoletes:	kdegraphics
 KuickShow is a comfortable image browser/viewer. It displays a
 filebrowser where you can select images which are then shown. The
 following image formats are supported: jpg, gif, tiff, png, bmp, psd,
-xmp, xbm, eim. Images can be displayed either in their own window, as
+xpm, xbm, eim. Images can be displayed either in their own window, as
 large as the image, or fullscreen.
 
-
 %description kuickshow -l pl
-Przegl±darka obrazków.
+KuickShow to wygodna przegl±darka obrazków. Wy¶wietla przegl±darkê
+plików, w której mo¿na wybieraæ obrazki do pokazania. Obs³ugiwane s±
+nastêpuj±ce formaty obrazków: jpg, gif, tiff, png, bmp, psd, xpm, xbm,
+eim. Obrazki mog± byæ wy¶wietlane w swoim oknie o rozmiarze obrazka
+lub na pe³nym ekranie.
 
 %package kview
 Summary:	KDE graphics file viewer
@@ -460,7 +489,14 @@ directly onto the desktop as a background picture, or arrange them in
 a little slideshow.
 
 %description kview -l pl
-Program ten umo¿liwia ogl±danie ró¿nych plików graficznych.
+KView to przegl±darka plików graficznych dla KDE. Pozwala ogl±daæ
+grafikê w wielu ró¿nych formatach, takich jak PostScript, TIFF itd.
+Zapisuj±c pliki w innym formacie ni¿ oryginalny mo¿na ³atwo
+przekonwertowaæ obrazki do innych formatów graficznych. Ponadto KView
+dostarcza pewnych mo¿liwo¶ci prostej obróbki obrazu, takich jak
+rozci±ganie/zmniejszanie, obracanie i filtrowanie. Mo¿na umieszczaæ
+obrazki bezpo¶rednio na pulpicie jako t³o lub ³±czyæ je w przegl±d
+slajdów.
 
 %description kview -l pt_BR
 Visualizador de imagens poderoso para KDE.
@@ -527,7 +563,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	kview		-p /sbin/ldconfig
 %postun	kview		-p /sbin/ldconfig
-
 
 %files devel
 %defattr(644,root,root,755)
