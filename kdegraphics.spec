@@ -33,6 +33,7 @@ BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
+BuildRequires:	fribidi-devel >= 0.10.4
 BuildRequires:	sed >= 4.0
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
@@ -446,9 +447,11 @@ for plik in `find ./ -name *.desktop` ; do
 	sed -i -e "s/\[nb\]/\[no\]/g" $plik
 done
 
+echo KDE_OPTIONS=nofinal >> ksvg/core/Makefile.am
+
 %{__make} -f admin/Makefile.common cvs
 
-%configure
+%configure --enable-final
 
 %{__make}
 
