@@ -112,8 +112,8 @@ Summary:	kdegraphics development files
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
-Requires:	%{name}-kooka = %{version}
-Requires:	%{name}-kview = %{version}
+Requires:	%{name}-kooka = %{epoch}:%{version}
+Requires:	%{name}-kview = %{epoch}:%{version}
 
 %description devel
 kdegraphics development files.
@@ -383,7 +383,7 @@ Summary:	KDE graphics file viewer
 Summary(pl):	Przegl±darka plików graficznych dla KDE
 Summary(pt_BR):	Visualizador de imagens
 Group:		X11/Applications/Graphics
-Requires:	%{name}-kview = %{version}
+Requires:	%{name}-kview = %{epoch}:%{version}
 Requires:	kdelibs >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
