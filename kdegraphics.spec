@@ -65,7 +65,7 @@ Included with this package are:
 - KGhostview - displays postscript (.ps) files,
 - KIconedit - icon editor,
 - Kooka - a scanning tool
-- KPaint - a simple drawing program,
+- KolourPaint - a simple drawing program,
 - KRuler - a screen ruler
 - KSnapshot - screen capture,
 - KuickShow - an image viewer
@@ -79,7 +79,7 @@ Incluidos en este paquete:
 - KFax - visualiza archivos de fax,
 - KFract - creador de fractal
 - KGhostview - visualiza archivos postscript (.ps),
-- KPaint - un programa sencillo de dibujo,
+- KolourPaint - un programa sencillo de dibujo,
 - KView - visualiza numerosos formatos de archivos gráficos.
 
 %description -l pl
@@ -95,7 +95,7 @@ Pakiet zawiera programy:
 - KFract - generator fraktali,
 - KGhostview - program do ogl±dania postscriptu (.ps),
 - KIconedit - program do edycji ikon dla KDE,
-- KPaint - prosty program do grafiki rastrowej,
+- KolourPaint - prosty program do grafiki rastrowej,
 - KRuler - linijka ekranowa
 - KSnapshot - program do przechwytywania wygl±du ekranu,
 - KuickShow - przegl±darka plików graficznych.
@@ -109,7 +109,7 @@ Incluídos neste pacote:
 - KFax - visualiza arquivos de fax,
 - KFract - gerador de fractal,
 - KGhostview - visualiza arquivos postscript (.ps),
-- KPaint - um programa simples de desenho,
+- KolourPaint - um programa simples de desenho,
 - KView - visualiza numerosos formatos de arquivos gráficos.
 
 %package devel
@@ -286,6 +286,24 @@ Edytor ikon dla KDE.
 %description kiconedit -l pt_BR
 Editor de ícones, lida inclusive com arquivos .ICO.
 
+%package kolourpaint
+Summary:	KDE Painter
+Summary(pl):	Program graficzny KDE
+Summary(pt_BR):	Editor básico de imagens bitmap
+Group:		X11/Applications/Graphics
+Requires:	kdebase-core >= 9:%{version}
+Obsoletes:	kdegraphics
+Obsoletes:	kdegraphics-kpaint
+
+%description kolourpaint
+A (very) simple painting program for KDE.
+
+%description kolourpaint -l pl
+(Bardzo) prosty program do rysowania pod KDE.
+
+%description kolourpaint -l pt_BR
+Editor básico de imagens bitmap.
+
 %package kooka
 Summary:	Scanning tool
 Summary(pl):	Narzêdzie do skanowania
@@ -303,22 +321,6 @@ Narzêdzie do skanowania.
 %description kooka -l pt_BR
 Um programa de rasterização de imagens, baseado no SANE e libkscan.
 
-%package kpaint
-Summary:	KDE Painter
-Summary(pl):	Program graficzny KDE
-Summary(pt_BR):	Editor básico de imagens bitmap
-Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= 9:%{version}
-Obsoletes:	kdegraphics
-
-%description kpaint
-A (very) simple painting program for KDE.
-
-%description kpaint -l pl
-(Bardzo) prosty program do rysowania pod KDE.
-
-%description kpaint -l pt_BR
-Editor básico de imagens bitmap.
 
 %package kpdf
 Summary:	Kpdf is an xpdf wrapper for KDE	
@@ -544,6 +546,20 @@ Internationalization and localization files for kiconedit.
 %description kiconedit-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla kiconedita.
 
+%package kolourpaint-i18n
+Summary:	Internationalization and localization files for kolourpaint
+Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kolourpainta
+Group:		X11/Applications
+Requires:	%{name}-kolourpaint = %{epoch}:%{version}-%{release}
+Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
+Requires:	kdebase-core-i18n >= 9:%{version}
+
+%description kolourpaint-i18n
+Internationalization and localization files for kolourpaint.
+
+%description kolourpaint-i18n -l pl
+Pliki umiêdzynarodawiaj±ce dla kolourpainta.
+
 %package kooka-i18n
 Summary:	Internationalization and localization files for kooka
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kooki
@@ -557,20 +573,6 @@ Internationalization and localization files for kooka.
 
 %description kooka-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla kooki.
-
-%package kpaint-i18n
-Summary:	Internationalization and localization files for kpaint
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kpainta
-Group:		X11/Applications
-Requires:	%{name}-kpaint = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kpaint-i18n
-Internationalization and localization files for kpaint.
-
-%description kpaint-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kpainta.
 
 %package kpdf-i18n
 Summary:	Internationalization and localization files for kpdf
@@ -773,8 +775,8 @@ fi
 %find_lang kdvi		--with-kde
 %find_lang kghostview	--with-kde
 %find_lang kiconedit	--with-kde
+#%find_lang kolourpaint	--with-kde
 %find_lang kooka	--with-kde
-#%find_lang kpaint	--with-kde
 %find_lang kpdf		--with-kde
 %find_lang kpovmodeler	--with-kde
 %find_lang kruler	--with-kde
@@ -893,8 +895,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kgamma-i18n -f kgamma.lang
 %files kghostview-i18n -f kghostview.lang
 %files kiconedit-i18n -f kiconedit.lang
+%files kolourpaint-i18n -f kolourpaint.lang
 %files kooka-i18n -f kooka.lang
-%files kpaint-i18n -f kpaint.lang
 %files kpdf-i18n -f kpdf.lang
 %files kpovmodeler-i18n -f kpovmodeler.lang
 %files kruler-i18n -f kruler.lang
@@ -1005,6 +1007,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/*/*/*/kiconedit.*
 %{_mandir}/man1/kiconedit.1*
 
+%files kolourpaint
+# -f kolourpaint_en.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/kolourpaint
+%{_datadir}/apps/kolourpaint
+%{_desktopdir}/kde/kolourpaint.desktop
+%{_iconsdir}/*/*/*/kolourpaint.*
+#%{_mandir}/man1/kolourpaint.1*
+
 %files kooka -f kooka_en.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
@@ -1017,13 +1028,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/*/*/actions/palette*
 %{_mandir}/man1/kooka.1*
 
-#%files kpaint
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{_bindir}/kpaint
-#%{_datadir}/apps/kpaint
-#%{_desktopdir}/kde/kpaint.desktop
-#%{_iconsdir}/*/*/*/kpaint.*
-#%{_mandir}/man1/kpaint.1*
 
 %files kpdf -f kpdf_en.lang
 %defattr(644,root,root,755)
