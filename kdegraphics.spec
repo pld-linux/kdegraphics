@@ -12,7 +12,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.2
+Release:	0.3
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -45,6 +45,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreqdep	libGL.so.1 libGLU.so.1
 
 %define		_prefix		/usr/X11R6
+%define		_mandir		%{_prefix}/man
 %define		_htmldir	/usr/share/doc/kde/HTML
 
 %define		no_install_post_chrpath		1
@@ -439,7 +440,8 @@ done
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,Settings/KDE,Utilities}
+install -d $RPM_BUILD_ROOT%{_applnkdir}/{Graphics/Viewers,Settings/KDE,Utilities} \
+	$RPM_BUILD_ROOT%{_mandir}/man1
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -465,31 +467,58 @@ cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-#%find_lang kcmkamera		--with-kde
-%find_lang kamera		--with-kde
-%find_lang kcoloredit		--with-kde
-%find_lang kdvi			--with-kde
-#%find_lang kfax		--with-kde
-#%find_lang kfile_pdf		--with-kde
-#%find_lang kfile_png		--with-kde
-#%find_lang kfile_ps		--with-kde
-#%find_lang kpixmap2bitmap	--with-kde
-#cat kpixmap2bitmap.lang kfile_pdf.lang kfile_png.lang kfile_ps.lang \
-#    >> %{name}.lang
-#%find_lang kfract		--with-kde
-%find_lang kghostview		--with-kde
-%find_lang kiconedit		--with-kde
-%find_lang kooka		--with-kde
-#%find_lang libkscan		--with-kde
-#cat libkscan.lang >> kooka.lang
-%find_lang kpaint		--with-kde
-%find_lang kpovmodeler		--with-kde
-%find_lang kruler		--with-kde
-%find_lang ksnapshot		--with-kde
-%find_lang kuickshow		--with-kde
-%find_lang kview		--with-kde
-#%find_lang kviewshell		--with-kde
-#cat kviewshell.lang >> kview.lang
+%find_lang	kamera			--with-kde
+%find_lang	kcmkamera		--with-kde
+cat kcmkamera.lang >> kamera.lang
+%find_lang	kcoloredit		--with-kde
+%find_lang	kdvi			--with-kde
+%find_lang	kfax			--with-kde
+%find_lang	kfile_bmp		--with-kde
+#%find_lang	kfile_gif		--with-kde
+%find_lang	kfile_ico		--with-kde
+%find_lang	kfile_jpeg		--with-kde
+%find_lang	kfile_pdf		--with-kde
+%find_lang	kfile_png		--with-kde
+%find_lang	kfile_ps		--with-kde
+%find_lang	kfile_tga		--with-kde
+%find_lang	kfile_tiff		--with-kde
+%find_lang	kfile_xbm		--with-kde
+cat kfile_{bmp,ico,jpeg,pdf,png,ps,tga,tiff,xbm}.lang >> kfile.lang
+%find_lang	kghostview		--with-kde
+%find_lang	kiconedit		--with-kde
+%find_lang	kooka			--with-kde
+%find_lang	libkscan		--with-kde
+cat libkscan.lang >> kooka.lang
+%find_lang	kpaint			--with-kde
+%find_lang	kpovmodeler		--with-kde
+%find_lang	kruler			--with-kde
+%find_lang	ksnapshot		--with-kde
+%find_lang	kuickshow		--with-kde
+%find_lang	kview			--with-kde
+#%find_lang	kview_scale		--with-kde
+#%find_lang	kviewtemplateplugin	--with-kde
+%find_lang	kviewbrowserplugin	--with-kde
+%find_lang	kviewpresenterplugin	--with-kde
+%find_lang	kviewscannerplugin	--with-kde
+cat kview{brows,present,scann}erplugin.lang >> kview.lang
+%find_lang	kviewshell		--with-kde
+cat kviewshell.lang >> kview.lang
+
+# kmrml.mo is used by both: mrml and daemonwatcher
+%find_lang 	kmrml
+mv -f kmrml.lang daemonwatcher.lang
+%find_lang 	kmrml			--with-kde
+mv -f kmrml.lang mrml.lang
+
+# kcoloredit.mo is used by both: kcoloredit and kcolorchooser
+%find_lang	kcoloredit
+mv -f kcoloredit.lang kcolorchooser.lang
+%find_lang	kcoloredit		--with-kde
+
+# probably should be in another package
+#%find_lang	kpixmap2bitmap		--with-kde
+
+install debian/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -507,7 +536,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             DAEMONWATCHER
 #################################################
-%files daemonwatcher
+%files daemonwatcher -f daemonwatcher.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kded_daemonwatcher.la
 %attr(755,root,root) %{_libdir}/kde3/kded_daemonwatcher.so
@@ -529,10 +558,11 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KCOLORCHOOSER
 #################################################
-%files kcolorchooser
+%files kcolorchooser -f kcolorchooser.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %{_applnkdir}/Utilities/kcolorchooser.desktop
+%{_mandir}/man1/kcolorchooser.*
 
 #################################################
 #             KCOLOREDIT
@@ -543,6 +573,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kcoloredit
 %{_applnkdir}/Graphics/kcoloredit.desktop
 %{_pixmapsdir}/[!l]*/*/*/kcoloredit.*
+%{_mandir}/man1/kcoloredit.*
 
 #################################################
 #             KDVI
@@ -555,12 +586,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kdvi/
 %{_applnkdir}/Graphics/Viewers/kdvi.desktop
 %{_pixmapsdir}/*/*/*/kdvi.*
+%{_mandir}/man1/kdvi.*
 
 #################################################
 #             KFAX
 #################################################
-#%files kfax -f kfax.lang
-%files kfax
+%files kfax -f kfax.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %{_libdir}/kde3/kfaxpart.la
@@ -568,11 +599,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kfax/
 %{_applnkdir}/Graphics/Viewers/kfax.desktop
 %{_pixmapsdir}/*/*/*/kfax.*
+%{_mandir}/man1/kfax.*
 
 #################################################
 #             KFILE
 #################################################
-%files kfile
+%files kfile -f kfile.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
@@ -589,6 +621,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kghostview
 %{_applnkdir}/Graphics/Viewers/kghostview.desktop
 %{_pixmapsdir}/*/*/*/kghostview.*
+%{_mandir}/man1/kghostview.*
 
 #################################################
 #             KICONEDIT
@@ -599,6 +632,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kiconedit
 %{_applnkdir}/Graphics/kiconedit.desktop
 %{_pixmapsdir}/*/*/*/kiconedit.*
+%{_mandir}/man1/kiconedit.*
 
 #################################################
 #             KOOKA
@@ -613,6 +647,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/scanservice.desktop
 %{_applnkdir}/Graphics/kooka.desktop
 %{_pixmapsdir}/*/*/actions/palette*
+%{_mandir}/man1/kooka.*
 
 #################################################
 #             KPAINT
@@ -623,6 +658,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kpaint
 %{_applnkdir}/Graphics/kpaint.desktop
 %{_pixmapsdir}/*/*/*/kpaint.*
+%{_mandir}/man1/kpaint.*
 
 #################################################
 #             KPOVMODELER
@@ -635,6 +671,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kpovmodeler
 %{_applnkdir}/Graphics/kpovmodeler.desktop
 %{_pixmapsdir}/[!l]*/*/*/kpovmodeler*
+%{_mandir}/man1/kpovmodeler.*
 
 #################################################
 #             KRULER
@@ -645,6 +682,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kruler
 %{_applnkdir}/Utilities/kruler.desktop
 %{_pixmapsdir}/*/*/apps/kruler.*
+%{_mandir}/man1/kruler.*
 
 #################################################
 #             KSNAPSHOT
@@ -654,6 +692,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ksnapshot
 %{_applnkdir}/Graphics/ksnapshot.desktop
 %{_pixmapsdir}/*/*/apps/ksnapshot.*
+%{_mandir}/man1/ksnapshot.*
 
 #################################################
 #             KUICKSHOW
@@ -666,6 +705,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kuickshow
 %{_applnkdir}/Graphics/Viewers/kuickshow.desktop
 %{_pixmapsdir}/[!l]*/*/*/kuickshow.*
+%{_mandir}/man1/kuickshow.*
 
 #################################################
 #             KVIEW
@@ -691,11 +731,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/kimageviewer*
 %{_applnkdir}/Graphics/Viewers/kview.desktop
 %{_pixmapsdir}/*/*/*/kview*
+%{_mandir}/man1/kview*
 
 #################################################
 #             MRML
 #################################################
-%files mrml
+%files mrml -f mrml.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mrmlsearch
 %attr(755,root,root) %{_libdir}/mrmlsearch.*
