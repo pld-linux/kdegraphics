@@ -4,7 +4,7 @@
 #
 
 %define         _state          stable
-%define         _ver		3.1.1a
+%define         _ver		3.1.2
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -12,19 +12,20 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.10
+Release:	0.9
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
-Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Patch0:		%{name}-no_glut.patch
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
-BuildRequires:	glut-devel
-BuildRequires:	gphoto2-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{version}
+BuildRequires:	libgphoto2-devel
+BuildRequires:	libieee1284-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
@@ -33,11 +34,8 @@ BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	sane-backends-devel
-BuildRequires:	sed
-BuildRequires:	perl
 BuildRequires:	textutils
 BuildRequires:	zlib-devel
-BuildRequires:	libieee1284-devel
 Requires:	kdelibs >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -53,7 +51,7 @@ Graphic applications for the K Desktop Environment.
 Included with this package are:
 
 - Kamera - digital camera support
-- KColorEdit - color calette editor
+- KColorEdit - color palette editor
 - KColorChooser - color chooser
 - KDVI - displays TeX's device independent (.dvi) files,
 - KFax - displays fax files,
@@ -86,7 +84,7 @@ Pakiet zawiera:
 - Kamera - obs³uga kamer cyfrowych
 - KDVI - przegl±darka plików DVI,
 - KColorEdit - edytor palety kolorów
-- KColorChooser - wybóe koloru
+- KColorChooser - wybór koloru
 - KFax - program do wy¶wietlania faksów,
 - KFract - generator fraktali,
 - KGhostview - program do ogl±dania postscriptu (.ps),
@@ -128,7 +126,7 @@ bibliotecas do kdegraphics.
 
 %package daemonwatcher
 Summary:	KDED Daemon Watcher
-Summary(pl):	Stra¼nik demona KDED
+Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Obsoletes:	%{name}-mrml < 3.1-6
@@ -155,7 +153,7 @@ Obs³uga kamer cyfrowych.
 
 %package kcolorchooser
 Summary:	Color chooser
-Summary(pl):	Wybieracz kolrów
+Summary(pl):	Program do wybierania kolorów
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
 Obsoletes:	kdegraphics
@@ -165,7 +163,7 @@ Obsoletes:	kdegraphics-kfract
 Color chooser
 
 %description kcolorchooser -l pl
-Wybieracz kolorów.
+Program do wybierania kolorów.
 
 %package kcoloredit
 Summary:	Color palette editor
@@ -191,7 +189,6 @@ Summary(pl):	Przegl±darka plików DVI dla KDE
 Summary(pt_BR):	Programa de exibição de DVIs
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
-Requires:	%{name}-kview >= %{version}
 Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
@@ -217,7 +214,7 @@ Obsoletes:	kdegraphics-kfract
 A Fax viewer for KDE.
 
 %description kfax -l pl
-Program ten umo¿liwia przegl±danie plików faksowych (G3)
+Program ten umo¿liwia przegl±danie plików faksowych (G3).
 
 %description kfax -l pt_BR
 Programa de visualização de faxes (formato TIFF).
@@ -231,11 +228,11 @@ Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
 %description kfile
-This package adds a fold to konqueror "file properities"
+This package adds a fold to konqueror "file properties"
 dialog window with file enhanced informations.
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku"
+Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" 
 konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
 o pliku.
 
@@ -249,10 +246,10 @@ Obsoletes:	kdegraphics
 Obsoletes:	kdegraphics-kfract
 
 %description kghostview
-Postscript files (.ps) viewer for KDE
+Postscript files (.ps) viewer for KDE.
 
 %description kghostview -l pl
-Program ten umo¿liwia przegl±danie plików postscriptowych (.ps)
+Program ten umo¿liwia przegl±danie plików postscriptowych (.ps).
 
 %description kghostview -l pt_BR
 Programa de visualização de arquivos Postscript e PDF.
@@ -313,7 +310,7 @@ Editor básico de imagens bitmap.
 
 %package kpovmodeler
 Summary:	Povary Modeler
-Summary(pl):	Povary Modeler
+Summary(pl):	Modeler Povary
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{version}
 Requires:	povray
@@ -324,7 +321,7 @@ Obsoletes:	kdegraphics-kfract
 Modeler for POV-Ray scenes.
 
 %description kpovmodeler -l pl
-Modeler for POV-Ray scenes.
+Modeler do scen POV-Raya.
 
 %package kruler
 Summary:	KRuler
@@ -393,7 +390,7 @@ Obsoletes:	kdegraphics-kfract
 A graphics files viewer for KDE.
 
 %description kview -l pl
-Program ten umo¿liwia ogl±danie ró¿nych plików graficznych (G3).
+Program ten umo¿liwia ogl±danie ró¿nych plików graficznych.
 
 %description kview -l pt_BR
 Visualizador de imagens poderoso para KDE.
@@ -415,15 +412,18 @@ z indeksowaniem plików.
 
 %prep
 %setup -q
+%patch0 -p1 
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
+%{__make} -f admin/Makefile.common cvs
+
 for plik in `find ./ -name \*.desktop` ; do
-		echo $plik
-		perl -pi -e "s/\[nb\]/\[no\]/g" $plik
+	echo $plik
+	sed -i -e "s/\[nb\]/\[no\]/g" $plik
 done
 
 %configure \
@@ -458,7 +458,7 @@ cat kamera.desktop |sed -e 's/Peripherals[/]kamera/kamera/' \
 mv -f kamera.desktop.tmp kamera.desktop
 cd -
 
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 #%find_lang kcmkamera		--with-kde
 %find_lang kamera		--with-kde
