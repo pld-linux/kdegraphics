@@ -13,7 +13,7 @@ Requires:	qt >= 1.44, kdelibs = %{version}
 Vendor:		The KDE Team
 BuildRoot:	/tmp/%{name}-%{version}-root
 
-%define _prefix	/usr/X11R6
+%define 	_prefix		/usr/X11R6
 
 %description
 Graphic applications for the K Desktop Environment.
@@ -180,13 +180,13 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kdvi -f kdvi.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/kdvi.kdelnk
 
-%attr(755, root, root) %{_bindir}/kdvi
+%attr(755,root,root) %{_bindir}/kdvi
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kdvi
+%{_datadir}/kde/doc/HTML/en/kdvi
 %lang(fi) %{_datadir}/kde/doc/HTML/fi/kdvi
 
 %{_datadir}/kde/apps/kdvi/
@@ -199,13 +199,13 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kfax -f kfax.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/KFax.kdelnk
 
-%attr(755, root, root) %{_bindir}/kfax
+%attr(755,root,root) %{_bindir}/kfax
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kfax
+%{_datadir}/kde/doc/HTML/en/kfax
 
 %{_datadir}/kde/apps/kfax/
 
@@ -217,13 +217,13 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kfract -f kfract.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/kfract.kdelnk
 
 %attr(755,root,root) %{_bindir}/kfract
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kfract
+%{_datadir}/kde/doc/HTML/en/kfract
 
 %{_datadir}/kde/icons/mini/kfract.xpm
 %{_datadir}/kde/icons/kfract.xpm
@@ -233,13 +233,13 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kghostview -f kghostview.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/kghostview.kdelnk
 
-%attr(755, root, root) %{_bindir}/kghostview
+%attr(755,root,root) %{_bindir}/kghostview
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kghostview
+%{_datadir}/kde/doc/HTML/en/kghostview
 
 %{_datadir}/kde/icons/mini/kghostview.xpm
 %{_datadir}/kde/icons/kghostview.xpm
@@ -249,13 +249,13 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kpaint -f kpaint.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/kpaint.kdelnk
 
-%attr(755, root, root) %{_bindir}/kpaint
+%attr(755,root,root) %{_bindir}/kpaint
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kpaint
+%{_datadir}/kde/doc/HTML/en/kpaint
 
 %{_datadir}/kde/apps/kpaint
 
@@ -267,14 +267,14 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files ksnapshot -f ksnapshot.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/ksnapshot.kdelnk
 
-%attr(755, root, root) %{_bindir}/ksnapshot
+%attr(755,root,root) %{_bindir}/ksnapshot
 
 %lang(cs) %{_datadir}/kde/doc/HTML/cs/ksnapshot
-%lang(en) %{_datadir}/kde/doc/HTML/en/ksnapshot
+%{_datadir}/kde/doc/HTML/en/ksnapshot
 
 %{_datadir}/kde/icons/mini/ksnapshot.xpm
 %{_datadir}/kde/icons/ksnapshot.xpm
@@ -284,13 +284,13 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kview -f kview.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/kview.kdelnk
 
-%attr(755, root, root) %{_bindir}/kview
+%attr(755,root,root) %{_bindir}/kview
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kview
+%{_datadir}/kde/doc/HTML/en/kview
 
 %{_datadir}/kde/icons/mini/kview.xpm
 %{_datadir}/kde/icons/kview.xpm
@@ -300,14 +300,14 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kiconedit -f kiconedit.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Graphics/kiconedit.kdelnk
 
-%attr(755, root, root) %{_bindir}/kiconedit
+%attr(755,root,root) %{_bindir}/kiconedit
 
 %lang(da) %{_datadir}/kde/doc/HTML/da/kiconedit
-%lang(en) %{_datadir}/kde/doc/HTML/en/kiconedit
+%{_datadir}/kde/doc/HTML/en/kiconedit
 
 %{_datadir}/kde/apps/kiconedit
 
