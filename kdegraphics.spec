@@ -14,7 +14,7 @@ Summary(pt_BR):	K Desktop Environment - Aplica珲es gr醘icas
 Summary(zh_CN):	KDE图形应用程序
 Name:		kdegraphics
 Version:	3.0.4
-Release:	3
+Release:	4
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -603,6 +603,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %attr(755,root,root) %{_libdir}/kcolorchooser.so
 %{_applnkdir}/Graphics/kcolorchooser.desktop
+%{_pixmapsdir}/kcolorchooser.png
 
 #################################################
 #             KUICKSHOW
