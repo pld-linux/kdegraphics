@@ -115,6 +115,7 @@ Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphi
 Group:		X11/Development/Libraries
 Requires:	%{name}-kooka = %{epoch}:%{version}
 Requires:	%{name}-kview = %{epoch}:%{version}
+Obsoletes:	kdegraphics
 
 %description devel
 kdegraphics development files.
@@ -132,6 +133,7 @@ Summary(pl):	Stra¿nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Obsoletes:	%{name}-mrml < 3.1-6
+Obsoletes:	kdegraphics
 
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
