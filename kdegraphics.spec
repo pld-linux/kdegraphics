@@ -11,7 +11,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	0.2
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -19,7 +19,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 # Source0-md5:	af7092f2afc5a8565eb5017ecee6b67e
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-vcategories.patch
-#Patch1:		%{name}-gcc34.patch
+Patch1:		%{name}-gcc34.patch
 BuildRequires:	ed
 BuildRequires:	unsermake >= 040511
 BuildRequires:	automake
@@ -485,7 +485,7 @@ indeksowaniem plików.
 %setup -q
 %patch100 -p1
 %patch0 -p1
-#patch1 -p1
+%patch1 -p1
 
 %build
 cp -f %{_datadir}/automake/config.sub admin
