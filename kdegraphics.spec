@@ -1,7 +1,7 @@
 # TODO:
 # - pdf plugin requires pdfinfo from xpdf to show pdf info.
 #   for some reason it checks for kpsewhich from tetex.
-# - Languages
+# - Where should desktop_kdegraphics.mo go ?!?
 
 %define         _state          stable
 %define         _ver		3.1.1a
@@ -12,14 +12,15 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		8
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	b67f64c1623d9d08473bcdbb73351d36
 # generated from kde-i18n
-# Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/kde-i18n-%{name}-%{version}.tar.bz2
+# Source1-md5:	24cadca227afd7ff231be39f2f51d6f3
 BuildRequires:	XFree86-devel >= 3.3.6
 BuildRequires:	gettext-devel
 BuildRequires:	glut-devel
@@ -461,31 +462,42 @@ cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-#%find_lang kcmkamera		--with-kde
+%find_lang kcmkamera		--with-kde
 %find_lang kamera		--with-kde
+cat kcmkamera.lang >> kamera.lang
+
 %find_lang kcoloredit		--with-kde
 %find_lang kdvi			--with-kde
-#%find_lang kfax		--with-kde
-#%find_lang kfile_pdf		--with-kde
-#%find_lang kfile_png		--with-kde
-#%find_lang kfile_ps		--with-kde
-#%find_lang kpixmap2bitmap	--with-kde
-#cat kpixmap2bitmap.lang kfile_pdf.lang kfile_png.lang kfile_ps.lang \
-#    >> %{name}.lang
-#%find_lang kfract		--with-kde
+%find_lang kfax		--with-kde
+
+> kfile.lang
+programs="kfile_bmp kfile_gif kfile_ico kfile_jpeg kfile_pdf kfile_png kfile_ps kfile_tga kfile_tiff kfile_xbm desktop_kdegraphics"
+for i in $programs; do
+        %find_lang $i --with-kde
+        cat $i.lang >>  kfile.lang
+done
+
 %find_lang kghostview		--with-kde
 %find_lang kiconedit		--with-kde
 %find_lang kooka		--with-kde
-#%find_lang libkscan		--with-kde
-#cat libkscan.lang >> kooka.lang
+%find_lang libkscan		--with-kde
+cat libkscan.lang >> kooka.lang
 %find_lang kpaint		--with-kde
 %find_lang kpovmodeler		--with-kde
 %find_lang kruler		--with-kde
 %find_lang ksnapshot		--with-kde
 %find_lang kuickshow		--with-kde
+
 %find_lang kview		--with-kde
-#%find_lang kviewshell		--with-kde
-#cat kviewshell.lang >> kview.lang
+%find_lang kview_scale		--with-kde
+%find_lang kviewshell		--with-kde
+%find_lang kviewbrowserplugin   --with-kde
+%find_lang kviewpresenterplugin --with-kde
+%find_lang kviewscannerplugin   --with-kde
+%find_lang kviewtemplateplugin  --with-kde
+cat kview_scale.lang kviewshell.lang  kviewbrowserplugin.lang kviewpresenterplugin.lang kviewscannerplugin.lang kviewtemplateplugin.lang  >> kview.lang
+
+%find_lang kmrml                --with-kde
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -555,8 +567,8 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KFAX
 #################################################
-#%files kfax -f kfax.lang
-%files kfax
+%files kfax -f kfax.lang
+#%%files kfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
 %{_libdir}/kde3/kfaxpart.la
@@ -568,7 +580,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             KFILE
 #################################################
-%files kfile
+%files kfile -f kfile.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
@@ -691,7 +703,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 #             MRML
 #################################################
-%files mrml
+%files mrml -f kmrml.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mrmlsearch
 %attr(755,root,root) %{_libdir}/mrmlsearch.*
