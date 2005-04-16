@@ -226,6 +226,60 @@ diff -urN -x CVS kdegraphics.orig/kcoloredit/kcoloredit.desktop kdegraphics/kcol
  Name[zh_TW]=顏色編輯程式
  Name[zu]=Umhleli Wombala ka K
  
+diff -urN -x CVS kdegraphics.orig/kdvi/dviwin.cpp kdegraphics/kdvi/dviwin.cpp
+--- kdegraphics.orig/kdvi/dviwin.cpp	2005-01-24 08:08:35.000000000 +0100
++++ kdegraphics/kdvi/dviwin.cpp	2005-04-16 12:18:51.000000000 +0200
+@@ -534,9 +534,9 @@
+ 
+ anchor dviRenderer::parseReference(const QString &reference)
+ {
+-  //#ifdef DEBUG_DVIWIN
+-  kdError(4300) << "dviRenderer::parseReference( " << reference << " ) called" << endl;
+-  //#endif
++#ifdef DEBUG_DVIWIN
++  kdDebug(4300) << "dviRenderer::parseReference( " << reference << " ) called" << endl;
++#endif
+   
+   if (dviFile == 0)
+     return anchor();
+diff -urN -x CVS kdegraphics.orig/kdvi/dviwin_prescan.cpp kdegraphics/kdvi/dviwin_prescan.cpp
+--- kdegraphics.orig/kdvi/dviwin_prescan.cpp	2005-01-29 22:11:39.000000000 +0100
++++ kdegraphics/kdvi/dviwin_prescan.cpp	2005-04-14 08:37:45.000000000 +0200
+@@ -117,6 +117,7 @@
+   parse_special_argument(include_command, "rhi=", &rhi);
+   parse_special_argument(include_command, "angle=", &angle);
+ 
++  int clip=include_command.find(" clip"); // -1 if clip keyword is not present, >= 0 otherwise
+ 
+   // Generate the PostScript commands to be included
+   QString PS = QString("ps: @beginspecial %1 @llx %2 @lly %3 @urx %4 @ury").arg(llx).arg(lly).arg(urx).arg(ury);
+@@ -126,6 +127,8 @@
+     PS.append( QString(" %1 @rhi").arg(rhi) );
+   if (angle != 0)
+     PS.append( QString(" %1 @angle").arg(angle) );
++  if (clip != -1)
++    PS.append(" @clip");
+   PS.append( " @setspecial\n" );
+   
+   QFile file( EPSfilename );
+@@ -415,7 +418,7 @@
+   parse_special_argument(include_command, "rwi=", &rwi);
+   parse_special_argument(include_command, "rhi=", &rhi);
+   parse_special_argument(include_command, "angle=", &angle);
+-
++  int clip=include_command.find(" clip"); // -1 if clip keyword is not present, >= 0 otherwise
+ 
+   if (QFile::exists(EPSfilename)) {
+     double PS_H = (currinf.data.dvi_h*300.0)/(65536*1200)-300;
+@@ -432,6 +435,8 @@
+       PostScriptOutPutString->append( QString(" %1 @rhi").arg(rhi) );
+     if (angle != 0)
+       PostScriptOutPutString->append( QString(" %1 @angle").arg(angle) );
++    if (clip != -1)
++      PostScriptOutPutString->append(" @clip");
+     PostScriptOutPutString->append( " @setspecial \n" );
+     PostScriptOutPutString->append( QString(" (%1) run\n").arg(EPSfilename) );
+     PostScriptOutPutString->append( "@endspecial \n" );
 diff -urN -x CVS kdegraphics.orig/kdvi/fontMap.cpp kdegraphics/kdvi/fontMap.cpp
 --- kdegraphics.orig/kdvi/fontMap.cpp	2004-10-05 14:21:37.000000000 +0200
 +++ kdegraphics/kdvi/fontMap.cpp	2005-03-30 08:42:53.000000000 +0200
@@ -290,8 +344,18 @@ diff -urN -x CVS kdegraphics.orig/kdvi/kdvi.desktop kdegraphics/kdvi/kdvi.deskto
  Exec=kdvi %f -caption "%c" %i %m 
 diff -urN -x CVS kdegraphics.orig/kdvi/kdvi_multipage.cpp kdegraphics/kdvi/kdvi_multipage.cpp
 --- kdegraphics.orig/kdvi/kdvi_multipage.cpp	2005-02-12 10:11:33.000000000 +0100
-+++ kdegraphics/kdvi/kdvi_multipage.cpp	2005-03-12 13:12:53.000000000 +0100
-@@ -522,10 +522,13 @@
++++ kdegraphics/kdvi/kdvi_multipage.cpp	2005-04-16 12:18:51.000000000 +0200
+@@ -201,6 +201,9 @@
+   if (!r)
+     emit setStatusBarText(QString::null);
+ 
++  //############
++  //An dieser Stelle m�sste der Zoom-Faktor neu berechnet werden?
++
+   generateDocumentWidgets();
+   emit numberOfPages(DVIRenderer.totalPages());
+   enableActions(r);
+@@ -522,10 +525,13 @@
  
  void KDVIMultiPage::enableActions(bool b)
  {
@@ -307,8 +371,8 @@ diff -urN -x CVS kdegraphics.orig/kdvi/kdvi_multipage.cpp kdegraphics/kdvi/kdvi_
  
 diff -urN -x CVS kdegraphics.orig/kdvi/kdvimultipage.desktop kdegraphics/kdvi/kdvimultipage.desktop
 --- kdegraphics.orig/kdvi/kdvimultipage.desktop	2005-02-21 19:18:07.000000000 +0100
-+++ kdegraphics/kdvi/kdvimultipage.desktop	2005-03-07 15:18:05.000000000 +0100
-@@ -1,7 +1,6 @@
++++ kdegraphics/kdvi/kdvimultipage.desktop	2005-04-13 04:15:39.000000000 +0200
+@@ -1,16 +1,15 @@
  [Desktop Entry]
  Type=Service
  Comment=DVI
@@ -316,7 +380,9 @@ diff -urN -x CVS kdegraphics.orig/kdvi/kdvimultipage.desktop kdegraphics/kdvi/kd
  Name=KDVIMultiPage
  Name[es]=KDVIMultiPágina
  Name[fr]=Multi-page KDVI
-@@ -10,7 +9,6 @@
+ Name[hu]=KDVITöbbOldalas
++Name[nb]=KDVI Flerside
+ Name[nl]=KDVIMultiPagina
  Name[pt]=KDVIMultiPágina
  Name[ro]=KDVI Pagini Multiple
  Name[sv]=KDVI flera sidor
@@ -386,8 +452,8 @@ diff -urN -x CVS kdegraphics.orig/kfile-plugins/bmp/kfile_bmp.desktop kdegraphic
  Name[zu]=Ulwazi lwe-BMP
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/dds/kfile_dds.desktop kdegraphics/kfile-plugins/dds/kfile_dds.desktop
 --- kdegraphics.orig/kfile-plugins/dds/kfile_dds.desktop	2005-02-21 19:18:08.000000000 +0100
-+++ kdegraphics/kfile-plugins/dds/kfile_dds.desktop	2005-03-14 09:16:35.000000000 +0100
-@@ -9,6 +9,8 @@
++++ kdegraphics/kfile-plugins/dds/kfile_dds.desktop	2005-04-13 04:15:40.000000000 +0200
+@@ -9,22 +9,26 @@
  Name[es]=Información de la primera vista de DirectDraw
  Name[et]=DirectDraw Surface'i info
  Name[fr]=Informations de surface DirectDraw
@@ -396,7 +462,10 @@ diff -urN -x CVS kdegraphics.orig/kfile-plugins/dds/kfile_dds.desktop kdegraphic
  Name[hu]=DirectDraw felületinformáció
  Name[is]=DirectDraw yfirborðs upplýsingar
  Name[it]=Informazioni superficie DirectDraw
-@@ -18,13 +20,14 @@
++Name[nb]=DirectDraw Overflate info
+ Name[nl]=DirectDraw Surface-info
+ Name[pl]=Informacja o powierzchni DirectDraw
+ Name[pt]=Informação de Superfície DirectDraw
  Name[pt_BR]=Informações Sobre Superfícies Direct Draw
  Name[ro]=Informaţii Suprafaţă DirectDraw
  Name[ru]=Сведения о поверхности DirectDraw
@@ -762,8 +831,8 @@ diff -urN -x CVS kdegraphics.orig/kfile-plugins/xbm/kfile_xbm.desktop kdegraphic
  Name[zu]=Ulwazi lwe-XBM
 diff -urN -x CVS kdegraphics.orig/kfile-plugins/xpm/kfile_xpm.desktop kdegraphics/kfile-plugins/xpm/kfile_xpm.desktop
 --- kdegraphics.orig/kfile-plugins/xpm/kfile_xpm.desktop	2005-02-21 19:18:08.000000000 +0100
-+++ kdegraphics/kfile-plugins/xpm/kfile_xpm.desktop	2005-03-14 09:16:35.000000000 +0100
-@@ -2,12 +2,15 @@
++++ kdegraphics/kfile-plugins/xpm/kfile_xpm.desktop	2005-04-13 04:15:40.000000000 +0200
+@@ -2,15 +2,19 @@
  Encoding=UTF-8
  Type=Service
  Name=XPM Info
@@ -779,7 +848,11 @@ diff -urN -x CVS kdegraphics.orig/kfile-plugins/xpm/kfile_xpm.desktop kdegraphic
  Name[hu]=XPM-jellemzők
  Name[is]=XPM upplýsingar
  Name[it]=Informazioni XPM
-@@ -19,12 +22,11 @@
++Name[nb]=XPM-info
+ Name[nl]=XPM-info
+ Name[pl]=Informacja o pliku XPM
+ Name[pt]=Informação do XPM
+@@ -19,12 +23,11 @@
  Name[ru]=Информация о XPM
  Name[sl]=Informacije o XPM
  Name[sr]=XPM информације
@@ -1079,7 +1152,7 @@ diff -urN -x CVS kdegraphics.orig/kmrml/kmrml/server/daemonwatcher.desktop kdegr
  X-KDE-ModuleType=Library
 diff -urN -x CVS kdegraphics.orig/kolourpaint/kolourpaint.desktop kdegraphics/kolourpaint/kolourpaint.desktop
 --- kdegraphics.orig/kolourpaint/kolourpaint.desktop	2005-02-03 10:20:42.000000000 +0100
-+++ kdegraphics/kolourpaint/kolourpaint.desktop	2005-03-11 09:25:46.000000000 +0100
++++ kdegraphics/kolourpaint/kolourpaint.desktop	2005-04-13 04:15:40.000000000 +0200
 @@ -2,11 +2,11 @@
  Encoding=UTF-8
  
@@ -1093,7 +1166,13 @@ diff -urN -x CVS kdegraphics.orig/kolourpaint/kolourpaint.desktop kdegraphics/ko
  GenericName=Paint Program
  GenericName[af]=Verf Program
  GenericName[ar]=برنامج تلوين
-@@ -22,6 +22,7 @@
+@@ -17,11 +17,12 @@
+ GenericName[cs]=Kreslící program
+ GenericName[cy]=Rhaglen Peintio
+ GenericName[da]=Maleprogram
+-GenericName[de]=Malprogramm
++GenericName[de]=Mal- und Zeichenprogramm
+ GenericName[el]=Πρόγραμμα ζωγραφικής
  GenericName[eo]=Pentrilo
  GenericName[es]=Programa de pintura
  GenericName[et]=Joonistusprogramm
@@ -1109,6 +1188,34 @@ diff -urN -x CVS kdegraphics.orig/kolourpaint/kolourpaint.desktop kdegraphics/ko
  GenericName[zh_CN]=绘图程序
  GenericName[zh_TW]=繪圖程式
  GenericName[zu]=Elila Iprogremu Kapende
+diff -urN -x CVS kdegraphics.orig/kolourpaint/kpdocument.cpp kdegraphics/kolourpaint/kpdocument.cpp
+--- kdegraphics.orig/kolourpaint/kpdocument.cpp	2005-02-02 12:15:42.000000000 +0100
++++ kdegraphics/kolourpaint/kpdocument.cpp	2005-04-02 19:37:28.000000000 +0200
+@@ -461,7 +461,7 @@
+                 i18n ("<qt><p>Saving the image at the low color depth of %1-bit"
+                         " may result in the loss of color information."
+ 
+-                        " Any transparency will also be removed."
++                        " Any transparency will also be removed.</p>"
+ 
+                         "<p>Are you sure you want to save at this color depth?</p></qt>")
+                     .arg (saveOptions.colorDepth ()),
+diff -urN -x CVS kdegraphics.orig/kolourpaint/tools/kptoolresizescale.cpp kdegraphics/kolourpaint/tools/kptoolresizescale.cpp
+--- kdegraphics.orig/kolourpaint/tools/kptoolresizescale.cpp	2005-02-02 12:14:13.000000000 +0100
++++ kdegraphics/kolourpaint/tools/kptoolresizescale.cpp	2005-04-02 19:37:28.000000000 +0200
+@@ -650,10 +650,10 @@
+                   " by creating new areas to the right and/or the bottom"
+                   " (filled in with the background color) or"
+                   " decreased by cutting"
+-                  " it at the right and/or the bottom."
++                  " it at the right and/or the bottom.</li>"
+ 
+                   "<li><b>Scale</b>: The picture will be expanded"
+-                  " by duplicating pixels or squashed by dropping pixels."
++                  " by duplicating pixels or squashed by dropping pixels.</li>"
+ 
+                   "<li><b>Smooth Scale</b>: This is the same as"
+                   " <i>Scale</i> except that it blends neighbouring"
 diff -urN -x CVS kdegraphics.orig/kooka/kooka.desktop kdegraphics/kooka/kooka.desktop
 --- kdegraphics.orig/kooka/kooka.desktop	2005-01-09 05:03:50.000000000 +0100
 +++ kdegraphics/kooka/kooka.desktop	2005-03-07 15:18:14.000000000 +0100
@@ -1306,7 +1413,22 @@ diff -urN -x CVS kdegraphics.orig/kpdf/kpdf_part.desktop kdegraphics/kpdf/kpdf_p
  ServiceTypes=KParts/ReadOnlyPart
 diff -urN -x CVS kdegraphics.orig/kpdf/part.cpp kdegraphics/kpdf/part.cpp
 --- kdegraphics.orig/kpdf/part.cpp	2005-03-03 22:50:20.000000000 +0100
-+++ kdegraphics/kpdf/part.cpp	2005-03-24 21:17:26.000000000 +0100
++++ kdegraphics/kpdf/part.cpp	2005-04-12 22:03:20.000000000 +0200
+@@ -402,11 +402,11 @@
+ 
+ void Part::slotDoFileDirty()
+ {
+-  uint p = m_document->currentPage() + 1;
++  DocumentViewport v = m_document->viewport();
+   if (openFile())
+   {
+-    if (p > m_document->pages()) p = m_document->pages();
+-    goToPage(p);
++    if (v.pageNumber > m_document->pages()) v.pageNumber = (int)m_document->pages() - 1;
++    m_document->setViewport(v);
+   }
+ }
+ 
 @@ -542,6 +542,12 @@
      KURL saveURL = KFileDialog::getSaveURL( url().isLocalFile() ? url().url() : url().fileName(), QString::null, widget() );
      if ( saveURL.isValid() && !saveURL.isEmpty() )
@@ -1596,7 +1718,7 @@ diff -urN -x CVS kdegraphics.orig/kpdf/xpdf/goo/gmem.h kdegraphics/kpdf/xpdf/goo
   * Same as free, but checks for and ignores NULL pointers.
 diff -urN -x CVS kdegraphics.orig/kpdf/xpdf/xpdf/GlobalParams.cc kdegraphics/kpdf/xpdf/xpdf/GlobalParams.cc
 --- kdegraphics.orig/kpdf/xpdf/xpdf/GlobalParams.cc	2005-03-04 10:03:03.000000000 +0100
-+++ kdegraphics/kpdf/xpdf/xpdf/GlobalParams.cc	2005-03-27 20:58:55.000000000 +0200
++++ kdegraphics/kpdf/xpdf/xpdf/GlobalParams.cc	2005-04-14 21:05:54.000000000 +0200
 @@ -23,6 +23,7 @@
  #include <ft2build.h>
  #include FT_FREETYPE_H
@@ -1605,7 +1727,15 @@ diff -urN -x CVS kdegraphics.orig/kpdf/xpdf/xpdf/GlobalParams.cc kdegraphics/kpd
  #include <X11/Xft/Xft.h>
  #include <X11/Xft/XftCompat.h>
  #include <stdio.h>
-@@ -1044,7 +1045,7 @@
+@@ -98,6 +99,7 @@
+   "/usr/share/fonts/default/Type1",
+   "/usr/share/fonts/type1/gsfonts",
+   "/usr/share/fonts/default/ghostscript/",
++  "/usr/share/fonts/Type1",
+   NULL
+ };
+ 
+@@ -1044,7 +1046,7 @@
  // KPDF: parse xpdf font name into family and style
  // Helvetica-BoldOblique => name=Helvetica, weight=Bold, slant=Oblique
  
@@ -1614,7 +1744,7 @@ diff -urN -x CVS kdegraphics.orig/kpdf/xpdf/xpdf/GlobalParams.cc kdegraphics/kpd
  {
    if (!name.contains('-') && !name.contains(',')) return;
    QString type = name.section(QRegExp("[-,]"),-1);
-@@ -1052,6 +1053,8 @@
+@@ -1052,6 +1054,8 @@
    if (type.contains("Oblique")) slant=FC_SLANT_OBLIQUE;
    if (type.contains("Italic")) slant=FC_SLANT_ITALIC;
    if (type.contains("Bold")) weight=FC_WEIGHT_BOLD;
@@ -1623,7 +1753,7 @@ diff -urN -x CVS kdegraphics.orig/kpdf/xpdf/xpdf/GlobalParams.cc kdegraphics/kpd
  }
  
  
-@@ -1068,10 +1071,10 @@
+@@ -1068,10 +1072,10 @@
    dfp = (DisplayFontParam *)displayFonts->lookup(fontName);
    // KPDF: try to find font using Xft
    if (!dfp) {
@@ -1648,28 +1778,30 @@ diff -urN -x CVS kdegraphics.orig/kpdf/xpdf/xpdf/Makefile.am kdegraphics/kpdf/xp
  libxpdf_la_LIBADD = $(LIB_X11) $(LIBFREETYPE_LIBS) $(LIBPAPER_LIBS) $(XFT_LIBS) ../goo/libgoo.la ../fofi/libfofi.la ../splash/libsplash.la 
 diff -urN -x CVS kdegraphics.orig/kpovmodeler/kpovmodeler.desktop kdegraphics/kpovmodeler/kpovmodeler.desktop
 --- kdegraphics.orig/kpovmodeler/kpovmodeler.desktop	2005-02-23 06:06:14.000000000 +0100
-+++ kdegraphics/kpovmodeler/kpovmodeler.desktop	2005-03-14 09:16:37.000000000 +0100
++++ kdegraphics/kpovmodeler/kpovmodeler.desktop	2005-04-13 04:15:40.000000000 +0200
 @@ -5,8 +5,9 @@
  MimeType=application/x-kpovmodeler;
  Name=KPovModeler
  Name[es]=Modelador Povray
 +Name[he]=מעצב Povray
-+Name[hi]=पोवरे मॉडलर
++Name[nb]=KPov-modellerer
  Name[sv]=Kpovmodeler
 -Name[xx]=xxKPovModelerxx
  GenericName=Povray Modeler
  GenericName[ca]=Modelador Povray
  GenericName[cs]=Modelář Povray
-@@ -17,6 +18,8 @@
+@@ -17,18 +18,19 @@
  GenericName[es]=Modelador Povray
  GenericName[et]=Povray modelleerija
  GenericName[fr]=Modeleur Povray
 +GenericName[he]=מעצב Povray
-+GenericName[hi]=पोवरे मॉडलर
  GenericName[hu]=Povray-modellező
  GenericName[is]=Povray hönnuður
  GenericName[it]=Modellatore per Povray
-@@ -26,9 +29,8 @@
++GenericName[nb]=Povray-modellerer
+ GenericName[pl]=Modeler Povray
+ GenericName[pt]=Modelador de Povray
+ GenericName[pt_BR]=Modelador Povray
  GenericName[ru]=Редактор Povray
  GenericName[sl]=Modelirnik Povray
  GenericName[sr]=Моделар за Povray
@@ -2582,7 +2714,7 @@ diff -urN -x CVS kdegraphics.orig/kview/config/kview.setdlg kdegraphics/kview/co
  Weight=5
 diff -urN -x CVS kdegraphics.orig/kview/config/plugins/kviewpluginsconfig.desktop kdegraphics/kview/config/plugins/kviewpluginsconfig.desktop
 --- kdegraphics.orig/kview/config/plugins/kviewpluginsconfig.desktop	2005-02-21 19:18:08.000000000 +0100
-+++ kdegraphics/kview/config/plugins/kviewpluginsconfig.desktop	2005-03-14 09:16:37.000000000 +0100
++++ kdegraphics/kview/config/plugins/kviewpluginsconfig.desktop	2005-04-13 04:15:41.000000000 +0200
 @@ -24,9 +24,11 @@
  Name[el]=Πρόσθετα
  Name[es]=Extensiones
@@ -2612,16 +2744,17 @@ diff -urN -x CVS kdegraphics.orig/kview/config/plugins/kviewpluginsconfig.deskto
  Name[zh_CN]=插件
  Comment=Choose and Configure Your Plugins
  Comment[bg]=Избор и конфигуриране на приставки
-@@ -63,6 +64,8 @@
+@@ -63,15 +64,19 @@
  Comment[es]=Seleccione y configure sus extensiones
  Comment[et]=Pluginate valimine ja seadistamine
  Comment[fr]=Choisissez et configurez vos modules externes
 +Comment[he]=בחר והגדר את התוספים שלך
-+Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फ़िगर करें:
  Comment[hu]=Bővítőmodulok kiválasztása, beállítása
  Comment[is]=Velja og stilla íforrit
  Comment[it]=Scegli e configura i tuoi plugin
-@@ -71,7 +74,9 @@
++Comment[nb]=Velg og sett opp programtilleggene
+ Comment[nl]=Kies uw plugins en stel ze in
+ Comment[pl]=Wybór i konfiguracja wtyczek
  Comment[pt]=Escolha e Configure os 'Plugins'
  Comment[pt_BR]=Escolha e Configure os Seus Plugins
  Comment[ru]=Выберите и настройте модули
@@ -2808,7 +2941,7 @@ diff -urN -x CVS kdegraphics.orig/kview/kview.desktop kdegraphics/kview/kview.de
  X-KDE-StartupNotify=true
 diff -urN -x CVS kdegraphics.orig/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop kdegraphics/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop
 --- kdegraphics.orig/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	2005-02-21 19:18:09.000000000 +0100
-+++ kdegraphics/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	2005-03-14 09:16:39.000000000 +0100
++++ kdegraphics/kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	2005-04-13 04:15:41.000000000 +0200
 @@ -24,9 +24,11 @@
  Name[el]=Πρόσθετα
  Name[es]=Extensiones
@@ -2838,16 +2971,17 @@ diff -urN -x CVS kdegraphics.orig/kview/kviewviewer/config/kviewviewerpluginscon
  Name[zh_CN]=插件
  Comment=Choose and Configure Your Plugins
  Comment[bg]=Избор и конфигуриране на приставки
-@@ -63,6 +64,8 @@
+@@ -63,15 +64,19 @@
  Comment[es]=Seleccione y configure sus extensiones
  Comment[et]=Pluginate valimine ja seadistamine
  Comment[fr]=Choisissez et configurez vos modules externes
 +Comment[he]=בחר והגדר את התוספים שלך
-+Comment[hi]=अपने प्लगइन्स को चुनें तथा कॉन्फ़िगर करें:
  Comment[hu]=Bővítőmodulok kiválasztása, beállítása
  Comment[is]=Velja og stilla íforrit
  Comment[it]=Scegli e configura i tuoi plugin
-@@ -71,7 +74,9 @@
++Comment[nb]=Velg og sett opp programtilleggene
+ Comment[nl]=Kies uw plugins en stel ze in
+ Comment[pl]=Wybór i konfiguracja wtyczek
  Comment[pt]=Escolha e Configure os 'Plugins'
  Comment[pt_BR]=Escolha e Configure os Seus Plugins
  Comment[ru]=Выберите и настройте модули
@@ -3193,8 +3327,8 @@ diff -urN -x CVS kdegraphics.orig/kview/modules/template/kviewtemplate.desktop k
  Comment[zu]=incazelo ende yokuthi i-plugin yenzani
 diff -urN -x CVS kdegraphics.orig/kview/photobook/photobook.desktop kdegraphics/kview/photobook/photobook.desktop
 --- kdegraphics.orig/kview/photobook/photobook.desktop	2005-02-21 19:18:09.000000000 +0100
-+++ kdegraphics/kview/photobook/photobook.desktop	2005-03-14 09:16:40.000000000 +0100
-@@ -9,6 +9,8 @@
++++ kdegraphics/kview/photobook/photobook.desktop	2005-04-13 04:15:41.000000000 +0200
+@@ -9,21 +9,24 @@
  GenericName[es]=Libro de fotografías
  GenericName[et]=Fotoalbum
  GenericName[fr]=Album photo
@@ -3203,7 +3337,9 @@ diff -urN -x CVS kdegraphics.orig/kview/photobook/photobook.desktop kdegraphics/
  GenericName[hu]=Fényképalbum
  GenericName[is]=Myndabók
  GenericName[it]=Album fotografico
-@@ -17,13 +19,13 @@
++GenericName[nb]=Fotoalbum
+ GenericName[nl]=Fotoboek
+ GenericName[pl]=Album ze zdjęciami
  GenericName[pt]=Álbum Fotográfico
  GenericName[pt_BR]=Álbum de Fotos
  GenericName[ro]=Colecţie de fotografii
@@ -3219,7 +3355,7 @@ diff -urN -x CVS kdegraphics.orig/kview/photobook/photobook.desktop kdegraphics/
  
  MimeType=inode/directory
  Icon=photobook
-@@ -34,6 +36,8 @@
+@@ -34,20 +37,22 @@
  Name[es]=Libro de fotografías
  Name[et]=Fotoalbum
  Name[fr]=Album photo
@@ -3228,7 +3364,10 @@ diff -urN -x CVS kdegraphics.orig/kview/photobook/photobook.desktop kdegraphics/
  Name[hu]=Fényképalbum
  Name[is]=Myndabók
  Name[it]=Album fotografico
-@@ -43,11 +47,10 @@
++Name[nb]=Fotoalbum
+ Name[nl]=Fotoboek
+ Name[pl]=Album zdjęciowy
+ Name[pt]=Álbum Fotográfico
  Name[pt_BR]=Álbum de Fotos
  Name[ro]=Colecţia de fotografii
  Name[sr]=Фотокњига
@@ -3241,7 +3380,7 @@ diff -urN -x CVS kdegraphics.orig/kview/photobook/photobook.desktop kdegraphics/
  Comment=Easily browse a folder of photographs
  Comment[bg]=Колекциониране на снимки като във фотоалбум
  Comment[ca]=Mirar fàcilment una carpeta de fotografies
-@@ -57,6 +60,8 @@
+@@ -57,23 +62,26 @@
  Comment[es]=Vistazo rápido de una carpeta con fotografías
  Comment[et]=Fotode kausta mugav lehitsemine
  Comment[fr]=Naviguer facilement dans un dossier contenant des photos
@@ -3250,7 +3389,10 @@ diff -urN -x CVS kdegraphics.orig/kview/photobook/photobook.desktop kdegraphics/
  Comment[hu]=Könyvtárba helyezett fényképek nézegetéséhez
  Comment[is]=Flettu á auðveldan hátt gegnum möppu með myndum
  Comment[it]=Sfoglia facilmente una cartella di fotografie
-@@ -66,14 +71,14 @@
++Comment[nb]=Enkel lesing av mapper med bilder
+ Comment[nl]=Blader eenvoudig door een map met foto's
+ Comment[pl]=Łatwe przeglądanie folderów ze zdjęciami
+ Comment[pt]=Navegue facilmente numa pasta de fotografias
  Comment[pt_BR]=Navegue facilmente por uma pasta cheia de fotos
  Comment[ro]=Răsfoiţi cu uşurinţă un folder de fotografii
  Comment[ru]=Просмотр папок с фотографиями
@@ -3267,9 +3409,615 @@ diff -urN -x CVS kdegraphics.orig/kview/photobook/photobook.desktop kdegraphics/
  Comment[zh_CN]=轻松浏览照片文件夹
  ServiceTypes=KParts/ReadOnlyPart,Browser/View
  X-KDE-Library=libphotobook
+diff -urN -x CVS kdegraphics.orig/kviewshell/centeringScrollview.cpp kdegraphics/kviewshell/centeringScrollview.cpp
+--- kdegraphics.orig/kviewshell/centeringScrollview.cpp	2005-01-22 10:32:48.000000000 +0100
++++ kdegraphics/kviewshell/centeringScrollview.cpp	2005-04-16 12:18:33.000000000 +0200
+@@ -1,6 +1,7 @@
+ /* This file is part of the KDE project
+    Copyright (C) 2001 Wilco Greven <greven@kde.org>
+    Copyright (C) 2002-2004 Stefan Kebekus <kebekus@kde.org>
++   Copyright (C) 2004-2005 Wilfried Huss <Wilfried.Huss@gmx.at>
+ 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+@@ -29,7 +30,7 @@
+ #include "centeringScrollview.h"
+ 
+ CenteringScrollview::CenteringScrollview( QWidget* parent, const char* name )
+-  : QScrollView( parent, name)
++  : QScrollView( parent, name, WStaticContents | WNoAutoErase)
+ {
+   widgetList = 0;
+   setFocusPolicy( QWidget::StrongFocus );
+@@ -40,11 +41,12 @@
+   setVScrollBarMode(QScrollView::Auto);
+   setHScrollBarMode(QScrollView::Auto);
+ 
+-  viewport()->setBackgroundMode(QWidget::PaletteMid);
++  viewport()->setBackgroundMode(Qt::NoBackground);
++
++  setResizePolicy(Manual);
++  setAcceptDrops(true);
++  setDragAutoScroll(false);
+ 
+-  URShadow.resize(4,4);
+-  BRShadow.resize(4,4);
+-  BLShadow.resize(4,4);
+   enableClipper(true);
+   nrCols = 2;
+   nrRows = 1;
+@@ -61,8 +63,10 @@
+   }
+ 
+   widgetList = wdgList;
++
+   for(Q_UINT16 i=0; i<widgetList->size(); i++) 
+-    connect(widgetList->at(i), SIGNAL(resized()), this, SLOT(centerContents()));
++    connect(widgetList->at(i), SIGNAL(showMe(QWidget *, Q_UINT16)), this, SLOT(slotShowWidget(QWidget *, Q_UINT16)) );
++
+   centerContents();
+ }
+ 
+@@ -216,7 +220,6 @@
+ void CenteringScrollview::setContinuousViewMode(bool continuous)
+ {
+   continuousViewmode = continuous;
+-  kdDebug(1223) << "ScrollView cont = " << continuous << endl;
+ }
+ 
+ bool CenteringScrollview::singlePageFullScreenMode()
+@@ -232,7 +235,7 @@
+   } else {
+     setVScrollBarMode(QScrollView::AlwaysOff);
+     setHScrollBarMode(QScrollView::AlwaysOff);
+-  }  
++  }
+ 
+   // Remember the state of the scrollbars so that we can restore
+   // scrollbar visibility when we switch back from fullscreen mode to
+@@ -254,9 +257,8 @@
+     {
+       viewport()->setPaletteBackgroundColor( Qt::black ) ;
+     }
+-    // repaintContents(true);
+-  } 
+-  else 
++  }
++  else
+   {
+     viewport()->setPaletteBackgroundColor( backgroundColor ) ;
+     slotShowScrollbars(showScrollBars);
+@@ -264,7 +266,7 @@
+   }
+ }
+ 
+-void CenteringScrollview::centerContents()
++void CenteringScrollview::centerContents(bool zoomChanged)
+ {
+   // Paranoid safety check
+   if (widgetList == 0)
+@@ -273,20 +275,9 @@
+   // If there are no widgets, e.g. because the last widget has been
+   // removed, the matter is easy: set the contents size to 0. If there
+   // are no widgets because previously existing widgets were removed
+-  // (we detect that by looking at the contentsWidth and -Height), we
+-  // make sure to update the viewport so that old shadows will be
+-  // removed.
+   if (widgetList->isEmpty()) {
+     if ((contentsWidth() != 0) || (contentsHeight() != 0)) {
+       QScrollView::resizeContents(0,0);
+-      viewport()->update();
+-      // Process pending events. In particular, re-draw the the
+-      // viewport now. This is useful as this method is often called
+-      // when widgets are removed, because a new file is
+-      // loaded. Loading a file may take a second, and we make sure
+-      // here that the user is not left with a garbled looking
+-      // viewport meanwhile.
+-      qApp->processEvents();
+     }
+     return;
+   }
+@@ -333,8 +324,11 @@
+       row = (i+nrCols) / nrCols - 1;
+     }
+ 
+-    colWidth[col] = QMAX(colWidth[col], (Q_UINT32)widgetList->at(i)->width());
+-    rowHeight[row] = QMAX(rowHeight[row], (Q_UINT32)widgetList->at(i)->height());
++    // Substract 4 pixels from the widgets width and height to take the page shadow into account.
++    // It would be much cleaner to just call documentWidget::pageSize(), but then we would have to
++    // link documentWidget etc. to the kviewpart. (This has already been changed in HEAD)
++    colWidth[col] = QMAX(colWidth[col], (Q_UINT32)widgetList->at(i)->width()-4);
++    rowHeight[row] = QMAX(rowHeight[row], (Q_UINT32)widgetList->at(i)->height()-4);
+   }
+ 
+   // Calculate the total width and height of the display
+@@ -388,9 +382,28 @@
+ 
+   // Re-draw the viewport background so that old shadows are removed
+   if (((Q_UINT32)contentsWidth() != totalWidth) || ((Q_UINT32)contentsHeight() != totalHeight))
++  {
++    // Calculate the point in the coordinates of the contents which is currently at the center of the viewport.
++    QPoint midPoint = QPoint(visibleWidth() / 2 + contentsX(), visibleHeight() / 2 + contentsY()); 
++    double midPointRatioX = (double)(midPoint.x()) / contentsWidth();
++    double midPointRatioY = (double)(midPoint.y()) / contentsHeight();
++
+     resizeContents(totalWidth,totalHeight);
+ 
+-  viewport()->update();
++    // If the zoom changed recenter the former midPoint
++    if (zoomChanged)
++      center((int)(contentsWidth() * midPointRatioX), (int)(contentsHeight() * midPointRatioY));
++
++  }
++}
++
++
++void CenteringScrollview::slotShowWidget(QWidget *wdg, Q_UINT16 y)
++{
++  if (wdg == 0)
++    return;
++
++  ensureVisible(childY(wdg)+wdg->width()/2, childY(wdg)+y, 50, 100);
+ }
+ 
+ 
+@@ -400,91 +413,51 @@
+ }
+ 
+ 
+-// The following tables store grey values for roundish shadow
+-// corners. They were shamelessly stolen from kdelibs/kdefx/kstyle.cpp
+-
+-const int bottom_right_corner[16] =
+-  { 61, 71, 85, 95,
+-    71, 78, 89, 96,
+-    85, 89, 95, 98,
+-    95, 97, 98, 99 };
+-const int bottom_left_corner[16] =
+-  { 95, 85, 71, 61,
+-    97, 89, 78, 71,
+-    98, 95, 89, 85,
+-    99, 98, 96, 95 };
+-const int shadow_strip[4] =
+-  { 56, 67, 83, 94 };
++void CenteringScrollview::moveViewportToWidget(QWidget* widget)
++{
++  setContentsPos(childX(widget) - distanceBetweenWidgets, 
++                 childY(widget) - distanceBetweenWidgets);
++}
+ 
+ 
+-void CenteringScrollview::drawContents( QPainter *p, int, int, int, int )
++void CenteringScrollview::viewportPaintEvent(QPaintEvent* e)
+ {
+-  // Safety check
+-  if ((widgetList == 0) ||  (widgetList->isEmpty()))
+-    return;
++  // Region from which rectangles occupied by child widgets will by substracted.
++  QRegion backgroundArea(e->rect());
+ 
+-  // Shadows are only drawn if a child widget exists, is shown and not
+-  // 0x0 size, and if whe are not in single page fullscreen mode
+-  if ( (widgetList != 0) && (!singlePageFullScreenMode()) ) {
+-    QColor backgroundColor = viewport()->paletteBackgroundColor();
+-
+-    // (Re-)generate the Pixmaps for the shadow corners, if necessary
+-    if (backgroundColor != viewportBackgroundColorForCorners) {
+-      viewportBackgroundColorForCorners = backgroundColor;
+-      QImage tmp(4, 4, 32);
+-
+-      for(int x=0; x<4; x++)
+-        for(int y=0; y<4; y++)
+-          tmp.setPixel(x, y, backgroundColor.light(bottom_right_corner[x+4*y]).rgb() );
+-      BRShadow.convertFromImage(tmp);
+-
+-      for(int x=0; x<4; x++)
+-        for(int y=0; y<4; y++)
+-          tmp.setPixel(x, y, backgroundColor.light(bottom_left_corner[x+4*y]).rgb() );
+-      BLShadow.convertFromImage(tmp);
+-
+-      URShadow.convertFromImage(tmp.mirror(true, true));
+-    }
++  if (widgetList != 0)
++  {
++    for (unsigned int i = 0; i < widgetList->count(); i++)
++    {
++      QWidget* item = widgetList->at(i);
+ 
+-    // Go through all widgets, but draw frames only about those that
+-    // are visible.
+-    QRect visiblRect(contentsX(), contentsY(), visibleWidth(), visibleHeight());
+-    for(Q_UINT16 widgetNr=0; widgetNr<widgetList->size(); widgetNr++) {
+-      QWidget *pagePtr = widgetList->at(widgetNr);
+-
+-      // Paranoid safety check
+-      if (pagePtr == 0) {
+-        kdError(4300) << "Safety check failed in void CenteringScrollview::drawContents( QPainter *p, int, int, int, int )" << endl;
++      // Check if the Widget needs to be updated.
++      if (!item->geometry().intersects(e->rect()))
+         continue;
++
++      QRect widgetGeometry = item->geometry();
++
++      // Draw the widget.
++      if (e->rect().intersects(widgetGeometry))
++      {
++        QRect widgetRect = e->rect().intersect(widgetGeometry);
++        widgetRect.moveBy(-widgetGeometry.left(), -widgetGeometry.top());
++
++        item->update(widgetRect);
+       }
+-      Q_INT32 X = childX(pagePtr);
+-      Q_INT32 Y = childY(pagePtr);
+-      Q_INT32 W = pagePtr->width();
+-      Q_INT32 H = pagePtr->height();
+-
+-      QRect widgetRect(X, Y, W, H );
+-      if (widgetRect.intersects(visiblRect)) {
+-        // Draw right and bottom shadows
+-        for(Q_INT32 i=0; i<4; i++) {
+-          p->setPen(backgroundColor.light(shadow_strip[i]));
+-          // Right shadow
+-          p->drawLine(X+W+i, Y+8, X+W+i, Y+H);
+-          // Bottom shadow
+-          p->drawLine(X+8, Y+H+i, X+W, Y+H+i );
+-        }
+-        // Draw shadow corners
+-        p->drawPixmap(X+W, Y+H, BRShadow);
+-        p->drawPixmap(X+4, Y+H, BLShadow);
+-        p->drawPixmap(X+W, Y+4, URShadow);
+-      }
++
++      // Substract the painted area.
++      backgroundArea -= widgetGeometry.intersect(e->rect());
+     }
+   }
+-}
+ 
+-void CenteringScrollview::moveViewportToWidget(QWidget* widget)
+-{
+-  setContentsPos(childX(widget) - distanceBetweenWidgets, 
+-                 childY(widget) - distanceBetweenWidgets);
++  // Paint the background.
++  QPainter p(viewport());
++
++  QMemArray<QRect> backgroundRects = backgroundArea.rects();
++
++  for (unsigned int i = 0; i < backgroundRects.count(); i++)
++    p.fillRect(backgroundRects[i], colorGroup().mid());
+ }
+ 
+ #include "centeringScrollview.moc"
+diff -urN -x CVS kdegraphics.orig/kviewshell/centeringScrollview.h kdegraphics/kviewshell/centeringScrollview.h
+--- kdegraphics.orig/kviewshell/centeringScrollview.h	2004-12-02 20:05:58.000000000 +0100
++++ kdegraphics/kviewshell/centeringScrollview.h	2005-04-16 12:18:33.000000000 +0200
+@@ -1,5 +1,6 @@
+ /* This file is part of the KDE project
+    Copyright (C) 2001 Wilco Greven <greven@kde.org>
++   Copyright (C) 2004-2005 Wilfried Huss <Wilfried.Huss@gmx.at>
+ 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+@@ -79,9 +80,12 @@
+     /** Turn the scrollbars on/off. */
+     void slotShowScrollbars(bool);
+ 
+-    /** If the viewport is larger than the page, center the page on
+-        the viewport. */
+-    void centerContents();
++    /** Set layout of the page widgets according to the current viewmode and zoomlevel.
++        Set zoomChanged = true if the the layout needs updateing because the zoomlevel has changed. */
++    void centerContents(bool zoomChanged = false);
++
++    /** Make the 'y' coordinate of the specified widget visible */
++    void slotShowWidget(QWidget *wdg, Q_UINT16 y);
+ 
+ signals:
+     void viewSizeChanged( QSize size );
+@@ -92,16 +96,12 @@
+     void wheelEventReceived( QWheelEvent * );
+ 
+ protected:
+-    /** This method draws shadows about the child widgets that the
+-        scrollview holds. It is automatically called by QT whenever
+-        necessary. */
+-    void drawContents ( QPainter * p, int clipx, int clipy, int clipw, int cliph );
+-
+     void keyPressEvent( QKeyEvent* );
+ 
+     /** Reimplemented from QScrollView to make sure that the page is
+         centered when it fits in the viewport. */
+     void viewportResizeEvent( QResizeEvent* );
++    void viewportPaintEvent(QPaintEvent*);
+ 
+     /** Reimplemented from QScrollView, because the kviepart needs to
+         handle the wheel events itself. The wheel event is passed on by 
+@@ -127,14 +127,6 @@
+     bool continuousViewmode;
+     bool fullScreen;
+ 
+-    /** Color used internally in the shadow drawing routines in the
+-        drawContents method. */
+-    QColor   viewportBackgroundColorForCorners;
+-
+-    /** Internal storages used in the shadow drawing routines in the
+-        drawContents method.*/
+-    QPixmap  URShadow, BRShadow, BLShadow;
+-
+     QPtrVector<QWidget> widgetListIfOldAddChildIsUsed;
+ 
+     /** This is set in slotShowScrollbars() to remember the status of the
+diff -urN -x CVS kdegraphics.orig/kviewshell/documentRenderer.cpp kdegraphics/kviewshell/documentRenderer.cpp
+--- kdegraphics.orig/kviewshell/documentRenderer.cpp	2005-01-29 22:12:11.000000000 +0100
++++ kdegraphics/kviewshell/documentRenderer.cpp	2005-04-16 12:18:33.000000000 +0200
+@@ -42,7 +42,7 @@
+     return simplePageSize();
+   }
+   if (page > totalPages()) {
+-    kdError(4300) << "documentRenderer::sizeOfPage( " << page << " ) called, but the document contains only " << totalPages() << " pages" << endl;
++    //    kdError(4300) << "documentRenderer::sizeOfPage( " << page << " ) called, but the document contains only " << totalPages() << " pages" << endl;
+     return simplePageSize();
+   }
+ 
+diff -urN -x CVS kdegraphics.orig/kviewshell/documentWidget.cpp kdegraphics/kviewshell/documentWidget.cpp
+--- kdegraphics.orig/kviewshell/documentWidget.cpp	2005-02-01 06:56:41.000000000 +0100
++++ kdegraphics/kviewshell/documentWidget.cpp	2005-04-16 12:18:33.000000000 +0200
+@@ -16,6 +16,7 @@
+ #include <qclipboard.h>
+ #include <qcursor.h>
+ #include <qpainter.h>
++#include <qimage.h>
+ 
+ #include "centeringScrollview.h"
+ #include "documentPagePixmap.h"
+@@ -27,6 +28,27 @@
+ 
+ //#define DEBUG_DOCUMENTWIDGET
+ 
++const int documentWidget::bottom_right_corner[16] =
++  { 61, 71, 85, 95,
++    71, 78, 89, 96,
++    85, 89, 95, 98,
++    95, 97, 98, 99 };
++
++const int documentWidget::bottom_left_corner[16] =
++  { 95, 85, 71, 61,
++    97, 89, 78, 71,
++    98, 95, 89, 85,
++    99, 98, 96, 95 };
++
++const int documentWidget::shadow_strip[4] =
++  { 56, 67, 83, 94 };
++
++QPixmap documentWidget::URShadow;
++QPixmap documentWidget::BRShadow;
++QPixmap documentWidget::BLShadow;
++
++QColor documentWidget::backgroundColorForCorners;
++
+ 
+ documentWidget::documentWidget(QWidget *parent, CenteringScrollview *sv, QSize size, documentPageCache *cache, 
+ 			       textSelection *documentSelection, const char *name )
+@@ -40,10 +62,18 @@
+   scrollView       = sv;
+ 
+   setMouseTracking(true);
+-  resize(size);
++  setPageSize(size);
+ 
+   connect(&clearStatusBarTimer, SIGNAL(timeout()), this, SLOT(clearStatusBar()));
+   setBackgroundMode(Qt::NoBackground);
++
++  // Initialize shadow pixmaps
++  if(URShadow.size() == QSize(0,0))
++  {
++    URShadow.resize(4,4);
++    BRShadow.resize(4,4);
++    BLShadow.resize(4,4);
++  }
+ }
+ 
+ 
+@@ -62,6 +92,8 @@
+     timerIdent       = 0;
+     animationCounter = 0;
+   }
++
++  emit showMe(this, flashOffset-1);
+   repaint(0, flashOffset-1, width(), height()/19+1, false);
+ }
+ 
+@@ -81,7 +113,7 @@
+ #ifdef DEBUG_DOCUMENTWIDGET
+   kdDebug(4300) << "documentWidget::paintEvent() called" << endl;
+ #endif
+-
++  
+   // Check if this widget is really visible to the user. If not, there
+   // is nothing to do. Remark: if we don't do this, then under QT
+   // 3.2.3 the following happens: when the user changes the zoom
+@@ -96,7 +128,51 @@
+   QRect widgetRect(scrollView->childX(this), scrollView->childY(this), width(), height() );
+   if (!widgetRect.intersects(visiblRect))
+     return;
++  
++  QPainter p(this);
++  p.setClipRect(e->rect());
++  
++  // Paint page shadow
++  QColor backgroundColor = colorGroup().mid();
++  
++  // (Re-)generate the Pixmaps for the shadow corners, if necessary
++  if (backgroundColor != backgroundColorForCorners)
++    {
++    backgroundColorForCorners = backgroundColor;
++    QImage tmp(4, 4, 32);
++    for(int x=0; x<4; x++)
++      for(int y=0; y<4; y++)
++        tmp.setPixel(x, y, backgroundColor.light(bottom_right_corner[x+4*y]).rgb() );
++    BRShadow.convertFromImage(tmp);
++
++    for(int x=0; x<4; x++)
++      for(int y=0; y<4; y++)
++        tmp.setPixel(x, y, backgroundColor.light(bottom_left_corner[x+4*y]).rgb() );
++    BLShadow.convertFromImage(tmp);
+ 
++    URShadow.convertFromImage(tmp.mirror(true, true));
++  }
++
++  // Draw right and bottom shadows
++  for(int i=0; i<4; i++)
++  {
++    p.setPen(backgroundColor.light(shadow_strip[i]));
++    // Right shadow
++    p.drawLine(pageSize().width()+i, 8, pageSize().width()+i, pageSize().height());
++    // Bottom shadow
++    p.drawLine(8, pageSize().height()+i, pageSize().width(), pageSize().height()+i);
++  }
++  // Draw shadow corners
++  p.drawPixmap(pageSize().width(), pageSize().height(), BRShadow);
++  p.drawPixmap(4, pageSize().height(), BLShadow);
++  p.drawPixmap(pageSize().width(), 4, URShadow);
++
++  // Draw corners
++  p.fillRect(0, pageSize().height(), 4, 4, backgroundColor);
++  p.fillRect(pageSize().width(), 0, 4, 4, backgroundColor);
++
++  // Paint the page where it intersects with the damaged area.
++  QRect destRect = e->rect().intersect(pageRect());
+ 
+   documentPagePixmap *pageData = documentCache->getPage(pageNr);
+   if (pageData == 0) {
+@@ -106,19 +182,8 @@
+     return;
+   }
+ 
+-  // Resize the widget, if appropriate
+-  if (pageData->size() != this->size()) {
+-    resize(pageData->size());
+-    // emit the signal 'resized' so that the widget can be newly
+-    // centered
+-    emit resized();
+-  }
+-
+   // Paint widget contents
+-  bitBlt ( this, e->rect().topLeft(), pageData, e->rect(), CopyROP);
+-
+-  QPainter p(this);
+-  p.setClipRect(e->rect());
++  bitBlt ( this, destRect.topLeft(), pageData, destRect, CopyROP);
+ 
+   // Underline hyperlinks
+   if (KVSPrefs::underlineLinks() == UL_Enabled || KVSPrefs::underlineLinks() == UL_OnlyOnHover)
+@@ -418,4 +483,32 @@
+ }
+ 
+ 
++QSize documentWidget::pageSize()
++{
++  // Substract size of the shadow.
++  return size() - QSize(4, 4);
++}
++
++
++QRect documentWidget::pageRect()
++{
++  QRect boundingRect = rect();
++  // Substract the shadow.
++  boundingRect.addCoords(0, 0, -4, -4);
++  return boundingRect;
++}
++
++
++void documentWidget::setPageSize(const QSize& pageSize)
++{
++  // Add size of the shadow.
++  resize(pageSize + QSize(4, 4));
++}
++
++
++void documentWidget::setPageSize(int width, int height)
++{
++  setPageSize(QSize(width, height));
++}
++
+ #include "documentWidget.moc"
+diff -urN -x CVS kdegraphics.orig/kviewshell/documentWidget.h kdegraphics/kviewshell/documentWidget.h
+--- kdegraphics.orig/kviewshell/documentWidget.h	2005-02-01 06:56:41.000000000 +0100
++++ kdegraphics/kviewshell/documentWidget.h	2005-04-16 12:18:33.000000000 +0200
+@@ -11,7 +11,8 @@
+ #define _documentwidget_h_
+ 
+ #include <qtimer.h> 
+-#include <qwidget.h> 
++#include <qwidget.h>
++#include <qpixmap.h>
+ 
+ class CenteringScrollview;
+ class documentPageCache;
+@@ -30,6 +31,11 @@
+   void          setPageNumber(Q_UINT16 pageNr);
+   Q_UINT16      getPageNumber() {return pageNr;};
+ 
++  /** Returns the size of the widget without the page shadow. */
++  QSize pageSize();
++
++  /** Returns the bounding rectangle of the widget without the page shadow. */
++  QRect pageRect();
+ 
+ public slots:
+   void          selectAll(void);
+@@ -39,12 +45,20 @@
+       page is selected */
+   void          selectionPageChanged(void);
+ 
++  /** Sets the size of the widget so that the page is of the given size.
++      The widget gets slightly bigger because of the page shadow. */
++  void setPageSize(const QSize&);
++  void setPageSize(int width, int height);
+ 
+ signals:
+   /** Passed through to the top-level kpart. */
+   void          setStatusBarText( const QString& );
+   void          localLink( const QString& );
+ 
++  /** Emitted when the widget wants to be shown, e.g., because a
++      'flash' takes place at coordinate 'y' */
++  void          showMe(QWidget *wdg, Q_UINT16 y);
++
+   /** This signal is emitted when the widget resizes itself */
+   void          resized(void);
+ 
+@@ -121,11 +135,25 @@
+       Is used when "Underline Links" is set to "Only on Hover". */
+   int indexOfUnderlinedLink;
+ 
+- private slots:
++private slots:
+   /** This slot emits the signal setStatusBarText(QString::null) to
+       clear the status bar. It is connected to the timeout slot of the
+       clearStatusBarTimer. */
+   void clearStatusBar();
++
++private:
++    /** Color used by in the shadow drawing to check if the background color has been changed. */
++  static QColor backgroundColorForCorners;
++
++  /** Internal storages used in the shadow drawing routines in the
++      drawContents method.*/
++  static QPixmap URShadow, BRShadow, BLShadow;
++
++  /** The following tables store grey values for roundish shadow
++      corners. They were shamelessly stolen from kdelibs/kdefx/kstyle.cpp. */
++  static const int bottom_right_corner[16];
++  static const int bottom_left_corner[16];
++  static const int shadow_strip[4];
+ };
+ 
+ 
 diff -urN -x CVS kdegraphics.orig/kviewshell/emptymultipage.desktop kdegraphics/kviewshell/emptymultipage.desktop
 --- kdegraphics.orig/kviewshell/emptymultipage.desktop	2005-02-21 19:18:10.000000000 +0100
-+++ kdegraphics/kviewshell/emptymultipage.desktop	2005-03-11 09:25:48.000000000 +0100
++++ kdegraphics/kviewshell/emptymultipage.desktop	2005-04-13 04:15:42.000000000 +0200
 @@ -1,18 +1,17 @@
  [Desktop Entry]
  Type=Service
@@ -3279,9 +4027,9 @@ diff -urN -x CVS kdegraphics.orig/kviewshell/emptymultipage.desktop kdegraphics/
  Name[de]=Leere Mehrfachseite
  Name[es]=Vaciado multipágina
  Name[fr]=Multi-page vide
-+Name[hi]=खालीबहुपेज़
  Name[hu]=ÜresTöbbOldalas
  Name[it]=MultiPaginaVuota
++Name[nb]=Tom Flerside
  Name[nl]=LegeMultiPagina
  Name[pl]=Puste wielostronicowe
  Name[pt_BR]=MultiPáginas Vazias
@@ -3292,8 +4040,41 @@ diff -urN -x CVS kdegraphics.orig/kviewshell/emptymultipage.desktop kdegraphics/
  X-KDE-EmptyMultiPage=1
 diff -urN -x CVS kdegraphics.orig/kviewshell/kmultipage.cpp kdegraphics/kviewshell/kmultipage.cpp
 --- kdegraphics.orig/kviewshell/kmultipage.cpp	2005-02-07 21:37:05.000000000 +0100
-+++ kdegraphics/kviewshell/kmultipage.cpp	2005-03-12 13:12:22.000000000 +0100
-@@ -1025,7 +1025,7 @@
++++ kdegraphics/kviewshell/kmultipage.cpp	2005-04-16 12:18:33.000000000 +0200
+@@ -701,9 +701,9 @@
+ 
+     // Resize, if necessary
+     QSize pageSize = pageCache.sizeOfPageInPixel(i+1);
+-    if (pageSize != _documentWidget->size()) 
++    if (pageSize != _documentWidget->pageSize()) 
+     {
+-      _documentWidget->resize(pageSize);
++      _documentWidget->setPageSize(pageSize);
+       everResized = true;
+     }
+   }
+@@ -713,7 +713,7 @@
+   // widgets. If no widgets were resized, go through the list of
+   // widgets again, and update those that are visible.
+   if (everResized == true)
+-    scrollView()->centerContents();
++    scrollView()->centerContents(true);
+   else 
+   {
+     QRect visiblRect(scrollView()->contentsX(), scrollView()->contentsY(),
+@@ -775,7 +775,10 @@
+ 
+ Q_UINT16 KMultiPage::numberOfPages()
+ {
+-  return markList()->numberOfPages();
++  if (renderer == 0)
++    return 0;
++
++  return renderer->totalPages();
+ }
+ 
+ QValueList<int> KMultiPage::selectedPages()
+@@ -1025,7 +1028,7 @@
      if (sv->isContinuous())
        return;
  
@@ -3302,7 +4083,7 @@ diff -urN -x CVS kdegraphics.orig/kviewshell/kmultipage.cpp kdegraphics/kviewshe
        return;
  
      nextPage();
-@@ -1045,7 +1045,7 @@
+@@ -1045,7 +1048,7 @@
      if (sv->isContinuous())
        return;
  
@@ -3311,6 +4092,23 @@ diff -urN -x CVS kdegraphics.orig/kviewshell/kmultipage.cpp kdegraphics/kviewshe
        return;
  
      prevPage();
+@@ -1067,8 +1070,6 @@
+ 
+ void KMultiPage::gotoPage(const anchor &a)
+ {
+-  kdError() << "GOTOPAGE pg=" << a.page << ", dist=" << a.distance_from_top_in_inch << endl;
+-
+   if (a.page.isInvalid() || (renderer == 0))
+     return;
+ 
+@@ -1126,7 +1127,6 @@
+ }
+ 
+ 
+-
+ void  KMultiPage::showFindTextDialog(void)
+ {
+   if ((renderer == 0) || (renderer->supportsTextSearch() == false))
 @@ -1430,3 +1430,14 @@
      }
    } // of while (all pages)
@@ -3328,8 +4126,15 @@ diff -urN -x CVS kdegraphics.orig/kviewshell/kmultipage.cpp kdegraphics/kviewshe
 +}
 diff -urN -x CVS kdegraphics.orig/kviewshell/kmultipage.desktop kdegraphics/kviewshell/kmultipage.desktop
 --- kdegraphics.orig/kviewshell/kmultipage.desktop	2005-02-21 19:18:10.000000000 +0100
-+++ kdegraphics/kviewshell/kmultipage.desktop	2005-03-07 15:18:22.000000000 +0100
-@@ -14,9 +14,8 @@
++++ kdegraphics/kviewshell/kmultipage.desktop	2005-04-13 04:15:42.000000000 +0200
+@@ -8,15 +8,15 @@
+ Name[fr]=Multi-page KViewShell
+ Name[hu]=KViewShell többoldalas
+ Name[it]=MultiPagina KViewShell
++Name[nb]=KViewShell Flerside
+ Name[nl]=KViewShell MultiPagina
+ Name[pl]=Wielostronicowe dla KViewShell
+ Name[pt]=KViewShell MultiPágina
  Name[pt_BR]=KViewShell - Múltiplas Páginas
  Name[ro]=KViewShell Pagini Multiple
  Name[sr]=KViewShell вишестрани
