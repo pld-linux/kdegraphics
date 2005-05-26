@@ -1,11 +1,11 @@
 %bcond_without	protections	# remove protections against fair use (printing and copying)
 
 %define		_state		stable
-%define		_kdever		3.4
-%define		_ver		3.4.0
+%define		_kdever		3.4.1
+%define		_ver		3.4.1
 
-%define		_minlibsevr	9:3.4.0
-%define		_minbaseevr	9:3.4.0
+%define		_minlibsevr	9:3.4.1
+%define		_minbaseevr	9:3.4.1
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -13,12 +13,12 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	2
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	5a0a32e314422e2ce051290c08390367
+# Source0-md5:	d91ef530a416bd8407abb28103bc049c
 Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
@@ -521,7 +521,7 @@ aplikacjach KDE.
 
 %prep
 %setup -q
-%patch100 -p1
+#%patch100 -p1
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
