@@ -21,6 +21,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.t
 # Source0-md5:	50916460952c4142329a7c6a47fe1530
 Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
+Patch1:		%{name}-ui-fix.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-devel
 BuildRequires:	ed
@@ -40,9 +41,8 @@ BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	lockdev-devel
-BuildRequires:	resmgr-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
-BuildRequires:	sane-backends-devel
+BuildRequires:	sane-backends-devel >= 1.0.16-3
 BuildRequires:	rpmbuild(macros) >= 1.129
 #BuildRequires:	unsermake
 BuildConflicts:	kdegraphics-mrml
@@ -524,6 +524,7 @@ aplikacjach KDE.
 %setup -q
 %patch100 -p0
 %patch0 -p1
+%patch1 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
 	kdvi/kdvi.desktop \
