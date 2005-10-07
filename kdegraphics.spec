@@ -1,11 +1,11 @@
 %bcond_without	protections	# remove protections against fair use (printing and copying)
 
 %define		_state		stable
-%define		_kdever		3.4.2
-%define		_ver		3.4.2
+%define		_kdever		3.4.3
+%define		_ver		3.4.3
 
-%define		_minlibsevr	9:3.4.2
-%define		_minbaseevr	9:3.4.2
+%define		_minlibsevr	9:3.4.3
+%define		_minbaseevr	9:3.4.3
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -13,15 +13,14 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	50916460952c4142329a7c6a47fe1530
+# Source0-md5:	e2b2926301204a0f587d9e6e163c06d9
 Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
-Patch1:		%{name}-ui-fix.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-devel
 BuildRequires:	ed
@@ -522,9 +521,8 @@ aplikacjach KDE.
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
-%patch1 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
 	kdvi/kdvi.desktop \
@@ -866,8 +864,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkviewcanvas.so
 %{_libdir}/kde3/libkviewviewer.la
 %attr(755,root,root) %{_libdir}/kde3/libkviewviewer.so
-%{_libdir}/libphotobook.la
-%attr(755,root,root) %{_libdir}/libphotobook.so
+%{_libdir}/kde3/libphotobook.la
+%attr(755,root,root) %{_libdir}/kde3/libphotobook.so
 %{_datadir}/apps/kview
 %{_datadir}/apps/kviewviewer
 %{_datadir}/apps/photobookui.rc
