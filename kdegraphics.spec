@@ -1,7 +1,7 @@
 %bcond_without	protections	# remove protections against fair use (printing and copying)
 
 %define		_state		stable
-%define		_kdever		3.5.0
+%define		_kdever		3.5
 %define		_ver		3.5.0
 
 %define		_minlibsevr	9:3.4.3
