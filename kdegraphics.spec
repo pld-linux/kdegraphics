@@ -1,8 +1,8 @@
 %bcond_without	protections	# remove protections against fair use (printing and copying)
 
 %define		_state		stable
-%define		_kdever		3.4.3
-%define		_ver		3.4.3
+%define		_kdever		3.5.0
+%define		_ver		3.5.0
 
 %define		_minlibsevr	9:3.4.3
 %define		_minbaseevr	9:3.4.3
@@ -13,12 +13,12 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	2
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	e2b2926301204a0f587d9e6e163c06d9
+# Source0-md5:	92ebb91067b4d38ea02a9b9e10ba9d50
 Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
@@ -41,7 +41,7 @@ BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	lockdev-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
-BuildRequires:	sane-backends-devel >= 1.0.16-3
+BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 #BuildRequires:	unsermake
 BuildConflicts:	kdegraphics-mrml
@@ -627,6 +627,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*.h
 %{_includedir}/dom/*
 %{_includedir}/ksvg
+%{_includedir}/kviewshell
 %{_includedir}/libtext2path-0.1
 
 %files daemonwatcher
@@ -641,7 +642,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kcm_kamera.so
 %{_libdir}/kde3/kio_kamera.la
 %attr(755,root,root) %{_libdir}/kde3/kio_kamera.so
-%{_datadir}/services/kamera.protocol
+%{_datadir}/services/camera.protocol
 %{_desktopdir}/kde/kamera.desktop
 %{_iconsdir}/*/*/*/camera*
 
@@ -649,7 +650,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %{_desktopdir}/kde/kcolorchooser.desktop
-%{_iconsdir}/crystalsvg/*/apps/kcolorchooser.png
+%{_iconsdir}/[!l]*/*/*/kcolorchooser.*
 %{_mandir}/man1/kcolorchooser.1*
 
 %files kcoloredit -f kcoloredit.lang
@@ -675,11 +676,19 @@ rm -rf $RPM_BUILD_ROOT
 %files kfax
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kfax
-%{_libdir}/kde3/kfaxpart.la
-%attr(755,root,root) %{_libdir}/kde3/kfaxpart.so
+%attr(755,root,root) %{_bindir}/kfaxview
+%{_libdir}/libkfaximage.la
+%attr(755,root,root) %{_libdir}/libkfaximage.so
+%{_libdir}/kde3/kfaxviewpart.la
+%attr(755,root,root) %{_libdir}/kde3/kfaxviewpart.so
 %{_datadir}/apps/kfax/
+%{_datadir}/apps/kfaxview
+%{_datadir}/services/kfaxmultipage.desktop
+%{_datadir}/services/kfaxmultipage_tiff.desktop
 %{_desktopdir}/kde/kfax.desktop
+%{_desktopdir}/kde/kfaxview.desktop
 %{_iconsdir}/*/*/*/kfax.*
+%{_iconsdir}/[!l]*/*/*/kfaxview.*
 %{_mandir}/man1/kfax.1*
 
 %files kfile
@@ -688,6 +697,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/gsthumbnail.so
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
+%{_datadir}/config/magic/x-image-raw.magic
+%{_datadir}/mimelnk/image/x-image-raw.desktop
 %{_datadir}/services/gsthumbnail.desktop
 %{_datadir}/services/kfile_*.desktop
 
@@ -747,7 +758,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kolourpaint
 %{_datadir}/apps/kolourpaint
 %{_desktopdir}/kde/kolourpaint.desktop
-%{_iconsdir}/*/*/*/kolourpaint.png
+%{_iconsdir}/[!l]*/*/*/kolourpaint.*
 %{_mandir}/man1/kolourpaint.1*
 
 %files kooka -f kooka.lang
@@ -772,7 +783,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/kpdf.kcfg
 %{_datadir}/services/kpdf_part.desktop
 %{_desktopdir}/kde/kpdf.desktop
-%{_iconsdir}/*/*/*/kpdf.png
+%{_iconsdir}/[!l]*/*/*/kpdf.*
 
 %files kpovmodeler -f kpovmodeler.lang
 %defattr(644,root,root,755)
@@ -868,7 +879,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libphotobook.so
 %{_datadir}/apps/kview
 %{_datadir}/apps/kviewviewer
-%{_datadir}/apps/photobookui.rc
+#%{_datadir}/apps/photobookui.rc
 %{_datadir}/services/kconfiguredialog/kviewcanvasconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewgeneralconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewpluginsconfig.desktop
@@ -882,7 +893,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kview.desktop
 %{_iconsdir}/*/*/*/kview.png
 %{_iconsdir}/crystalsvg/*/apps/photobook.png
-
 %{_mandir}/man1/kview.1*
 
 %files kviewshell
@@ -901,3 +911,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/kmultipage.desktop
 %{_iconsdir}/*/*/*/kviewshell.png
 %{_mandir}/man1/kviewshell.1*
+# New
+%{_libdir}/kde3/djvuviewpart.la
+%attr(755,root,root) %{_libdir}/kde3/djvuviewpart.so
+%{_libdir}/kde3/libdjvu.la
+%attr(755,root,root) %{_libdir}/kde3/libdjvu.so
+%{_datadir}/apps/djvumultipage.rc
+%{_datadir}/config.kcfg/djvumultipage.kcfg
+%{_datadir}/services/djvumultipage.desktop
