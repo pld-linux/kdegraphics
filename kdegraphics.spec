@@ -1,4 +1,4 @@
-%bcond_without	protections	# remove protections against fair use (printing and copying)
+%bcond_with	protections	# protections against fair use (printing and copying)
 
 %define		_state		stable
 %define		_kdever		3.5
@@ -13,7 +13,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
