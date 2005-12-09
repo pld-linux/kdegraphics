@@ -1,301 +1,2019 @@
-Index: kpdf/xpdf/xpdf/DCTStream.cc
+Index: kpdf/kpdf_part.desktop
 ===================================================================
---- kpdf/xpdf/xpdf/DCTStream.cc	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kpdf/xpdf/xpdf/DCTStream.cc	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -15,7 +15,15 @@
- static boolean str_fill_input_buffer(j_decompress_ptr cinfo)
+--- kpdf/kpdf_part.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/kpdf_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -4,7 +4,6 @@
+ Name=KPDF
+ Name[ar]=برنامج KPDF
+ Name[hi]=के-पीडीएफ
+-Name[xx]=xxKPDFxx
+ MimeType=application/pdf
+ InitialPreference=7
+ ServiceTypes=KParts/ReadOnlyPart
+Index: kpdf/part.cpp
+===================================================================
+--- kpdf/part.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/part.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -274,6 +274,8 @@
+ 	connect( m_watcher, SIGNAL( dirty( const QString& ) ), this, SLOT( slotFileDirty( const QString& ) ) );
+ 	m_dirtyHandler = new QTimer( this );
+ 	connect( m_dirtyHandler, SIGNAL( timeout() ),this, SLOT( slotDoFileDirty() ) );
++	m_saveSplitterSizeTimer = new QTimer( this );
++	connect( m_saveSplitterSizeTimer, SIGNAL( timeout() ),this, SLOT( saveSplitterSize() ) );
+ 
+ 	slotNewConfig();
+ 
+@@ -478,7 +480,7 @@
  {
-   struct str_src_mgr * src = (struct str_src_mgr *)cinfo->src;
--  src->buffer = src->str->getChar();
-+  if (src->index == 0) {
-+    src->buffer = 0xFF;
-+    src->index++;
-+  }
-+  else if (src->index == 1) {
-+    src->buffer = 0xD8;
-+    src->index++;
-+  }
-+  else src->buffer = src->str->getChar();
-   src->pub.next_input_byte = &src->buffer;
-   src->pub.bytes_in_buffer = 1;
-   return TRUE;
-@@ -50,6 +58,7 @@
-   src.pub.bytes_in_buffer = 0;
-   src.pub.next_input_byte = NULL;
-   src.str = str;
-+  src.index = 0;
-   cinfo.src = (jpeg_source_mgr *)&src;
-   cinfo.err = jpeg_std_error(&jerr);
-   x = 0;
-@@ -64,6 +73,40 @@
-   int row_stride;
+     // if pageView has been resized, save splitter sizes
+     if ( watched == m_pageView && e->type() == QEvent::Resize )
+-        saveSplitterSize();
++        m_saveSplitterSizeTimer->start(500, true);
  
-   str->reset();
-+  
-+  // JPEG data has to start with 0xFF 0xD8
-+  // but some pdf like the one on 
-+  // https://bugs.freedesktop.org/show_bug.cgi?id=3299
-+  // does have some garbage before that this seeks for
-+  // the start marker...
-+  bool startFound = false;
-+  int c = 0, c2 = 0;
-+  int n = 0;
-+  while (!startFound)
-+  {
-+    if (!c)
-+    {
-+      c = str->getChar();
-+      if (c != 0xFF) c = 0;
-+      if (c == -1)
-+      {
-+        error(-1, "Could not find start of jpeg data");
-+        exit(1);
-+      }
-+    }
-+    else
-+    {
-+      c2 = str->getChar();
-+      if (c2 != 0xD8)
-+      {
-+        c = 0;
-+        c2 = 0;
-+      }
-+      else startFound = true;
-+    }
-+    n++;
-+  }
-+
-   jpeg_read_header(&cinfo, TRUE);
-   jpeg_start_decompress(&cinfo);
- 
-Index: kpdf/xpdf/xpdf/DCTStream.h
+     // only intercept events, don't block them
+     return false;
+Index: kpdf/part.h
 ===================================================================
---- kpdf/xpdf/xpdf/DCTStream.h	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kpdf/xpdf/xpdf/DCTStream.h	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -44,6 +44,7 @@
-     struct jpeg_source_mgr pub;
-     JOCTET buffer;
-     Stream *str;
-+    int index;
+--- kpdf/part.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/part.h	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -146,6 +146,11 @@
+ 	// static instances counter
+ 	static unsigned int m_count;
+ 
++	// this is a hack because we can not use writeConfig on part destructor
++	// and we don't want to writeconfig every time someone moves the splitter
++	// so we use a QTimer each 500 ms
++	QTimer *m_saveSplitterSizeTimer;
++
+ 	KDirWatch *m_watcher;
+ 	QTimer *m_dirtyHandler;
+ 	DocumentViewport m_viewportDirty;
+Index: kpdf/xpdf/xpdf/Stream.cc
+===================================================================
+--- kpdf/xpdf/xpdf/Stream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/xpdf/xpdf/Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -403,18 +403,33 @@
+ 
+ StreamPredictor::StreamPredictor(Stream *strA, int predictorA,
+ 				 int widthA, int nCompsA, int nBitsA) {
++  int totalBits;
++
+   str = strA;
+   predictor = predictorA;
+   width = widthA;
+   nComps = nCompsA;
+   nBits = nBitsA;
++  predLine = NULL;
++  ok = gFalse;
+ 
+   nVals = width * nComps;
++  totalBits = nVals * nBits;
++  if (totalBits == 0 ||
++      (totalBits / nBits) / nComps != width ||
++      totalBits + 7 < 0) {
++    return;
++  }
+   pixBytes = (nComps * nBits + 7) >> 3;
+-  rowBytes = ((nVals * nBits + 7) >> 3) + pixBytes;
++  rowBytes = ((totalBits + 7) >> 3) + pixBytes;
++  if (rowBytes < 0) {
++    return;
++  }
+   predLine = (Guchar *)gmalloc(rowBytes);
+   memset(predLine, 0, rowBytes);
+   predIdx = rowBytes;
++
++  ok = gTrue;
+ }
+ 
+ StreamPredictor::~StreamPredictor() {
+@@ -1006,6 +1021,10 @@
+     FilterStream(strA) {
+   if (predictor != 1) {
+     pred = new StreamPredictor(this, predictor, columns, colors, bits);
++    if (!pred->isOk()) {
++      delete pred;
++      pred = NULL;
++    }
+   } else {
+     pred = NULL;
+   }
+@@ -2903,6 +2922,14 @@
+   height = read16();
+   width = read16();
+   numComps = str->getChar();
++  if (numComps <= 0 || numComps > 4) {
++    error(getPos(), "Bad number of components in DCT stream", prec);
++    return gFalse;
++  }
++  if (numComps <= 0 || numComps > 4) {
++    error(getPos(), "Bad number of components in DCT stream", prec);
++    return gFalse;
++  }
+   if (prec != 8) {
+     error(getPos(), "Bad DCT precision %d", prec);
+     return gFalse;
+@@ -3833,6 +3860,10 @@
+     FilterStream(strA) {
+   if (predictor != 1) {
+     pred = new StreamPredictor(this, predictor, columns, colors, bits);
++    if (!pred->isOk()) {
++      delete pred;
++      pred = NULL;
++    }
+   } else {
+     pred = NULL;
+   }
+Index: kpdf/xpdf/xpdf/Stream.h
+===================================================================
+--- kpdf/xpdf/xpdf/Stream.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/xpdf/xpdf/Stream.h	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -232,6 +232,8 @@
+ 
+   ~StreamPredictor();
+ 
++  GBool isOk() { return ok; }
++
+   int lookChar();
+   int getChar();
+ 
+@@ -249,6 +251,7 @@
+   int rowBytes;			// bytes per line
+   Guchar *predLine;		// line buffer
+   int predIdx;			// current index in predLine
++  GBool ok;
  };
  
- 
-Index: kpdf/xpdf/fofi/FoFiType1.cc
+ //------------------------------------------------------------------------
+Index: kpdf/xpdf/xpdf/JPXStream.cc
 ===================================================================
---- kpdf/xpdf/fofi/FoFiType1.cc	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kpdf/xpdf/fofi/FoFiType1.cc	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -186,17 +186,13 @@
- 	      }
- 	    }
- 	  }
--	} else {
--	  p = strtok(buf, " \t\n\r");
--	  if (p)
--	  {
--	    if (!strcmp(p, "def")) break;
--	    if (!strcmp(p, "readonly")) break;
--	    // the spec does not says this but i'm mantaining old xpdf behaviour that accepts "foo def" as end of the encoding array
--	    p = strtok(buf, " \t\n\r");
--	    if (p && !strcmp(p, "def")) break;
--	  }
- 	}
-+	
-+	// Any line that begins with "def" or contains " def"
-+	// terminates the encoding array.
-+	if (!strcmp (p, "def") || strstr (buf, " def"))
-+	  break;
-+	
- 	line = line1;
-       }
-       //~ check for getinterval/putinterval junk
-Index: kpdf/xpdf/splash/Splash.cc
-===================================================================
---- kpdf/xpdf/splash/Splash.cc	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kpdf/xpdf/splash/Splash.cc	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -240,6 +240,11 @@
-     return splashErrEmptyPath;
-   }
-   xPath = new SplashXPath(path, state->flatness, gFalse);
-+  if (!xPath->segs)
-+  {
-+    delete xPath;
-+    return splashErrEmptyPath;
-+  }
-   if (state->lineDashLength > 0) {
-     xPath2 = makeDashedPath(xPath);
-     delete xPath;
-@@ -633,6 +638,11 @@
-   }
-   xPath = new SplashXPath(path, state->flatness, gTrue);
-   xPath->sort();
-+  if (!&xPath->segs[0])
-+  {
-+    delete xPath;
-+    return splashErrEmptyPath;
-+  }
-   scanner = new SplashXPathScanner(xPath, eo);
+--- kpdf/xpdf/xpdf/JPXStream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/xpdf/xpdf/JPXStream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -783,7 +783,7 @@
+   int segType;
+   GBool haveSIZ, haveCOD, haveQCD, haveSOT;
+   Guint precinctSize, style;
+-  Guint segLen, capabilities, comp, i, j, r;
++  Guint segLen, capabilities, nTiles, comp, i, j, r;
  
-   // get the min and max x and y values
+   //----- main header
+   haveSIZ = haveCOD = haveQCD = haveSOT = gFalse;
+@@ -818,8 +818,13 @@
+ 	            / img.xTileSize;
+       img.nYTiles = (img.ySize - img.yTileOffset + img.yTileSize - 1)
+ 	            / img.yTileSize;
+-      img.tiles = (JPXTile *)gmallocn(img.nXTiles * img.nYTiles,
+-				     sizeof(JPXTile));
++      nTiles = img.nXTiles * img.nYTiles;
++      // check for overflow before allocating memory
++      if (nTiles == 0 || nTiles / img.nXTiles != img.nYTiles) {
++	error(getPos(), "Bad tile count in JPX SIZ marker segment");
++	return gFalse;
++      }
++      img.tiles = (JPXTile *)gmallocn(nTiles, sizeof(JPXTile));
+       for (i = 0; i < img.nXTiles * img.nYTiles; ++i) {
+ 	img.tiles[i].tileComps = (JPXTileComp *)gmallocn(img.nComps,
+ 							sizeof(JPXTileComp));
+Index: kpdf/shell/kpdf.desktop
+===================================================================
+--- kpdf/shell/kpdf.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/shell/kpdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -5,7 +5,6 @@
+ Name=KPDF
+ Name[ar]=برنامج KPDF
+ Name[hi]=के-पीडीएफ
+-Name[xx]=xxKPDFxx
+ GenericName=PDF Viewer
+ GenericName[ar]=عارض ملفات PDF
+ GenericName[az]=PDF Nümayişçisi
+@@ -62,7 +61,6 @@
+ GenericName[uz]=PDF кўрувчи
+ GenericName[ven]=Tshivhoni tsha PDF
+ GenericName[xh]=Umboniseli we PDF
+-GenericName[xx]=xxPDF Viewerxx
+ GenericName[zh_CN]=PDF 查看器
+ GenericName[zu]=Umboniseli we PDF
+ Exec=kpdf %U %i %m -caption "%c"
+Index: kpdf/ui/presentationwidget.cpp
+===================================================================
+--- kpdf/ui/presentationwidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/ui/presentationwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -171,12 +171,14 @@
+ 
+ 
+ // <widget events>
++/* This hack was here to fix 103718 but it's no longer necessary on KDE 3.5 and Lubos asked me to remove it
+ bool PresentationWidget::event ( QEvent * e )
+ {
+     if (e -> type() == QEvent::WindowDeactivate) KWin::clearState(winId(), NET::StaysOnTop);
+     else if (e -> type() == QEvent::WindowActivate) KWin::setState(winId(), NET::StaysOnTop);
+     return QDialog::event(e);
+ }
++*/
+ 
+ void PresentationWidget::keyPressEvent( QKeyEvent * e )
+ {
+Index: kpdf/ui/presentationwidget.h
+===================================================================
+--- kpdf/ui/presentationwidget.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpdf/ui/presentationwidget.h	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -46,7 +46,7 @@
+ 
+     protected:
+         // widget events
+-        bool event( QEvent * e );
++//        bool event( QEvent * e );
+         void keyPressEvent( QKeyEvent * e );
+         void wheelEvent( QWheelEvent * e );
+         void mousePressEvent( QMouseEvent * e );
+Index: kfaxview/kfaxmultipage_tiff.desktop
+===================================================================
+--- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -3,7 +3,6 @@
+ Name=kfaxview_tiff
+ Name[da]=Kfaxview TIFF
+ Name[sv]=Kfaxview TIFF
+-Name[xx]=xxkfaxview_tiffxx
+ Name[zh_CN]=KFaxView_tiff
+ Icon=kfaxview
+ Type=Service
+@@ -16,7 +15,9 @@
+ Comment[de]=Ein Modul für KViewShell zum Betrachten von Faxdateien
+ Comment[es]=Extensión KViewShell para archivos de fax
+ Comment[et]=KView faksifailide plugin
++Comment[eu]=Fax fitxategientzatko KViewShell-en plugina
+ Comment[fr]=Module KViewShell pour les fichiers fax
++Comment[hu]=KViewShell-modul faxfájlokhoz
+ Comment[is]=KViewShell íforrit fyrir faxskrár
+ Comment[it]=Plugin KViewShell per file di fax
+ Comment[ja]=FAX ファイル用の KViewShell プラグイン
+@@ -33,7 +34,6 @@
+ Comment[sv]=Kviewshell-insticksprogram för telefaxfiler
+ Comment[tr]=Faks dosyaları için KViewShell eklentisi
+ Comment[uk]=Втулок перегляду файлів факсів для KViewShell
+-Comment[xx]=xxKViewShell plugin for fax filesxx
+ Comment[zh_CN]=传真文件的 KViewShell 插件
+ ServiceTypes=KViewShell/MultiPage
+ X-KDE-MimeTypes=image/tiff
+Index: kfaxview/kfaxmultipage.desktop
+===================================================================
+--- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -1,10 +1,10 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Name=kfaxview
++Name[hu]=KFaxView
+ Name[ja]=KfaxView
+ Name[nb]=Kfaxview
+ Name[sv]=Kfaxview
+-Name[xx]=xxkfaxviewxx
+ Name[zh_CN]=KFaxView
+ Icon=kfaxview
+ Type=Service
+@@ -17,7 +17,9 @@
+ Comment[de]=Ein Modul für KViewShell zum Betrachten von Faxdateien
+ Comment[es]=Extensión KViewShell para archivos de fax
+ Comment[et]=KView faksifailide plugin
++Comment[eu]=Fax fitxategientzatko KViewShell-en plugina
+ Comment[fr]=Module KViewShell pour les fichiers fax
++Comment[hu]=KViewShell-modul faxfájlokhoz
+ Comment[is]=KViewShell íforrit fyrir faxskrár
+ Comment[it]=Plugin KViewShell per file di fax
+ Comment[ja]=FAX ファイル用の KViewShell プラグイン
+@@ -34,7 +36,6 @@
+ Comment[sv]=Kviewshell-insticksprogram för telefaxfiler
+ Comment[tr]=Faks dosyaları için KViewShell eklentisi
+ Comment[uk]=Втулок перегляду файлів факсів для KViewShell
+-Comment[xx]=xxKViewShell plugin for fax filesxx
+ Comment[zh_CN]=传真文件的 KViewShell 插件
+ ServiceTypes=KViewShell/MultiPage
+ X-KDE-MimeTypes=image/fax-g3
+Index: kfaxview/kfaxview.desktop
+===================================================================
+--- kfaxview/kfaxview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfaxview/kfaxview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -52,14 +52,12 @@
+ GenericName[ven]=Muvhoni wa Fekisi
+ GenericName[wa]=Håyneu di facs
+ GenericName[xh]=Umboniseli Wefax
+-GenericName[xx]=xxFax Viewerxx
+ GenericName[zh_CN]=传真查看器
+ GenericName[zh_TW]=傳真檢視器
+ GenericName[zu]=Umbonisi wefax
+ Name=KFaxView
+ Name[nb]=Kfaxview
+ Name[sv]=Kfaxview
+-Name[xx]=xxKFaxViewxx
+ MimeType=image/fax-g3
+ InitialPreference=6
+ Exec=kfaxview %f
+Index: kview/kimageviewer/kimageviewercanvas.desktop
+===================================================================
+--- kview/kimageviewer/kimageviewercanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/kimageviewer/kimageviewercanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -31,7 +31,7 @@
+ Comment[nl]=Ingebed weergave-canvas (widget die een afbeelding toont)
+ Comment[nn]=Inkluderbart lerret for biletvising (skjermelement som viser eit bilete)
+ Comment[nso]=Canvas yeo e Robatsegago ya Molebeledi wa Ponagalo (widget yeo e bontshago ponagalo)
+-Comment[pl]=Obszar do przeglądania obrazów (wnętrze okienka, które pokazuje obraz)
++Comment[pl]=Obszar do przeglądania obrazków (wnętrze okienka, które pokazuje obrazek)
+ Comment[pt]=Área de Visualização Embebida de Imagens (um item que mostra uma imagem)
+ Comment[pt_BR]=Componente Integrado do Visualizador Canvas (componente que exibe uma imagem)
+ Comment[ro]=Componentă înglobată de vizualizare imagini (widget)
+@@ -48,7 +48,6 @@
+ Comment[uk]=Вмонтовний компонент полотна перегляду зображень (віджет, що малює зображення)
+ Comment[ven]=Muvhala wa muvhoni wa tshifanyiso tsho dzheniswaho (tshishumiswa tsha vhuthogwa tshine tsha sumbedza tshifanyiso)
+ Comment[xh]=Iseyile Yombonisi Womfanekiso Olungisiweyo (widget ebonisa umfanekiso)
+-Comment[xx]=xxEmbeddable Image Viewer Canvas (widget that shows an image)xx
+ Comment[zh_CN]=可嵌入的图像查看画布(显示图像的部件)
+ Comment[zh_TW]=可嵌入的影像檢視器畫布（顯示影像的界面工具）
+ Comment[zu]=Inkalivasi Yombukisi Wesithombe Esixubeneyo (i-widget ekhombisa isithombe)
+Index: kview/kimageviewer/kimageviewer.desktop
+===================================================================
+--- kview/kimageviewer/kimageviewer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/kimageviewer/kimageviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -34,7 +34,7 @@
+ Comment[nl]=Ingebed weergavecomponent voor afbeeldingen
+ Comment[nn]=Inkluderbart komponent for biletvising
+ Comment[nso]=Seripa seo se Robatsegago sa Molebeledi wa Ponagalo
+-Comment[pl]=Składnik do przeglądania obrazów
++Comment[pl]=Składnik do przeglądania obrazków
+ Comment[pt]=Componente Embebida de Visualização de Imagens
+ Comment[pt_BR]=Componente Integrado do Visualizador de Imagens
+ Comment[ro]=Componentă înglobată de vizualizare imagini
+@@ -51,7 +51,6 @@
+ Comment[uk]=Вмонтовний компонент перегляду зображень
+ Comment[ven]=Tshipida tsha muvhoni wa tshifanyiso tsho dzheniswaho
+ Comment[xh]=Ingxenye Yombonisi Womfanekiso Olungisiweyo
+-Comment[xx]=xxEmbeddable Image Viewer Componentxx
+ Comment[zh_CN]=可嵌入的图像查看器组件
+ Comment[zh_TW]=可嵌入的影像檢視器元件
+ Comment[zu]=Ilunga Lombukisi Wesithombe Esixubeneyo
+Index: kview/kviewcanvas/config/kviewcanvasconfig.desktop
+===================================================================
+--- kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -39,7 +39,7 @@
+ Name[nl]=Weergaveprogramma
+ Name[nn]=Framvisar
+ Name[pa]=ਦਰਸ਼ਕ
+-Name[pl]=Przeglądarka obrazów
++Name[pl]=Przeglądarka obrazków
+ Name[pt]=Visualizador
+ Name[pt_BR]=Visualizador
+ Name[ro]=Vizualizor
+@@ -56,7 +56,6 @@
+ Name[uk]=Переглядач
+ Name[uz]=Кўрувчи
+ Name[wa]=Håyneu
+-Name[xx]=xxViewerxx
+ Name[zh_CN]=查看器
+ Comment=General KViewCanvas Configuration
+ Comment[ar]=اعدادات KViewCanvas العامة
+@@ -97,5 +96,4 @@
+ Comment[tg]=Танзимоти умумии KViewCanvas
+ Comment[tr]=Genel KView Ekran Ayarları
+ Comment[uk]=Загальні параметри KViewCanvas
+-Comment[xx]=xxGeneral KViewCanvas Configurationxx
+ Comment[zh_CN]=KViewCanvas 常规配置
+Index: kview/kviewcanvas/kviewcanvas.desktop
+===================================================================
+--- kview/kviewcanvas/kviewcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/kviewcanvas/kviewcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -30,7 +30,7 @@
+ Name[nl]=KView afbeeldingwidget
+ Name[nn]=KView biletvisarelement
+ Name[nso]=KView Widget ya Molebeledi wa Ponagalo
+-Name[pl]=Okienko przeglądarki obrazów KView
++Name[pl]=Okienko przeglądarki obrazków KView
+ Name[pt]=Elemento de Visualização de Imagens do KView
+ Name[pt_BR]=Componente de Visualização de Imagens do KVisualização
+ Name[ro]=Widget vizualizare imagini KView
+@@ -48,7 +48,6 @@
+ Name[ven]=Tshishumiswa tsha vhuthogwa tsha muvhoni wa tshifanyiso tsha mbonalelo ya K
+ Name[wa]=Ahesse håyneu d' imådjes KView 
+ Name[xh]=Widget Yombonisi Womfanekiso we KView
+-Name[xx]=xxKView Image Viewer Widgetxx
+ Name[zh_CN]=KView 图像查看器部件
+ Name[zh_TW]=KView 影像檢視器界面工具
+ Name[zu]=I-widget Yombukisi Wesithombe se-KView
+Index: kview/kview.desktop
+===================================================================
+--- kview/kview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/kview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -62,7 +62,6 @@
+ GenericName[ven]=Tshivhoni tsha Mutaleli
+ GenericName[wa]=Håyneu d' imådjes
+ GenericName[xh]=Umboniseli Womfanekiso
+-GenericName[xx]=xxImage Viewerxx
+ GenericName[zh_CN]=图片查看程序
+ GenericName[zh_TW]=影像檢視程式
+ GenericName[zu]=Umbonisi Womfanekiso
+@@ -75,13 +74,12 @@
+ Name[hi]=के-व्यू
+ Name[hr]=Preglednik slika
+ Name[lv]=KSkatīt
+-Name[pl]=Przeglądarka obrazów
++Name[pl]=Przeglądarka obrazków
+ Name[pt_BR]=KVisualização
+ Name[sv]=Kview
+ Name[ta]=கேகாட்சி
+ Name[th]=ดูภาพ - K
+ Name[ven]=U vhona ha K
+-Name[xx]=xxKViewxx
+ Name[zh_TW]=KView 檢視器
+ InitialPreference=3
+ X-KDE-StartupNotify=true
+Index: kview/photobook/photobook.desktop
+===================================================================
+--- kview/photobook/photobook.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/photobook/photobook.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -29,7 +29,6 @@
+ GenericName[sv]=Fotoalbum
+ GenericName[ta]=புகைப்படப் புத்தகம்
+ GenericName[tr]=Albüm
+-GenericName[xx]=xxPhotobookxx
+ 
+ MimeType=inode/directory
+ Icon=photobook
+@@ -58,7 +57,6 @@
+ Name[sv]=Fotoalbum
+ Name[ta]=புகைப்படப் புத்தகம்
+ Name[tr]=Albüm
+-Name[xx]=xxPhotobookxx
+ Comment=Easily browse a folder of photographs
+ Comment[bg]=Колекциониране на снимки като във фотоалбум
+ Comment[ca]=Mirar fàcilment una carpeta de fotografies
+@@ -91,7 +89,6 @@
+ Comment[ta]=புகைப்படங்களின் அடைவை சுலபமாக உலாவ
+ Comment[tr]=Fotoğraflarla dolu bir dizini kolayca gez
+ Comment[uk]=Простий перегляд тек з фотографіями
+-Comment[xx]=xxEasily browse a folder of photographsxx
+ Comment[zh_CN]=轻松浏览照片文件夹
+ ServiceTypes=KParts/ReadOnlyPart,Browser/View
+ X-KDE-Library=libphotobook
+Index: kview/config/kviewgeneralconfig.desktop
+===================================================================
+--- kview/config/kviewgeneralconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/config/kviewgeneralconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -68,7 +68,6 @@
+ Name[ven]=Apulifikhesheni
+ Name[wa]=Programe
+ Name[xh]=Isicelo
+-Name[xx]=xxApplicationxx
+ Name[zh_CN]=应用程序
+ Name[zu]=Isicelo
+ Comment=Configuration for the standalone Version of KView
+@@ -110,5 +109,4 @@
+ Comment[tg]=Танзимоти барномаи мустақили KView
+ Comment[tr]=KView programının yanlız sürümünün ayarları
+ Comment[uk]=Налаштування KView, як окреиої програми
+-Comment[xx]=xxConfiguration for the standalone Version of KViewxx
+ Comment[zh_CN]=KView 标准版本的配置
+Index: kview/config/plugins/kviewpluginsconfig.desktop
+===================================================================
+--- kview/config/plugins/kviewpluginsconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/config/plugins/kviewpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -56,7 +56,6 @@
+ Name[uk]=Втулки
+ Name[uz]=Плагинлар
+ Name[wa]=Tchôke-divins
+-Name[xx]=xxPluginsxx
+ Name[zh_CN]=插件
+ Comment=Choose and Configure Your Plugins
+ Comment[bg]=Избор и конфигуриране на приставки
+@@ -92,5 +91,4 @@
+ Comment[tr]=Eklentilerinizi Seçin ve Yapılandırın:
+ Comment[uk]=Виберіть та налаштуйте ваші втулки
+ Comment[uz]=Плагинларни танлаш ва мослаш
+-Comment[xx]=xxChoose and Configure Your Pluginsxx
+ Comment[zh_CN]=选择并配置您的插件
+Index: kview/config/kview.setdlg
+===================================================================
+--- kview/config/kview.setdlg	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -26,7 +26,7 @@
+ Name[nl]=Weergaveprogramma
+ Name[nn]=Framvisar
+ Name[pa]=ਦਰਸ਼ਕ
+-Name[pl]=Przeglądarka obrazów
++Name[pl]=Przeglądarka obrazków
+ Name[pt]=Visualizador
+ Name[pt_BR]=Visualizador
+ Name[ro]=Vizualizor
+@@ -43,7 +43,6 @@
+ Name[uk]=Переглядач
+ Name[uz]=Кўрувчи
+ Name[wa]=Håyneu
+-Name[xx]=xxViewerxx
+ Name[zh_CN]=查看器
+ Comment=This is the configuration for the part of KView that can be reused by other applications (meaning that the settings will also affect the KView part that gets embedded into Konqueror or other applications).
+ Comment[ar]=هذه الإعدادات هي لجزء برنامج KView الذي يدمج في داخل متصفح Konqueror والبرامج الأخرى
+@@ -81,7 +80,6 @@
+ Comment[tg]=Танзимоти қисмати KView, ки бо дигар барномаҳо (рафтори қисматро, ки ба дохили Konqueror ҷорӣ шудааст ё дигар барномаҳоро низ танзим мекунад) истифода мешавад.
+ Comment[tr]=Bu KView'in diğer programlar tarafından tekrar kullanılabilecek ayarlarıdır (Bu KView'in Konqueror veya diğer programlar altında çalışan gömülü parçalarını da etkiler).
+ Comment[uk]=Це параметри складової KView, які можуть бути використані багатьма програмами (тобто, зміни значеннь цих параметрів будуть впливати на складову KView вмонтовану у Konqueror та інші програми).
+-Comment[xx]=xxThis is the configuration for the part of KView that can be reused by other applications (meaning that the settings will also affect the KView part that gets embedded into Konqueror or other applications).xx
+ Comment[zh_CN]=这是可被其它应用程序重用的 KView 部分的配置(这意味着，这里的设置也会影响嵌入到 Konqueror 或其它应用程序中的 KView 部分)。
+ Weight=1
+ [Application]
+@@ -141,7 +139,6 @@
+ Name[ven]=Apulifikhesheni
+ Name[wa]=Programe
+ Name[xh]=Isicelo
+-Name[xx]=xxApplicationxx
+ Name[zh_CN]=应用程序
+ Name[zu]=Isicelo
+ Comment=Here you can set options that are special for the KView application when running stand-alone. What you change in here will not affect other applications.
+@@ -181,6 +178,5 @@
+ Comment[tg]=Танзимоти барномаи KView, ки ҷудо оғоз шуда буд. Ин танзимотҳо дигар барномаҳоро, ки дар он қисмати KView дохил мешавад дар бар намегирад.
+ Comment[tr]=Burada KView programı yanlız (standalone) çalışırken özel olan seçeneklerinizi belirleyebilirsiniz. Burada yaptığınız değişiklikler diğer programları etkilemeyecektir.
+ Comment[uk]=Тут Ви можете встановити значення параметрів для програми KView, коли вона виконується окремо. Зміни тут не будуть впливати на інші програми.
+-Comment[xx]=xxHere you can set options that are special for the KView application when running stand-alone. What you change in here will not affect other applications.xx
+ Comment[zh_CN]=您可在此设定 KView 应用程序以独立形式运行时的特殊选项。您在此所在的更改不会影响其它应用程序。
+ Weight=5
+Index: kview/kviewviewer/kviewviewer.desktop
+===================================================================
+--- kview/kviewviewer/kviewviewer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/kviewviewer/kviewviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -32,7 +32,7 @@
+ Comment[nn]=Biletvisardel for KDE
+ Comment[nso]=Seripa sa Molebeledi wa Ponagalo sa KDE
+ Comment[pa]=KDE ਚਿੱਤਰ ਦਰਸ਼ਕ ਭਾਗ
+-Comment[pl]=Składnik do przeglądarka obrazów KDE
++Comment[pl]=Składnik do przeglądarka obrazków KDE
+ Comment[pt]=Componente de Visualização de Imagens do KDE
+ Comment[pt_BR]=Parte do Visualizador de Imagens do KDE
+ Comment[ro]=Componentă KDE de vizualizare imagini
+@@ -49,7 +49,6 @@
+ Comment[uk]=Складова KDE переглядача зображень
+ Comment[ven]=Tshipida tsha muvhoni wa tshifanyiso tsha KDE
+ Comment[xh]=Iqhekeza Lombonisi Womfanekiso we KDE
+-Comment[xx]=xxKDE Image Viewer Partxx
+ Comment[zh_CN]=KDE 图像查看器组件
+ Comment[zh_TW]=KDE 影像檢視器組件
+ Comment[zu]=Ingxenye Yombukisi Wesithombe se-KDE
+@@ -96,7 +95,6 @@
+ Name[tr]=KView Resim Görüntüleyici
+ Name[uk]=Переглядач зображень KView
+ Name[wa]=KView Håyneu d' imådjes
+-Name[xx]=xxKView Image Viewerxx
+ Name[zh_CN]=KView 图像查看器
+ ServiceTypes=KImageViewer/Viewer,KParts/ReadWritePart,Browser/View
+ InitialPreference=3
+Index: kview/kviewviewer/config/kviewviewerpluginsconfig.desktop
+===================================================================
+--- kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -56,7 +56,6 @@
+ Name[uk]=Втулки
+ Name[uz]=Плагинлар
+ Name[wa]=Tchôke-divins
+-Name[xx]=xxPluginsxx
+ Name[zh_CN]=插件
+ Comment=Choose and Configure Your Plugins
+ Comment[bg]=Избор и конфигуриране на приставки
+@@ -92,5 +91,4 @@
+ Comment[tr]=Eklentilerinizi Seçin ve Yapılandırın:
+ Comment[uk]=Виберіть та налаштуйте ваші втулки
+ Comment[uz]=Плагинларни танлаш ва мослаш
+-Comment[xx]=xxChoose and Configure Your Pluginsxx
+ Comment[zh_CN]=选择并配置您的插件
+Index: kview/modules/effects/kvieweffects.desktop
+===================================================================
+--- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -54,7 +54,6 @@
+ Name[uk]=Ефекти
+ Name[uz]=Эффектлар
+ Name[wa]=Efets
+-Name[xx]=xxEffectsxx
+ Name[zh_CN]=特效
+ Comment=Provides some image effects
+ Comment[ar]=يقدم بعض مؤثرات الصور
+@@ -96,5 +95,4 @@
+ Comment[tr]=Resim efektleri oluşturur
+ Comment[uk]=Надає деякі ефекти зображень
+ Comment[uz]=Расм эффектлари
+-Comment[xx]=xxProvides some image effectsxx
+ Comment[zh_CN]=提供某些图像特效
+Index: kview/modules/browser/kviewbrowser.desktop
+===================================================================
+--- kview/modules/browser/kviewbrowser.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/modules/browser/kviewbrowser.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -61,7 +61,6 @@
+ Name[ven]=Burausa
+ Name[wa]=Foyteuse
+ Name[xh]=Umkhangeli wencwadi
+-Name[xx]=xxBrowserxx
+ Name[zh_CN]=浏览器
+ Name[zh_TW]=瀏覽器
+ Name[zu]=Umcingi
+@@ -110,7 +109,6 @@
+ Comment[ven]=Ini konisa u tshimbidza kha zwifanyiso zwothe kha tsumbavhulwo ya zwino.
+ Comment[wa]=Vos permete di foyter dins totes les imådjes do ridant do moumint.
+ Comment[xh]=Ikuvumela ukuba ukwazi ukukhangela yonke imifanekiso kulawulo lwangoku.
+-Comment[xx]=xxEnables you to browse through all of the images in the current directory.xx
+ Comment[zh_CN]=使您能够浏览当前目录中的所有图像。
+ Comment[zh_TW]=讓您瀏覽目前目錄的所有影像。
+ Comment[zu]=Ikuvumela ukuba ucinge ngokwedlulela izithombe ohlwini lwamafayela lwamanje.
+Index: kview/modules/presenter/config/kviewpresenterconfig.desktop
+===================================================================
+--- kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -51,7 +51,6 @@
+ Name[uk]=Назва
+ Name[uz]=Номи
+ Name[wa]=No
+-Name[xx]=xxNamexx
+ Name[zh_CN]=名称
+ Comment=Comment
+ Comment[ar]=تعليق
+@@ -97,5 +96,4 @@
+ Comment[uk]=Коментар
+ Comment[uz]=Изоҳ
+ Comment[wa]=Rawete
+-Comment[xx]=xxCommentxx
+ Comment[zh_CN]=注释
+Index: kview/modules/presenter/kviewpresenter.desktop
+===================================================================
+--- kview/modules/presenter/kviewpresenter.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/modules/presenter/kviewpresenter.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -53,7 +53,6 @@
+ Name[tr]=Sunum Aracı
+ Name[ven]=Mulanguli
+ Name[xh]=Umbonisi
+-Name[xx]=xxPresenterxx
+ Name[zh_CN]=演示板
+ Name[zh_TW]=簡報
+ Name[zu]=Umnikeli
+@@ -101,7 +100,6 @@
+ Comment[uk]=Створює список зображень та дозволяє створювати презентацію слайдів
+ Comment[ven]=Iita mutevhe wa tshifanyiso ya dovha yani tendela uita tsumbedzo ya tshilaidi
+ Comment[xh]=Yenza uluhlu lwemifanekiso ekuvumela ukwazi ukwenza umboniso wotyibiliko
+-Comment[xx]=xxCreates an imagelist and enables you to create a slideshowxx
+ Comment[zh_CN]=创建图像列表，并能为您创建幻灯片
+ Comment[zh_TW]=建立影像清單並讓您能建立幻燈片式放映
+ Comment[zu]=Idala uhlu lwesithombe futhi ikuvumela wena ukuba udale umbukiso wesithombe esishibilikayo
 Index: kview/modules/scale/kview_scale.desktop
 ===================================================================
---- kview/modules/scale/kview_scale.desktop	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kview/modules/scale/kview_scale.desktop	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -3,6 +3,7 @@
- Name[af]=Skaal
- Name[ar]=تكبير أو تصغير
- Name[bg]=Мащабиране
-+Name[br]=Skeulaet
- Name[bs]=Skaliraj
- Name[ca]=Escala
- Name[cs]=Změna měřítka
-Index: kolourpaint/NEWS
+--- kview/modules/scale/kview_scale.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/modules/scale/kview_scale.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -49,7 +49,6 @@
+ Name[ven]=Tshikeili
+ Name[wa]=Al schåle
+ Name[xh]=Isikali
+-Name[xx]=xxScalexx
+ Name[zh_CN]=缩放
+ Name[zh_TW]=縮放
+ Name[zu]=Isikali
+@@ -83,7 +82,7 @@
+ Comment[nl]=Filter om de afbeelding te schalen
+ Comment[nn]=Filter for skalering av biletet
+ Comment[nso]=Sesekodi sago kala ponagalo
+-Comment[pl]=Filtr do przeskalowywania obrazow
++Comment[pl]=Filtr do skalowania obrazków
+ Comment[pt]=Um filtro para escalar a imagem
+ Comment[pt_BR]=Filtro para escalar a imagem
+ Comment[ro]=Filtru de scalat imaginea
+@@ -101,7 +100,6 @@
+ Comment[ven]=Faela yau kala tshifanyiso
+ Comment[wa]=Passete po mete l' imådje al schåle
+ Comment[xh]=Icebo lokucoca ulwelo lokukala umfanekiso
+-Comment[xx]=xxFilter to scale the imagexx
+ Comment[zh_CN]=缩放图像的滤镜
+ Comment[zh_TW]=用來縮放影像的濾鏡
+ Comment[zu]=Hluza isithombe esikaleni
+Index: kview/modules/scanner/kviewscanner.desktop
 ===================================================================
---- kolourpaint/NEWS	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kolourpaint/NEWS	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -32,15 +32,15 @@
- 
- KolourPaint 1.4_light (Frozen 2005-02-22)
-    * Antialias text when the text box has a transparent background (Bug #24)
--     [also in branches/KDE/3.3/, branches/kolourpaint/1.2_kde3/]
-+     [later backported to branches/KDE/3.3/, branches/kolourpaint/1.2_kde3/]
-    * Add Unzoomed Thumbnail Mode and Thumbnail Rectangle
-    * Add RMB context menu for when a selection tool is active (closing KDE
-      Bug #92882)
-    * More intuitive "Set as Image" behaviour (esp. with selection borders).
-      Thanks to Michael Lake for the feedback.
--     [also in branches/KDE/3.3/, branches/kolourpaint/1.2_kde3/]
-+     [later backported to branches/KDE/3.3/, branches/kolourpaint/1.2_kde3/]
-    * InputMethod support
--     [also in branches/kolourpaint/1.2_kde3/]
-+     [later backported to branches/kolourpaint/1.2_kde3/]
-    * Save "More Effects" dialog's last effect to config file
-    * Save "Resize / Scale" dialog's last "Keep aspect ratio" setting to
-      config file
-Index: kolourpaint/kpmainwindow_view.cpp
+--- kview/modules/scanner/kviewscanner.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/modules/scanner/kviewscanner.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -59,7 +59,6 @@
+ Name[ven]=Tshinanguludzi
+ Name[wa]=Sicanrece
+ Name[xh]=Umvavanyi
+-Name[xx]=xxScannerxx
+ Name[zh_CN]=扫描仪
+ Name[zh_TW]=掃描器
+ Name[zu]=Umhloli
+@@ -91,7 +90,7 @@
+ Comment[nl]=Scan afbeeldingen rechtstreeks in KView
+ Comment[nn]=Opnar bilete frå skannaren i KView
+ Comment[nso]=Bula diponagalo gotswa go selebeledi sa gago goya kago KView
+-Comment[pl]=Otwiera obrazy ze skanera w przeglądarce KView
++Comment[pl]=Otwiera obrazki ze skanera w przeglądarce KView
+ Comment[pt]=Abrir as imagens do seu 'scanner' no KView
+ Comment[pt_BR]=Abre imagens do seu digitalizador no KVisualização
+ Comment[ro]=Deschide imagini din scaner în KView
+@@ -109,7 +108,6 @@
+ Comment[ven]=Vulani zwifanyiso ubva kha tshinanguludzi uya kha mbonalelo ya K
+ Comment[wa]=Drovi des imådjes di vosse sicanrece avou KView
+ Comment[xh]=Vula imifanekiso evela kumvavanyisi wakho kwi KView
+-Comment[xx]=xxOpen images from your scanner into KViewxx
+ Comment[zh_CN]=从您的扫描仪中打开图像至 KView
+ Comment[zh_TW]=從您的掃描器開啟影像至 KView
+ Comment[zu]=Vula izithombe ezisuka kumhloli wakho kwi-KView
+Index: kview/modules/template/kviewtemplate.desktop
 ===================================================================
---- kolourpaint/kpmainwindow_view.cpp	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kolourpaint/kpmainwindow_view.cpp	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -183,7 +183,9 @@
-         items << zoomLevelToString (*it);
-     }
- 
--    // SYNC: work around a KDE bug - KSelectAction::setItems() enables the action
-+    // Work around a KDE bug - KSelectAction::setItems() enables the action.
-+    // David Faure said it won't be fixed because it's a feature used by
-+    // KRecentFilesAction.
-     bool e = m_actionZoom->isEnabled ();
-     m_actionZoom->setItems (items);
-     if (e != m_actionZoom->isEnabled ())
-Index: kolourpaint/README
+--- kview/modules/template/kviewtemplate.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kview/modules/template/kviewtemplate.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -59,7 +59,6 @@
+ Name[uk]=Шаблон
+ Name[uz]=Намуна
+ Name[wa]=Modele
+-Name[xx]=xxTemplatexx
+ Name[zh_CN]=模板
+ Name[zh_TW]=範本
+ Name[zu]=i-template
+@@ -110,7 +109,6 @@
+ Comment[ven]=Thalutshedzo khulwane ya ine plugin ya ita zwone
+ Comment[wa]=On discrijhaedje pus complet di çou k' est fwait på tchôke-divins
+ Comment[xh]=Inkcazelo ende echaza ukuba iplagi ezingaphakathi zenza ntoni na
+-Comment[xx]=xxA longer description of what the plugin doesxx
+ Comment[zh_CN]=这里应该填写插件功能详细一点的描述
+ Comment[zh_TW]=關於這個外掛程式的所做所為的較長描述
+ Comment[zu]=incazelo ende yokuthi i-plugin yenzani
+Index: libkscan/scanservice.desktop
 ===================================================================
---- kolourpaint/README	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kolourpaint/README	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -6,10 +6,9 @@
- 
- 
- For licensing and warranty information, read COPYING.
--For installation instructions, read INSTALL (but not with KDE releases).
- For known problems with this release of KolourPaint, read BUGS.
- For what changes have been made, read NEWS.
--For information on what features are planned or unfinished, read TODO.
-+For developer information, checkout branches/kolourpaint/control/.
- For general information, read this file (README):
- 
- 
-Index: Makefile.cvs
+--- libkscan/scanservice.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ libkscan/scanservice.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -55,7 +55,6 @@
+ Name[ven]=Tshishumiswa tshau naga tsha KDE
+ Name[wa]=Siervice di scanaedje di KDE
+ Name[xh]=Inkonzo yemita yovavanyo ye KDE
+-Name[xx]=xxKDE Scan Servicexx
+ Name[zh_CN]=KDE 扫描服务
+ Name[zh_TW]=KDE 掃描服務
+ Name[zu]=Umsebenzi Lokuhlola lwe-KDE
+Index: kpovmodeler/pmshell.cpp
 ===================================================================
---- Makefile.cvs	(.../tags/KDE/3.4.2/kdegraphics)	(revision 0)
-+++ Makefile.cvs	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -0,0 +1,16 @@
-+
-+all: 
-+	@echo "This Makefile is only for the CVS repository"
-+	@echo "This will be deleted before making the distribution"
-+	@echo ""
-+	@if test ! -d admin; then \
-+	   echo "Please recheckout this module!" ;\
-+	   echo "for cvs: use checkout once and after that update again" ;\
-+	   echo "for cvsup: checkout kde-common from cvsup and" ;\
-+	   echo "   link kde-common/admin to ./admin" ;\
-+	   exit 1 ;\
-+	fi
-+	$(MAKE) -f admin/Makefile.common cvs
-+
-+.SILENT:
-+
-
-Property changes on: Makefile.cvs
-___________________________________________________________________
-Name: svn:keywords
-   + Author Date Id Revision
-
-Index: kviewshell/centeringScrollview.h
+--- kpovmodeler/pmshell.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpovmodeler/pmshell.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -641,7 +641,7 @@
+ 
+ bool PMShell::overwriteURL( const KURL& u )
+ {
+-   int query = KMessageBox::Yes;
++   int query = KMessageBox::Continue;
+ 
+    if( u.isLocalFile( ) )
+    {
+Index: kpovmodeler/kpovmodeler.desktop
 ===================================================================
---- kviewshell/centeringScrollview.h	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kviewshell/centeringScrollview.h	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -129,10 +129,6 @@
+--- kpovmodeler/kpovmodeler.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kpovmodeler/kpovmodeler.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -9,7 +9,6 @@
+ Name[nb]=KPov-modellerer
+ Name[nn]=KPov-modellering
+ Name[sv]=Kpovmodeler
+-Name[xx]=xxKPovModelerxx
+ GenericName=Povray Modeler
+ GenericName[ca]=Modelador Povray
+ GenericName[cs]=Modelář Povray
+@@ -40,7 +39,6 @@
+ GenericName[sv]=Modellering med Povray
+ GenericName[ta]=பாவ்ரே மாடுல்லர்
+ GenericName[tr]=Povray Modelleyici
+-GenericName[xx]=xxPovray Modelerxx
+ GenericName[zh_CN]=Povray 建模器
+ Path=
+ ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart,Browser/View,KPovModeler/Document
+Index: kgamma/kcmkgamma/kgamma.desktop
+===================================================================
+--- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -37,13 +37,13 @@
+ Comment[tg]=Утилита барои калибратсия кардани монитор
+ Comment[tr]=Monitör kalibrasyon aracı
+ Comment[uk]=Засіб для калібрування монітора
+-Comment[xx]=xxA monitor calibration toolxx
+ Comment[zh_CN]=监视器校准工具
  
-     QPtrVector<QWidget> widgetListIfOldAddChildIsUsed;
+ Name=Gamma
+ Name[ar]=غاما
+ Name[az]=Qamma
+ Name[bg]=Гама
++Name[cs]=Gama
+ Name[cy]=Gama
+ Name[el]=Γάμμα
+ Name[eo]=Gamo
+@@ -63,14 +63,13 @@
+ Name[uk]=Гама
+ Name[uz]=Гамма
+ Name[xh]=Unobumba wesithathu konoobumba besiGrike
+-Name[xx]=xxGammaxx
  
--    /** This is set in slotShowScrollbars() to remember the status of the
--        scrollbars when we switch from fullscreen mode back to normal mode. */
--    bool showScrollBars;
+ DocPath=kgamma
+ Exec=kcmshell kgamma
+ Icon=kgamma
+ Keywords=KGamma, kgamma, Gamma, gamma
+ Keywords[bg]=калибриране, гама, яркост, цвят, монитор, екран, KGamma, kgamma, Gamma, gamma
+-Keywords[cs]=KGamma, kgamma, gamma
++Keywords[cs]=KGamma, kgamma, gama
+ Keywords[de]=KGamma,kgamma,Gamma,gamma
+ Keywords[el]=KGamma, kgamma, Γάμμα, γάμμα
+ Keywords[ga]=KGamma, kgamma, Gamma, gamma, Gáma
+@@ -96,7 +95,6 @@
+ Keywords[uk]=KGamma, kgamma, Gamma, gamma, гама, яскравість
+ Keywords[uz]=KGamma, kgamma, Гамма, гамма
+ Keywords[wa]=KGamma, kgamma, Gama, gama
+-Keywords[xx]=xxKGamma, kgamma, Gamma, gammaxx
+ Keywords[zh_CN]=KGamma, kgamma, Gamma, gamma,伽玛
+ Type=Application
+ X-KDE-Init=kgamma
+Index: kdvi/kdvi_multipage.cpp
+===================================================================
+--- kdvi/kdvi_multipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kdvi/kdvi_multipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -77,7 +77,6 @@
+ 
+   setXMLFile("kdvi_part.rc");
+ 
+-  readSettings();
+   preferencesChanged();
+ 
+   enableActions(false);
+@@ -93,7 +92,6 @@
+   delete exportPSAction;
+   delete exportPDFAction;
+ 
+-  writeSettings();
+   Prefs::writeConfig();
+ }
+ 
+Index: kdvi/special.cpp
+===================================================================
+--- kdvi/special.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kdvi/special.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -326,17 +326,17 @@
+   // course, this does not work if the filename contains spaces
+   // (already the simplifyWhiteSpace() above is wrong). If you have
+   // files like this, go away.
+-  QString EPSfilename = include_command;
+-  EPSfilename.truncate(EPSfilename.find(' '));
++  QString EPSfilename_orig = include_command;
++  EPSfilename_orig.truncate(EPSfilename_orig.find(' '));
+ 
+   // Strip enclosing quotation marks which are included by some LaTeX
+   // macro packages (but not by others). This probably means that
+   // graphic files are no longer found if the filename really does
+   // contain quotes, but we don't really care that much.
+-  if ((EPSfilename.at(0) == '\"') && (EPSfilename.at(EPSfilename.length()-1) == '\"')) {
+-    EPSfilename = EPSfilename.mid(1,EPSfilename.length()-2);
++  if ((EPSfilename_orig.at(0) == '\"') && (EPSfilename_orig.at(EPSfilename_orig.length()-1) == '\"')) {
++    EPSfilename_orig = EPSfilename_orig.mid(1,EPSfilename_orig.length()-2);
+   }
+-  EPSfilename = ghostscript_interface::locateEPSfile(EPSfilename, baseURL);
++  QString EPSfilename = ghostscript_interface::locateEPSfile(EPSfilename_orig, baseURL);
+   
+   // Now parse the arguments. 
+   int  llx     = 0; 
+@@ -425,11 +425,14 @@
+       foreGroundPainter->setBrush(Qt::red);
+     foreGroundPainter->setPen(Qt::black);
+     foreGroundPainter->drawRoundRect(bbox, 2, 2);
++    QFont f = foreGroundPainter->font();
++    f.setPointSize(8);
++    foreGroundPainter->setFont(f);
+     if (QFile::exists(EPSfilename))
+-      foreGroundPainter->drawText (bbox, (int)(Qt::AlignCenter), EPSfilename, -1);
++      foreGroundPainter->drawText (bbox, (int)(Qt::AlignCenter), EPSfilename_orig, -1);
+     else
+       foreGroundPainter->drawText (bbox, (int)(Qt::AlignCenter), 
+-				i18n("File not found: \n %1").arg(EPSfilename), -1);
++				i18n("File not found: \n %1").arg(EPSfilename_orig), -1);
+     foreGroundPainter->restore();
+   }
+   
+Index: kdvi/kdvi.desktop
+===================================================================
+--- kdvi/kdvi.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kdvi/kdvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -59,7 +59,6 @@
+ GenericName[ven]=Muvhoni wa DVI
+ GenericName[wa]=Håyneu di fitchîs DVI
+ GenericName[xh]=Umboniseli we DVI
+-GenericName[xx]=xxDVI Viewerxx
+ GenericName[zh_CN]=DVI 查看器
+ GenericName[zh_TW]=DVI 檢視器
+ GenericName[zu]=Umboniseli we DVI
+@@ -68,7 +67,6 @@
+ Name[ar]=برنامج KDVI
+ Name[eo]=DVI-rigardilo
+ Name[hi]=के-डीवीआई
+-Name[xx]=xxKDVIxx
+ MimeType=application/x-dvi;application/x-gzdvi;application/x-bz2dvi;
+ InitialPreference=6
+ Exec=kdvi %f -caption "%c" %i %m
+Index: kdvi/kdvimultipage.desktop
+===================================================================
+--- kdvi/kdvimultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kdvi/kdvimultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -1,7 +1,6 @@
+ [Desktop Entry]
+ Type=Service
+ Comment=DVI
+-Comment[xx]=xxDVIxx
+ Name=KDVIMultiPage
+ Name[es]=KDVIMultiPágina
+ Name[fr]=Multi-page KDVI
+@@ -12,7 +11,6 @@
+ Name[pt]=KDVIMultiPágina
+ Name[ro]=KDVI Pagini Multiple
+ Name[sv]=KDVI flera sidor
+-Name[xx]=xxKDVIMultiPagexx
+ ServiceTypes=KViewShell/MultiPage
+ X-KDE-Library=kdvipart
+ X-KDE-MimeTypes=application/x-dvi
+Index: kdvi/fontpool.cpp
+===================================================================
+--- kdvi/fontpool.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kdvi/fontpool.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -422,7 +422,7 @@
+ 	matchingFiles = fileNameList.grep(fn);
+ #endif
+       if (matchingFiles.isEmpty() == true)
+-	matchingFiles += fileNameList.grep(fontp->fontname);
++	matchingFiles += fileNameList.grep(fontp->fontname+".");
+       
+       if (matchingFiles.isEmpty() != true) {
+ #ifdef DEBUG_FONTPOOL
+Index: kdvi/psgs.cpp
+===================================================================
+--- kdvi/psgs.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kdvi/psgs.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -329,11 +329,11 @@
+   
+   // Otherwise, use kpsewhich to find the eps file.
+   QString EPSfilename;
 -
-     /** This int remembers the style of the frame of the centering
-         scrollview when fullscreen mode is switched on. It is then
-         restored when it is switched off. */
+   KProcIO proc;
+-  proc << "kpsewhich" << EPSfilename;
++  proc << "kpsewhich" << filename;
+   proc.start(KProcess::Block);
+   proc.readln(EPSfilename);
++
+   return EPSfilename.stripWhiteSpace();
+ }
+ 
+Index: kcoloredit/kcoloredit.desktop
+===================================================================
+--- kcoloredit/kcoloredit.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kcoloredit/kcoloredit.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -59,7 +59,6 @@
+ GenericName[uk]=Редактор палітри кольорів
+ GenericName[ven]=Musengulusi wa phalete ya muvhala
+ GenericName[wa]=Aspougneu del palete di coleurs
+-GenericName[xx]=xxColor Palette Editorxx
+ GenericName[zh_CN]=调色板编辑器
+ GenericName[zh_TW]=調色板編輯器
+ GenericName[zu]=Umhleli Wombala we Palette
+@@ -83,7 +82,6 @@
+ Name[tr]=K Renk Düzenleyici
+ Name[ven]=U sengulusa muvhala ha K
+ Name[xh]=Umhleli Wombala ye K
+-Name[xx]=xxKColorEditxx
+ Name[zh_TW]=顏色編輯程式
+ Name[zu]=Umhleli Wombala ka K
+ 
+Index: kcoloredit/kcolorchooser.desktop
+===================================================================
+--- kcoloredit/kcolorchooser.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kcoloredit/kcolorchooser.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -61,7 +61,6 @@
+ GenericName[ven]=Munangi wa Muvhala
+ GenericName[wa]=Tchoezixheu di coleurs
+ GenericName[xh]=Mkhethi Wombala
+-GenericName[xx]=xxColor Chooserxx
+ GenericName[zh_CN]=颜色选择程序
+ GenericName[zh_TW]=顏色選擇程式
+ GenericName[zu]=Umkhethi Wombala
+@@ -93,7 +92,6 @@
+ Name[uz]=Ранг танловчи
+ Name[ven]=Tshinangi tsha muvhala tsha K
+ Name[xh]=Umkhethi Wombala i K
+-Name[xx]=xxKColorChooserxx
+ Name[zh_TW]=顏色選擇程式
+ Name[zu]=Umkhethi Wombala ka K
+ 
+Index: kooka/kooka.desktop
+===================================================================
+--- kooka/kooka.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kooka/kooka.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -54,7 +54,6 @@
+ GenericName[ven]=U nanga & Mbekanyamushumo ya OCR
+ GenericName[wa]=Programe di scanaedje eyet di ricnoxhance di tecse
+ GenericName[xh]=Udweliso Lwenkqubo Yemita Yovavanyo
+-GenericName[xx]=xxScan & OCR Programxx
+ GenericName[zh_CN]=扫描和文字识别程序
+ GenericName[zh_TW]=掃描和文字辦識程式
+ GenericName[zu]=Scan & OCR Iprogremu
+@@ -66,7 +65,6 @@
+ Name[ko]=쿠카
+ Name[pa]=ਕੋਕਾ
+ Name[ta]=கூக்கா
+-Name[xx]=xxKookaxx
+ 
+ X-DCOP-ServiceType=Multi
+ Categories=Qt;KDE;Graphics;
+Index: kooka/kookaimage.cpp
+===================================================================
+--- kooka/kookaimage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kooka/kookaimage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -30,7 +30,7 @@
+ 
+ #include "kookaimage.h"
+ #include "config.h"
+-#ifdef HAVE_TIFF
++#ifdef HAVE_LIBTIFF
+ #include <tiffio.h>
+ #include <tiff.h>
+ #endif
+
+Property changes on: doc/kolourpaint/image_flatten.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+
+Property changes on: doc/kolourpaint/rotate_image_30.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+
+Property changes on: doc/kolourpaint/rotate_selection_30.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+
+Property changes on: doc/kolourpaint/image_soften_sharpen.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+
+Property changes on: doc/kolourpaint/image_balance.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+
+Property changes on: doc/kolourpaint/image_reduce_colors.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+
+Property changes on: doc/kolourpaint/image_invert.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+
+Property changes on: doc/kolourpaint/image_emboss.png
+___________________________________________________________________
+Name: svn:executable
+   - *
+
+Index: kuickshow/src/kuickshow.desktop
+===================================================================
+--- kuickshow/src/kuickshow.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kuickshow/src/kuickshow.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -12,7 +12,6 @@
+ Name[ta]=விரைவுகாட்சி
+ Name[th]=ดูภาพด่วน - K
+ Name[ven]=Musumbedzo wa kuick
+-Name[xx]=xxKuickshowxx
+ Name[zu]=I Kuickshow
+ Exec=kuickshow %i %m -caption "%c" %U
+ Icon=kuickshow
+@@ -78,7 +77,6 @@
+ GenericName[ven]=Tshivhoni tsha Mutaleli
+ GenericName[wa]=Håyneu d' imådjes
+ GenericName[xh]=Umboniseli Womfanekiso
+-GenericName[xx]=xxImage Viewerxx
+ GenericName[zh_CN]=图片查看程序
+ GenericName[zh_TW]=影像檢視程式
+ GenericName[zu]=Umbonisi Womfanekiso
+Index: kolourpaint/kolourpaint.desktop
+===================================================================
+--- kolourpaint/kolourpaint.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kolourpaint/kolourpaint.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -6,7 +6,6 @@
+ Name[pa]=ਕੇ-ਰੰਗ-ਪੇਂਟ
+ Name[sv]=Kolourpaint
+ Name[ta]=நிற பெயின்ட் 
+-Name[xx]=xxKolourPaintxx
+ GenericName=Paint Program
+ GenericName[af]=Verf Program
+ GenericName[ar]=برنامج تلوين
+@@ -63,7 +62,6 @@
+ GenericName[ven]=Mbekanyamushumo ya Pennde
+ GenericName[wa]=Program di dessinaedje
+ GenericName[xh]=Udweliso lwenkqubo lwepeyinti
+-GenericName[xx]=xxPaint Programxx
+ GenericName[zh_CN]=绘图程序
+ GenericName[zh_TW]=繪圖程式
+ GenericName[zu]=Elila Iprogremu Kapende
+Index: ksvg/core/ksvgrenderer.desktop
+===================================================================
+--- ksvg/core/ksvgrenderer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ ksvg/core/ksvgrenderer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -41,7 +41,6 @@
+ Comment[tg]=Лағжандаи тасовироти KSVG
+ Comment[tr]=KSVG Tarama Arkayüzü
+ Comment[uk]=Інтерфейс відтворення KSVG
+-Comment[xx]=xxKSVG Rendering Backendxx
+ Comment[zh_CN]=KSVG 渲染后端
+ 
+ [PropertyDef::X-KSVG-InternalName]
+Index: ksvg/plugin/ksvgplugin.desktop
+===================================================================
+--- ksvg/plugin/ksvgplugin.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ ksvg/plugin/ksvgplugin.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -18,7 +18,6 @@
+ Name[ta]=KSVGசொருகுப்பொருள்
+ Name[tr]=KSVG Eklentisi
+ Name[xh]=Iplagi efakiweyo ye KSVG
+-Name[xx]=xxKSVGPluginxx
+ Name[zu]=Iplagi efakiweyo ye KSVG
+ Icon=vectorgfx
+ MimeType=image/svg+xml
+@@ -69,7 +68,6 @@
+ Comment[uz]=SVG кўрувчи
+ Comment[ven]=Muvhono wa girafiki wa scalable vector
+ Comment[xh]=Umboniseli wemizobo olinganiselwayo onesalathiso
+-Comment[xx]=xxScalable Vector Graphics Viewerxx
+ Comment[zh_CN]=可缩放矢量图查看器
+ Comment[zu]=Umbonisi wemidwebo Onenani Elibalekayo
+ Type=Service
+Index: ksvg/plugin/backends/libart/ksvglibartcanvas.desktop
+===================================================================
+--- ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -40,7 +40,6 @@
+ Name[tg]=Лағжандаи тасовироти KSVG - Libart
+ Name[tr]=KSVG Derleme Aracı - Libart
+ Name[uk]=Інтерфейс відтворення KSVG - Libart
+-Name[xx]=xxKSVG Rendering Backend - Libartxx
+ Name[zh_CN]=KSVG 渲染后端 - Libart
+ Comment=Mature ksvg rendering backend
+ Comment[ar]=خلفية الرسم لksvg البالغة
+@@ -78,6 +77,5 @@
+ Comment[tg]=Лағжандаи тасовироти кӯҳнаи ksvg
+ Comment[tr]=Tamamlanmış ksvg derleme aracı
+ Comment[uk]=Стабільний інтерфейс відтворення KSVG
+-Comment[xx]=xxMature ksvg rendering backendxx
+ Comment[zh_CN]=稳定的 ksvg 渲染后端
+ author=Nikolas Zimmermann <wildfox@kde.org>
+Index: ksvg/plugin/backends/agg/ksvgaggcanvas.desktop
+===================================================================
+--- ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -41,7 +41,6 @@
+ Name[tg]=Лағжандаи тасовироти KSVG - геометрияи мутақобили гандумӣ
+ Name[tr]=KSVG Derleme Aracı - Taneciksiz Geometri
+ Name[uk]=Інтерфейс відтворення KSVG - AGG
+-Name[xx]=xxKSVG Rendering Backend - Anti Grain Geometryxx
+ Name[zh_CN]=KSVG 渲染后端 - 反增长几何形状
+ Comment=New, unstable ksvg rendering backend
+ Comment[ar]=خلفية الرسم ل ksvg الجديدة والغير مستقرة
+@@ -80,6 +79,5 @@
+ Comment[tg]=Лағжандаи ғайриустувори тасовироти ksvg-и нав
+ Comment[tr]=Yeni, stabil olmayan ksvg derleme aracı
+ Comment[uk]=Новий, нестабільний інтерфейс відтворення KSVG
+-Comment[xx]=xxNew, unstable ksvg rendering backendxx
+ Comment[zh_CN]=新的不稳定的 ksvg 渲染后端
+ author=Rob Buis <buis@kde.org>
+Index: ksvg/plugin/svgthumbnail.desktop
+===================================================================
+--- ksvg/plugin/svgthumbnail.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ ksvg/plugin/svgthumbnail.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -35,7 +35,6 @@
+ Name[uk]=Масштабовна векторна графіка
+ Name[ven]=Dzigirafiki ya vekitha ya Scalable
+ Name[xh]=Imizobo elinganiselwayo enesalathisi
+-Name[xx]=xxScalable Vector Graphicsxx
+ Name[zh_CN]=可缩放矢量图
+ Name[zu]=Imidwebo Enenani Elibalekayo
+ Icon=thumbnail
+Index: ksnapshot/ksnapshot.desktop
+===================================================================
+--- ksnapshot/ksnapshot.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ ksnapshot/ksnapshot.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -54,7 +54,6 @@
+ GenericName[ven]=Mbekanya mushumo ino gavha tshikirini
+ GenericName[wa]=Programe po fé des waitroûlêyes
+ GenericName[xh]=Iinkcazelo Ezigcina Ikhusi
+-GenericName[xx]=xxScreen Capture Programxx
+ GenericName[zh_CN]=屏幕截图程序
+ GenericName[zh_TW]=畫面擷取程式
+ GenericName[zu]=Iprogremu Yokubamba Isikrini
+@@ -71,7 +70,6 @@
+ Name[th]=จับภาพ - K
+ Name[ven]=Tshinepe tsha K
+ Name[wa]=KWaitroûlêye
+-Name[xx]=xxKSnapshotxx
+ Name[zh_TW]=KSnapshot 快照
+ Name[zu]=KEsincane isithombe
+ MimeType=
+Index: kviewshell/kmultipage.cpp
+===================================================================
+--- kviewshell/kmultipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/kmultipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -68,8 +68,10 @@
+   // Create MarkList
+   _markList = new MarkList(sideBar, "marklist");
+   sideBar->addItem(_markList, QIconSet(SmallIcon("thumbnail")), i18n("Thumbnails"));
+-  sideBar->setCurrentItem(_markList);
+ 
++  // Restore state of the sidebar
++  sideBar->setCurrentItem(sideBar->item(KVSPrefs::sideBarItem()));
++
+   splitterWidget->setResizeMode(sideBar, QSplitter::KeepSize);
+ 
+   connect(_markList, SIGNAL(selected(const PageNumber&)), this, SLOT(gotoPage(const PageNumber&)));
+@@ -101,15 +103,29 @@
+ 
+ KMultiPage::~KMultiPage()
+ {
+-  KVSPrefs::setGuiLayout(splitterWidget->sizes());
+-  KVSPrefs::writeConfig();
++  writeSettings();
++
+   if (timer_id != -1)
+     killTimer(timer_id);
+ 
+   delete pageCache;
+ }
+ 
++void KMultiPage::readSettings()
++{
++}
+ 
++void KMultiPage::writeSettings()
++{
++  // Save TOC layout
++  tableOfContents->writeSettings();
++
++  KVSPrefs::setGuiLayout(splitterWidget->sizes());
++  // Save state of the sidebar
++  KVSPrefs::setSideBarItem(sideBar->indexOf(sideBar->currentItem()));
++  KVSPrefs::writeConfig();
++}
++
+ QString KMultiPage::name_of_current_file()
+ {
+   return m_file;
+Index: kviewshell/kviewshell.kcfg
+===================================================================
+--- kviewshell/kviewshell.kcfg	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/kviewshell.kcfg	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -72,6 +72,9 @@
+     </whatsthis>
+   </entry>
+   <entry key="GuiLayout" type="IntList" />
++  <entry key="SideBarItem" type="Int">
++    <default>1</default>
++  </entry>
+  </group>
+  <group name="Accessibility" >
+    <entry key="PaperColor" type="Color" >
+Index: kviewshell/kmultipage.desktop
+===================================================================
+--- kviewshell/kmultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/kmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -22,7 +22,6 @@
+ Name[sv]=Kviewshell flera sidor
+ Name[ta]=கேகாட்சிஓடு பலபக்கம்
+ Name[tr]=KViewShell ÇokluSayfa
+-Name[xx]=xxKViewShell MultiPagexx
+ Name[zh_CN]=KViewShell 多页
+ 
+ [PropertyDef::X-KDE-MimeTypes]
+Index: kviewshell/plugins/djvu/djvurenderer.cpp
+===================================================================
+--- kviewshell/plugins/djvu/djvurenderer.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/plugins/djvu/djvurenderer.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -663,7 +663,15 @@
+   }
+   
+   QMutexLocker locker( &mutex );
+- 
++  
++  G_TRY {
++    document->save_as(GURL::Filename::UTF8(filename.ascii()), true);
++  }
++  G_CATCH(ex) {
++    return false;
++  }
++  G_ENDCATCH;
++
+   document->save_as(GURL::Filename::UTF8(filename.ascii()), true);
+   
+   if (QFile::exists(filename) == false)
+Index: kviewshell/plugins/djvu/djvumultipage.desktop
+===================================================================
+--- kviewshell/plugins/djvu/djvumultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/plugins/djvu/djvumultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -1,9 +1,9 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Name=kdjview
++Name[hu]=KDjView
+ Name[ja]=Kdjview
+ Name[sv]=Kdjview
+-Name[xx]=xxkdjviewxx
+ Name[zh_CN]=KDjView
+ Icon=kdjview
+ Type=Service
+@@ -16,7 +16,9 @@
+ Comment[de]=Ein KViewShell-Modul für DjVu-Dateien
+ Comment[es]=Extensión KViewShell para archivos DjVu
+ Comment[et]=KView DjVu-failide plugin
++Comment[eu]=DjVu fitxategien KViewShell-en plugina
+ Comment[fr]=Module KViewShell pour les fichiers DjVu
++Comment[hu]=KViewShell-modul DjVu-fájlokhoz
+ Comment[is]=KViewShell íforrit fyrir DjVu skrár
+ Comment[it]=Plugin KViewShell per file DjVu
+ Comment[ja]=DjVu ファイル用の KViewShell プラグイン
+@@ -32,7 +34,6 @@
+ Comment[sv]=Kviewshell-insticksprogram för DjVu-filer
+ Comment[tr]=DjVu dosyaları için KViewShell eklentisi
+ Comment[uk]=Втулок перегляду файлів DjVu для KViewShell
+-Comment[xx]=xxKViewShell plugin for DjVu filesxx
+ Comment[zh_CN]=DjVu 文件的 KViewShell 插件
+ ServiceTypes=KViewShell/MultiPage
+ X-KDE-MimeTypes=image/x-djvu
+Index: kviewshell/kmultipage.h
+===================================================================
+--- kviewshell/kmultipage.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/kmultipage.h	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -227,11 +227,11 @@
+    has actually been used. A default implementation is provided. */
+   virtual double setZoom(double z);
+   
+-  /* reads in settings */
+-  virtual void readSettings() {}
++  /** reads in settings. Reimplementations must call this. */
++  virtual void readSettings();
+   
+-  /* writes settings */
+-  virtual void writeSettings() {}
++  /** writes settings. Reimplementations must call this. */
++  virtual void writeSettings();
+   
+   /** Flag to indicate that this implementation has support for textserach and selection */
+   virtual bool supportsTextSearch() const { return getRenderer() && getRenderer()->supportsTextSearch(); }
+Index: kviewshell/tableOfContents.cpp
+===================================================================
+--- kviewshell/tableOfContents.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/tableOfContents.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -25,6 +25,7 @@
+ 
+ #include "tableOfContents.h"
+ #include "bookmark.h"
++#include "kvsprefs.h"
+ 
+ 
+ TocItem::TocItem(TocItem* parent)
+@@ -48,14 +49,30 @@
+   setRootIsDecorated(true);
+   setSelectionMode(QListView::NoSelection);
+   setResizeMode(AllColumns);
++  setColumnWidthMode(0, Manual);
++  setColumnWidthMode(1, Manual);
++  setFullWidth(true);
+ 
++  readSettings();
++
+   connect(this, SIGNAL(executed(QListViewItem*)), this, SLOT(itemClicked(QListViewItem*)));
+ }
+ 
+ TableOfContents::~TableOfContents()
+ {
++  writeSettings();
+ }
+ 
++void TableOfContents::writeSettings()
++{
++  saveLayout(KVSPrefs::self()->config(), "tocLayout");
++}
++
++void TableOfContents::readSettings()
++{
++  restoreLayout(KVSPrefs::self()->config(), "tocLayout");
++}
++
+ void TableOfContents::setContents(const QPtrList<Bookmark>& bookmarks)
+ {
+   clear();
+Index: kviewshell/emptymultipage.desktop
+===================================================================
+--- kviewshell/emptymultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/emptymultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -1,7 +1,6 @@
+ [Desktop Entry]
+ Type=Service
+ Comment=
+-Comment[xx]=xxxx
+ Name=EmptyMultiPage
+ Name[de]=Leere Mehrfachseite
+ Name[es]=Vaciado multipágina
+@@ -18,7 +17,6 @@
+ Name[sv]=Tom flera sidor
+ Name[ta]=காலியான பலபக்கம்
+ Name[tr]=BoşÇokluSayfa
+-Name[xx]=xxEmptyMultiPagexx
+ ServiceTypes=KViewShell/MultiPage
+ X-KDE-Library=emptymultipagepart
+ X-KDE-EmptyMultiPage=1
+Index: kviewshell/tableOfContents.h
+===================================================================
+--- kviewshell/tableOfContents.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/tableOfContents.h	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -53,6 +53,9 @@
+ 
+   void setContents(const QPtrList<Bookmark>& bookmarks);
+ 
++  void writeSettings();
++  void readSettings();
++
+ signals:
+   void gotoPage(const Anchor&);
+ 
+Index: kviewshell/pageView.cpp
+===================================================================
+--- kviewshell/pageView.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/pageView.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -49,7 +49,7 @@
+   setDragAutoScroll(false);
+ 
+   enableClipper(true);
+-  nrCols = 2;
++  nrCols = 1;
+   nrRows = 1;
+   continuousViewmode = true;
+   fullScreen = false;
 Index: kviewshell/kviewpart.cpp
 ===================================================================
---- kviewshell/kviewpart.cpp	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kviewshell/kviewpart.cpp	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -453,7 +453,10 @@
-     kdError(4300) << "KViewPart::slotSetFullPage() called without existing multipage" << endl;
- 
-   if (fullpage == false)
-+  {
-     slotShowSidebar();
-+    multiPage->slotShowScrollbars(scrollbarHandling->isChecked());
-+  }
- }
- 
- 
-@@ -958,6 +961,8 @@
-   _zoomVal.setZoomValue(sval);
-   if (fval != _zoomVal.value())
-     _zoomVal.setZoomValue(multiPage->setZoom(_zoomVal.value()));
+--- kviewshell/kviewpart.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kviewshell/kviewpart.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -1349,14 +1349,19 @@
+   // not need to take any action here, because this method is called
+   // only in the constructor of the KViewPart when no document is loaded.
+   useDocumentSpecifiedSize->setChecked(KVSPrefs::useDocumentSpecifiedSize());
 +
-+  mainWidget->setFocus(); 
++  multiPage->readSettings();
  }
  
  
-Index: kviewshell/centeringScrollview.cpp
+ void KViewPart::writeSettings()
+ {
+   // if loading the KPart failed - just exit now
+-  if (!showSidebar)
+-    return;
++  //if (!showSidebar)
++  //  return;
++
++  multiPage->writeSettings();
++
+   KVSPrefs::setPageMarks(showSidebar->isChecked());
+   KVSPrefs::setWatchFile(watchAct->isChecked());
+   KVSPrefs::setZoom(_zoomVal.value());
+Index: kmrml/kmrml/mrml.desktop
 ===================================================================
---- kviewshell/centeringScrollview.cpp	(.../tags/KDE/3.4.2/kdegraphics)	(revision 442272)
-+++ kviewshell/centeringScrollview.cpp	(.../branches/KDE/3.4/kdegraphics)	(revision 442272)
-@@ -236,11 +236,6 @@
-     setVScrollBarMode(QScrollView::AlwaysOff);
-     setHScrollBarMode(QScrollView::AlwaysOff);
-   }
--
--  // Remember the state of the scrollbars so that we can restore
--  // scrollbar visibility when we switch back from fullscreen mode to
--  // normal mode
--  showScrollBars = status;
- }
- 
- void CenteringScrollview::setFullScreenMode(bool fullScreen)
-@@ -261,7 +256,6 @@
-   else
-   {
-     viewport()->setPaletteBackgroundColor( backgroundColor ) ;
--    slotShowScrollbars(showScrollBars);
-     setFrameStyle(oldFrameStyle);
-   }
- }
+--- kmrml/kmrml/mrml.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kmrml/kmrml/mrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -42,7 +42,6 @@
+ Comment[uk]=Документ формату зберігання мультимедія
+ Comment[ven]=Manwalwa a luambo lwau humbula zwa khasho nnzhi
+ Comment[xh]=Uxwebhu Lolwimi Lophawulo phezulu Lokufumana i Multimedia
+-Comment[xx]=xxMultimedia Retrieval Markup Language Documentxx
+ Comment[zh_CN]=多媒体检索标记语言文档
+ Comment[zh_TW]=多媒體補償標記語言文件
+ Comment[zu]=Ushicilelo Lwe-Multimedia Retrieval Markup Language 
+Index: kmrml/kmrml/kcontrol/kcmkmrml.desktop
+===================================================================
+--- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -55,7 +55,6 @@
+ Name[ven]=Index ya tshifanyiso
+ Name[wa]=Indecse des imådjes
+ Name[xh]=Isalathisi Somfanekiso
+-Name[xx]=xxImage Indexxx
+ Name[zh_CN]=图像索引
+ Name[zh_TW]=影像索引
+ Name[zu]=Isiqalo Sesithombe
+@@ -86,7 +85,7 @@
+ Comment[nb]=Tilpass GNU bildesøkingsverktøy
+ Comment[nl]=Configuratie voor het gebruik van de GNU Image Finding Tool
+ Comment[nn]=Oppsett av GNU Image Finding Tool
+-Comment[pl]=Konfiguracja Gifta (narzędzia do szukania obrazów GNU)
++Comment[pl]=Konfiguracja Gifta (narzędzia do szukania obrazków GNU)
+ Comment[pt]=Configuração da Ferramenta de Procura de Imagens da GNU
+ Comment[pt_BR]=Configuração para o uso da Ferramenta de Procura de Imagens GNU
+ Comment[ro]=Configurare pentru GNU Image Finding Tool
+@@ -104,7 +103,6 @@
+ Comment[ven]=Nzudzanyo yau shumisa tshishumiswa tshau toda tshifanyiso tsha GNU
+ Comment[wa]=Apontiaedje po-z eployî l' usteye di cweraedje d' imådjes di GNU
+ Comment[xh]=Uqwalaselo lokusebenzisa Isixhobo Sokufumana Umfanekiso we GNU
+-Comment[xx]=xxConfiguration for using the GNU Image Finding Toolxx
+ Comment[zh_CN]=使用 GNU 图像查找工具的配置
+ Comment[zh_TW]= GNU 影像搜尋工具組態
+ Comment[zu]=Inhlanganiselo yokusebenzisa Ithuluzi Lokuthola Isithombe se-GNU
+@@ -135,7 +133,7 @@
+ Keywords[nl]=illustraties,figuren,figuur,afbeeldingen,plaatjes,zoeken,find,gift,kmrml,mrml,CBIR,images
+ Keywords[nn]=bilete,søk,spørjing,finn,gåve,kmrml,mrml,CBIR
+ Keywords[nso]=Diponagalo,Nyaka,Kgokgonego,Hwetsa,Mpho,kmrml,mrml,CBIR
+-Keywords[pl]=Obrazy,Szukanie,Zapytanie,Szukaj,Gift,kmrml,mrml,CBIR
++Keywords[pl]=Obrazki,Szukanie,Zapytanie,Szukaj,Gift,kmrml,mrml,CBIR
+ Keywords[pt]=Imagens,Procurar,Pesquisar,Encontrar,Prenda,kmrml,mrml,CBIR
+ Keywords[pt_BR]=Imagens,Busca,Consulta,Procurar,Presente,kmrml,mrml,CBIR
+ Keywords[ro]=imagini,căutare,caută,interogare,găseşte,dar,kmrml,mrml,CBIR
+@@ -152,7 +150,6 @@
+ Keywords[ven]=Zwifanyiso,Toda,Mbudziso,Wana,Mpho,kmrml,mrml,CBIR
+ Keywords[wa]=Imådjes,Cweri,Cweraedje,Trover,Gift,kmrml,mrml,CBIR
+ Keywords[xh]=Imifanekiso,Uphendlo,Ubuzo,fumana,Isiphiwo,kmrml,mrml,CBIR
+-Keywords[xx]=xxImages,Search,Query,Find,Gift,kmrml,mrml,CBIRxx
+ Keywords[zh_CN]=Images,Search,Query,Find,Gift,kmrml,mrml,CBIR,图像,搜索,查询,查找,礼物
+ Keywords[zh_TW]=Images,Search,Query,Find,Gift,kmrml,mrml,CBIR,影像,搜尋,查詢,尋找
+ Keywords[zu]=Izithombe,Funa,Buza,Thola,Isipho,kmrml,mrml,CBIR
+Index: kmrml/kmrml/mrml-servicemenu.desktop
+===================================================================
+--- kmrml/kmrml/mrml-servicemenu.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kmrml/kmrml/mrml-servicemenu.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -12,7 +12,7 @@
+ Name[cs]=Hledat podobný obrázek...
+ Name[cy]=Chwilio am Ddelweddau Tebyg...
+ Name[da]=Søg efter lignende filer...
+-Name[de]=Nach ähnlichen Bildern suchen...
++Name[de]=Nach ähnlichen Bildern suchen ...
+ Name[el]=Αναζήτηση για παρόμοιες εικόνες...
+ Name[es]=Búsqueda de imágenes similares...
+ Name[et]=Otsi sarnaseid pilte...
+@@ -31,7 +31,7 @@
+ Name[nl]=Zoeken naar vergelijkbare afbeeldingen...
+ Name[nn]=Søk etter liknande bilete ...
+ Name[nso]=Nyako ya Diponagalo tseo di Swanago...
+-Name[pl]=Szukaj podobnych obrazów
++Name[pl]=Szukaj podobnych obrazków
+ Name[pt]=Procurar por Imagens Semelhantes...
+ Name[pt_BR]=Procurar por Imagens Parecidas...
+ Name[ro]=Caută imagini similare...
+@@ -50,7 +50,6 @@
+ Name[ven]=Todani zwifanyiso zwielanaho...
+ Name[wa]=Cweri après des rshonnantès imådjes...
+ Name[xh]=Phendla Imifanekiso Efanayo...
+-Name[xx]=xxSearch for Similar Images...xx
+ Name[zh_CN]=搜索类似图像...
+ Name[zh_TW]=尋找類似的影像...
+ Name[zu]=Sesha ukuthola Izithombe Ezifanayo....
+Index: kmrml/kmrml/mrml_part.desktop
+===================================================================
+--- kmrml/kmrml/mrml_part.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kmrml/kmrml/mrml_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -43,7 +43,6 @@
+ Name[uk]=Перегляд MRML
+ Name[ven]=Mbonalelo ya MRML
+ Name[xh]=MRML Imbono
+-Name[xx]=xxMRML Viewxx
+ Name[zh_CN]=MRML 查看器
+ Name[zh_TW]=MRML 檢視器
+ Name[zu]=Umbukiso we-MRML
+Index: kmrml/kmrml/server/daemonwatcher.desktop
+===================================================================
+--- kmrml/kmrml/server/daemonwatcher.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kmrml/kmrml/server/daemonwatcher.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -41,7 +41,6 @@
+ Name[tg]=Мудири демони KDED KMRML
+ Name[tr]=KDED KMRML Aracı İzleyici
+ Name[uk]=Спостерігач демону KDED KMRML
+-Name[xx]=xxKDED KMRML Daemon Watcherxx
+ Name[zh_CN]=KDED KMRML 守护程序监视器
+ Comment=Starts daemons on demand and restarts them on failure
+ Comment[bg]=Стартиране на демоните при заявка и рестартиране на демони при грешка
+@@ -80,7 +79,6 @@
+ Comment[tg]=Оғози демон аз рӯи дархост ва ҳангоми нуқсони он аз сари нав оғоз намудан.
+ Comment[tr]=İstek halinde programı başlatır ve hata durumunda yeniden başlatır.
+ Comment[uk]=Запускає демони при потребі та перезапускає їх при аварії
+-Comment[xx]=xxStarts daemons on demand and restarts them on failurexx
+ Comment[zh_CN]=按需启动守护程序并在失败时重新启动
+ ServiceTypes=KDEDModule
+ X-KDE-ModuleType=Library
+Index: kfax/kfax.desktop
+===================================================================
+--- kfax/kfax.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfax/kfax.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -53,7 +53,6 @@
+ GenericName[ven]=Muvhoni wa Fekisi
+ GenericName[wa]=Håyneu di facs
+ GenericName[xh]=Umboniseli Wefax
+-GenericName[xx]=xxFax Viewerxx
+ GenericName[zh_CN]=传真查看器
+ GenericName[zh_TW]=傳真檢視器
+ GenericName[zu]=Umbonisi wefax
+@@ -69,7 +68,6 @@
+ Name[th]=โทรสาร - K
+ Name[ven]=Fekisi ya K
+ Name[wa]=KFacs
+-Name[xx]=xxKFaxxx
+ Name[zh_TW]=KFax 傳真
+ Exec=kfax %f   -caption "%c" %i %m
+ Icon=kfax
+Index: kghostview/kghostview.desktop
+===================================================================
+--- kghostview/kghostview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kghostview/kghostview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -12,7 +12,6 @@
+ Name[tr]=GhostView
+ Name[ven]=Mbonalelo ya tshipuku tsha K
+ Name[xh]=Imboniselo yeKGhost
+-Name[xx]=xxKGhostViewxx
+ MimeType=application/pdf;application/postscript;image/x-eps;application/x-gzpostscript;application/illustrator
+ InitialPreference=6
+ Exec=kghostview %u -caption "%c" %i %m
+@@ -73,7 +72,6 @@
+ GenericName[ven]=Muvhoni wa PS/PDF
+ GenericName[wa]=Håyneu di documints PS/PDF
+ GenericName[xh]=Umboniseli we PS/PDF
+-GenericName[xx]=xxPS/PDF Viewerxx
+ GenericName[zh_CN]=PS/PDF 查看器
+ GenericName[zh_TW]=PS/PDF 檢視器
+ GenericName[zu]=Umboniseli we PS/PDF
+Index: kamera/kcontrol/kamera.desktop
+===================================================================
+--- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -16,7 +16,7 @@
+ Comment[eo]=Agordu fotilon
+ Comment[es]=Configura Kamera
+ Comment[et]=Kaamera seadistamine
+-Comment[eu]=Konfigure Kamera
++Comment[eu]=Konfiguratu Kamera
+ Comment[fi]=Kameran asetukset
+ Comment[fr]=Configuration de Kamera
+ Comment[ga]=Cumraigh Kamera
+@@ -57,7 +57,6 @@
+ Comment[uz]=Фотоапаратни мослаш
+ Comment[ven]=Dzudzanya kamera
+ Comment[xh]=Qwalasela Umfoti
+-Comment[xx]=xxConfigure Kameraxx
+ Comment[zh_CN]=配置 Kamera
+ Comment[zh_TW]=設定照相機
+ Comment[zu]=Hlanganisa ikhamera
+@@ -104,7 +103,6 @@
+ Keywords[uk]=gphoto,камера,цифрова камера,камера Тенет,kamera
+ Keywords[ven]=Tshinepe tsha g,Tshaudzhia zwifanyiso,digicam,webcam,Tshaudzhiazwifanyiso
+ Keywords[xh]=gphoto,umfoti,digicam,webcam,umfoti
+-Keywords[xx]=xxgphoto,camera,digicam,webcam,kameraxx
+ Keywords[zh_CN]=gphoto,camera,digicam,webcam,kamera,照相机,数码相机,摄像头
+ Keywords[zh_TW]=gphoto,camera,digicam,webcam,kamera,照相機
+ Keywords[zu]=gphoto,ikhamera,digicam,webcam,ikhamera
+@@ -164,7 +162,6 @@
+ Name[uz]=Фотоапарат
+ Name[ven]=Tshau dzhia zwifanyiso tsha didzhithala
+ Name[xh]=Ikhamera Yesuntswana
+-Name[xx]=xxDigital Cameraxx
+ Name[zh_CN]=数码相机
+ Name[zh_TW]=數位相機
+ Name[zu]=Ikhamera ebonisa inani ngalinye
+Index: kruler/eventsrc
+===================================================================
+--- kruler/eventsrc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kruler/eventsrc	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -54,7 +54,6 @@
+ Comment[uz]=KDE экран линейкаси
+ Comment[ven]=Muvhusi wa tshikirini tsha KDE
+ Comment[xh]=Umlawuli wekhusi le KDE
+-Comment[xx]=xxKDE Screen Rulerxx
+ Comment[zh_CN]=KDE 屏幕标尺
+ Comment[zh_TW]=KDE 螢幕丈量尺
+ Comment[zu]=Umlawuli Wesikrini se KDE
+@@ -111,7 +110,6 @@
+ Name[uk]=Пересунуто клавішами курсора
+ Name[ven]=Tshimbidzhwa nga khii ya musevhe
+ Name[xh]=Ishukunyiswa zizitshixo zesalathisi
+-Name[xx]=xxMoved by Cursor Keysxx
+ Name[zh_CN]=用光标键移动
+ Name[zh_TW]=用游標鍵移動
+ Name[zu]=Inyakaziswe Izikhiye Ze Cursor
+@@ -165,7 +163,6 @@
+ Comment[uk]=Лінійка пересувається по пікселях за допомогою клавіш курсора
+ Comment[ven]=Muvhusi o sudzulusa pixelwise a tshi khou shumisa khii ya Cursor
+ Comment[xh]=Umlawuli ushukume jikelele kwipixel esebenzisa izitshixi zesalathisi
+-Comment[xx]=xxThe ruler has moved pixelwise using the cursor keysxx
+ Comment[zh_CN]=标尺已经用光标键按像素移动
+ Comment[zh_TW]=使用游標鍵移動尺規單一個像素
+ Comment[zu]=Umlawuli unyakazise jikelele kwipixel esebenzisa izikhiye ze cursor
+Index: kruler/kruler.desktop
+===================================================================
+--- kruler/kruler.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kruler/kruler.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -48,7 +48,6 @@
+ GenericName[uk]=Лінійка екрана
+ GenericName[uz]=Экран линейкаси
+ GenericName[ven]=Muvhusi wa Tshikirini
+-GenericName[xx]=xxScreen Rulerxx
+ GenericName[zh_CN]=屏幕标尺
+ GenericName[zh_TW]=螢幕丈量尺
+ GenericName[zu]=Umlawuli Wesikrini
+@@ -68,7 +67,6 @@
+ Name[ta]=கேவரை உருளை
+ Name[th]=ไม้บรรทัด - K
+ Name[ven]=Muvhusi wa K
+-Name[xx]=xxKRulerxx
+ Name[zu]=KUmlawuli
+ DocPath=kruler/index.html
+ MimeType=
+Index: kiconedit/kiconedit.desktop
+===================================================================
+--- kiconedit/kiconedit.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kiconedit/kiconedit.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -56,7 +56,6 @@
+ GenericName[ven]=Musengulusi wa Aikhono
+ GenericName[wa]=Aspougneu d' imådjetes
+ GenericName[xh]=Umhleli we Icon
+-GenericName[xx]=xxIcon Editorxx
+ GenericName[zh_CN]=图标编辑器
+ GenericName[zh_TW]=圖示編輯器
+ GenericName[zu]=Umhleli we Icon
+@@ -77,7 +76,6 @@
+ Name[th]=แก้ไขไอคอน - K
+ Name[tr]=K Icon Düzenleyici
+ Name[ven]=U sengulusa ha aikhono ya K
+-Name[xx]=xxKIconEditxx
+ Name[zh_TW]=圖示編輯器
+ MimeType=image/x-xpm;image/x-ico;image/png;image/jpeg;
+ Exec=kiconedit -caption "%c" %i %m %u
+Index: kfile-plugins/ps/kfile_ps.desktop
+===================================================================
+--- kfile-plugins/ps/kfile_ps.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/ps/kfile_ps.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -50,7 +50,6 @@
+ Name[ven]=Mafhungo a mabammbiri a poso
+ Name[wa]=Informåcion sol documint PostScript
+ Name[xh]=Ulwazi Lwe PostScript
+-Name[xx]=xxPostScript Infoxx
+ Name[zh_CN]=PostScript 信息
+ Name[zh_TW]=PostScript 資訊
+ Name[zu]=Ulwazi Lwesi-PostScript
+Index: kfile-plugins/ps/gsthumbnail.desktop
+===================================================================
+--- kfile-plugins/ps/gsthumbnail.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/ps/gsthumbnail.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -43,7 +43,6 @@
+ Name[tr]=PostScript, PDF ve DVI Dosyaları
+ Name[uk]=Файли PostScript, PDF та DVI
+ Name[uz]=PostScript, PDF ва DVI файллари
+-Name[xx]=xxPostScript, PDF and DVI Filesxx
+ Name[zh_CN]=PostScript、PDF 和 DVI 文件
+ ServiceTypes=ThumbCreator
+ MimeTypes=application/x-dvi,application/postscript,application/pdf,image/x-eps
+Index: kfile-plugins/dvi/kfile_dvi.desktop
+===================================================================
+--- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -43,7 +43,6 @@
+ Name[uk]=Інформація по DVI
+ Name[uz]=DVI ҳақида маълумот
+ Name[wa]=Informåcion sol documint DVI
+-Name[xx]=xxDVI Infoxx
+ Name[zh_CN]=DVI 信息
+ ServiceTypes=KFilePlugin
+ Type=Service
+Index: kfile-plugins/png/kfile_png.desktop
+===================================================================
+--- kfile-plugins/png/kfile_png.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/png/kfile_png.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -48,7 +48,6 @@
+ Name[ven]=Mafhungo a PNG
+ Name[wa]=Informåcion sol imådje PNG
+ Name[xh]=PNG Ulwazi
+-Name[xx]=xxPNG Infoxx
+ Name[zh_CN]=PNG 信息
+ Name[zh_TW]=PNG 資訊
+ Name[zu]=Ulwazi lwe-PNG
+Index: kfile-plugins/jpeg/kfile_jpeg.desktop
+===================================================================
+--- kfile-plugins/jpeg/kfile_jpeg.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/jpeg/kfile_jpeg.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -46,7 +46,6 @@
+ Name[ven]=Mafhungo a JPEG EXIF
+ Name[wa]=Informåcion sol imådje JPEG EXIF
+ Name[xh]=Ulwazi lwe JPEG EXIF
+-Name[xx]=xxJPEG EXIF Infoxx
+ Name[zh_CN]=JPEG EXIF 信息
+ Name[zh_TW]=JPEG EXIF 資訊
+ Name[zu]=Ulwazi lwe-JPEG EXIF
+Index: kfile-plugins/xbm/kfile_xbm.desktop
+===================================================================
+--- kfile-plugins/xbm/kfile_xbm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/xbm/kfile_xbm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -47,7 +47,6 @@
+ Name[ven]=Mafhungo a XBM
+ Name[wa]=Informåcion sol imådje XBM
+ Name[xh]=Ulwazi lwe XBM
+-Name[xx]=xxXBM Infoxx
+ Name[zh_CN]=XBM 信息
+ Name[zh_TW]=XBM 資訊
+ Name[zu]=Ulwazi lwe-XBM
+Index: kfile-plugins/tiff/kfile_tiff.desktop
+===================================================================
+--- kfile-plugins/tiff/kfile_tiff.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/tiff/kfile_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -49,7 +49,6 @@
+ Name[ven]=Mafhungo a Meta faela ya TIFF
+ Name[wa]=Informåcion sol imådje TIFF
+ Name[xh]=Ulwazi lwe TIFF Ifayile Esembindini
+-Name[xx]=xxTIFF File Meta Infoxx
+ Name[zh_CN]=TIFF 文件元信息
+ Name[zh_TW]=TIFF 檔案 Meta 資訊
+ Name[zu]=Ulwazi Lwefayela yemeta ye-TIFF
+Index: kfile-plugins/raw/x-image-raw.desktop
+===================================================================
+--- kfile-plugins/raw/x-image-raw.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/raw/x-image-raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -12,8 +12,10 @@
+ Comment[de]=RAW Kamera-Datei
+ Comment[es]=Archivo RAW de cámara
+ Comment[et]=Toores kaamerafail (RAW)
++Comment[eu]=RAW kamera-fitxategiak
+ Comment[fr]=Fichiers brut d'appareil photo numériques
+ Comment[ga]=Comhad Ceamara RAW
++Comment[hu]=RAW-fájl
+ Comment[is]=RAW myndavélaskrá
+ Comment[it]=File grezzi fotocamera digitale
+ Comment[ja]=RAW カメラファイル
+@@ -29,5 +31,4 @@
+ Comment[sv]=Obehandlad kamerafil
+ Comment[tr]=RAW Kamera Dosyası
+ Comment[uk]=Файл цифрової камери RAW
+-Comment[xx]=xxRAW Camera Filexx
+ Comment[zh_CN]=RAW 相机文件
+Index: kfile-plugins/raw/kfile_raw.desktop
+===================================================================
+--- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -10,8 +10,10 @@
+ Name[el]=RAW αρχείο κάμερας
+ Name[es]=Archivos RAW de cámara
+ Name[et]=Toored kaamerafailid
++Name[eu]=RAW kamera-fitxategiak
+ Name[fr]=Fichiers bruts d'appareil photo numériques
+ Name[ga]=Comhaid Cheamara RAW
++Name[hu]=RAW-fájlok
+ Name[is]=RAW myndavélaskrár
+ Name[it]=File grezzi fotocamera digitale
+ Name[ja]=RAW カメラファイル
+@@ -27,7 +29,6 @@
+ Name[sv]=Obehandlade kamerafiler
+ Name[tr]=RAW Kamera Dosyaları
+ Name[uk]=Файли цифрової камери RAW
+-Name[xx]=xxRAW Camera Filesxx
+ Name[zh_CN]=RAW 相机文件
+ ServiceTypes=KFilePlugin
+ MimeType=image/x-raw
+Index: kfile-plugins/pnm/kfile_pnm.desktop
+===================================================================
+--- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -43,7 +43,6 @@
+ Name[uk]=Інформація про PNM
+ Name[uz]=PNM ҳақида маълумот
+ Name[wa]=Informåcion sol imådje PNM
+-Name[xx]=xxPNM Infoxx
+ Name[zh_CN]=PNM 信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_pnm
+Index: kfile-plugins/pcx/kfile_pcx.desktop
+===================================================================
+--- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -44,7 +44,6 @@
+ Name[uk]=Мета-інформація про файл PCX
+ Name[uz]=PCX-файлининг мета-маълумоти
+ Name[wa]=Informåcion sol imådje PCX
+-Name[xx]=xxPCX File Meta Infoxx
+ Name[zh_CN]=PCX 文件元信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_pcx
+Index: kfile-plugins/exr/kfile_exr.desktop
+===================================================================
+--- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -39,7 +39,6 @@
+ Name[tr]=EXR Bilgisi
+ Name[uk]=Інформація по EXR
+ Name[uz]=EXR ҳақида маълумот
+-Name[xx]=xxEXR Infoxx
+ Name[zh_CN]=EXR 信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_exr
+Index: kfile-plugins/xpm/kfile_xpm.desktop
+===================================================================
+--- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -33,7 +33,6 @@
+ Name[tr]=XPM Bilgisi
+ Name[uk]=Інформація про XPM
+ Name[uz]=XPM ҳақида маълумот
+-Name[xx]=xxXPM Infoxx
+ Name[zh_CN]=XPM 信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_xpm
+Index: kfile-plugins/gif/kfile_gif.desktop
+===================================================================
+--- kfile-plugins/gif/kfile_gif.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/gif/kfile_gif.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -48,7 +48,6 @@
+ Name[ven]=Mafhungo a GIF
+ Name[wa]=Informåcion sol imådje GIF
+ Name[xh]=Ulwazi lwe GIF
+-Name[xx]=xxGIF Infoxx
+ Name[zh_CN]=GIF 信息
+ Name[zh_TW]=GIF 資訊
+ Name[zu]=Ulwazi lwe-GIF
+Index: kfile-plugins/pdf/kfile_pdf.desktop
+===================================================================
+--- kfile-plugins/pdf/kfile_pdf.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/pdf/kfile_pdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -48,7 +48,6 @@
+ Name[ven]=Mafhungo a PDF
+ Name[wa]=Informåcion sol documint PDF
+ Name[xh]=PDF Ulwazi
+-Name[xx]=xxPDF Infoxx
+ Name[zh_CN]=PDF 信息
+ Name[zh_TW]=PDF 資訊
+ Name[zu]=Ulwazi lwe-PDF
+Index: kfile-plugins/ico/kfile_ico.desktop
+===================================================================
+--- kfile-plugins/ico/kfile_ico.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/ico/kfile_ico.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -47,7 +47,6 @@
+ Name[ven]=Mafhungo a ICO
+ Name[wa]=Informåcion sol imådjete ICO
+ Name[xh]=Ulwazi lwe ICO
+-Name[xx]=xxICO Infoxx
+ Name[zh_CN]=ICO 信息
+ Name[zh_TW]=ICO 資訊
+ Name[zu]=Ulwazi lwe-ICO
+Index: kfile-plugins/dds/kfile_dds.desktop
+===================================================================
+--- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -33,7 +33,6 @@
+ Name[ta]=நேரடி மேற்பரப்பு தகவல்
+ Name[tr]=DirectDraw Yüzey Bilgisi
+ Name[uk]=Інформація про поверхню DirectDraw
+-Name[xx]=xxDirectDraw Surface Infoxx
+ Name[zh_CN]=DirectDraw 表面信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_dds
+Index: kfile-plugins/rgb/kfile_rgb.desktop
+===================================================================
+--- kfile-plugins/rgb/kfile_rgb.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/rgb/kfile_rgb.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -45,7 +45,6 @@
+ Name[tr]=SGI Resmi(KYM)
+ Name[uk]=Зображення SGI (RGB)
+ Name[uz]=SGI-расм (RGB)
+-Name[xx]=xxSGI Image (RGB)xx
+ Name[zh_CN]=SGI 图像(RGB)
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_rgb
+Index: kfile-plugins/tga/kfile_tga.desktop
+===================================================================
+--- kfile-plugins/tga/kfile_tga.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/tga/kfile_tga.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -46,7 +46,6 @@
+ Name[ven]=Mafhungo a Targa ya mbonalelo ya vhukuma
+ Name[wa]=Informåcion sol imådje Truevision Targa
+ Name[xh]=Ulwazi lwe Truevision Targa
+-Name[xx]=xxTruevision Targa Infoxx
+ Name[zh_CN]=Truevision Targa 信息
+ Name[zh_TW]=Truevision Targa 資訊
+ Name[zu]=Ulwazi lwe-Truevision Targa
+Index: kfile-plugins/bmp/kfile_bmp.desktop
+===================================================================
+--- kfile-plugins/bmp/kfile_bmp.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 486886)
++++ kfile-plugins/bmp/kfile_bmp.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 486886)
+@@ -48,7 +48,6 @@
+ Name[ven]=Mafhungo BMP
+ Name[wa]=Informåcion sol imådje BMP
+ Name[xh]=Ulwazi lwe BMP
+-Name[xx]=xxBMP Infoxx
+ Name[zh_CN]=BMP 信息
+ Name[zh_TW]=BMP 資訊
+ Name[zu]=Ulwazi lwe-BMP
 
 Property changes on: .
 ___________________________________________________________________
 Name: svn:externals
-   + admin https://svn.kde.org/home/kde/branches/KDE/3.4/kde-common/admin
+   + admin https://svn.kde.org/home/kde/branches/KDE/3.5/kde-common/admin
 
 
