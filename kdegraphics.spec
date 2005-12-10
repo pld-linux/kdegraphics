@@ -1,5 +1,8 @@
 %bcond_with	protections	# protections against fair use (printing and copying)
-
+%bcond_with	hidden_visibility	# pass '--fvisibility=hidden'
+					# & '--fvisibility-inlines-hidden'
+					# to g++ 
+#
 %define		_state		stable
 %define		_kdever		3.5
 %define		_ver		3.5.0
@@ -26,6 +29,7 @@ BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-devel
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
+%{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
 BuildRequires:	gettext-devel
 BuildRequires:	imlib-devel
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
@@ -42,6 +46,7 @@ BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	lockdev-devel
 BuildRequires:	poppler-qt-devel
+%{?with_hidden_visibility:BuildRequires:	qt-devel >= 6:3.3.5.051113-1}
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
@@ -558,19 +563,18 @@ done
 %build
 cp %{_datadir}/automake/config.sub admin
 
-#export UNSERMAKE=%{_datadir}/unsermake/unsermake
-
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
-	--disable-rpath \
+	--%{?debug:en}%{!?debug:dis}able-debug%{?debug:=full} \
+	%{!?debug:--disable-rpath} \
 	--enable-final \
-	--with-qt-libraries=%{_libdir} \
+	%{?with_hidden_visibility:--enable-gcc-hidden-visibility} \
 	--enable-kpdf-drm=%{!?with_protections:no}%{?with_protections:yes} \
 %if "%{_lib}" == "lib64"
 	--enable-libsuffix=64 \
 %endif
-	--%{?debug:en}%{!?debug:dis}able-debug%{?debug:=full}
+	--with-qt-libraries=%{_libdir}
 
 %{__make}
 
