@@ -1,4 +1,6 @@
-%bcond_with	protections	# protections against fair use (printing and copying)
+#
+# Conditional build:
+%bcond_with	protections		# protections against fair use (printing and copying)
 %bcond_with	hidden_visibility	# pass '--fvisibility=hidden'
 					# & '--fvisibility-inlines-hidden'
 					# to g++ 
@@ -16,7 +18,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	5
+Release:	6
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -44,7 +46,6 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
-BuildRequires:	lockdev-devel
 BuildRequires:	poppler-qt-devel
 %{?with_hidden_visibility:BuildRequires:	qt-devel >= 6:3.3.5.051113-1}
 BuildRequires:	rpmbuild(macros) >= 1.129
