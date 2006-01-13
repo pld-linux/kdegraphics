@@ -1,7 +1,7 @@
 Index: kpdf/kpdf_part.desktop
 ===================================================================
---- kpdf/kpdf_part.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/kpdf_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/kpdf_part.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/kpdf_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -4,7 +4,6 @@
  Name=KPDF
  Name[ar]=برنامج KPDF
@@ -12,8 +12,8 @@ Index: kpdf/kpdf_part.desktop
  ServiceTypes=KParts/ReadOnlyPart
 Index: kpdf/part.cpp
 ===================================================================
---- kpdf/part.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/part.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/part.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/part.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -274,6 +274,8 @@
  	connect( m_watcher, SIGNAL( dirty( const QString& ) ), this, SLOT( slotFileDirty( const QString& ) ) );
  	m_dirtyHandler = new QTimer( this );
@@ -34,8 +34,8 @@ Index: kpdf/part.cpp
      return false;
 Index: kpdf/part.h
 ===================================================================
---- kpdf/part.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/part.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/part.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/part.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -146,6 +146,11 @@
  	// static instances counter
  	static unsigned int m_count;
@@ -50,8 +50,8 @@ Index: kpdf/part.h
  	DocumentViewport m_viewportDirty;
 Index: kpdf/xpdf/xpdf/JBIG2Stream.cc
 ===================================================================
---- kpdf/xpdf/xpdf/JBIG2Stream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/xpdf/xpdf/JBIG2Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/xpdf/xpdf/JBIG2Stream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/xpdf/xpdf/JBIG2Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -7,6 +7,7 @@
  //========================================================================
  
@@ -124,8 +124,8 @@ Index: kpdf/xpdf/xpdf/JBIG2Stream.cc
  
 Index: kpdf/xpdf/xpdf/Stream.cc
 ===================================================================
---- kpdf/xpdf/xpdf/Stream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/xpdf/xpdf/Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/xpdf/xpdf/Stream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/xpdf/xpdf/Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -15,6 +15,7 @@
  #include <stdio.h>
  #include <stdlib.h>
@@ -251,8 +251,8 @@ Index: kpdf/xpdf/xpdf/Stream.cc
    }
 Index: kpdf/xpdf/xpdf/Stream.h
 ===================================================================
---- kpdf/xpdf/xpdf/Stream.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/xpdf/xpdf/Stream.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/xpdf/xpdf/Stream.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/xpdf/xpdf/Stream.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -232,6 +232,8 @@
  
    ~StreamPredictor();
@@ -272,8 +272,8 @@ Index: kpdf/xpdf/xpdf/Stream.h
  //------------------------------------------------------------------------
 Index: kpdf/xpdf/xpdf/Page.cc
 ===================================================================
---- kpdf/xpdf/xpdf/Page.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/xpdf/xpdf/Page.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/xpdf/xpdf/Page.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/xpdf/xpdf/Page.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -66,6 +66,20 @@
    if (!haveCropBox) {
      cropBox = mediaBox;
@@ -297,8 +297,8 @@ Index: kpdf/xpdf/xpdf/Page.cc
    bleedBox = cropBox;
 Index: kpdf/xpdf/xpdf/DCTStream.cc
 ===================================================================
---- kpdf/xpdf/xpdf/DCTStream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/xpdf/xpdf/DCTStream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/xpdf/xpdf/DCTStream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/xpdf/xpdf/DCTStream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,19 +14,25 @@
  
  static boolean str_fill_input_buffer(j_decompress_ptr cinfo)
@@ -372,8 +372,8 @@ Index: kpdf/xpdf/xpdf/DCTStream.cc
    c = row_buffer[0][x];
 Index: kpdf/xpdf/xpdf/JPXStream.cc
 ===================================================================
---- kpdf/xpdf/xpdf/JPXStream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/xpdf/xpdf/JPXStream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/xpdf/xpdf/JPXStream.cc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/xpdf/xpdf/JPXStream.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -7,6 +7,7 @@
  //========================================================================
  
@@ -409,8 +409,8 @@ Index: kpdf/xpdf/xpdf/JPXStream.cc
  							sizeof(JPXTileComp));
 Index: kpdf/xpdf/goo/gmem.c
 ===================================================================
---- kpdf/xpdf/goo/gmem.c	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/xpdf/goo/gmem.c	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/xpdf/goo/gmem.c	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/xpdf/goo/gmem.c	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -11,6 +11,7 @@
  #include <stdlib.h>
  #include <stddef.h>
@@ -439,8 +439,8 @@ Index: kpdf/xpdf/goo/gmem.c
    }
 Index: kpdf/shell/shell.cpp
 ===================================================================
---- kpdf/shell/shell.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/shell/shell.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/shell/shell.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/shell/shell.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -132,31 +132,6 @@
      KGlobal::config()->setDesktopGroup();
      bool fullScreen = KGlobal::config()->readBoolEntry( "FullScreen", false );
@@ -475,8 +475,8 @@ Index: kpdf/shell/shell.cpp
  void Shell::writeSettings()
 Index: kpdf/shell/kpdf.desktop
 ===================================================================
---- kpdf/shell/kpdf.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/shell/kpdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/shell/kpdf.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/shell/kpdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -5,7 +5,6 @@
  Name=KPDF
  Name[ar]=برنامج KPDF
@@ -495,8 +495,8 @@ Index: kpdf/shell/kpdf.desktop
  Exec=kpdf %U %i %m -caption "%c"
 Index: kpdf/part.rc
 ===================================================================
---- kpdf/part.rc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/part.rc	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/part.rc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/part.rc	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -35,7 +35,7 @@
      <Separator/>
      <Action name="goto_page"/>
@@ -508,8 +508,8 @@ Index: kpdf/part.rc
      <Action name="mouse_select"/>
 Index: kpdf/ui/presentationwidget.cpp
 ===================================================================
---- kpdf/ui/presentationwidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/ui/presentationwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/ui/presentationwidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/ui/presentationwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -171,12 +171,14 @@
  
  
@@ -527,8 +527,8 @@ Index: kpdf/ui/presentationwidget.cpp
  {
 Index: kpdf/ui/presentationwidget.h
 ===================================================================
---- kpdf/ui/presentationwidget.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpdf/ui/presentationwidget.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpdf/ui/presentationwidget.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpdf/ui/presentationwidget.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -46,7 +46,7 @@
  
      protected:
@@ -540,8 +540,8 @@ Index: kpdf/ui/presentationwidget.h
          void mousePressEvent( QMouseEvent * e );
 Index: kfaxview/kfaxmultipage_tiff.desktop
 ===================================================================
---- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -3,7 +3,6 @@
  Name=kfaxview_tiff
  Name[da]=Kfaxview TIFF
@@ -573,8 +573,8 @@ Index: kfaxview/kfaxmultipage_tiff.desktop
  X-KDE-MimeTypes=image/tiff
 Index: kfaxview/kfaxmultipage.desktop
 ===================================================================
---- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,10 +1,10 @@
  [Desktop Entry]
  Encoding=UTF-8
@@ -610,8 +610,8 @@ Index: kfaxview/kfaxmultipage.desktop
  X-KDE-MimeTypes=image/fax-g3
 Index: kfaxview/kfaxview.desktop
 ===================================================================
---- kfaxview/kfaxview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfaxview/kfaxview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfaxview/kfaxview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfaxview/kfaxview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -52,14 +52,12 @@
  GenericName[ven]=Muvhoni wa Fekisi
  GenericName[wa]=Håyneu di facs
@@ -629,8 +629,8 @@ Index: kfaxview/kfaxview.desktop
  Exec=kfaxview %f
 Index: kview/kimageviewer/kimageviewercanvas.desktop
 ===================================================================
---- kview/kimageviewer/kimageviewercanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/kimageviewer/kimageviewercanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/kimageviewer/kimageviewercanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/kimageviewer/kimageviewercanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -11,7 +11,7 @@
  Comment[cy]=Cynfas Mewnadeiladadwy Gwelydd Delweddau (celfigyn sy'n dangos delwedd)
  Comment[da]=Indlejrbar billedviserlærred (kontrol der viser et billede)
@@ -659,8 +659,8 @@ Index: kview/kimageviewer/kimageviewercanvas.desktop
  Comment[zu]=Inkalivasi Yombukisi Wesithombe Esixubeneyo (i-widget ekhombisa isithombe)
 Index: kview/kimageviewer/kimageviewer.desktop
 ===================================================================
---- kview/kimageviewer/kimageviewer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/kimageviewer/kimageviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/kimageviewer/kimageviewer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/kimageviewer/kimageviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -34,7 +34,7 @@
  Comment[nl]=Ingebed weergavecomponent voor afbeeldingen
  Comment[nn]=Inkluderbart komponent for biletvising
@@ -680,8 +680,8 @@ Index: kview/kimageviewer/kimageviewer.desktop
  Comment[zu]=Ilunga Lombukisi Wesithombe Esixubeneyo
 Index: kview/kviewcanvas/config/kviewcanvasconfig.desktop
 ===================================================================
---- kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -39,7 +39,7 @@
  Name[nl]=Weergaveprogramma
  Name[nn]=Framvisar
@@ -707,8 +707,8 @@ Index: kview/kviewcanvas/config/kviewcanvasconfig.desktop
  Comment[zh_CN]=KViewCanvas 常规配置
 Index: kview/kviewcanvas/kviewcanvas.desktop
 ===================================================================
---- kview/kviewcanvas/kviewcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/kviewcanvas/kviewcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/kviewcanvas/kviewcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/kviewcanvas/kviewcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -30,7 +30,7 @@
  Name[nl]=KView afbeeldingwidget
  Name[nn]=KView biletvisarelement
@@ -728,8 +728,8 @@ Index: kview/kviewcanvas/kviewcanvas.desktop
  Name[zu]=I-widget Yombukisi Wesithombe se-KView
 Index: kview/kview.desktop
 ===================================================================
---- kview/kview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/kview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/kview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/kview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -62,7 +62,6 @@
  GenericName[ven]=Tshivhoni tsha Mutaleli
  GenericName[wa]=Håyneu d' imådjes
@@ -755,8 +755,8 @@ Index: kview/kview.desktop
  X-KDE-StartupNotify=true
 Index: kview/photobook/photobook.desktop
 ===================================================================
---- kview/photobook/photobook.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/photobook/photobook.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/photobook/photobook.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/photobook/photobook.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -29,7 +29,6 @@
  GenericName[sv]=Fotoalbum
  GenericName[ta]=புகைப்படப் புத்தகம்
@@ -783,8 +783,8 @@ Index: kview/photobook/photobook.desktop
  X-KDE-Library=libphotobook
 Index: kview/config/kviewgeneralconfig.desktop
 ===================================================================
---- kview/config/kviewgeneralconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/config/kviewgeneralconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/config/kviewgeneralconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/config/kviewgeneralconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -68,7 +68,6 @@
  Name[ven]=Apulifikhesheni
  Name[wa]=Programe
@@ -809,8 +809,8 @@ Index: kview/config/kviewgeneralconfig.desktop
  Comment[zh_CN]=KView 标准版本的配置
 Index: kview/config/plugins/kviewpluginsconfig.desktop
 ===================================================================
---- kview/config/plugins/kviewpluginsconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/config/plugins/kviewpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/config/plugins/kviewpluginsconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/config/plugins/kviewpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -56,7 +56,6 @@
  Name[uk]=Втулки
  Name[uz]=Плагинлар
@@ -827,8 +827,8 @@ Index: kview/config/plugins/kviewpluginsconfig.desktop
  Comment[zh_CN]=选择并配置您的插件
 Index: kview/config/kview.setdlg
 ===================================================================
---- kview/config/kview.setdlg	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/config/kview.setdlg	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -26,7 +26,7 @@
  Name[nl]=Weergaveprogramma
  Name[nn]=Framvisar
@@ -871,8 +871,8 @@ Index: kview/config/kview.setdlg
  Weight=5
 Index: kview/kviewviewer/kviewviewer.desktop
 ===================================================================
---- kview/kviewviewer/kviewviewer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/kviewviewer/kviewviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/kviewviewer/kviewviewer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/kviewviewer/kviewviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -32,7 +32,7 @@
  Comment[nn]=Biletvisardel for KDE
  Comment[nso]=Seripa sa Molebeledi wa Ponagalo sa KDE
@@ -900,8 +900,8 @@ Index: kview/kviewviewer/kviewviewer.desktop
  InitialPreference=3
 Index: kview/kviewviewer/config/kviewviewerpluginsconfig.desktop
 ===================================================================
---- kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -56,7 +56,6 @@
  Name[uk]=Втулки
  Name[uz]=Плагинлар
@@ -918,8 +918,8 @@ Index: kview/kviewviewer/config/kviewviewerpluginsconfig.desktop
  Comment[zh_CN]=选择并配置您的插件
 Index: kview/modules/effects/kvieweffects.desktop
 ===================================================================
---- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -54,7 +54,6 @@
  Name[uk]=Ефекти
  Name[uz]=Эффектлар
@@ -936,8 +936,8 @@ Index: kview/modules/effects/kvieweffects.desktop
  Comment[zh_CN]=提供某些图像特效
 Index: kview/modules/browser/kviewbrowser.desktop
 ===================================================================
---- kview/modules/browser/kviewbrowser.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/modules/browser/kviewbrowser.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/modules/browser/kviewbrowser.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/modules/browser/kviewbrowser.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -61,7 +61,6 @@
  Name[ven]=Burausa
  Name[wa]=Foyteuse
@@ -956,8 +956,8 @@ Index: kview/modules/browser/kviewbrowser.desktop
  Comment[zu]=Ikuvumela ukuba ucinge ngokwedlulela izithombe ohlwini lwamafayela lwamanje.
 Index: kview/modules/presenter/config/kviewpresenterconfig.desktop
 ===================================================================
---- kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -51,7 +51,6 @@
  Name[uk]=Назва
  Name[uz]=Номи
@@ -974,8 +974,8 @@ Index: kview/modules/presenter/config/kviewpresenterconfig.desktop
  Comment[zh_CN]=注释
 Index: kview/modules/presenter/kviewpresenter.desktop
 ===================================================================
---- kview/modules/presenter/kviewpresenter.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/modules/presenter/kviewpresenter.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/modules/presenter/kviewpresenter.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/modules/presenter/kviewpresenter.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -53,7 +53,6 @@
  Name[tr]=Sunum Aracı
  Name[ven]=Mulanguli
@@ -994,8 +994,8 @@ Index: kview/modules/presenter/kviewpresenter.desktop
  Comment[zu]=Idala uhlu lwesithombe futhi ikuvumela wena ukuba udale umbukiso wesithombe esishibilikayo
 Index: kview/modules/scale/kview_scale.desktop
 ===================================================================
---- kview/modules/scale/kview_scale.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/modules/scale/kview_scale.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/modules/scale/kview_scale.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/modules/scale/kview_scale.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -49,7 +49,6 @@
  Name[ven]=Tshikeili
  Name[wa]=Al schåle
@@ -1023,8 +1023,8 @@ Index: kview/modules/scale/kview_scale.desktop
  Comment[zu]=Hluza isithombe esikaleni
 Index: kview/modules/scanner/kviewscanner.desktop
 ===================================================================
---- kview/modules/scanner/kviewscanner.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/modules/scanner/kviewscanner.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/modules/scanner/kviewscanner.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/modules/scanner/kviewscanner.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -59,7 +59,6 @@
  Name[ven]=Tshinanguludzi
  Name[wa]=Sicanrece
@@ -1052,8 +1052,8 @@ Index: kview/modules/scanner/kviewscanner.desktop
  Comment[zu]=Vula izithombe ezisuka kumhloli wakho kwi-KView
 Index: kview/modules/template/kviewtemplate.desktop
 ===================================================================
---- kview/modules/template/kviewtemplate.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kview/modules/template/kviewtemplate.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kview/modules/template/kviewtemplate.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kview/modules/template/kviewtemplate.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -59,7 +59,6 @@
  Name[uk]=Шаблон
  Name[uz]=Намуна
@@ -1072,8 +1072,8 @@ Index: kview/modules/template/kviewtemplate.desktop
  Comment[zu]=incazelo ende yokuthi i-plugin yenzani
 Index: libkscan/scanservice.desktop
 ===================================================================
---- libkscan/scanservice.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ libkscan/scanservice.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- libkscan/scanservice.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ libkscan/scanservice.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -55,7 +55,6 @@
  Name[ven]=Tshishumiswa tshau naga tsha KDE
  Name[wa]=Siervice di scanaedje di KDE
@@ -1084,8 +1084,8 @@ Index: libkscan/scanservice.desktop
  Name[zu]=Umsebenzi Lokuhlola lwe-KDE
 Index: kpovmodeler/pmpovrayparser.cpp
 ===================================================================
---- kpovmodeler/pmpovrayparser.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpovmodeler/pmpovrayparser.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpovmodeler/pmpovrayparser.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpovmodeler/pmpovrayparser.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -3876,7 +3876,7 @@
              nextToken( );
              pattern->setPatternType( PMPattern::PatternJulia );
@@ -1103,8 +1103,8 @@ Name: svn:executable
 
 Index: kpovmodeler/pmobjectsettings.cpp
 ===================================================================
---- kpovmodeler/pmobjectsettings.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpovmodeler/pmobjectsettings.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpovmodeler/pmobjectsettings.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpovmodeler/pmobjectsettings.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -538,7 +538,7 @@
        PMSphereSweep::setSSteps( m_pSphereSweepSSteps->value( ) );
        repaint = true;
@@ -1116,8 +1116,8 @@ Index: kpovmodeler/pmobjectsettings.cpp
        repaint = true;
 Index: kpovmodeler/pmshell.cpp
 ===================================================================
---- kpovmodeler/pmshell.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpovmodeler/pmshell.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpovmodeler/pmshell.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpovmodeler/pmshell.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -641,7 +641,7 @@
  
  bool PMShell::overwriteURL( const KURL& u )
@@ -1129,8 +1129,8 @@ Index: kpovmodeler/pmshell.cpp
     {
 Index: kpovmodeler/kpovmodeler.desktop
 ===================================================================
---- kpovmodeler/kpovmodeler.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kpovmodeler/kpovmodeler.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kpovmodeler/kpovmodeler.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kpovmodeler/kpovmodeler.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -9,7 +9,6 @@
  Name[nb]=KPov-modellerer
  Name[nn]=KPov-modellering
@@ -1149,8 +1149,8 @@ Index: kpovmodeler/kpovmodeler.desktop
  ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart,Browser/View,KPovModeler/Document
 Index: kgamma/kcmkgamma/kgamma.desktop
 ===================================================================
---- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -37,13 +37,13 @@
  Comment[tg]=Утилита барои калибратсия кардани монитор
  Comment[tr]=Monitör kalibrasyon aracı
@@ -1192,8 +1192,8 @@ Index: kgamma/kcmkgamma/kgamma.desktop
  X-KDE-Init=kgamma
 Index: kdvi/kdvi_multipage.cpp
 ===================================================================
---- kdvi/kdvi_multipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kdvi/kdvi_multipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kdvi/kdvi_multipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kdvi/kdvi_multipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -77,7 +77,6 @@
  
    setXMLFile("kdvi_part.rc");
@@ -1212,8 +1212,8 @@ Index: kdvi/kdvi_multipage.cpp
  
 Index: kdvi/special.cpp
 ===================================================================
---- kdvi/special.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kdvi/special.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kdvi/special.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kdvi/special.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -326,17 +326,17 @@
    // course, this does not work if the filename contains spaces
    // (already the simplifyWhiteSpace() above is wrong). If you have
@@ -1256,8 +1256,8 @@ Index: kdvi/special.cpp
    
 Index: kdvi/kdvi.desktop
 ===================================================================
---- kdvi/kdvi.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kdvi/kdvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kdvi/kdvi.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kdvi/kdvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -59,7 +59,6 @@
  GenericName[ven]=Muvhoni wa DVI
  GenericName[wa]=Håyneu di fitchîs DVI
@@ -1276,8 +1276,8 @@ Index: kdvi/kdvi.desktop
  Exec=kdvi %f -caption "%c" %i %m
 Index: kdvi/kdvimultipage.desktop
 ===================================================================
---- kdvi/kdvimultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kdvi/kdvimultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kdvi/kdvimultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kdvi/kdvimultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,7 +1,6 @@
  [Desktop Entry]
  Type=Service
@@ -1296,8 +1296,8 @@ Index: kdvi/kdvimultipage.desktop
  X-KDE-MimeTypes=application/x-dvi
 Index: kdvi/fontpool.cpp
 ===================================================================
---- kdvi/fontpool.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kdvi/fontpool.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kdvi/fontpool.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kdvi/fontpool.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -422,7 +422,7 @@
  	matchingFiles = fileNameList.grep(fn);
  #endif
@@ -1309,8 +1309,8 @@ Index: kdvi/fontpool.cpp
  #ifdef DEBUG_FONTPOOL
 Index: kdvi/psgs.cpp
 ===================================================================
---- kdvi/psgs.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kdvi/psgs.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kdvi/psgs.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kdvi/psgs.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -329,11 +329,11 @@
    
    // Otherwise, use kpsewhich to find the eps file.
@@ -1327,8 +1327,8 @@ Index: kdvi/psgs.cpp
  
 Index: kcoloredit/kcoloredit.desktop
 ===================================================================
---- kcoloredit/kcoloredit.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kcoloredit/kcoloredit.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kcoloredit/kcoloredit.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kcoloredit/kcoloredit.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -59,7 +59,6 @@
  GenericName[uk]=Редактор палітри кольорів
  GenericName[ven]=Musengulusi wa phalete ya muvhala
@@ -1347,8 +1347,8 @@ Index: kcoloredit/kcoloredit.desktop
  
 Index: kcoloredit/kcolorchooser.desktop
 ===================================================================
---- kcoloredit/kcolorchooser.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kcoloredit/kcolorchooser.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kcoloredit/kcolorchooser.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kcoloredit/kcolorchooser.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -61,7 +61,6 @@
  GenericName[ven]=Munangi wa Muvhala
  GenericName[wa]=Tchoezixheu di coleurs
@@ -1367,8 +1367,8 @@ Index: kcoloredit/kcolorchooser.desktop
  
 Index: kooka/kooka.desktop
 ===================================================================
---- kooka/kooka.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kooka/kooka.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kooka/kooka.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kooka/kooka.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -54,7 +54,6 @@
  GenericName[ven]=U nanga & Mbekanyamushumo ya OCR
  GenericName[wa]=Programe di scanaedje eyet di ricnoxhance di tecse
@@ -1387,8 +1387,8 @@ Index: kooka/kooka.desktop
  Categories=Qt;KDE;Graphics;
 Index: kooka/kookaimage.cpp
 ===================================================================
---- kooka/kookaimage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kooka/kookaimage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kooka/kookaimage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kooka/kookaimage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -30,7 +30,7 @@
  
  #include "kookaimage.h"
@@ -1400,8 +1400,8 @@ Index: kooka/kookaimage.cpp
  #endif
 Index: doc/kcoloredit/index.docbook
 ===================================================================
---- doc/kcoloredit/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kcoloredit/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kcoloredit/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kcoloredit/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -16,7 +16,7 @@
  <firstname>Artur</firstname>
  <surname>Rataj</surname>
@@ -1642,8 +1642,8 @@ Name: svn:mime-type
 
 Index: doc/kpdf/index.docbook
 ===================================================================
---- doc/kpdf/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kpdf/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kpdf/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kpdf/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -13,17 +13,23 @@
  		<authorgroup>
  			<author>
@@ -2529,8 +2529,8 @@ Index: doc/kpdf/index.docbook
  mode: sgml
 Index: doc/kruler/index.docbook
 ===================================================================
---- doc/kruler/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kruler/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kruler/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kruler/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -16,7 +16,7 @@
  <firstname>Lauri</firstname>
  <surname>Watts</surname>
@@ -2727,8 +2727,8 @@ Index: doc/kruler/index.docbook
  
 Index: doc/kview/index.docbook
 ===================================================================
---- doc/kview/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kview/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kview/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kview/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -16,8 +16,7 @@
  <firstname>Hauke</firstname>
  <surname>Hildebrandt</surname>
@@ -3199,8 +3199,8 @@ Name: svn:executable
 
 Index: doc/kolourpaint/index.docbook
 ===================================================================
---- doc/kolourpaint/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kolourpaint/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kolourpaint/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kolourpaint/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -48,8 +48,8 @@
  <legalnotice>
  &FDLNotice;
@@ -3463,8 +3463,8 @@ Name: svn:executable
 
 Index: doc/kuickshow/index.docbook
 ===================================================================
---- doc/kuickshow/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kuickshow/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kuickshow/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kuickshow/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -17,22 +17,21 @@
  <firstname>Carsten</firstname>
  <surname>Pfeiffer</surname>
@@ -4056,8 +4056,8 @@ Name: svn:mime-type
 
 Index: doc/kiconedit/index.docbook
 ===================================================================
---- doc/kiconedit/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kiconedit/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kiconedit/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kiconedit/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,7 +14,7 @@
  <firstname>Thomas</firstname>
  <surname>Tanghus</surname>
@@ -4470,8 +4470,8 @@ Index: doc/kiconedit/index.docbook
  -->
 Index: doc/kghostview/index.docbook
 ===================================================================
---- doc/kghostview/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ doc/kghostview/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- doc/kghostview/index.docbook	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ doc/kghostview/index.docbook	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -15,7 +15,7 @@
  <firstname>Pamela</firstname>
  <surname>Roberts</surname>
@@ -5058,8 +5058,8 @@ Index: doc/kghostview/index.docbook
  
 Index: kuickshow/ChangeLog
 ===================================================================
---- kuickshow/ChangeLog	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/ChangeLog	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/ChangeLog	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/ChangeLog	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,3 +1,31 @@
 +<pre>
 +Sun Jan  8 09:47:39 2006  Carsten Pfeiffer  <pfeiffer@kde.org>
@@ -5102,8 +5102,8 @@ Index: kuickshow/ChangeLog
  	* now completely smooth, flicker-free switching between images
 Index: kuickshow/src/kuickshow.cpp
 ===================================================================
---- kuickshow/src/kuickshow.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/kuickshow.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/kuickshow.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/kuickshow.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,5 +1,5 @@
  /* This file is part of the KDE project
 -   Copyright (C) 1998-2003 Carsten Pfeiffer <pfeiffer@kde.org>
@@ -5452,8 +5452,8 @@ Index: kuickshow/src/kuickshow.cpp
      if ( !haveBrowser() ) {
 Index: kuickshow/src/imagewindow.cpp
 ===================================================================
---- kuickshow/src/imagewindow.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/imagewindow.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/imagewindow.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/imagewindow.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -143,9 +143,13 @@
      new KAction( i18n("Show Previous Image"), KStdAccel::prior(),
                   this, SLOT( slotRequestPrevious() ),
@@ -5530,8 +5530,8 @@ Index: kuickshow/src/imagewindow.cpp
  
 Index: kuickshow/src/kurlwidget.cpp
 ===================================================================
---- kuickshow/src/kurlwidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/kurlwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/kurlwidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/kurlwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -35,7 +35,7 @@
  {
      KURL ku( url() );
@@ -5543,8 +5543,8 @@ Index: kuickshow/src/kurlwidget.cpp
  
 Index: kuickshow/src/kuickshow.desktop
 ===================================================================
---- kuickshow/src/kuickshow.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/kuickshow.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/kuickshow.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/kuickshow.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -12,7 +12,6 @@
  Name[ta]=விரைவுகாட்சி
  Name[th]=ดูภาพด่วน - K
@@ -5563,8 +5563,8 @@ Index: kuickshow/src/kuickshow.desktop
  GenericName[zu]=Umbonisi Womfanekiso
 Index: kuickshow/src/kuickshow.h
 ===================================================================
---- kuickshow/src/kuickshow.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/kuickshow.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/kuickshow.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/kuickshow.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,5 +1,5 @@
  /* This file is part of the KDE project
 -   Copyright (C) 1998-2003 Carsten Pfeiffer <pfeiffer@kde.org>
@@ -5651,8 +5651,8 @@ Index: kuickshow/src/kuickshow.h
  
 Index: kuickshow/src/aboutwidget.cpp
 ===================================================================
---- kuickshow/src/aboutwidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/aboutwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/aboutwidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/aboutwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -32,10 +32,10 @@
  #include "aboutwidget.h"
  
@@ -5686,8 +5686,8 @@ Index: kuickshow/src/aboutwidget.cpp
      }
 Index: kuickshow/src/imagewindow.h
 ===================================================================
---- kuickshow/src/imagewindow.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/imagewindow.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/imagewindow.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/imagewindow.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -81,12 +81,14 @@
    void 		toggleFullscreen();
    void 		maximize();
@@ -5714,8 +5714,8 @@ Index: kuickshow/src/imagewindow.h
  
 Index: kuickshow/src/version.h
 ===================================================================
---- kuickshow/src/version.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kuickshow/src/version.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kuickshow/src/version.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kuickshow/src/version.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,3 +1,3 @@
  #ifndef KUICKSHOWVERSION
 -#define KUICKSHOWVERSION "0.8.7"
@@ -5723,8 +5723,8 @@ Index: kuickshow/src/version.h
  #endif
 Index: kolourpaint/kolourpaint.desktop
 ===================================================================
---- kolourpaint/kolourpaint.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kolourpaint/kolourpaint.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kolourpaint/kolourpaint.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kolourpaint/kolourpaint.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -6,7 +6,6 @@
  Name[pa]=ਕੇ-ਰੰਗ-ਪੇਂਟ
  Name[sv]=Kolourpaint
@@ -5743,8 +5743,8 @@ Index: kolourpaint/kolourpaint.desktop
  GenericName[zu]=Elila Iprogremu Kapende
 Index: ksvg/dom/SVGPolylineElement.h
 ===================================================================
---- ksvg/dom/SVGPolylineElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/dom/SVGPolylineElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/dom/SVGPolylineElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/dom/SVGPolylineElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,8 +14,8 @@
  
      You should have received a copy of the GNU Library General Public
@@ -5758,8 +5758,8 @@ Index: ksvg/dom/SVGPolylineElement.h
      This file includes excerpts from the Scalable Vector Graphics
 Index: ksvg/dom/SVGTextElement.h
 ===================================================================
---- ksvg/dom/SVGTextElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/dom/SVGTextElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/dom/SVGTextElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/dom/SVGTextElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,8 +14,8 @@
  
      You should have received a copy of the GNU Library General Public
@@ -5773,8 +5773,8 @@ Index: ksvg/dom/SVGTextElement.h
      This file includes excerpts from the Scalable Vector Graphics
 Index: ksvg/dom/SVGLineElement.h
 ===================================================================
---- ksvg/dom/SVGLineElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/dom/SVGLineElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/dom/SVGLineElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/dom/SVGLineElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,8 +14,8 @@
  
      You should have received a copy of the GNU Library General Public
@@ -5788,8 +5788,8 @@ Index: ksvg/dom/SVGLineElement.h
      This file includes excerpts from the Scalable Vector Graphics
 Index: ksvg/dom/SVGEllipseElement.h
 ===================================================================
---- ksvg/dom/SVGEllipseElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/dom/SVGEllipseElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/dom/SVGEllipseElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/dom/SVGEllipseElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,8 +14,8 @@
  
      You should have received a copy of the GNU Library General Public
@@ -5803,8 +5803,8 @@ Index: ksvg/dom/SVGEllipseElement.h
      This file includes excerpts from the Scalable Vector Graphics
 Index: ksvg/dom/SVGRectElement.h
 ===================================================================
---- ksvg/dom/SVGRectElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/dom/SVGRectElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/dom/SVGRectElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/dom/SVGRectElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,8 +14,8 @@
  
      You should have received a copy of the GNU Library General Public
@@ -5818,8 +5818,8 @@ Index: ksvg/dom/SVGRectElement.h
      This file includes excerpts from the Scalable Vector Graphics
 Index: ksvg/dom/SVGCircleElement.h
 ===================================================================
---- ksvg/dom/SVGCircleElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/dom/SVGCircleElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/dom/SVGCircleElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/dom/SVGCircleElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,8 +14,8 @@
  
      You should have received a copy of the GNU Library General Public
@@ -5833,8 +5833,8 @@ Index: ksvg/dom/SVGCircleElement.h
      This file includes excerpts from the Scalable Vector Graphics
 Index: ksvg/dom/SVGPolygonElement.h
 ===================================================================
---- ksvg/dom/SVGPolygonElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/dom/SVGPolygonElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/dom/SVGPolygonElement.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/dom/SVGPolygonElement.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -14,8 +14,8 @@
  
      You should have received a copy of the GNU Library General Public
@@ -5848,8 +5848,8 @@ Index: ksvg/dom/SVGPolygonElement.h
      This file includes excerpts from the Scalable Vector Graphics
 Index: ksvg/core/ksvgrenderer.desktop
 ===================================================================
---- ksvg/core/ksvgrenderer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/core/ksvgrenderer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/core/ksvgrenderer.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/core/ksvgrenderer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -11,7 +11,7 @@
  Comment[cy]=Ôl-wyneb Llunio KSVG
  Comment[da]=Underliggende program for KSVG-visning
@@ -5869,8 +5869,8 @@ Index: ksvg/core/ksvgrenderer.desktop
  [PropertyDef::X-KSVG-InternalName]
 Index: ksvg/plugin/ksvgplugin.desktop
 ===================================================================
---- ksvg/plugin/ksvgplugin.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/plugin/ksvgplugin.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/plugin/ksvgplugin.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/plugin/ksvgplugin.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -18,7 +18,6 @@
  Name[ta]=KSVGசொருகுப்பொருள்
  Name[tr]=KSVG Eklentisi
@@ -5889,8 +5889,8 @@ Index: ksvg/plugin/ksvgplugin.desktop
  Type=Service
 Index: ksvg/plugin/backends/libart/ksvglibartcanvas.desktop
 ===================================================================
---- ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -12,7 +12,7 @@
  Name[cy]=Ôl-wyneb Llunio KSVG - Libart
  Name[da]=Underliggende program til KSVG-visning - Libart
@@ -5926,8 +5926,8 @@ Index: ksvg/plugin/backends/libart/ksvglibartcanvas.desktop
  author=Nikolas Zimmermann <wildfox@kde.org>
 Index: ksvg/plugin/backends/agg/ksvgaggcanvas.desktop
 ===================================================================
---- ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -12,7 +12,7 @@
  Name[cy]=Ôl-wyneb Llunio KSVG - Geometreg Wrth-Raen
  Name[da]=Underliggende program for KSVG-visning - antikorn geometri
@@ -5963,8 +5963,8 @@ Index: ksvg/plugin/backends/agg/ksvgaggcanvas.desktop
  author=Rob Buis <buis@kde.org>
 Index: ksvg/plugin/svgthumbnail.desktop
 ===================================================================
---- ksvg/plugin/svgthumbnail.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksvg/plugin/svgthumbnail.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksvg/plugin/svgthumbnail.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksvg/plugin/svgthumbnail.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -35,7 +35,6 @@
  Name[uk]=Масштабовна векторна графіка
  Name[ven]=Dzigirafiki ya vekitha ya Scalable
@@ -5975,8 +5975,8 @@ Index: ksvg/plugin/svgthumbnail.desktop
  Icon=thumbnail
 Index: ksnapshot/ksnapshotwidget.ui.h
 ===================================================================
---- ksnapshot/ksnapshotwidget.ui.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksnapshot/ksnapshotwidget.ui.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksnapshot/ksnapshotwidget.ui.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksnapshot/ksnapshotwidget.ui.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -27,6 +27,8 @@
      default:
  	break;
@@ -5988,8 +5988,8 @@ Index: ksnapshot/ksnapshotwidget.ui.h
  
 Index: ksnapshot/ksnapshot.desktop
 ===================================================================
---- ksnapshot/ksnapshot.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksnapshot/ksnapshot.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksnapshot/ksnapshot.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksnapshot/ksnapshot.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -54,7 +54,6 @@
  GenericName[ven]=Mbekanya mushumo ino gavha tshikirini
  GenericName[wa]=Programe po fé des waitroûlêyes
@@ -6008,8 +6008,8 @@ Index: ksnapshot/ksnapshot.desktop
  MimeType=
 Index: ksnapshot/regiongrabber.cpp
 ===================================================================
---- ksnapshot/regiongrabber.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksnapshot/regiongrabber.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksnapshot/regiongrabber.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksnapshot/regiongrabber.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -89,6 +89,14 @@
    pixmap = QPixmap::grabWindow( qt_xrootwin() );
    setPaletteBackgroundPixmap( pixmap );
@@ -6027,8 +6027,8 @@ Index: ksnapshot/regiongrabber.cpp
    QApplication::setOverrideCursor( crossCursor );
 Index: ksnapshot/ksnapshot.cpp
 ===================================================================
---- ksnapshot/ksnapshot.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ ksnapshot/ksnapshot.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- ksnapshot/ksnapshot.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ ksnapshot/ksnapshot.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -256,7 +256,7 @@
  {
      hide();
@@ -6040,8 +6040,8 @@ Index: ksnapshot/ksnapshot.cpp
  	if ( mainWidget->mode() == Region ) {
 Index: kviewshell/kmultipage.cpp
 ===================================================================
---- kviewshell/kmultipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/kmultipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/kmultipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/kmultipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -68,8 +68,10 @@
    // Create MarkList
    _markList = new MarkList(sideBar, "marklist");
@@ -6097,8 +6097,8 @@ Index: kviewshell/kmultipage.cpp
    }
 Index: kviewshell/kviewshell.kcfg
 ===================================================================
---- kviewshell/kviewshell.kcfg	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/kviewshell.kcfg	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/kviewshell.kcfg	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/kviewshell.kcfg	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -72,6 +72,9 @@
      </whatsthis>
    </entry>
@@ -6111,8 +6111,8 @@ Index: kviewshell/kviewshell.kcfg
     <entry key="PaperColor" type="Color" >
 Index: kviewshell/kmultipage.desktop
 ===================================================================
---- kviewshell/kmultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/kmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/kmultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/kmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -4,6 +4,7 @@
  Name=KViewShell MultiPage
  Name[da]=KViewShell Multiside
@@ -6131,8 +6131,8 @@ Index: kviewshell/kmultipage.desktop
  [PropertyDef::X-KDE-MimeTypes]
 Index: kviewshell/plugins/djvu/djvurenderer.cpp
 ===================================================================
---- kviewshell/plugins/djvu/djvurenderer.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/plugins/djvu/djvurenderer.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/plugins/djvu/djvurenderer.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/plugins/djvu/djvurenderer.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -663,7 +663,15 @@
    }
    
@@ -6152,8 +6152,8 @@ Index: kviewshell/plugins/djvu/djvurenderer.cpp
    if (QFile::exists(filename) == false)
 Index: kviewshell/plugins/djvu/pageRangeWidget.h
 ===================================================================
---- kviewshell/plugins/djvu/pageRangeWidget.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/plugins/djvu/pageRangeWidget.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/plugins/djvu/pageRangeWidget.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/plugins/djvu/pageRangeWidget.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -15,7 +15,7 @@
   *   You should have received a copy of the GNU General Public License     *
   *   along with this program; if not, write to the                         *
@@ -6165,8 +6165,8 @@ Index: kviewshell/plugins/djvu/pageRangeWidget.h
  #ifndef PAGERANGEWIDGET_H
 Index: kviewshell/plugins/djvu/djvumultipage.desktop
 ===================================================================
---- kviewshell/plugins/djvu/djvumultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/plugins/djvu/djvumultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/plugins/djvu/djvumultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/plugins/djvu/djvumultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,9 +1,9 @@
  [Desktop Entry]
  Encoding=UTF-8
@@ -6201,8 +6201,8 @@ Index: kviewshell/plugins/djvu/djvumultipage.desktop
  X-KDE-MimeTypes=image/x-djvu
 Index: kviewshell/plugins/djvu/djvumultipage.cpp
 ===================================================================
---- kviewshell/plugins/djvu/djvumultipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/plugins/djvu/djvumultipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/plugins/djvu/djvumultipage.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/plugins/djvu/djvumultipage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -334,8 +334,8 @@
      fileName = fileName+ending;
  
@@ -6216,8 +6216,8 @@ Index: kviewshell/plugins/djvu/djvumultipage.cpp
    }
 Index: kviewshell/plugins/djvu/kprintDialogPage_DJVUconversionoptions_basewidget.ui
 ===================================================================
---- kviewshell/plugins/djvu/kprintDialogPage_DJVUconversionoptions_basewidget.ui	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/plugins/djvu/kprintDialogPage_DJVUconversionoptions_basewidget.ui	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/plugins/djvu/kprintDialogPage_DJVUconversionoptions_basewidget.ui	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/plugins/djvu/kprintDialogPage_DJVUconversionoptions_basewidget.ui	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -115,11 +115,11 @@
                  </sizepolicy>
              </property>
@@ -6237,8 +6237,8 @@ Index: kviewshell/plugins/djvu/kprintDialogPage_DJVUconversionoptions_basewidget
          <spacer row="2" column="1">
 Index: kviewshell/plugins/djvu/pageRangeWidget.cpp
 ===================================================================
---- kviewshell/plugins/djvu/pageRangeWidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/plugins/djvu/pageRangeWidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/plugins/djvu/pageRangeWidget.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/plugins/djvu/pageRangeWidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -15,7 +15,7 @@
   *   You should have received a copy of the GNU General Public License     *
   *   along with this program; if not, write to the                         *
@@ -6250,8 +6250,8 @@ Index: kviewshell/plugins/djvu/pageRangeWidget.cpp
  #include <kdebug.h>
 Index: kviewshell/kmultipage.h
 ===================================================================
---- kviewshell/kmultipage.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/kmultipage.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/kmultipage.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/kmultipage.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -227,11 +227,11 @@
     has actually been used. A default implementation is provided. */
    virtual double setZoom(double z);
@@ -6270,8 +6270,8 @@ Index: kviewshell/kmultipage.h
    virtual bool supportsTextSearch() const { return getRenderer() && getRenderer()->supportsTextSearch(); }
 Index: kviewshell/tableOfContents.cpp
 ===================================================================
---- kviewshell/tableOfContents.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/tableOfContents.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/tableOfContents.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/tableOfContents.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -25,6 +25,7 @@
  
  #include "tableOfContents.h"
@@ -6313,8 +6313,8 @@ Index: kviewshell/tableOfContents.cpp
    clear();
 Index: kviewshell/emptymultipage.desktop
 ===================================================================
---- kviewshell/emptymultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/emptymultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/emptymultipage.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/emptymultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -1,9 +1,9 @@
  [Desktop Entry]
  Type=Service
@@ -6336,8 +6336,8 @@ Index: kviewshell/emptymultipage.desktop
  X-KDE-EmptyMultiPage=1
 Index: kviewshell/tableOfContents.h
 ===================================================================
---- kviewshell/tableOfContents.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/tableOfContents.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/tableOfContents.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/tableOfContents.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -53,6 +53,9 @@
  
    void setContents(const QPtrList<Bookmark>& bookmarks);
@@ -6350,8 +6350,8 @@ Index: kviewshell/tableOfContents.h
  
 Index: kviewshell/pageView.cpp
 ===================================================================
---- kviewshell/pageView.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/pageView.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/pageView.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/pageView.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -49,7 +49,7 @@
    setDragAutoScroll(false);
  
@@ -6363,8 +6363,8 @@ Index: kviewshell/pageView.cpp
    fullScreen = false;
 Index: kviewshell/kviewpart.cpp
 ===================================================================
---- kviewshell/kviewpart.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kviewshell/kviewpart.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kviewshell/kviewpart.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kviewshell/kviewpart.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -338,6 +338,12 @@
  
  KViewPart::~KViewPart()
@@ -6402,8 +6402,8 @@ Index: kviewshell/kviewpart.cpp
    KVSPrefs::setZoom(_zoomVal.value());
 Index: kmrml/kmrml/mrml.desktop
 ===================================================================
---- kmrml/kmrml/mrml.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kmrml/kmrml/mrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kmrml/kmrml/mrml.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kmrml/kmrml/mrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -42,7 +42,6 @@
  Comment[uk]=Документ формату зберігання мультимедія
  Comment[ven]=Manwalwa a luambo lwau humbula zwa khasho nnzhi
@@ -6414,8 +6414,8 @@ Index: kmrml/kmrml/mrml.desktop
  Comment[zu]=Ushicilelo Lwe-Multimedia Retrieval Markup Language 
 Index: kmrml/kmrml/kcontrol/kcmkmrml.desktop
 ===================================================================
---- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -55,7 +55,6 @@
  Name[ven]=Index ya tshifanyiso
  Name[wa]=Indecse des imådjes
@@ -6460,8 +6460,8 @@ Index: kmrml/kmrml/kcontrol/kcmkmrml.desktop
  Keywords[zu]=Izithombe,Funa,Buza,Thola,Isipho,kmrml,mrml,CBIR
 Index: kmrml/kmrml/mrml-servicemenu.desktop
 ===================================================================
---- kmrml/kmrml/mrml-servicemenu.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kmrml/kmrml/mrml-servicemenu.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kmrml/kmrml/mrml-servicemenu.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kmrml/kmrml/mrml-servicemenu.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -12,7 +12,7 @@
  Name[cs]=Hledat podobný obrázek...
  Name[cy]=Chwilio am Ddelweddau Tebyg...
@@ -6490,8 +6490,8 @@ Index: kmrml/kmrml/mrml-servicemenu.desktop
  Name[zu]=Sesha ukuthola Izithombe Ezifanayo....
 Index: kmrml/kmrml/mrml_part.desktop
 ===================================================================
---- kmrml/kmrml/mrml_part.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kmrml/kmrml/mrml_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kmrml/kmrml/mrml_part.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kmrml/kmrml/mrml_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -43,7 +43,6 @@
  Name[uk]=Перегляд MRML
  Name[ven]=Mbonalelo ya MRML
@@ -6502,8 +6502,8 @@ Index: kmrml/kmrml/mrml_part.desktop
  Name[zu]=Umbukiso we-MRML
 Index: kmrml/kmrml/server/daemonwatcher.desktop
 ===================================================================
---- kmrml/kmrml/server/daemonwatcher.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kmrml/kmrml/server/daemonwatcher.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kmrml/kmrml/server/daemonwatcher.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kmrml/kmrml/server/daemonwatcher.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -41,7 +41,6 @@
  Name[tg]=Мудири демони KDED KMRML
  Name[tr]=KDED KMRML Aracı İzleyici
@@ -6522,8 +6522,8 @@ Index: kmrml/kmrml/server/daemonwatcher.desktop
  X-KDE-ModuleType=Library
 Index: kfax/kfax.desktop
 ===================================================================
---- kfax/kfax.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfax/kfax.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfax/kfax.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfax/kfax.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -53,7 +53,6 @@
  GenericName[ven]=Muvhoni wa Fekisi
  GenericName[wa]=Håyneu di facs
@@ -6542,8 +6542,8 @@ Index: kfax/kfax.desktop
  Icon=kfax
 Index: kghostview/kgvdocument.cpp
 ===================================================================
---- kghostview/kgvdocument.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kghostview/kgvdocument.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kghostview/kgvdocument.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kghostview/kgvdocument.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -567,8 +567,9 @@
                            QString::null );
      if( !KIO::NetAccess::upload( _fileName,
@@ -6564,8 +6564,8 @@ Name: svn:executable
 
 Index: kghostview/kghostview.desktop
 ===================================================================
---- kghostview/kghostview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kghostview/kghostview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kghostview/kghostview.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kghostview/kghostview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -12,7 +12,6 @@
  Name[tr]=GhostView
  Name[ven]=Mbonalelo ya tshipuku tsha K
@@ -6590,8 +6590,8 @@ Name: svn:executable
 
 Index: kamera/kcontrol/kamera.cpp
 ===================================================================
---- kamera/kcontrol/kamera.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kcontrol/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kcontrol/kamera.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kcontrol/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -17,7 +17,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6603,8 +6603,8 @@ Index: kamera/kcontrol/kamera.cpp
  #include <qlabel.h>
 Index: kamera/kcontrol/kameradevice.cpp
 ===================================================================
---- kamera/kcontrol/kameradevice.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kcontrol/kameradevice.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kcontrol/kameradevice.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kcontrol/kameradevice.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -17,7 +17,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6616,8 +6616,8 @@ Index: kamera/kcontrol/kameradevice.cpp
  #include <qlayout.h>
 Index: kamera/kcontrol/kamera.h
 ===================================================================
---- kamera/kcontrol/kamera.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kcontrol/kamera.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kcontrol/kamera.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kcontrol/kamera.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -17,7 +17,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6629,8 +6629,8 @@ Index: kamera/kcontrol/kamera.h
  #ifndef __kamera_h__
 Index: kamera/kcontrol/kameradevice.h
 ===================================================================
---- kamera/kcontrol/kameradevice.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kcontrol/kameradevice.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kcontrol/kameradevice.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kcontrol/kameradevice.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -17,7 +17,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6642,8 +6642,8 @@ Index: kamera/kcontrol/kameradevice.h
  #ifndef __kameradevice_h__
 Index: kamera/kcontrol/kameraconfigdialog.cpp
 ===================================================================
---- kamera/kcontrol/kameraconfigdialog.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kcontrol/kameraconfigdialog.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kcontrol/kameraconfigdialog.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kcontrol/kameraconfigdialog.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -17,7 +17,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6655,8 +6655,8 @@ Index: kamera/kcontrol/kameraconfigdialog.cpp
  #include <qlayout.h>
 Index: kamera/kcontrol/kamera.desktop
 ===================================================================
---- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -16,7 +16,7 @@
  Comment[eo]=Agordu fotilon
  Comment[es]=Configura Kamera
@@ -6692,8 +6692,8 @@ Index: kamera/kcontrol/kamera.desktop
  Name[zu]=Ikhamera ebonisa inani ngalinye
 Index: kamera/kcontrol/kameraconfigdialog.h
 ===================================================================
---- kamera/kcontrol/kameraconfigdialog.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kcontrol/kameraconfigdialog.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kcontrol/kameraconfigdialog.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kcontrol/kameraconfigdialog.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -17,7 +17,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6705,8 +6705,8 @@ Index: kamera/kcontrol/kameraconfigdialog.h
  #ifndef __kameraconfigdialog_h__
 Index: kamera/kioslave/kamera.cpp
 ===================================================================
---- kamera/kioslave/kamera.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kioslave/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kioslave/kamera.cpp	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kioslave/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -16,7 +16,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6718,8 +6718,8 @@ Index: kamera/kioslave/kamera.cpp
  
 Index: kamera/kioslave/kamera.h
 ===================================================================
---- kamera/kioslave/kamera.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kamera/kioslave/kamera.h	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kamera/kioslave/kamera.h	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kamera/kioslave/kamera.h	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -16,7 +16,7 @@
  
      You should have received a copy of the GNU General Public License
@@ -6731,8 +6731,8 @@ Index: kamera/kioslave/kamera.h
  
 Index: kruler/eventsrc
 ===================================================================
---- kruler/eventsrc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kruler/eventsrc	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kruler/eventsrc	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kruler/eventsrc	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -54,7 +54,6 @@
  Comment[uz]=KDE экран линейкаси
  Comment[ven]=Muvhusi wa tshikirini tsha KDE
@@ -6759,8 +6759,8 @@ Index: kruler/eventsrc
  Comment[zu]=Umlawuli unyakazise jikelele kwipixel esebenzisa izikhiye ze cursor
 Index: kruler/kruler.desktop
 ===================================================================
---- kruler/kruler.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kruler/kruler.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kruler/kruler.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kruler/kruler.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -48,7 +48,6 @@
  GenericName[uk]=Лінійка екрана
  GenericName[uz]=Экран линейкаси
@@ -6779,8 +6779,8 @@ Index: kruler/kruler.desktop
  MimeType=
 Index: kiconedit/kiconedit.desktop
 ===================================================================
---- kiconedit/kiconedit.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kiconedit/kiconedit.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kiconedit/kiconedit.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kiconedit/kiconedit.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -56,7 +56,6 @@
  GenericName[ven]=Musengulusi wa Aikhono
  GenericName[wa]=Aspougneu d' imådjetes
@@ -6799,8 +6799,8 @@ Index: kiconedit/kiconedit.desktop
  Exec=kiconedit -caption "%c" %i %m %u
 Index: kfile-plugins/ps/kfile_ps.desktop
 ===================================================================
---- kfile-plugins/ps/kfile_ps.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/ps/kfile_ps.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/ps/kfile_ps.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/ps/kfile_ps.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -50,7 +50,6 @@
  Name[ven]=Mafhungo a mabammbiri a poso
  Name[wa]=Informåcion sol documint PostScript
@@ -6811,8 +6811,8 @@ Index: kfile-plugins/ps/kfile_ps.desktop
  Name[zu]=Ulwazi Lwesi-PostScript
 Index: kfile-plugins/ps/gsthumbnail.desktop
 ===================================================================
---- kfile-plugins/ps/gsthumbnail.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/ps/gsthumbnail.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/ps/gsthumbnail.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/ps/gsthumbnail.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -43,7 +43,6 @@
  Name[tr]=PostScript, PDF ve DVI Dosyaları
  Name[uk]=Файли PostScript, PDF та DVI
@@ -6823,8 +6823,8 @@ Index: kfile-plugins/ps/gsthumbnail.desktop
  MimeTypes=application/x-dvi,application/postscript,application/pdf,image/x-eps
 Index: kfile-plugins/dvi/kfile_dvi.desktop
 ===================================================================
---- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -43,7 +43,6 @@
  Name[uk]=Інформація по DVI
  Name[uz]=DVI ҳақида маълумот
@@ -6835,8 +6835,8 @@ Index: kfile-plugins/dvi/kfile_dvi.desktop
  Type=Service
 Index: kfile-plugins/png/kfile_png.desktop
 ===================================================================
---- kfile-plugins/png/kfile_png.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/png/kfile_png.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/png/kfile_png.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/png/kfile_png.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -48,7 +48,6 @@
  Name[ven]=Mafhungo a PNG
  Name[wa]=Informåcion sol imådje PNG
@@ -6847,8 +6847,8 @@ Index: kfile-plugins/png/kfile_png.desktop
  Name[zu]=Ulwazi lwe-PNG
 Index: kfile-plugins/jpeg/kfile_jpeg.desktop
 ===================================================================
---- kfile-plugins/jpeg/kfile_jpeg.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/jpeg/kfile_jpeg.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/jpeg/kfile_jpeg.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/jpeg/kfile_jpeg.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -46,7 +46,6 @@
  Name[ven]=Mafhungo a JPEG EXIF
  Name[wa]=Informåcion sol imådje JPEG EXIF
@@ -6859,8 +6859,8 @@ Index: kfile-plugins/jpeg/kfile_jpeg.desktop
  Name[zu]=Ulwazi lwe-JPEG EXIF
 Index: kfile-plugins/xbm/kfile_xbm.desktop
 ===================================================================
---- kfile-plugins/xbm/kfile_xbm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/xbm/kfile_xbm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/xbm/kfile_xbm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/xbm/kfile_xbm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -47,7 +47,6 @@
  Name[ven]=Mafhungo a XBM
  Name[wa]=Informåcion sol imådje XBM
@@ -6871,8 +6871,8 @@ Index: kfile-plugins/xbm/kfile_xbm.desktop
  Name[zu]=Ulwazi lwe-XBM
 Index: kfile-plugins/tiff/kfile_tiff.desktop
 ===================================================================
---- kfile-plugins/tiff/kfile_tiff.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/tiff/kfile_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/tiff/kfile_tiff.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/tiff/kfile_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -49,7 +49,6 @@
  Name[ven]=Mafhungo a Meta faela ya TIFF
  Name[wa]=Informåcion sol imådje TIFF
@@ -6883,8 +6883,8 @@ Index: kfile-plugins/tiff/kfile_tiff.desktop
  Name[zu]=Ulwazi Lwefayela yemeta ye-TIFF
 Index: kfile-plugins/raw/x-image-raw.desktop
 ===================================================================
---- kfile-plugins/raw/x-image-raw.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/raw/x-image-raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/raw/x-image-raw.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/raw/x-image-raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -10,10 +10,13 @@
  Comment[cs]=RAW soubor
  Comment[da]=RAW kamera-fil
@@ -6907,8 +6907,8 @@ Index: kfile-plugins/raw/x-image-raw.desktop
  Comment[zh_CN]=RAW 相机文件
 Index: kfile-plugins/raw/kfile_raw.desktop
 ===================================================================
---- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -10,8 +10,10 @@
  Name[el]=RAW αρχείο κάμερας
  Name[es]=Archivos RAW de cámara
@@ -6930,8 +6930,8 @@ Index: kfile-plugins/raw/kfile_raw.desktop
  MimeType=image/x-raw
 Index: kfile-plugins/raw/parse.c
 ===================================================================
---- kfile-plugins/raw/parse.c	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/raw/parse.c	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/raw/parse.c	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/raw/parse.c	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -713,10 +713,12 @@
  			printf (" %d", sget4(dp));
  			dp += 4;
@@ -6950,8 +6950,8 @@ Index: kfile-plugins/raw/parse.c
  		}
 Index: kfile-plugins/pnm/kfile_pnm.desktop
 ===================================================================
---- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -43,7 +43,6 @@
  Name[uk]=Інформація про PNM
  Name[uz]=PNM ҳақида маълумот
@@ -6962,8 +6962,8 @@ Index: kfile-plugins/pnm/kfile_pnm.desktop
  X-KDE-Library=kfile_pnm
 Index: kfile-plugins/pcx/kfile_pcx.desktop
 ===================================================================
---- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -44,7 +44,6 @@
  Name[uk]=Мета-інформація про файл PCX
  Name[uz]=PCX-файлининг мета-маълумоти
@@ -6974,8 +6974,8 @@ Index: kfile-plugins/pcx/kfile_pcx.desktop
  X-KDE-Library=kfile_pcx
 Index: kfile-plugins/exr/kfile_exr.desktop
 ===================================================================
---- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -39,7 +39,6 @@
  Name[tr]=EXR Bilgisi
  Name[uk]=Інформація по EXR
@@ -6986,8 +6986,8 @@ Index: kfile-plugins/exr/kfile_exr.desktop
  X-KDE-Library=kfile_exr
 Index: kfile-plugins/xpm/kfile_xpm.desktop
 ===================================================================
---- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -33,7 +33,6 @@
  Name[tr]=XPM Bilgisi
  Name[uk]=Інформація про XPM
@@ -6998,8 +6998,8 @@ Index: kfile-plugins/xpm/kfile_xpm.desktop
  X-KDE-Library=kfile_xpm
 Index: kfile-plugins/gif/kfile_gif.desktop
 ===================================================================
---- kfile-plugins/gif/kfile_gif.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/gif/kfile_gif.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/gif/kfile_gif.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/gif/kfile_gif.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -48,7 +48,6 @@
  Name[ven]=Mafhungo a GIF
  Name[wa]=Informåcion sol imådje GIF
@@ -7010,8 +7010,8 @@ Index: kfile-plugins/gif/kfile_gif.desktop
  Name[zu]=Ulwazi lwe-GIF
 Index: kfile-plugins/pdf/kfile_pdf.desktop
 ===================================================================
---- kfile-plugins/pdf/kfile_pdf.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/pdf/kfile_pdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/pdf/kfile_pdf.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/pdf/kfile_pdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -48,7 +48,6 @@
  Name[ven]=Mafhungo a PDF
  Name[wa]=Informåcion sol documint PDF
@@ -7022,8 +7022,8 @@ Index: kfile-plugins/pdf/kfile_pdf.desktop
  Name[zu]=Ulwazi lwe-PDF
 Index: kfile-plugins/ico/kfile_ico.desktop
 ===================================================================
---- kfile-plugins/ico/kfile_ico.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/ico/kfile_ico.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/ico/kfile_ico.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/ico/kfile_ico.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -47,7 +47,6 @@
  Name[ven]=Mafhungo a ICO
  Name[wa]=Informåcion sol imådjete ICO
@@ -7034,8 +7034,8 @@ Index: kfile-plugins/ico/kfile_ico.desktop
  Name[zu]=Ulwazi lwe-ICO
 Index: kfile-plugins/dds/kfile_dds.desktop
 ===================================================================
---- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -6,6 +6,7 @@
  Name[cs]=DirectDraw Surface info
  Name[da]=DirectDraw overflade-info
@@ -7054,8 +7054,8 @@ Index: kfile-plugins/dds/kfile_dds.desktop
  X-KDE-Library=kfile_dds
 Index: kfile-plugins/rgb/kfile_rgb.desktop
 ===================================================================
---- kfile-plugins/rgb/kfile_rgb.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/rgb/kfile_rgb.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/rgb/kfile_rgb.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/rgb/kfile_rgb.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -45,7 +45,6 @@
  Name[tr]=SGI Resmi(KYM)
  Name[uk]=Зображення SGI (RGB)
@@ -7066,8 +7066,8 @@ Index: kfile-plugins/rgb/kfile_rgb.desktop
  X-KDE-Library=kfile_rgb
 Index: kfile-plugins/tga/kfile_tga.desktop
 ===================================================================
---- kfile-plugins/tga/kfile_tga.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/tga/kfile_tga.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/tga/kfile_tga.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/tga/kfile_tga.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -46,7 +46,6 @@
  Name[ven]=Mafhungo a Targa ya mbonalelo ya vhukuma
  Name[wa]=Informåcion sol imådje Truevision Targa
@@ -7078,8 +7078,8 @@ Index: kfile-plugins/tga/kfile_tga.desktop
  Name[zu]=Ulwazi lwe-Truevision Targa
 Index: kfile-plugins/bmp/kfile_bmp.desktop
 ===================================================================
---- kfile-plugins/bmp/kfile_bmp.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 495790)
-+++ kfile-plugins/bmp/kfile_bmp.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 495790)
+--- kfile-plugins/bmp/kfile_bmp.desktop	(.../tags/KDE/3.5.0/kdegraphics)	(revision 497739)
++++ kfile-plugins/bmp/kfile_bmp.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 497739)
 @@ -48,7 +48,6 @@
  Name[ven]=Mafhungo BMP
  Name[wa]=Informåcion sol imådje BMP
