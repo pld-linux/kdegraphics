@@ -571,7 +571,7 @@ cp %{_datadir}/automake/config.sub admin
 %configure \
 	--%{?debug:en}%{!?debug:dis}able-debug%{?debug:=full} \
 	%{!?debug:--disable-rpath} \
-	--enable-final \
+	--disable-final \
 	%{?with_hidden_visibility:--enable-gcc-hidden-visibility} \
 	--enable-kpdf-drm=%{!?with_protections:no}%{?with_protections:yes} \
 %if "%{_lib}" == "lib64"
