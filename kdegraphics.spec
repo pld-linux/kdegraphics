@@ -1,5 +1,6 @@
 #
 # Conditional build:
+%bcond_without	kuickshow		# do not build kuickshow app (omit imlib req)
 %bcond_with	protections		# protections against fair use (printing and copying)
 %bcond_with	hidden_visibility	# pass '--fvisibility=hidden'
 					# & '--fvisibility-inlines-hidden'
@@ -34,7 +35,7 @@ BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 %{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
 BuildRequires:	gettext-devel
-BuildRequires:	imlib-devel
+%{?with_kuickshow:BuildRequires:	imlib-devel}
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	kpathsea
 BuildRequires:	lcms-devel
@@ -568,6 +569,10 @@ cp %{_datadir}/automake/config.sub admin
 
 %{__make} -f admin/Makefile.common cvs
 
+%if %{without kuickshow}
+export DO_NOT_COMPILE="$DO_NOT_COMPILE kuickshow"
+%endif
+
 %configure \
 	--%{?debug:en}%{!?debug:dis}able-debug%{?debug:=full} \
 	%{!?debug:--disable-rpath} \
@@ -842,6 +847,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/svgthumbnail.desktop
 %{_datadir}/servicetypes/ksvgrenderer.desktop
 
+%if %{with kuickshow}
 %files kuickshow -f kuickshow.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kuickshow
@@ -853,6 +859,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kuickshow.desktop
 %{_iconsdir}/[!l]*/*/*/kuickshow.*
 %{_mandir}/man1/kuickshow.1*
+%endif
 
 %files kview -f kview.lang
 %defattr(644,root,root,755)
