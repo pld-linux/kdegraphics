@@ -19,7 +19,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	2
+Release:	3
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -28,7 +28,6 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.t
 Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
-Patch2:		%{name}-kpdf-overwriteself.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-devel
 BuildRequires:	ed
@@ -531,10 +530,9 @@ aplikacjach KDE.
 
 %prep
 %setup -q
-#%patch100 -p0
+%patch100 -p0
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
 	kdvi/kdvi.desktop \
