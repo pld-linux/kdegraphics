@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_without	kuickshow		# do not build kuickshow app (omit imlib req)
 %bcond_with	protections		# protections against fair use (printing and copying)
-%bcond_with	hidden_visibility	# pass '--fvisibility=hidden'
+%bcond_without	hidden_visibility	# pass '--fvisibility=hidden'
 					# & '--fvisibility-inlines-hidden'
 					# to g++ 
 #
