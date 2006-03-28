@@ -7,11 +7,11 @@
 					# to g++ 
 #
 %define		_state		stable
-%define		_kdever		3.5.1
-%define		_ver		3.5.1
+%define		_kdever		3.5.2
+%define		_ver		3.5.2
 
-%define		_minlibsevr	9:3.5.1
-%define		_minbaseevr	9:3.5.1
+%define		_minlibsevr	9:3.5.2
+%define		_minbaseevr	9:3.5.2
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
@@ -19,13 +19,13 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	%{_ver}
-Release:	4
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	2cd1c5348b7df46cf7f9d91e1dbfebd2
-Patch100:	%{name}-branch.diff
+# Source0-md5:	8e1816a2191ea85b889930159a5d1e46
+#Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
@@ -530,7 +530,7 @@ aplikacjach KDE.
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 
@@ -593,9 +593,11 @@ rm -rf *.lang
 	kde_libs_htmldir=%{_kdedocdir} \
 	kde_htmldir=%{_kdedocdir}
 
+%if 0
 # Debian manpages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install debian/man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
+%endif
 
 %find_lang kamera	--with-kde
 %find_lang kcoloredit	--with-kde
@@ -611,6 +613,8 @@ install debian/man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 %find_lang ksnapshot	--with-kde
 %find_lang kuickshow	--with-kde
 %find_lang kview	--with-kde
+
+rm -f $RPM_BUILD_ROOT%{_datadir}/applnk/Graphics/kruler.desktop
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -664,7 +668,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %{_desktopdir}/kde/kcolorchooser.desktop
 %{_iconsdir}/[!l]*/*/*/kcolorchooser.*
-%{_mandir}/man1/kcolorchooser.1*
+#%{_mandir}/man1/kcolorchooser.1*
 
 %files kcoloredit -f kcoloredit.lang
 %defattr(644,root,root,755)
@@ -672,7 +676,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kcoloredit
 %{_desktopdir}/kde/kcoloredit.desktop
 %{_iconsdir}/[!l]*/*/*/kcoloredit.*
-%{_mandir}/man1/kcoloredit.1*
+#%{_mandir}/man1/kcoloredit.1*
 
 %files kdvi -f kdvi.lang
 %defattr(644,root,root,755)
@@ -684,7 +688,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kdvimultipage.desktop
 %{_desktopdir}/kde/kdvi.desktop
 %{_iconsdir}/*/*/*/kdvi.*
-%{_mandir}/man1/kdvi.1*
+#%{_mandir}/man1/kdvi.1*
 
 %files kfax
 %defattr(644,root,root,755)
@@ -702,7 +706,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kfaxview.desktop
 %{_iconsdir}/*/*/*/kfax.*
 %{_iconsdir}/[!l]*/*/*/kfaxview.*
-%{_mandir}/man1/kfax.1*
+#%{_mandir}/man1/kfax.1*
 
 %files kfile
 %defattr(644,root,root,755)
@@ -710,8 +714,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/gsthumbnail.so
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
-%{_datadir}/config/magic/x-image-raw.magic
-%{_datadir}/mimelnk/image/x-image-raw.desktop
+#%{_datadir}/config/magic/x-image-raw.magic
+#%{_datadir}/mimelnk/image/x-image-raw.desktop
 %{_datadir}/services/gsthumbnail.desktop
 %{_datadir}/services/kfile_*.desktop
 
@@ -737,7 +741,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/kghostview.kcfg
 %{_desktopdir}/kde/kghostview.desktop
 %{_iconsdir}/*/*/*/kghostview.*
-%{_mandir}/man1/kghostview.1*
+#%{_mandir}/man1/kghostview.1*
 
 %files kiconedit -f kiconedit.lang
 %defattr(644,root,root,755)
@@ -745,7 +749,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kiconedit
 %{_desktopdir}/kde/kiconedit.desktop
 %{_iconsdir}/*/*/*/kiconedit.*
-%{_mandir}/man1/kiconedit.1*
+#%{_mandir}/man1/kiconedit.1*
 
 %files kmrml
 %defattr(644,root,root,755)
@@ -772,7 +776,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kolourpaint
 %{_desktopdir}/kde/kolourpaint.desktop
 %{_iconsdir}/[!l]*/*/*/kolourpaint.*
-%{_mandir}/man1/kolourpaint.1*
+#%{_mandir}/man1/kolourpaint.1*
 
 %files kooka -f kooka.lang
 %defattr(644,root,root,755)
@@ -784,7 +788,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/scanservice.desktop
 %{_desktopdir}/kde/kooka.desktop
 %{_iconsdir}/*/*/actions/palette*
-%{_mandir}/man1/kooka.1*
+#%{_mandir}/man1/kooka.1*
 
 %files kpdf -f kpdf.lang
 %defattr(644,root,root,755)
@@ -808,7 +812,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kpovmodeler
 %{_desktopdir}/kde/kpovmodeler.desktop
 %{_iconsdir}/[!l]*/*/*/kpovmodeler*
-%{_mandir}/man1/kpovmodeler.1*
+#%{_mandir}/man1/kpovmodeler.1*
 
 %files kruler -f kruler.lang
 %defattr(644,root,root,755)
@@ -816,14 +820,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kruler
 %{_desktopdir}/kde/kruler.desktop
 %{_iconsdir}/*/*/apps/kruler.*
-%{_mandir}/man1/kruler.1*
+#%{_mandir}/man1/kruler.1*
 
 %files ksnapshot -f ksnapshot.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ksnapshot
 %{_desktopdir}/kde/ksnapshot.desktop
 %{_iconsdir}/*/*/apps/ksnapshot.*
-%{_mandir}/man1/ksnapshot.1*
+#%{_mandir}/man1/ksnapshot.1*
 
 %files ksvg
 %defattr(644,root,root,755)
@@ -856,7 +860,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kuickshow
 %{_desktopdir}/kde/kuickshow.desktop
 %{_iconsdir}/[!l]*/*/*/kuickshow.*
-%{_mandir}/man1/kuickshow.1*
+#%{_mandir}/man1/kuickshow.1*
 %endif
 
 %files kview -f kview.lang
@@ -908,7 +912,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kview.desktop
 %{_iconsdir}/*/*/*/kview.png
 %{_iconsdir}/crystalsvg/*/apps/photobook.png
-%{_mandir}/man1/kview.1*
+#%{_mandir}/man1/kview.1*
 
 %files kviewshell
 %defattr(644,root,root,755)
@@ -925,7 +929,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/emptymultipage.desktop
 %{_datadir}/servicetypes/kmultipage.desktop
 %{_iconsdir}/*/*/*/kviewshell.png
-%{_mandir}/man1/kviewshell.1*
+#%{_mandir}/man1/kviewshell.1*
 # New
 %{_libdir}/kde3/djvuviewpart.la
 %attr(755,root,root) %{_libdir}/kde3/djvuviewpart.so
