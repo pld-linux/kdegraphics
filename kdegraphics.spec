@@ -7,23 +7,20 @@
 					# to g++ 
 #
 %define		_state		stable
-%define		_kdever		3.5.2
-%define		_ver		3.5.2
-
-%define		_minlibsevr	9:3.5.2
-%define		_minbaseevr	9:3.5.2
+%define		_minlibsevr	9:%{version}
+%define		_minbaseevr	9:%{version}
 
 Summary:	K Desktop Environment - Graphic Applications
 Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	%{_ver}
+Version:	3.5.2
 Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	8e1816a2191ea85b889930159a5d1e46
 #Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
