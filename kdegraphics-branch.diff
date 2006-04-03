@@ -1,246 +1,3264 @@
-Index: kpdf/part.cpp
+Index: kpdf/core/generator_pdf/generator_pdf.cpp
 ===================================================================
---- kpdf/part.cpp	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kpdf/part.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -697,6 +697,11 @@
-     KURL saveURL = KFileDialog::getSaveURL( url().isLocalFile() ? url().url() : url().fileName(), QString::null, widget() );
-     if ( saveURL.isValid() && !saveURL.isEmpty() )
+--- kpdf/core/generator_pdf/generator_pdf.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kpdf/core/generator_pdf/generator_pdf.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -731,7 +731,7 @@
+         return i18n( "Unknown Date" );
+ 
+     Object obj;
+-    char *s;
++    const char *s;
+     int year, mon, day, hour, min, sec;
+     Dict *infoDict = info.getDict();
+     UnicodeMap *uMap = globalParams->getTextEncoding();
+@@ -742,7 +742,7 @@
+ 
+     if ( infoDict->lookup( data.latin1(), &obj )->isString() )
      {
-+        if (saveURL == url())
-+        {
-+            KMessageBox::information( widget(), i18n("You are trying to overwrite \"%1\" with itself. This is not allowed. Please save it in another location.").arg(saveURL.filename()) );
-+            return;
-+        }
-         if ( KIO::NetAccess::exists( saveURL, false, widget() ) )
-         {
-             if (KMessageBox::warningContinueCancel( widget(), i18n("A file named \"%1\" already exists. Are you sure you want to overwrite it?").arg(saveURL.filename()), QString::null, i18n("Overwrite")) != KMessageBox::Continue)
-Index: kpdf/configure.in.in
+-        s = obj.getString()->getCString();
++        s = UGString(*obj.getString()).getCString();
+         if ( s[0] == 'D' && s[1] == ':' )
+             s += 2;
+ 
+Index: kpdf/xpdf/xpdf/XRef.cc
 ===================================================================
---- kpdf/configure.in.in	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kpdf/configure.in.in	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -66,7 +66,7 @@
- fi
+--- kpdf/xpdf/xpdf/XRef.cc	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kpdf/xpdf/xpdf/XRef.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -878,19 +878,23 @@
  
- dnl #### Check for FSEEK variants
--AC_SYS_LARGEFILE
-+KDE_CHECK_LARGEFILE
- AC_FUNC_FSEEKO
- AC_CHECK_FUNCS(fseek64, xpdf_cv_func_fseek64=yes, xpdf_cv_func_fseek64=no)
- AC_CHECK_FUNCS(ftell64, xpdf_cv_func_ftell64=yes, xpdf_cv_func_ftell64=no)
-Index: kpdf/xpdf/xpdf/GfxFont.cc
-===================================================================
---- kpdf/xpdf/xpdf/GfxFont.cc	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kpdf/xpdf/xpdf/GfxFont.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -1493,6 +1493,7 @@
-   unsigned int cidlen;
- 
-   *mapsizep = 0;
-+  if (!ctu) return NULL;
- 
-   /* we use only unicode cmap */
-   cmap = -1;
-Index: kpdf/xpdf/splash/SplashXPathScanner.cc
-===================================================================
---- kpdf/xpdf/splash/SplashXPathScanner.cc	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kpdf/xpdf/splash/SplashXPathScanner.cc	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -186,7 +186,7 @@
- }
- 
- void SplashXPathScanner::computeIntersections(int y) {
--  SplashCoord ySegMin, ySegMax, xx0, xx1;
-+  SplashCoord xSegMin, xSegMax, ySegMin, ySegMax, xx0, xx1;
-   SplashXPathSeg *seg;
-   int i, j;
- 
-@@ -236,20 +236,28 @@
-     } else if (seg->flags & splashXPathVert) {
-       xx0 = xx1 = seg->x0;
-     } else {
--      if (ySegMin <= y) {
--	// intersection with top edge
--	xx0 = seg->x0 + ((SplashCoord)y - seg->y0) * seg->dxdy;
-+      if (seg->x0 < seg->x1) {
-+	xSegMin = seg->x0;
-+	xSegMax = seg->x1;
-       } else {
--	// x coord of segment endpoint with min y coord
--	xx0 = (seg->flags & splashXPathFlip) ? seg->x1 : seg->x0;
-+	xSegMin = seg->x1;
-+	xSegMax = seg->x0;
-       }
--      if (ySegMax >= y + 1) {
--	// intersection with bottom edge
--	xx1 = seg->x0 + ((SplashCoord)y + 1 - seg->y0) * seg->dxdy;
--      } else {
--	// x coord of segment endpoint with max y coord
--	xx1 = (seg->flags & splashXPathFlip) ? seg->x0 : seg->x1;
-+      // intersection with top edge
-+      xx0 = seg->x0 + ((SplashCoord)y - seg->y0) * seg->dxdy;
-+      // intersection with bottom edge
-+      xx1 = seg->x0 + ((SplashCoord)y + 1 - seg->y0) * seg->dxdy;
-+      // the segment may not actually extend to the top and/or bottom edges
-+      if (xx0 < xSegMin) {
-+	xx0 = xSegMin;
-+      } else if (xx0 > xSegMax) {
-+	xx0 = xSegMax;
-       }
-+      if (xx1 < xSegMin) {
-+	xx1 = xSegMin;
-+      } else if (xx1 > xSegMax) {
-+	xx1 = xSegMax;
+ int XRef::getNumEntry(int offset) const
+ {
+-  int res = -1;
+-  int resOffset = -1;
+-  XRefEntry e;
+-  for (int i = 0; i < size; ++i)
++  if (size > 0)
+   {
+-    e = entries[i];
+-    if (e.offset < offset && e.offset > resOffset)
++    int res = 0;
++    Guint resOffset = entries[0].offset;
++    XRefEntry e;
++    for (int i = 1; i < size; ++i)
+     {
+-      res = i;
+-      resOffset = e.offset;
++      e = entries[i];
++      if (e.offset < offset && e.offset >= resOffset)
++      {
++        res = i;
++        resOffset = e.offset;
 +      }
      }
-     if (xx0 < xx1) {
-       inter[interLen].x0 = splashFloor(xx0);
++    return res;
+   }
+-  return res;
++  else return -1;
+ }
+ 
+ Guint XRef::strToUnsigned(char *s) {
+Index: kpdf/xpdf/xpdf/Makefile.am
+===================================================================
+--- kpdf/xpdf/xpdf/Makefile.am	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kpdf/xpdf/xpdf/Makefile.am	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -1,4 +1,4 @@
+-INCLUDES = -I$(srcdir)/.. -I$(srcdir)/../fofi -I$(srcdir)/../splash -I$(srcdir)/../goo $(all_includes) $(LIBFREETYPE_CFLAGS) $(XFT_CFLAGS) $(X_INCLUDES) $(QT_INCLUDES)
++INCLUDES = -I$(srcdir)/.. -I$(srcdir)/../fofi -I$(srcdir)/../splash -I$(srcdir)/../goo $(LIBFREETYPE_CFLAGS) $(XFT_CFLAGS) $(all_includes)
+ 
+ libxpdf_la_LDFLAGS = $(all_libraries)
+ libxpdf_la_LIBADD = $(LIB_X11) $(LIBFREETYPE_LIBS) $(LIBPAPER_LIBS) $(XFT_LIBS) $(LIBJPEG) ../goo/libgoo.la ../fofi/libfofi.la ../splash/libsplash.la 
 Index: kfaxview/kfaxmultipage_tiff.desktop
 ===================================================================
---- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -18,7 +18,7 @@
- Comment[et]=KView faksifailide plugin
- Comment[eu]=Fax fitxategientzatko KViewShell-en plugina
- Comment[fi]=KViewShell sovelma faksitiedostoille
--Comment[fr]=Module KViewShell pour les fichiers fax
-+Comment[fr]=Module KViewShell pour les fichiers de fax
- Comment[hu]=KViewShell-modul faxfájlokhoz
- Comment[is]=KViewShell íforrit fyrir faxskrár
- Comment[it]=Plugin KViewShell per file di fax
+--- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -33,6 +33,7 @@
+ Comment[pt]='Plugin' do KViewShell para ficheiros de Fax
+ Comment[pt_BR]='Plugin' do KViewShell para ficheiros de Fax
+ Comment[ru]=Компонент просмотра факсов
++Comment[sl]=Vstavek za KViewShell za fakse
+ Comment[sr]=KViewShell-ов прикључак за факс фајлове
+ Comment[sr@Latn]=KViewShell-ov priključak za faks fajlove
+ Comment[sv]=Kviewshell-insticksprogram för telefaxfiler
 Index: kfaxview/kfaxmultipage.desktop
 ===================================================================
---- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -20,7 +20,7 @@
- Comment[et]=KView faksifailide plugin
- Comment[eu]=Fax fitxategientzatko KViewShell-en plugina
- Comment[fi]=KViewShell sovelma faksitiedostoille
--Comment[fr]=Module KViewShell pour les fichiers fax
-+Comment[fr]=Module KViewShell pour les fichiers de fax
- Comment[hu]=KViewShell-modul faxfájlokhoz
- Comment[is]=KViewShell íforrit fyrir faxskrár
- Comment[it]=Plugin KViewShell per file di fax
-Index: kdvi/special.cpp
+--- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -36,6 +36,7 @@
+ Comment[pt]='Plugin' do KViewShell para ficheiros de Fax
+ Comment[pt_BR]='Plugin' do KViewShell para ficheiros de Fax
+ Comment[ru]=Компонент просмотра факсов
++Comment[sl]=Vstavek za KViewShell za fakse
+ Comment[sr]=KViewShell-ов прикључак за факс фајлове
+ Comment[sr@Latn]=KViewShell-ov priključak za faks fajlove
+ Comment[sv]=Kviewshell-insticksprogram för telefaxfiler
+Index: kfaxview/kfaxview.desktop
 ===================================================================
---- kdvi/special.cpp	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kdvi/special.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -697,6 +697,7 @@
-       (strncasecmp(cp, "html:<A name=", 13) == 0) ||
-       (strncasecmp(cp, "ps:", 3) == 0) ||
-       (strncasecmp(cp, "papersize", 9) == 0) ||
-+      (strncasecmp(cp, "header", 6) == 0) ||
-       (strncasecmp(cp, "background", 10) == 0) )
-     return;
-   
-Index: kdvi/dviRenderer_prescan.cpp
+--- kfaxview/kfaxview.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfaxview/kfaxview.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -41,7 +41,7 @@
+ GenericName[ru]=Чтение факсов
+ GenericName[se]=Fáksačájeheaddji
+ GenericName[sk]=Prehliadač faxov
+-GenericName[sl]=Ogledovalnik faksov
++GenericName[sl]=Pregledovalnik faksov
+ GenericName[sr]=Приказивач факсова
+ GenericName[sr@Latn]=Prikazivač faksova
+ GenericName[sv]=Faxvisare
+Index: kview/kimageviewer/kimageviewercanvas.desktop
 ===================================================================
---- kdvi/dviRenderer_prescan.cpp	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kdvi/dviRenderer_prescan.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -284,8 +284,20 @@
-   kdDebug(4300) << "PostScript-special, header " << cp.latin1() << endl;
- #endif
+--- kview/kimageviewer/kimageviewercanvas.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kview/kimageviewer/kimageviewercanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -40,7 +40,7 @@
+ Comment[ru]=Встраиваемый элемент просмотра изображений (просмотр изображения в виджете)
+ Comment[se]=Vuojuhahtti govvačájehanliinni (áhtá mii čájeha gova)
+ Comment[sk]=Vložiteľný komponent prehliadač obrázkov (prvok, ktorý zobrazuje obrázky)
+-Comment[sl]=Vključena komponenta za pregled slik (gradnik, ki prikaže sliko)
++Comment[sl]=Vključljivo platno za pregled slik (gradnik, ki prikaže sliko)
+ Comment[sr]=Уградиво платно приказивача слика (контрола која показује слику)
+ Comment[sr@Latn]=Ugradivo platno prikazivača slika (kontrola koja pokazuje sliku)
+ Comment[sv]=Inbäddningsbar bildvisande duk (komponent som visar en bild)
+Index: kview/photobook/photobook.desktop
+===================================================================
+--- kview/photobook/photobook.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kview/photobook/photobook.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -31,6 +31,7 @@
+ GenericName[sv]=Fotoalbum
+ GenericName[ta]=புகைப்படப் புத்தகம்
+ GenericName[tr]=Albüm
++GenericName[uz]=Расмлар тўплами
+ GenericName[zh_HK]=照相簿
  
--  if (QFile::exists(cp)) 
--    PS_interface->PostScriptHeaderString->append( QString(" (%1) run\n").arg(cp) );
-+  QString _file = cp;
-+  
-+  // If the file is not found in the current directory, use kpsewhich
-+  // to find it.
-+  if (!QFile::exists(_file)) {
-+    // Otherwise, use kpsewhich to find the eps file.
-+    KProcIO proc;
-+    proc << "kpsewhich" << cp;
-+    proc.start(KProcess::Block);
-+    proc.readln(_file);
-+  }
-+  
-+  if (QFile::exists(_file))
-+    PS_interface->PostScriptHeaderString->append( QString(" (%1) run\n").arg(_file) );
+ MimeType=inode/directory
+@@ -62,6 +63,7 @@
+ Name[sv]=Fotoalbum
+ Name[ta]=புகைப்படப் புத்தகம்
+ Name[tr]=Albüm
++Name[uz]=Расмлар тўплами
+ Name[zh_HK]=照相簿
+ Comment=Easily browse a folder of photographs
+ Comment[bg]=Колекциониране на снимки като във фотоалбум
+Index: kview/config/kview.setdlg
+===================================================================
+--- kview/config/kview.setdlg	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -77,7 +77,7 @@
+ Comment[ro]=Aceasta este configurarea pentru partea KView care poate fi reutilizată de alte aplicaţii. Setările afectează acea parte de KView care este înglobată în Konqueror sau alte aplicaţii.
+ Comment[ru]=Настройки компонента KView, который используется другими приложениями (устанавливают поведение компонента, внедрённого в Konqueror или другие приложения).
+ Comment[sk]=Toto je konfigurácia pre KView, ktorý je možné použiť vo viacerých aplikáciách (takže zmeny tohto nastavenia sa prejavia vo všetkých aplikáciách, ktoré by KView použili, ako je Konqueror alebo iné).
+-Comment[sl]=To so nastavitve za del KView, ki ga lahko uporabijo tudi drugi programi (kar pomeni, da nastavitve veljajo tudi v delu KView, ki je vključen v Konqueror in druge programe).
++Comment[sl]=To so nastavitve za del KView, ki ga lahko uporabijo tudi drugi programi (kar pomeni, da nastavitve veljajo tudi za del KView, ki je vključen v Konqueror in druge programe).
+ Comment[sr]=Ово је подешавање за део KView-а који могу користити и други програми (што значи да ће поставке утицати и на KView-ов део који се уграђује у Konqueror и друге програме).
+ Comment[sr@Latn]=Ovo je podešavanje za deo KView-a koji mogu koristiti i drugi programi (što znači da će postavke uticati i na KView-ov deo koji se ugrađuje u Konqueror i druge programe).
+ Comment[sv]=Det här är inställningen av den del av Kview som kan återanvändas av flera program (vilket betyder att inställningarna också påverkar Kview-delen som bäddas in i Konqueror eller andra program).
+Index: kview/modules/effects/kvieweffects.desktop
+===================================================================
+--- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -91,7 +91,7 @@
+ Comment[ro]=Oferă unele efecte pentru imagini
+ Comment[ru]=Некоторые эффекты обработки изображений
+ Comment[sk]=Poskytuje niektoré efekty pre obrázky
+-Comment[sl]=Nekaj učinkov slik
++Comment[sl]=Prinaša nekaj učinkov za slike
+ Comment[sr]=Пружа неке сликовне ефекте
+ Comment[sr@Latn]=Pruža neke slikovne efekte
+ Comment[sv]=Tillhandahåller vissa bildeffekter
+Index: kview/modules/browser/kviewbrowser.desktop
+===================================================================
+--- kview/modules/browser/kviewbrowser.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kview/modules/browser/kviewbrowser.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -103,7 +103,7 @@
+ Comment[ru]=Просмотр всех изображений в текущем каталоге.
+ Comment[se]=Diktá du bláđđet buot govaid čađa dán ozus.
+ Comment[sk]=Umožňuje prechádzať mezi obrázkami v aktuálnom priečinku.
+-Comment[sl]=Omogoča vam brskanje po vseh slikah v trenutnem imeniku.
++Comment[sl]=Omogoča vam brskanje po vseh slikah v trenutni mapi.
+ Comment[sr]=Омогућава вам да прегледате све слике у текућем директоријуму 
+ Comment[sr@Latn]=Omogućava vam da pregledate sve slike u tekućem direktorijumu 
+ Comment[sv]=Låter dig bläddra igenom alla bilder i den aktuella katalogen.
+Index: kview/modules/scanner/kviewscanner.desktop
+===================================================================
+--- kview/modules/scanner/kviewscanner.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kview/modules/scanner/kviewscanner.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -17,7 +17,7 @@
+ Name[bg]=Скенер
+ Name[br]=Eiltreser
+ Name[bs]=Skener
+-Name[ca]=Escànner
++Name[ca]=Escàner
+ Name[cy]=Sganiwr
+ Name[da]=Skanner
+ Name[el]=Σαρωτής
+@@ -70,7 +70,7 @@
+ Comment[ar]=يفتح الصور الموجودة على ماسحك الضوئي في برنامج KView
+ Comment[bg]=Сканиране и отваряне на изображения от скенера
+ Comment[bs]=Otvara slike sa skenera u KView
+-Comment[ca]=Obre les imatges de l'escànner a KView
++Comment[ca]=Obre les imatges de l'escàner a KView
+ Comment[cs]=Otevírá obrázky ze skeneru do KView
+ Comment[cy]=Agor delweddau oddiwrth eich sganiwr yn KGweld
+ Comment[da]=åbn billeder fra din skanner til KView
+Index: libkscan/scanservice.desktop
+===================================================================
+--- libkscan/scanservice.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ libkscan/scanservice.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -7,7 +7,7 @@
+ Name[az]=KDE Darama Servisi
+ Name[bg]=Услуга за сканиране
+ Name[br]=Damanterien skramm
+-Name[ca]=Servei d'escànner KDE
++Name[ca]=Servei d'escaneig del KDE
+ Name[cs]=Skenovací služba pro KDE
+ Name[cy]=Gwasanaeth Sganio KDE
+ Name[da]=KDE Skanneservice
+@@ -44,7 +44,7 @@
+ Name[ru]=Служба сканирования KDE
+ Name[se]=KDE skánnenbálválus
+ Name[sk]=KDE skenovacia služba
+-Name[sl]=Storitev skeniranja KDE
++Name[sl]=Storitev skeniranja za KDE
+ Name[sr]=KDE-ов сервис за скенирање
+ Name[sr@Latn]=KDE-ov servis za skeniranje
+ Name[sv]=KDE:s bildläsartjänst
+Index: kgamma/kcmkgamma/kgamma.desktop
+===================================================================
+--- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -59,6 +59,7 @@
+ Name[pa]=ਗ਼ਾਮਾ
+ Name[pt]=Gama
+ Name[ru]=Гамма
++Name[sl]=Gama
+ Name[sr]=Гама
+ Name[sr@Latn]=Gama
+ Name[ta]=காமா
+@@ -93,7 +94,7 @@
+ Keywords[ro]=KGamma,kgamma,gama,gamma
+ Keywords[ru]=KGamma,kgamma,Gamma,gamma,гамма,монитор
+ Keywords[sk]=KGamma, kgamma, gamma
+-Keywords[sl]=KGamma,kgamma,Gamma,gamma,gama,Gama,kgama
++Keywords[sl]=KGamma,kgamma,Gama,gama
+ Keywords[sr]=KGamma, kgamma, Gamma, gamma, гама
+ Keywords[sr@Latn]=KGamma, kgamma, Gamma, gamma, gama
+ Keywords[ta]=கேகாமா, கேகாமா, காமா, காமா
+Index: kooka/kooka.desktop
+===================================================================
+--- kooka/kooka.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kooka/kooka.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -11,7 +11,7 @@
+ GenericName[ar]=برنامج للمسح الضوئي
+ GenericName[bg]=Сканиране
+ GenericName[bs]=Program za skeniranje i OCR
+-GenericName[ca]=Programa d'escànner i OCR
++GenericName[ca]=Programa d'escaneig i OCR
+ GenericName[cs]=Program pro skenování a OCR
+ GenericName[cy]=Rhaglen Sganio ac OCR
+ GenericName[da]=Skanne- & OCR-program
+Index: kuickshow/ChangeLog
+===================================================================
+--- kuickshow/ChangeLog	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/ChangeLog	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -1,4 +1,23 @@
+ <pre>
++Fri Mar 31 02:04:21 2006  Carsten Pfeiffer  <pfeiffer@kde.org>
++
++	* fixed one of the most long-standing bugs: non-local browsing
++	  (i.e. you can browse remote directories like local ones now, flipping
++	   through the images with PageUp/Down etc., including pre-loading
++	   images)
++	   Browsing through /media should work now, but can be improved by
++	   not"downloading" from there. Framework to do this is there, though.
++
++	* also allow saving to remote URLs
++	
++	* fixed image not being completely maximized when opening image in
++	  fullscreen mode
++	* performance improvement
++	
++	* layed groundwork for fixing #48812 and #101986
++	
++	* make sure all temporary files get deleted
++
+ Wed Feb 22 16:02:58 2006  Carsten Pfeiffer  <pfeiffer@kde.org>
+ 
+ 	* make autohide-cursor finally work
+Index: kuickshow/src/kuickio.cpp
+===================================================================
+--- kuickshow/src/kuickio.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/kuickio.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -1,41 +0,0 @@
+-/* This file is part of the KDE project
+-   Copyright (C) 2000,2001 Carsten Pfeiffer <pfeiffer@kde.org>
+-
+-   This program is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU General Public
+-   License as published by the Free Software Foundation, version 2.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-    General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program; see the file COPYING.  If not, write to
+-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+-   Boston, MA 02110-1301, USA.
+-*/
+-
+-#include <unistd.h>
+-
+-#include <qfile.h>
+-
+-#include <klocale.h>
+-#include <kmessagebox.h>
+-#include <kio/netaccess.h>
+-
+-#include "kuickio.h"
+-
+-KuickIO * KuickIO::s_self = 0L;
+-QWidget * KuickIO::s_parent = 0L;
+-
+-KuickIO * KuickIO::self( QWidget *parent )
+-{
+-    if ( !s_self )
+-	s_self = new KuickIO();
+-
+-    s_self->s_parent = parent;
+-    return s_self;
+-}
+-
+-#include "kuickio.moc"
+Index: kuickshow/src/kuickio.h
+===================================================================
+--- kuickshow/src/kuickio.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/kuickio.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -1,40 +0,0 @@
+-/* This file is part of the KDE project
+-   Copyright (C) 2000,2001 Carsten Pfeiffer <pfeiffer@kde.org>
+-
+-   This program is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU General Public
+-   License as published by the Free Software Foundation, version 2.
+-
+-   This program is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-    General Public License for more details.
+-
+-   You should have received a copy of the GNU General Public License
+-   along with this program; see the file COPYING.  If not, write to
+-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+-   Boston, MA 02110-1301, USA.
+-*/
+-
+-#ifndef KUICKIO_H
+-#define KUICKIO_H
+-
+-class QWidget;
+-
+-#include <qobject.h>
+-
+-#include <kurl.h>
+-
+-class KuickIO : public QObject
+-{
+-    Q_OBJECT
+-
+-public:
+-    static KuickIO * self( QWidget *parent );
+-
+-private:
+-    static QWidget * s_parent;
+-    static KuickIO * s_self;
+-};
+-
+-#endif // KUICKIO_H
+Index: kuickshow/src/imdata.cpp
+===================================================================
+--- kuickshow/src/imdata.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/imdata.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -30,6 +30,7 @@
+   fastRender  	 = true;
+   dither16bit    = false;
+   dither8bit     = true;
++  smoothScale    = true; // ### false
+   maxCache       = 10240;
+ 
+   gamma          = 0;
+@@ -53,6 +54,7 @@
+   fastRender  = kc->readBoolEntry( "FastRendering", def.fastRender );
+   dither16bit = kc->readBoolEntry( "Dither16Bit", def.dither16bit );
+   dither8bit  = kc->readBoolEntry( "Dither8Bit", def.dither8bit );
++  smoothScale = kc->readBoolEntry( "SmoothScaling", def.smoothScale );
+ 
+   maxCache    = kc->readNumEntry( "MaxCacheSize", 10240 );
+ 
+@@ -76,6 +78,7 @@
+   kc->writeEntry( "Dither16Bit", dither16bit );
+   kc->writeEntry( "Dither8Bit", dither8bit );
+   kc->writeEntry( "MaxCacheSize", maxCache );
++  kc->writeEntry( "SmoothScaling", smoothScale );
+ 
+   kc->writeEntry( "GammaDefault", gamma );
+   kc->writeEntry( "BrightnessDefault", brightness );
+Index: kuickshow/src/imlibwidget.cpp
+===================================================================
+--- kuickshow/src/imlibwidget.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/imlibwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -22,6 +22,7 @@
+ #include <unistd.h>
+ 
+ #include <stdlib.h>
++#include <assert.h>
+ 
+ #include <qcolor.h>
+ #include <qfile.h>
+@@ -35,6 +36,9 @@
+ #include <kfilemetainfo.h>
+ #include <kimageio.h>
+ 
++#include "filecache.h"
++#include "kuickfile.h"
++#include "kuickimage.h"
+ #include "imlibwidget.h"
+ 
+ const int ImlibWidget::ImlibOffset = 256;
+@@ -102,6 +106,7 @@
+     int h = 1;
+     myBackgroundColor = Qt::black;
+     m_kuim              = 0L;
++    m_kuickFile = 0L;
+ 
+     if ( !id )
+ 	qFatal("ImlibWidget: Imlib not initialized, aborting.");
+@@ -128,27 +133,32 @@
+ 
+ KURL ImlibWidget::url() const
+ {
+-    KURL url;
+-    if ( m_filename.at(0) == '/' )
+-        url.setPath( m_filename );
+-    else
+-        url = m_filename;
++    if ( m_kuickFile )
++        return m_kuickFile->url();
+ 
+-    return url;
++    return KURL();
  }
  
- 
-@@ -305,7 +317,6 @@
+-// tries to load "filename" and returns the according KuickImage *
++KuickFile * ImlibWidget::currentFile() const
++{
++    return m_kuickFile;
++}
++
++// tries to load "file" and returns the according KuickImage *
+ // or 0L if unsuccessful
+-KuickImage * ImlibWidget::loadImageInternal( const QString& filename )
++// Note that the given file MUST already be downloaded prior to calling this function
++KuickImage * ImlibWidget::loadImageInternal( KuickFile * file )
  {
- #ifdef DEBUG_PRESCAN
-   kdError(4300) << "PostScript-special, literal PostScript " << cp.latin1() << endl;
--
- #endif
-   
-   double PS_H = (currinf.data.dvi_h*300.0)/(65536*1200)-300;
-Index: kuickshow/src/kuickshow.cpp
-===================================================================
---- kuickshow/src/kuickshow.cpp	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kuickshow/src/kuickshow.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -646,7 +646,7 @@
++    assert( file->isAvailable() );
++
+     // apply default image modifications
+     mod.brightness = idata->brightness + ImlibOffset;
+     mod.contrast = idata->contrast + ImlibOffset;
+     mod.gamma = idata->gamma + ImlibOffset;
+ 
+-    KuickImage *kuim = imageCache->getKuimage( filename, mod );
++    KuickImage *kuim = imageCache->getKuimage( file, mod );
+     if ( !kuim ) {// couldn't load file, maybe corrupt or wrong format
+-	kdWarning() << "ImlibWidget: can't load image " << filename << endl;
++	kdWarning() << "ImlibWidget: can't load image " << file->url().prettyURL() << endl;
+ 	return 0L;
      }
  
-     tryShowNextImage();
--    fileWidget->trash(list, false, false);
-+    fileWidget->trash(list, parent, false, false);
+@@ -162,15 +172,23 @@
+ {
  }
  
- void KuickShow::tryShowNextImage()
+-bool ImlibWidget::loadImage( const QString& filename )
++bool ImlibWidget::loadImage( const KURL& url )
+ {
+-    KuickImage *kuim = loadImageInternal( filename );
++    return loadImage( FileCache::self()->getFile( url ));
++}
++
++bool ImlibWidget::loadImage( KuickFile * file )
++{
++    if ( file->waitForDownload( this ) != KuickFile::OK)
++    	return false;
++    	
++    KuickImage *kuim = loadImageInternal( file );
+     // FIXME - check everywhere if we have a kuim or not!
+ 
+     if ( kuim ) {
+ 	m_kuim = kuim;
+ 	autoUpdate( true ); // -> updateWidget() -> updateGeometry()
+-	m_filename = filename;
++	m_kuickFile = file;
+         return true;
+     }
+ 
+@@ -178,9 +196,25 @@
+ }
+ 
+ 
+-bool ImlibWidget::cacheImage( const QString& filename )
++bool ImlibWidget::cacheImage( const KURL& url )
+ {
+-    KuickImage *kuim = loadImageInternal( filename );
++//    qDebug("cache image: %s", url.url().latin1());
++    KuickFile *file = FileCache::self()->getFile( url );
++    if ( file->isAvailable() )
++        return cacheImage( file );
++    else {
++        if ( !file->download() ) {
++            return false;
++        }
++        connect( file, SIGNAL( downloaded( KuickFile * )), SLOT( cacheImage( KuickFile * )) );
++        return true; // optimistic
++    }
++}
++
++bool ImlibWidget::cacheImage( KuickFile * file )
++{
++//    qDebug("cache image: %s", file->url().url().latin1());
++    KuickImage *kuim = loadImageInternal( file );
+     if ( kuim ) {
+         kuim->renderPixmap();
+         return true;
+@@ -226,6 +260,16 @@
+ }
+ 
+ 
++Rotation ImlibWidget::rotation() const 
++{ 
++    return m_kuim ? m_kuim->absRotation() : ROT_0; 
++}
++
++FlipMode ImlibWidget::flipMode()  const 
++{ 
++    return m_kuim ? m_kuim->flipMode() : FlipNone; 
++}
++
+ void ImlibWidget::zoomImage( float factor )
+ {
+     if ( factor == 1 || factor == 0 || !m_kuim )
+@@ -236,7 +280,7 @@
+ 
+     if ( canZoomTo( newWidth, newHeight ) )
+     {
+-        m_kuim->resize( newWidth, newHeight );
++        m_kuim->resize( newWidth, newHeight, idata->smoothScale ? KuickImage::SMOOTH : KuickImage::FAST );
+         autoUpdate( true );
+     }
+ }
+@@ -263,7 +307,7 @@
+ 
+ bool ImlibWidget::autoRotate( KuickImage *kuim )
+ {
+-    KFileMetaInfo metadatas( kuim->filename() );
++    KFileMetaInfo metadatas( kuim->file().localFile() );
+     if ( !metadatas.isValid() )
+         return false;
+ 
+@@ -502,188 +546,6 @@
+ //----------
+ 
+ 
+-
+-KuickImage::KuickImage( const QString& filename, ImlibImage *im, ImlibData *id)
+-    : QObject( 0L, 0L )
+-{
+-    myFilename = filename;
+-    myIm       = im;
+-    myId       = id;
+-    myPixmap   = 0L;
+-    myWidth    = im->rgb_width;
+-    myHeight   = im->rgb_height;
+-    myIsDirty  = true;
+-
+-    myOrigWidth  = myWidth;
+-    myOrigHeight = myHeight;
+-    myRotation   = ROT_0;
+-    myFlipMode   = FlipNone;
+-}
+-
+-KuickImage::~KuickImage()
+-{
+-    if ( myPixmap )
+-        Imlib_free_pixmap( myId, myPixmap );
+-    Imlib_destroy_image( myId, myIm );
+-}
+-
+-
+-void KuickImage::resize( int width, int height )
+-{
+-    if ( myWidth == width && myHeight == height )
+-	return;
+-
+-    myWidth   = width;
+-    myHeight  = height;
+-    myIsDirty = true;
+-}
+-
+-
+-void KuickImage::restoreOriginalSize()
+-{
+-    if (myWidth == myOrigWidth && myHeight == myOrigHeight)
+-	return;
+-
+-    myWidth   = myOrigWidth;
+-    myHeight  = myOrigHeight;
+-    myIsDirty = true;
+-
+-    if ( myRotation == ROT_90 || myRotation == ROT_270 )
+-        qSwap( myWidth, myHeight );
+-}
+-
+-
+-Pixmap& KuickImage::pixmap()
+-{
+-    if ( myIsDirty )
+-	renderPixmap();
+-
+-    return myPixmap;
+-}
+-
+-
+-void KuickImage::renderPixmap()
+-{
+-    if ( !myIsDirty )
+-	return;
+-
+-//     qDebug("### rendering: %s", myFilename.latin1());
+-
+-    if ( myPixmap )
+-	Imlib_free_pixmap( myId, myPixmap );
+-
+-    emit startRendering();
+-
+-// #ifndef NDEBUG
+-//     struct timeval tms1, tms2;
+-//     gettimeofday( &tms1, NULL );
+-// #endif
+-
+-    Imlib_render( myId, myIm, myWidth, myHeight );
+-    myPixmap = Imlib_move_image( myId, myIm );
+-
+-// #ifndef NDEBUG
+-//     gettimeofday( &tms2, NULL );
+-//     qDebug("*** rendering image: %s, took %ld ms", myFilename.latin1(),
+-//            (tms2.tv_usec - tms1.tv_usec)/1000);
+-// #endif
+-
+-
+-    emit stoppedRendering();
+-
+-    myIsDirty = false;
+-}
+-
+-
+-void KuickImage::rotate( Rotation rot )
+-{
+-    if ( rot == ROT_180 ) { 		// rotate 180 degrees
+-	Imlib_flip_image_horizontal( myId, myIm );
+-	Imlib_flip_image_vertical( myId, myIm );
+-    }
+-
+-    else if ( rot == ROT_90 || rot == ROT_270 ) {
+-	qSwap( myWidth, myHeight );
+-	Imlib_rotate_image( myId, myIm, -1 );
+-
+-	if ( rot == ROT_90 ) 		// rotate 90 degrees
+-	    Imlib_flip_image_horizontal( myId, myIm );
+-	else if ( rot == ROT_270 ) 		// rotate 270 degrees
+-	    Imlib_flip_image_vertical( myId, myIm );
+-    }
+-
+-    myRotation = (Rotation) ((myRotation + rot) % 4);
+-    myIsDirty = true;
+-}
+-
+-
+-bool KuickImage::rotateAbs( Rotation rot )
+-{
+-    if ( myRotation == rot )
+-	return false;
+-
+-    int diff = rot - myRotation;
+-    bool clockWise = (diff > 0);
+-
+-    switch( abs(diff) ) {
+-    case ROT_90:
+-        rotate( clockWise ? ROT_90 : ROT_270 );
+-	break;
+-    case ROT_180:
+-	rotate( ROT_180 );
+-	break;
+-    case ROT_270:
+-        rotate( clockWise ? ROT_270 : ROT_90 );
+-	break;
+-    }
+-
+-    return true;
+-}
+-
+-void KuickImage::flip( FlipMode flipMode )
+-{
+-    if ( flipMode & FlipHorizontal )
+-	Imlib_flip_image_horizontal( myId, myIm );
+-    if ( flipMode & FlipVertical )
+-	Imlib_flip_image_vertical( myId, myIm );
+-
+-    myFlipMode = (FlipMode) (myFlipMode ^ flipMode);
+-    myIsDirty = true;
+-}
+-
+-bool KuickImage::flipAbs( int mode )
+-{
+-    if ( myFlipMode == mode )
+-	return false;
+-
+-    bool changed = false;
+-
+-    if ( ((myFlipMode & FlipHorizontal) && !(mode & FlipHorizontal)) ||
+-	 (!(myFlipMode & FlipHorizontal) && (mode & FlipHorizontal)) ) {
+-	Imlib_flip_image_horizontal( myId, myIm );
+-	changed = true;
+-    }
+-
+-    if ( ((myFlipMode & FlipVertical) && !(mode & FlipVertical)) ||
+-	 (!(myFlipMode & FlipVertical) && (mode & FlipVertical)) ) {
+-	Imlib_flip_image_vertical( myId, myIm );
+-	changed = true;
+-    }
+-
+-    if ( changed ) {
+-        myFlipMode = (FlipMode) mode;
+-        myIsDirty = true;
+-        return true;
+-    }
+-
+-    return false;
+-}
+-
+-
+-//----------
+-
+-
+-
+ // uhh ugly, we have two lists to map from filename to KuickImage :-/
+ ImageCache::ImageCache( ImlibData *id, int maxImages )
+ {
+@@ -731,13 +593,17 @@
+ }
+ 
+ 
+-KuickImage * ImageCache::getKuimage( const QString& file,
++KuickImage * ImageCache::getKuimage( KuickFile * file,
+ 				     ImlibColorModifier mod )
+ {
+-    KuickImage *kuim = 0L;
+-    if ( file.isEmpty() )
++    if ( !file )
+ 	return 0L;
+ 
++    assert( file->isAvailable() ); // debug build
++    if ( file->waitForDownload( 0L ) != KuickFile::OK ) // and for users
++    	return 0L;
++
++    KuickImage *kuim = 0L;
+     int index = fileList.findIndex( file );
+     if ( index != -1 ) {
+         if ( index == 0 )
+@@ -764,7 +630,7 @@
+ // #endif
+ 
+         ImlibImage *im = Imlib_load_image( myId,
+-                                           QFile::encodeName( file ).data() );
++                                           QFile::encodeName( file->localFile() ).data() );
+ 
+ // #ifndef NDEBUG
+ //         gettimeofday( &tms2, NULL );
+@@ -774,7 +640,9 @@
+ 
+         slotIdle();
+ 	if ( !im ) {
+-	    im = loadImageWithQt( file );
++            slotBusy();
++	    im = loadImageWithQt( file->localFile() );
++            slotIdle();
+ 	    if ( !im )
+ 		return 0L;
+ 	}
+@@ -812,9 +680,10 @@
+     if ( image.depth() != 32 ) {
+ 	image.setAlphaBuffer(false);
+ 	image = image.convertDepth(32);
+-    }
++
+     if ( image.isNull() )
+ 	return 0L;
++    }
+ 
+     // convert to 24 bpp (discard alpha)
+     int numPixels = image.width() * image.height();
+@@ -843,16 +712,4 @@
+     return im;
+ }
+ 
+-/*
+-KuickImage * ImageCache::find( const QString& file )
+-{
+-  KuickImage *kuim = 0L;
+-  int index = fileList.findIndex( file );
+-  if ( index >= 0 )
+-    kuim = kuickList.at( index );
+-
+-  qDebug("found cached KuickImage? : %p", kuim );
+-  return kuim;
+-}
+-*/
+ #include "imlibwidget.moc"
+Index: kuickshow/src/kuickdata.h
+===================================================================
+--- kuickshow/src/kuickdata.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/kuickdata.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -29,6 +29,9 @@
+ // values are also used as combobox index defaultswidget.*
+ enum Rotation { ROT_0=0, ROT_90=1, ROT_180=2, ROT_270=3 };
+ 
++// hmm, global declaration for now
++enum FlipMode { FlipNone = 0, FlipHorizontal = 1, FlipVertical = 2 };
++
+ class KuickData
+ {
+ public:
+Index: kuickshow/src/kuickshow.cpp
+===================================================================
+--- kuickshow/src/kuickshow.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/kuickshow.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -63,11 +63,12 @@
+ 
+ #include "aboutwidget.h"
+ #include "filewidget.h"
++#include "filecache.h"
+ #include "imdata.h"
+ #include "imagewindow.h"
+ #include "imlibwidget.h"
+ #include "kuick.h"
+-#include "kuickio.h"
++#include "kuickfile.h"
+ 
+ #ifdef index
+ #undef index
+@@ -205,6 +206,7 @@
+     if ( m_viewer )
+         m_viewer->close( true );
+ 
++    delete FileCache::self();
+     free( id );
+     kapp->quit();
+ 
+@@ -443,7 +445,7 @@
+ 
+     if ( !haveBrowser() && s_viewers.isEmpty() ) {
+         saveSettings();
+-
++        delete FileCache::self();
+         ::exit(0);
+     }
+ 
+@@ -524,13 +526,14 @@
+ 
+         if ( newWindow ) {
+             m_viewer = new ImageWindow( kdata->idata, id, 0L, "image window" );
++            m_viewer->setFullscreen( fullscreen );
+             s_viewers.append( m_viewer );
+ 
+             connect( m_viewer, SIGNAL( destroyed() ), SLOT( viewerDeleted() ));
+             connect( m_viewer, SIGNAL( sigFocusWindow( ImageWindow *) ),
+                      this, SLOT( slotSetActiveViewer( ImageWindow * ) ));
+-            connect( m_viewer, SIGNAL( sigBadImage(const QString& ) ),
+-                     this, SLOT( messageCantLoadImage(const QString &) ));
++            connect( m_viewer, SIGNAL( sigImageError(const KuickFile *, const QString& ) ),
++                     this, SLOT( messageCantLoadImage(const KuickFile *, const QString &) ));
+             connect( m_viewer, SIGNAL( requestImage( ImageWindow *, int )),
+                      this, SLOT( slotAdvanceImage( ImageWindow *, int )));
+ 	    connect( m_viewer, SIGNAL( pauseSlideShowSignal() ),
+@@ -556,18 +559,19 @@
+         // Imlib can't load).
+         ImageWindow *safeViewer = m_viewer;
+ 
+-        QString filename;
+-        KIO::NetAccess::download(fi->url(), filename, this);
++//        file->waitForDownload( this );
++//        QString filename;
++//        KIO::NetAccess::download(fi->url(), filename, this);
+ 
+-        if ( !safeViewer->showNextImage( filename ) ) {
++        if ( !safeViewer->showNextImage( fi->url() ) ) {
+             m_viewer = safeViewer;
+             safeViewer->close( true ); // couldn't load image, close window
+         }
+         else {
+-            safeViewer->setFullscreen( fullscreen );
++//            safeViewer->setFullscreen( fullscreen );
+ 
+             if ( newWindow ) {
+-                safeViewer->show();
++//                safeViewer->show();
+ 
+                 if ( !fullscreen && s_viewers.count() == 1 && moveToTopLeft ) {
+                     // the WM might have moved us after showing -> strike back!
+@@ -580,7 +584,7 @@
+                 KFileItem *item = 0L;                 // don't move cursor
+                 item = fileWidget->getItem( FileWidget::Next, true );
+                 if ( item )
+-                    safeViewer->cacheImage( item->url().path() ); // FIXME
++                    safeViewer->cacheImage( item->url() );
+             }
+ 
+             m_viewer = safeViewer;
+@@ -669,8 +673,8 @@
+     if (!next)
+         next = fileWidget->getPrevious(true);
+ 
+-    // FIXME: why is this necessary at all? Why does KDirOperator suddenly re-read the
+-    // entire directory after a file was deleted/trashed!?
++    // ### why is this necessary at all? Why does KDirOperator suddenly re-read the
++    // entire directory after a file was deleted/trashed!? (KDirNotify is the reason)
+     if (!m_viewer)
+         return;
+ 
+@@ -746,7 +750,7 @@
+ 
+ void KuickShow::nextSlide( KFileItem *item )
+ {
+-    m_viewer->showNextImage( item->url().path() );
++    m_viewer->showNextImage( item->url() );
+     if(kdata->slideDelay)
+         m_slideTimer->start( kdata->slideDelay );
+ }
+@@ -765,7 +769,7 @@
+     ImageWindow *iw = new ImageWindow( 0, id, this, "printing image" );
+     KFileItem *item;
+     while ( (item = it.current()) ) {
+-        if (FileWidget::isImage( item ) && iw->loadImage( item->url().path()))
++        if (FileWidget::isImage( item ) && iw->loadImage( item->url() ))
+             iw->printImage();
+         ++it;
+     }
+@@ -835,15 +839,17 @@
+     }
+ 
+     if ( FileWidget::isImage( item ) ) {
+-        QString filename;
+-        KIO::NetAccess::download(item->url(), filename, this);
+-        view->showNextImage( filename );
++//        QString filename;
++//        KIO::NetAccess::download(item->url(), filename, this);
++        view->showNextImage( item->url() );
+         if (m_slideTimer->isActive() && kdata->slideDelay)
+             m_slideTimer->start( kdata->slideDelay );
+ 
+-        if ( kdata->preloadImage && item_next && item_next->url().isLocalFile() ) // preload next image
++        if ( kdata->preloadImage && item_next ) { // preload next image
+             if ( FileWidget::isImage( item_next ) )
+-                view->cacheImage( item_next->url().path() ); // ###
++                view->cacheImage( item_next->url() );
++        }
++        
+     }
+ }
+ 
+@@ -862,6 +868,7 @@
+         if ( KStdAccel::quit().contains( KKey( k ) ) ) {
+             saveSettings();
+             deleteAllViewers();
++            delete FileCache::self();
+             ::exit(0);
+         }
+         else if ( KStdAccel::help().contains( KKey( k ) ) ) {
+@@ -899,10 +906,10 @@
+             {
+                 if ( key != Key_Escape && key != Key_Shift && key != Key_Alt )
+                 {
+-                    KURL start;
+-                    QFileInfo fi( m_viewer->filename() );
+-                    start.setPath( fi.dirPath( true ) );
+-                    initGUI( start );
++                    KuickFile *file = m_viewer->currentFile();
++//                    QFileInfo fi( m_viewer->filename() );
++//                    start.setPath( fi.dirPath( true ) );
++                    initGUI( file->url().upURL() );
+ 
+                     // the fileBrowser will list the start-directory
+                     // asynchronously so we can't immediately continue. There
+@@ -925,12 +932,12 @@
+                     if ( fileWidget->dirLister()->isFinished() &&
+                          fileWidget->dirLister()->rootItem() )
+                     {
+-                        fileWidget->setCurrentItem( fi.fileName() );
++                        fileWidget->setCurrentItem( file->url().fileName() );
+                         QTimer::singleShot( 0, this, SLOT( slotReplayEvent()));
+                     }
+                     else
+                     {
+-                        fileWidget->setInitialItem( fi.fileName() );
++                        fileWidget->setInitialItem( file->url().fileName() );
+                         connect( fileWidget, SIGNAL( finished() ),
+                                  SLOT( slotReplayEvent() ));
+                     }
+@@ -987,13 +994,14 @@
+ 
+ 
+             if ( FileWidget::isImage( item ) ) {
+-                QString filename;
+-                KIO::NetAccess::download(item->url(), filename, this);
+-                m_viewer->showNextImage( filename );
++//                QString filename;
++//                KIO::NetAccess::download(item->url(), filename, this);
++                m_viewer->showNextImage( item->url() );
+ 
+-                if ( kdata->preloadImage && item_next && item_next->url().isLocalFile() ) // preload next image
++                if ( kdata->preloadImage && item_next ) { // preload next image
+                     if ( FileWidget::isImage( item_next ) )
+-                        m_viewer->cacheImage( item_next->url().path() ); // ###
++                        m_viewer->cacheImage( item_next->url() );
++                }
+ 
+                 ret = true; // don't pass keyEvent
+             }
+@@ -1011,10 +1019,10 @@
+                 {
+                     if ( !fileWidget )
+                     {
+-                        KURL start;
+-                        QFileInfo fi( window->filename() );
+-                        start.setPath( fi.dirPath( true ) );
+-                        initGUI( start );
++//                        KURL start;
++//                        QFileInfo fi( window->filename() );
++//                        start.setPath( fi.dirPath( true ) );
++                        initGUI( window->currentFile()->url().fileName() );
+                     }
+                     show();
+                     raise();
+@@ -1143,7 +1151,13 @@
+     QStringList urls;
+     QValueListIterator<ImageWindow*> it;
+     for ( it = s_viewers.begin(); it != s_viewers.end(); ++it )
+-        urls.append( (*it)->filename() );
++    {
++        const KURL& url = (*it)->currentFile()->url();
++        if ( url.isLocalFile() )
++            urls.append( url.path() );
++        else
++            urls.append( url.prettyURL() ); // ### check if writePathEntry( prettyURL ) works!
++    }
+ 
+     kc->writePathEntry( "Images shown", urls );
+ }
+@@ -1159,7 +1173,7 @@
+         kc->writeEntry( "OpenImagesInActiveWindow", oneWindowAction->isChecked() );
+ 
+     if ( fileWidget ) {
+-        kc->writePathEntry( "CurrentDirectory", fileWidget->url().url() );
++        kc->writePathEntry( "CurrentDirectory", fileWidget->url().prettyURL() ); // ### was url().url()
+         fileWidget->writeConfig( kc, "Filebrowser" );
+     }
+ 
+@@ -1167,13 +1181,10 @@
+ }
+ 
+ 
+-void KuickShow::messageCantLoadImage( const QString& filename )
++void KuickShow::messageCantLoadImage( const KuickFile *, const QString& message )
+ {
+     m_viewer->clearFocus();
+-    QString tmp = i18n("Unable to load the image %1.\n"
+-                       "Perhaps the file format is unsupported or "
+-                       "your Imlib is not installed properly.").arg(filename);
+-    KMessageBox::information( m_viewer, tmp, i18n("Image Error"), "kuick_cant_load_image" );
++    KMessageBox::information( m_viewer, message, i18n("Error"), "kuick_cant_load_image" );
+ }
+ 
+ void KuickShow::initImlib()
+@@ -1188,7 +1199,7 @@
+ 
+         qWarning("*** KuickShow: Whoops, can't initialize imlib, trying my own palettefile now.");
+         QString paletteFile = locate( "data", "kuickshow/im_palette.pal" );
+-        // FIXME - does the qstrdup() cure the segfault in imlib eventually?
++        // ### - does the qstrdup() cure the segfault in imlib eventually?
+         char *file = qstrdup( paletteFile.local8Bit() );
+         par.palettefile = file;
+         par.flags |= PARAMS_PALETTEFILE;
+@@ -1204,6 +1215,7 @@
+                                "The program will now quit.");
+             KMessageBox::error( this, tmp, i18n("Fatal Imlib Error") );
+ 
++            delete FileCache::self();
+             ::exit(1);
+         }
+     }
+@@ -1212,7 +1224,7 @@
+ 
+ void KuickShow::initImlibParams( ImData *idata, ImlibInitParams *par )
+ {
+-    par->flags = ( PARAMS_REMAP | PARAMS_VISUALID |
++    par->flags = ( PARAMS_REMAP | PARAMS_VISUALID | PARAMS_SHAREDMEM | PARAMS_SHAREDPIXMAPS |
+                    PARAMS_FASTRENDER | PARAMS_HIQUALITY | PARAMS_DITHER |
+                    PARAMS_IMAGECACHESIZE | PARAMS_PIXMAPCACHESIZE );
+ 
+@@ -1223,6 +1235,8 @@
+     par->fastrender      = idata->fastRender  ? 1 : 0;
+     par->hiquality       = idata->dither16bit ? 1 : 0;
+     par->dither          = idata->dither8bit  ? 1 : 0;
++    par->sharedmem       = 1;
++    par->sharedpixmaps   = 1;
+     par->visualid	 = defaultvis->visualid;
+     uint maxcache        = idata->maxCache;
+ 
+@@ -1285,21 +1299,21 @@
+ 
+     m_delayedRepeatItem = event;
+ 
+-    KURL start;
+-    QFileInfo fi( event->viewer->filename() );
+-    start.setPath( fi.dirPath( true ) );
+-    initGUI( start );
++    KURL url = event->viewer->currentFile()->url();
++//    QFileInfo fi( event->viewer->filename() );
++//    start.setPath( fi.dirPath( true ) );
++    initGUI( url.upURL() );
+ 
+     // see eventFilter() for explanation and similar code
+     if ( fileWidget->dirLister()->isFinished() &&
+          fileWidget->dirLister()->rootItem() )
+     {
+-        fileWidget->setCurrentItem( fi.fileName() );
++        fileWidget->setCurrentItem( url.fileName() );
+         QTimer::singleShot( 0, this, SLOT( doReplay()));
+     }
+     else
+     {
+-        fileWidget->setInitialItem( fi.fileName() );
++        fileWidget->setInitialItem( url.fileName() );
+         connect( fileWidget, SIGNAL( finished() ),
+                  SLOT( doReplay() ));
+     }
+Index: kuickshow/src/filecache.h
+===================================================================
+--- kuickshow/src/filecache.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 0)
++++ kuickshow/src/filecache.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -0,0 +1,45 @@
++/****************************************************************************
++** $Id$
++**
++** Created : 2006
++**
++** Copyright (C) 2006 Carsten Pfeiffer <pfeiffer@kde.org>
++**
++****************************************************************************/
++
++#ifndef FILECACHE_H
++#define FILECACHE_H
++
++#include <qcache.h>
++
++#include "kuickfile.h"
++
++class KTempDir;
++
++class FileCache
++{
++public:
++    static FileCache * self();
++    ~FileCache();
++
++    KuickFile * getFile( const KURL& url );
++    void setLimit( int numFiles );
++    int getLimit() const { return m_limit; }
++
++    /**
++     * @return the temporary directory or QString::null if none available
++     */
++    QString tempDir();
++
++private:
++    static FileCache *s_self;
++    FileCache();
++    KTempDir * createTempDir();
++    QCache<KuickFile> m_files;
++
++    int m_limit;
++    KTempDir *m_tempDir;
++
++};
++
++#endif // FILECACHE_H
+Index: kuickshow/src/imagewindow.cpp
+===================================================================
+--- kuickshow/src/imagewindow.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/imagewindow.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -1,5 +1,5 @@
+ /* This file is part of the KDE project
+-   Copyright (C) 1998-2004 Carsten Pfeiffer <pfeiffer@kde.org>
++   Copyright (C) 1998-2006 Carsten Pfeiffer <pfeiffer@kde.org>
+ 
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public
+@@ -21,6 +21,7 @@
+ #include <qcheckbox.h>
+ #include <qcursor.h>
+ #include <qdrawutil.h>
++#include <qfileinfo.h>
+ #include <qkeycode.h>
+ #include <qpainter.h>
+ #include <qpen.h>
+@@ -60,11 +61,15 @@
+ #include <kurldrag.h>
+ #include <kio/netaccess.h>
+ 
++#include "filecache.h"
+ #include "imagewindow.h"
+ #include "kuick.h"
+ #include "kuickdata.h"
++#include "kuickfile.h"
++#include "kuickimage.h"
+ #include "printing.h"
+ 
++
+ #undef GrayScale
+ 
+ QCursor *ImageWindow::s_handCursor = 0L;
+@@ -257,20 +262,27 @@
+     }
+ }
+ 
++void ImageWindow::showWindow()
++{
++	if ( myIsFullscreen )
++		showFullScreen();
++	else
++		showNormal();
++}
+ 
+ void ImageWindow::setFullscreen( bool enable )
+ {
+     xpos = 0; ypos = 0;
+ 
+-    if ( enable && !myIsFullscreen ) { // set Fullscreen
+-        showFullScreen();
+-    }
+-    else if ( !enable && myIsFullscreen ) { // go into window mode
+-        showNormal();
+-    }
++//    if ( enable && !myIsFullscreen ) { // set Fullscreen
++//        showFullScreen();
++//    }
++//    else if ( !enable && myIsFullscreen ) { // go into window mode
++//        showNormal();
++//    }
+ 
+     myIsFullscreen = enable;
+-    centerImage(); // ### really necessary (multihead!)
++//    centerImage(); // ### really necessary (multihead!)
+ }
+ 
+ 
+@@ -299,7 +311,7 @@
+     QString caption = i18n( "Filename (Imagewidth x Imageheight)",
+                             "%3 (%1 x %2)" );
+     caption = caption.arg( m_kuim->originalWidth() ).
+-              arg( m_kuim->originalHeight() ).arg( m_kuim->filename() );
++              arg( m_kuim->originalHeight() ).arg( m_kuim->url().prettyURL() );
+     setCaption( kapp->makeStdCaption( caption ) );
+ }
+ 
+@@ -394,15 +406,40 @@
+ //     XClearWindow(); // repaint
+ //     XMapWindow(), XSync();
+ //
+-bool ImageWindow::showNextImage( const QString& filename )
++bool ImageWindow::showNextImage( const KURL& url )
+ {
+-    if ( !loadImage( filename ) ) {
+-	emit sigBadImage( filename );
+-	return false;
++    KuickFile *file = FileCache::self()->getFile( url );
++    switch ( file->waitForDownload( this ) ) {
++    	case KuickFile::ERROR:
++    	{
++    	    QString tmp = i18n("Unable to download the image from %1.").arg(url.prettyURL());
++	        emit sigImageError( file, tmp );
++	        return false;
++    	}
++	    case KuickFile::CANCELED:
++	    	return false; // just abort, no error message
++	    default:
++	    	break; // go on...
+     }
+ 
++    return showNextImage( file );
++}
++
++bool ImageWindow::showNextImage( KuickFile *file )
++{
++    if ( !loadImage( file ) ) {
++   	    QString tmp = i18n("Unable to load the image %1.\n"
++                       "Perhaps the file format is unsupported or "
++                       "your Imlib is not installed properly.").arg(file->url().prettyURL());
++        emit sigImageError( file, tmp );
++        return false;
++    }
++
+     else {
+ 	// updateWidget( true ); // already called from loadImage()
++	if ( !isVisible() )
++		showWindow();
++		
+ 	showImage();
+ 	return true;
+     }
+@@ -410,7 +447,7 @@
+ 
+ void ImageWindow::reload()
+ {
+-    showNextImage( filename() );
++    showNextImage( currentFile() );
+ }
+ 
+ void ImageWindow::pauseSlideShow()
+@@ -758,7 +795,7 @@
+     xtmp += xcenter;
+     ytmp += ycenter;
+ 
+-    m_kuim->resize( w, h );
++    m_kuim->resize( w, h, idata->smoothScale ? KuickImage::SMOOTH : KuickImage::FAST );
+     XResizeWindow( x11Display(), win, w, h );
+     updateWidget( false );
+ 
+@@ -894,26 +931,29 @@
+                    );
+ 
+     QString selection = m_saveDirectory.isEmpty() ?
+-                            m_kuim->filename() :
+-                            KURL::fromPathOrURL( m_kuim->filename() ).fileName();
++                            m_kuim->url().url() :
++                            m_kuim->url().fileName();
++    dlg.setOperationMode( KFileDialog::Saving );
++    dlg.setMode( KFile::File );
+     dlg.setSelection( selection );
+-    dlg.setOperationMode( KFileDialog::Saving );
+     dlg.setCaption( i18n("Save As") );
+     if ( dlg.exec() == QDialog::Accepted )
+     {
+-        QString file = dlg.selectedFile();
+-        if ( !file.isEmpty() )
++        KURL url = dlg.selectedURL();
++        if ( url.isValid() )
+         {
+-            if ( !saveImage( file, keepSize->isChecked() ) )
++            if ( !saveImage( url, keepSize->isChecked() ) )
+             {
+                 QString tmp = i18n("Couldn't save the file.\n"
+                                    "Perhaps the disk is full, or you don't "
+                                    "have write permission to the file.");
+                 KMessageBox::sorry( this, tmp, i18n("File Saving Failed"));
+             }
+-
+-            if ( file == m_kuim->filename() ) {
+-                Imlib_apply_modifiers_to_rgb( id, m_kuim->imlibImage() );
++			else
++			{
++	            if ( url.equals( m_kuim->url() )) {
++	                Imlib_apply_modifiers_to_rgb( id, m_kuim->imlibImage() );
++	            }
+             }
+         }
+     }
+@@ -927,7 +967,7 @@
+ #endif
+ }
+ 
+-bool ImageWindow::saveImage( const QString& filename, bool keepOriginalSize ) const
++bool ImageWindow::saveImage( const KURL& dest, bool keepOriginalSize )
+ {
+     int w = keepOriginalSize ? m_kuim->originalWidth()  : m_kuim->width();
+     int h = keepOriginalSize ? m_kuim->originalHeight() : m_kuim->height();
+@@ -938,11 +978,37 @@
+                                                    w, h );
+     bool success = false;
+ 
+-    if ( saveIm ) {
++	QString saveFile;
++	if ( dest.isLocalFile() )
++		saveFile = dest.path();
++	else 
++	{
++		QString extension = QFileInfo( dest.fileName() ).extension();
++		if ( !extension.isEmpty() )
++			extension.prepend( '.' );
++		
++		KTempFile tmpFile( QString::null, extension );
++		if ( tmpFile.status() != 0 )
++			return false;
++		tmpFile.close();
++		if ( tmpFile.status() != 0 )
++			return false;
++		saveFile = tmpFile.name();		
++	}
++	
++    if ( saveIm ) 
++    {
+         Imlib_apply_modifiers_to_rgb( id, saveIm );
+         success = Imlib_save_image( id, saveIm,
+-                                    QFile::encodeName( filename ).data(),
++                                    QFile::encodeName( saveFile ).data(),
+                                     NULL );
++        if ( success && !dest.isLocalFile() ) 
++        {
++        	if ( isFullscreen() )
++        		toggleFullscreen(); // otherwise upload window would block us invisibly
++        	success = KIO::NetAccess::upload( saveFile, dest, const_cast<ImageWindow*>( this ) );
++        }
++                                    
+         Imlib_kill_image( id, saveIm );
+     }
+ 
+@@ -952,18 +1018,20 @@
+ void ImageWindow::toggleFullscreen()
+ {
+     setFullscreen( !myIsFullscreen );
++    showWindow();
+ }
+ 
+ void ImageWindow::loaded( KuickImage *kuim )
+ {
+-    if ( !kdata->isModsEnabled ) {
+-	kuim->restoreOriginalSize();
+-    }
+-    else
+-    {
+-        autoRotate( kuim );
+-        autoScale( kuim );
+-    }
++	if ( !kdata->isModsEnabled ) {
++		// ### BUG: should be "restorePreviousSize"
++		kuim->restoreOriginalSize();
++	}
++	else
++	{
++		autoRotate( kuim );
++		autoScale( kuim );
++	}
+ }
+ 
+ // upscale/downscale depending on configuration
+@@ -1024,7 +1092,7 @@
+     }
+ 
+     if ( doIt )
+-        kuim->resize( newW, newH );
++        kuim->resize( newW, newH, idata->smoothScale ? KuickImage::SMOOTH : KuickImage::FAST );
+ }
+ 
+ // only called when kdata->isModsEnabled is true
+@@ -1153,14 +1221,12 @@
+     ImlibWidget::rotated( kuim, rotation );
+     
+     if ( rotation == ROT_90 || rotation == ROT_270 )
+-        autoScale( kuim );
++        autoScale( kuim ); // ### BUG: only autoScale when configured!
+ }
+ 
+ void ImageWindow::slotProperties()
+ {
+-    KURL url;
+-    url.setPath( filename() ); // ###
+-    (void) new KPropertiesDialog( url, this, "props dialog", true );
++    (void) new KPropertiesDialog( currentFile()->url(), this, "props dialog", true );
+ }
+ 
+ void ImageWindow::setBusyCursor()
+Index: kuickshow/src/kuickfile.h
+===================================================================
+--- kuickshow/src/kuickfile.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 0)
++++ kuickshow/src/kuickfile.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -0,0 +1,99 @@
++/****************************************************************************
++** $Id$
++**
++** Created : 2006
++**
++** Copyright (C) 2006 Carsten Pfeiffer <pfeiffer@kde.org>
++**
++****************************************************************************/
++
++#ifndef KUICKFILE_H
++#define KUICKFILE_H
++
++#include <qobject.h>
++#include <qstring.h>
++
++#include <kurl.h>
++#include <kprogress.h>
++
++namespace KIO {
++    class Job;
++    class FileCopyJob;
++}
++
++class KuickFile : public QObject
++{
++    Q_OBJECT
++
++public:
++	enum DownloadStatus
++	{
++		OK = 1,
++		CANCELED,
++		ERROR	
++	};
++
++    KuickFile(const KURL& url);
++
++    /**
++     * Cleans up resources and removes any temporary file, if available.
++     */
++    ~KuickFile();
++
++    const KURL& url() const { return m_url; }
++
++
++    QString localFile() const;
++
++    bool download();
++
++    /**
++     * @return true if download is in progress
++     */
++    bool isDownloading() const { return m_job != 0L; }
++
++    /**
++     * @return true if a local file is available, that is,
++     * @ref #localFile will return a non-empty name
++     * ### HERE ADD mostlylocal thing!
++     */
++    bool isAvailable() const { return !localFile().isEmpty(); }
++
++    /**
++     * @return true if @ref #isAvailable() returns true AND @ref #url() is a remote URL,
++     * i.e. the file really has been downloaded.
++     */
++    bool hasDownloaded() const;
++
++    /**
++     * Opens a modal dialog window, blocking user interaction until the download
++     * has finished. If the file is already available, this function will return true
++     * immediately.
++     * @return true when the download has finished or false when the user aborted the dialog
++     */
++    KuickFile::DownloadStatus waitForDownload( QWidget *parent );
++
++//    bool needsDownload();
++
++signals:
++    /**
++     * Signals that download has finished for that file. Will only be emitted for non-local files!
++     */
++    void downloaded( KuickFile * );
++
++private slots:
++    void slotResult( KIO::Job *job );
++    void slotProgress( KIO::Job *job, unsigned long percent );
++
++private:
++    KURL m_url;
++    QString m_localFile;
++    KIO::FileCopyJob *m_job;
++    KProgress *m_progress;
++    int m_currentProgress;
++
++};
++
++bool operator==( const KuickFile& first, const KuickFile& second );
++
++#endif // KUICKFILE_H
+Index: kuickshow/src/kuickimage.h
+===================================================================
+--- kuickshow/src/kuickimage.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 0)
++++ kuickshow/src/kuickimage.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -0,0 +1,92 @@
++/****************************************************************************
++** $Id$
++**
++** Created : 2002
++**
++** Copyright (C) 2002 Carsten Pfeiffer <pfeiffer@kde.org> 
++**
++****************************************************************************/
++
++#ifndef KUICKIMAGE_H
++#define KUICKIMAGE_H
++
++#include <qimage.h>
++#include <qobject.h>
++
++#include <kurl.h>
++
++#include "kuickdata.h"
++#include "kuickfile.h"
++
++// #include those AFTER Qt-includes!
++#include <Imlib.h>
++#include <X11/Xlib.h>
++#include <X11/Xutil.h>
++// #include <X11/extensions/shape.h>
++
++
++class KuickImage : public QObject
++{
++  Q_OBJECT
++
++public:
++  enum ResizeMode { FAST, SMOOTH };
++
++  KuickImage( const KuickFile * file, ImlibImage *im, ImlibData *id );
++  ~KuickImage();
++
++  int 		width() 	const { return myWidth;   }
++  int 		height()	const { return myHeight;  }
++  int 		originalWidth() const { return myOrigWidth; }
++  int 		originalHeight() const { return myOrigHeight; }
++
++  void 		resize( int width, int height, KuickImage::ResizeMode mode );
++  void 		restoreOriginalSize();
++  void		rotate( Rotation rot );
++  bool		rotateAbs( Rotation rot );
++  void 		flip( FlipMode flipMode );
++  bool 		flipAbs( int mode );
++  ImlibImage *	imlibImage()	const { return myIm;      }
++  Pixmap& 	pixmap();
++  void 		renderPixmap();
++//  const QString& filename() 	const { return myFilename;}
++  const KuickFile& file()       const { return *myFile; }
++  const KURL& url()             const { return myFile->url(); }
++
++  void 		setDirty( bool d )    { myIsDirty = d;    }
++  bool 		isDirty() 	const { return myIsDirty; }
++  Rotation      absRotation()   const { return myRotation; }
++  FlipMode      flipMode()      const { return myFlipMode; }
++
++  static ImlibImage * toImage( ImlibData *id, QImage& image );
++
++private:
++  void      fastResize( int newWidth, int newHeight );
++  bool 		smoothResize( int width, int height );
++  /**
++   * Note: caller must delete it!
++   */
++  QImage * 	newQImage() const;
++
++  const KuickFile * myFile;
++
++  int 		myWidth;
++  int 		myHeight;
++  ImlibImage * 	myOrigIm;
++  ImlibImage * 	myIm;
++  ImlibData  * 	myId;
++  Pixmap 	myPixmap;
++  bool 		myIsDirty;
++
++  int 		myOrigWidth;
++  int 		myOrigHeight;
++  Rotation 	myRotation;
++  FlipMode 	myFlipMode;
++
++signals:
++  void 		startRendering();
++  void 		stoppedRendering();
++};
++
++
++#endif // KUICKIMAGE_H
+Index: kuickshow/src/main.cpp
+===================================================================
+--- kuickshow/src/main.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -41,7 +41,7 @@
+     KAboutData about(
+ 	  "kuickshow", I18N_NOOP( "KuickShow" ), KUICKSHOWVERSION,
+ 	  I18N_NOOP("A fast and versatile image viewer" ),
+-	  KAboutData::License_GPL, "(c) 1998-2002, Carsten Pfeiffer",
++	  KAboutData::License_GPL, "(c) 1998-2006, Carsten Pfeiffer",
+ 	  0 /*text*/, "http://devel-home.kde.org/~pfeiffer/" );
+ 
+     about.addAuthor( "Carsten Pfeiffer", 0, "pfeiffer@kde.org",
+Index: kuickshow/src/printing.h
+===================================================================
+--- kuickshow/src/printing.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/printing.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -36,7 +36,7 @@
+ class Printing
+ {
+ public:
+-    static bool printImage( const ImageWindow& imageWin, QWidget *parent = 0L);
++    static bool printImage( ImageWindow& imageWin, QWidget *parent = 0L);
+     static bool printImageWithQt( const QString& filename, KPrinter& printer,
+                                   const QString& originalFileName );
+ 
+Index: kuickshow/src/filecache.cpp
+===================================================================
+--- kuickshow/src/filecache.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 0)
++++ kuickshow/src/filecache.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -0,0 +1,71 @@
++#include <unistd.h>
++
++#include <qstring.h>
++
++#include <kdebug.h>
++#include <kstandarddirs.h>
++#include <ktempdir.h>
++
++#include "filecache.h"
++
++FileCache * FileCache::s_self;
++
++FileCache::FileCache()
++    : m_limit( 0 ),
++      m_tempDir( 0L )
++{
++    m_files.setAutoDelete( true );
++    m_files.setMaxCost( 100 ); // good default? ### make configurable?
++}
++
++FileCache::~FileCache()
++{
++    delete m_tempDir;
++}
++
++FileCache * FileCache::self()
++{
++    if ( !s_self )
++        s_self = new FileCache();
++    return s_self;
++}
++
++KuickFile * FileCache::getFile( const KURL& url )
++{
++    QString urlString = url.prettyURL();
++    KuickFile *file = m_files.find( urlString );
++    if ( !file ) {
++        file = new KuickFile( url );
++        m_files.insert( urlString, file );
++    }
++    
++    return file;
++}
++
++QString FileCache::tempDir()
++{
++    if ( !m_tempDir ) {
++        m_tempDir = createTempDir();
++
++        if ( !m_tempDir ) {
++            kdWarning() << "Unable to create temporary directory for KuickShow" << endl;
++            return QString::null;
++        }
++    }
++    
++    return m_tempDir->name();
++}
++
++
++KTempDir * FileCache::createTempDir()
++{
++    QString tmpName = QString::fromLatin1( KGlobal::instance()->instanceName() );
++    tmpName.append( QString::number( getpid() ) );
++    QString dirName = locateLocal( "tmp", tmpName );
++    KTempDir *dir = new KTempDir( dirName );
++    dir->setAutoDelete( true );
++    if ( dir->status() != 0L )
++        return 0L;
++
++    return dir;
++}
+Index: kuickshow/src/imdata.h
+===================================================================
+--- kuickshow/src/imdata.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/imdata.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -37,11 +37,13 @@
+ 
+   // -----------------------
+ 
+-  bool 		ownPalette;
+-  bool 		fastRemap;
+-  bool 		fastRender;
+-  bool		dither16bit;
+-  bool 		dither8bit;
++  bool 		ownPalette		:1;
++  bool 		fastRemap		:1;
++  bool 		fastRender		:1;
++  bool		dither16bit		:1;
++  bool 		dither8bit		:1;
++  bool		smoothScale		:1;
++  
+ 
+   uint          gammaFactor;
+   uint          brightnessFactor;
+Index: kuickshow/src/imlibwidget.h
+===================================================================
+--- kuickshow/src/imlibwidget.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/imlibwidget.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -31,62 +31,9 @@
+ #include "imdata.h"
+ #include "kuickdata.h"
+ 
++class KuickFile;
++class KuickImage;
+ 
+-// hmm, global declaration for now
+-enum FlipMode { FlipNone = 0, FlipHorizontal = 1, FlipVertical = 2 };
+-
+-class KuickImage : public QObject
+-{
+-  Q_OBJECT
+-
+-public:
+-  KuickImage( const QString& filename, ImlibImage *im, ImlibData *id );
+-  ~KuickImage();
+-
+-  int 		width() 	const { return myWidth;   }
+-  int 		height()	const { return myHeight;  }
+-  int 		originalWidth() const { return myOrigWidth; }
+-  int 		originalHeight() const { return myOrigHeight; }
+-
+-  void 		resize( int width, int height );
+-  void 		restoreOriginalSize();
+-  void	        rotate( Rotation rot );
+-  bool          rotateAbs( Rotation rot );
+-  void 		flip( FlipMode flipMode );
+-  bool 		flipAbs( int mode );
+-  ImlibImage *	imlibImage()	const { return myIm;      }
+-  Pixmap& 	pixmap();
+-  void 		renderPixmap();
+-  const QString& filename() 	const { return myFilename;}
+-
+-  void 		setDirty( bool d )    { myIsDirty = d;    }
+-  bool 		isDirty() 	const { return myIsDirty; }
+-  Rotation      absRotation()   const { return myRotation; }
+-  FlipMode      flipMode()      const { return myFlipMode; }
+-
+-private:
+-  int 		myWidth;
+-  int 		myHeight;
+-  QString 	myFilename;
+-  ImlibImage * 	myIm;
+-  ImlibData  * 	myId;
+-  Pixmap 	myPixmap;
+-  bool 		myIsDirty;
+-
+-  int 		myOrigWidth;
+-  int 		myOrigHeight;
+-  Rotation 	myRotation;
+-  FlipMode 	myFlipMode;
+-
+-signals:
+-  void 		startRendering();
+-  void 		stoppedRendering();
+-};
+-
+-
+-// ------------------------------------------
+-
+-
+ class ImageCache : public QObject
+ {
+   Q_OBJECT
+@@ -98,14 +45,13 @@
+   void 			setMaxImages( int maxImages );
+   int 			maxImages() 		const { return myMaxImages; }
+ 
+-  KuickImage *		getKuimage( const QString& file, ImlibColorModifier  );
+-  //  KuickImage *		find( const QString& filename );
++  KuickImage *		getKuimage( KuickFile * file, ImlibColorModifier  );
+ 
+ private:
+   ImlibImage *		loadImageWithQt( const QString& filename ) const;
+ 
+   int 			myMaxImages;
+-  QStringList		fileList;
++  QValueList<KuickFile*>fileList;
+   QPtrList<KuickImage>	kuickList;
+   //  QPtrList<ImlibImage>	imList;
+   ImlibData * 		myId;
+@@ -124,7 +70,6 @@
+ 
+ // ------------------------------------------
+ 
+-
+ class QColor;
+ 
+ class ImlibWidget : public QWidget
+@@ -138,10 +83,11 @@
+ 	       const char *name=0 );
+   virtual ~ImlibWidget();
+ 
+-  const QString& filename() 		const { return m_filename; }
+   KURL          url()                   const;
+-  bool		loadImage( const QString& filename );
+-  bool 		cacheImage( const QString& filename );
++  KuickFile *   currentFile()           const;
++  bool		loadImage( KuickFile * file );
++  bool		loadImage( const KURL& url );
++  bool 		cacheImage(const KURL& url );
+   void   	zoomImage( float );
+   void 		setBrightness( int );
+   void 		setContrast( int );
+@@ -149,11 +95,11 @@
+   void 		setRotation( Rotation );
+   void 		setFlipMode( int mode );
+ 
+-  int 		brightness() 		 const;
+-  int 		contrast()		 const;
+-  int 		gamma() 		 const;
+-  Rotation 	rotation() 		 const { return m_kuim ? m_kuim->absRotation() : ROT_0; }
+-  FlipMode	flipMode() 		 const { return m_kuim ? m_kuim->flipMode() : FlipNone; }
++  int 		brightness() 		 const; // ### no impl!
++  int 		contrast()		 const; // ### no impl!
++  int 		gamma() 		 const; // ### no impl!
++  Rotation 	rotation() 		 const;
++  FlipMode	flipMode() 		 const;
+ 
+   int 		imageWidth() 		 const;
+   int 		imageHeight() 		 const;
+@@ -186,7 +132,7 @@
+ 
+ 
+ protected:
+-  KuickImage *	loadImageInternal( const QString&  );
++  KuickImage *	loadImageInternal( KuickFile * file );
+   void 		showImage();
+   void          setImageModifier();
+   void 		rotate( int );
+@@ -213,7 +159,7 @@
+   Window        win;
+   ImlibColorModifier mod;
+ 
+-  QString m_filename;
++  KuickFile *m_kuickFile;
+   QCursor m_oldCursor;
+ 
+   static const int ImlibOffset;
+@@ -227,12 +173,13 @@
+ 
+ 
+ protected slots:
++  bool 		cacheImage( KuickFile *file );
+   virtual void 	setBusyCursor();
+   virtual void	restoreCursor();
+ 
+ 
+ signals:
+-  void 		sigBadImage( const QString& );
++  void 		sigImageError( const KuickFile * file, const QString& );
+ 
+ };
+ 
+Index: kuickshow/src/kuickfile.cpp
+===================================================================
+--- kuickshow/src/kuickfile.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 0)
++++ kuickshow/src/kuickfile.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -0,0 +1,183 @@
++#include <qfile.h>
++
++#include <kdebug.h>
++#include <kdeversion.h>
++#include <kinstance.h>
++#include <klocale.h>
++#include <kprogress.h>
++#include <kio/job.h>
++#include <ktempfile.h>
++
++#include "filecache.h"
++#include "kuickfile.h"
++
++KuickFile::KuickFile(const KURL& url)
++    : QObject(),
++      m_url( url ),
++      m_job( 0L ),
++      m_progress( 0L ),
++      m_currentProgress( 0 )
++{
++    if ( m_url.isLocalFile() )
++        m_localFile = m_url.path();
++
++    // ### KDE4: special support for "mostLocalURL"
++}
++
++KuickFile::~KuickFile()
++{
++    delete m_job;
++
++    if ( hasDownloaded() )
++        QFile::remove( m_localFile );
++}
++
++QString KuickFile::localFile() const
++{
++    // Note: never call isAvailable() from here, directly or indirectly
++
++    if ( isDownloading() )
++        return QString::null;
++
++    return m_localFile;
++}
++
++bool KuickFile::hasDownloaded() const
++{
++    return !m_url.isLocalFile() && isAvailable() && m_job != 0L;
++}
++
++// ### need an API for refreshing the file?
++bool KuickFile::download()
++{
++    if ( m_url.isLocalFile() || isAvailable() )
++        return true;
++
++    if ( isDownloading() )
++        return true;
++
++    // reinitialize
++    m_localFile = QString::null;
++    m_currentProgress = 0;
++    
++
++    // ### KDE4: special support for "mostLocalURL"
++
++    QString ext;
++    QString fileName = m_url.fileName();
++    int extIndex = fileName.findRev('.');
++    if ( extIndex > 0 )
++        ext = fileName.mid( extIndex + 1 );
++
++    QString tempDir = FileCache::self()->tempDir();
++    KTempFile tempFile( tempDir, ext );
++    tempFile.setAutoDelete( tempDir.isNull() ); // in case there is no proper tempdir, make sure to delete those files!
++    if ( tempFile.status() != 0 )
++        return false;
++
++    tempFile.close();
++    if ( tempFile.status() != 0 )
++        return false;
++
++    KURL destURL;
++    destURL.setPath( tempFile.name() );
++
++    m_job = KIO::file_copy( m_url, destURL, -1, true, false, false ); // handling progress ourselves
++    m_job->setAutoErrorHandlingEnabled( true );
++    connect( m_job, SIGNAL( result( KIO::Job * )), SLOT( slotResult( KIO::Job * ) ));
++    connect( m_job, SIGNAL( percent( KIO::Job *, unsigned long )), SLOT( slotProgress( KIO::Job *, unsigned long ) ));
++
++    // TODO: generify background/foreground downloading?
++
++    return m_job != 0L;
++}
++
++KuickFile::DownloadStatus KuickFile::waitForDownload( QWidget *parent )
++{
++    if ( isAvailable() )
++        return OK;
++
++    if ( !isDownloading() ) {
++        if ( !download() )
++            return ERROR;
++    }
++
++    KProgressDialog *dialog = new KProgressDialog( parent );
++    dialog->setModal( true );
++    dialog->setCaption( i18n("Downloading %1...").arg( m_url.fileName() ) );
++    dialog->setLabel( i18n("Please wait while downloading\n%1").arg( m_url.prettyURL() ));
++    dialog->setAllowCancel( true );
++    dialog->setAutoClose( true );
++
++    m_progress = dialog->progressBar();
++    m_progress->setTotalSteps( 100 ); // percent
++    m_progress->setProgress( m_currentProgress );
++    dialog->exec();
++    bool canceled = dialog->wasCancelled();
++    delete dialog;
++    m_progress = 0L;
++
++	if ( canceled && m_job ) {
++		m_job->kill();
++		m_job = 0L;
++		m_currentProgress = 0;
++	}
++    // ### when aborted, remove KuickImage from FileCache?
++    
++    // ### use custom progress dialog with OK, SKIP, CANCEL?
++     return canceled ? CANCELED : OK;
++}
++
++void KuickFile::slotResult( KIO::Job *job )
++{
++    if (job != m_job) { // huh?
++        return;
++    }
++
++    m_job = 0L;
++
++    if ( job->error() != 0 ) {
++    	m_currentProgress = 0;
++        kdWarning() << "ERROR: " << job->errorString() << endl;
++        QString canceledFile = static_cast<KIO::FileCopyJob*>(job)->destURL().path();
++        QFile::remove( canceledFile );
++        m_progress->topLevelWidget()->hide();
++    }
++    else {
++	    m_localFile = static_cast<KIO::FileCopyJob*>(job)->destURL().path();
++	    emit downloaded( this ); // before closing the progress dialog
++
++	    if ( m_progress ) {
++	        m_progress->setProgress( 100 );
++#define BUGGY_VERSION KDE_MAKE_VERSION(3,5,2)
++	        if ( KDE::version() <= BUGGY_VERSION ) {
++	            m_progress->topLevelWidget()->hide(); // ### workaround broken KProgressDialog
++	        }
++	    }
++    }
++}
++
++void KuickFile::slotProgress( KIO::Job *job, unsigned long percent )
++{
++    if (job != m_job) { // huh?
++        return;
++    }
++
++    m_currentProgress = percent;
++    
++    if ( !m_progress )
++        return;
++
++    // only set 100% in slotResult. Otherwise, the progress dialog would be closed
++    // before slotResult() is called.
++    if ( percent >= 100 )
++        percent = 99;
++
++    m_progress->setProgress( (int) percent );
++}
++
++bool operator==( const KuickFile& first, const KuickFile& second ) {
++    return first.url().equals( second.url() );
++}
++
++#include "kuickfile.moc"
+Index: kuickshow/src/kuickimage.cpp
+===================================================================
+--- kuickshow/src/kuickimage.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 0)
++++ kuickshow/src/kuickimage.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -0,0 +1,527 @@
++#include "kuickimage.h"
++
++KuickImage::KuickImage( const KuickFile * file, ImlibImage *im, ImlibData *id)
++    : QObject( 0L, 0L )
++{
++    myFile     = file;
++    myOrigIm   = 0L;
++    myIm       = im;
++    myId       = id;
++    myPixmap   = 0L;
++    myWidth    = im->rgb_width;
++    myHeight   = im->rgb_height;
++    myIsDirty  = true;
++
++    myOrigWidth  = myWidth;
++    myOrigHeight = myHeight;
++    myRotation   = ROT_0;
++    myFlipMode   = FlipNone;
++}
++
++KuickImage::~KuickImage()
++{
++    if ( myPixmap )
++        Imlib_free_pixmap( myId, myPixmap );
++
++    if ( myOrigIm )
++    {
++    	Imlib_destroy_image( myId, myOrigIm );
++	    Imlib_kill_image( myId, myIm ); // kill scaled image (### really? analyze!)
++    }
++    else
++	    Imlib_destroy_image( myId, myIm );
++}
++
++
++Pixmap& KuickImage::pixmap()
++{
++    if ( myIsDirty )
++	renderPixmap();
++
++    return myPixmap;
++}
++
++
++void KuickImage::renderPixmap()
++{
++    if ( !myIsDirty )
++	return;
++
++//     qDebug("### rendering: %s", myFilename.latin1());
++
++    if ( myPixmap )
++	Imlib_free_pixmap( myId, myPixmap );
++
++    emit startRendering();
++
++// #ifndef NDEBUG
++//     struct timeval tms1, tms2;
++//     gettimeofday( &tms1, NULL );
++// #endif
++
++    Imlib_render( myId, myIm, myWidth, myHeight );
++	myPixmap = Imlib_move_image( myId, myIm );
++
++// #ifndef NDEBUG
++//     gettimeofday( &tms2, NULL );
++//     qDebug("*** rendering image: %s, took %ld ms", myFilename.latin1(),
++//            (tms2.tv_usec - tms1.tv_usec)/1000);
++// #endif
++
++    emit stoppedRendering();
++
++    myIsDirty = false;
++}
++
++
++void KuickImage::rotate( Rotation rot )
++{
++    if ( rot == ROT_180 ) { 		// rotate 180 degrees
++	Imlib_flip_image_horizontal( myId, myIm );
++	Imlib_flip_image_vertical( myId, myIm );
++    }
++
++    else if ( rot == ROT_90 || rot == ROT_270 ) {
++	qSwap( myWidth, myHeight );
++	Imlib_rotate_image( myId, myIm, -1 );
++
++	if ( rot == ROT_90 ) 		// rotate 90 degrees
++	    Imlib_flip_image_horizontal( myId, myIm );
++	else if ( rot == ROT_270 ) 		// rotate 270 degrees
++	    Imlib_flip_image_vertical( myId, myIm );
++    }
++
++    myRotation = (Rotation) ((myRotation + rot) % 4);
++    myIsDirty = true;
++}
++
++
++bool KuickImage::rotateAbs( Rotation rot )
++{
++    if ( myRotation == rot )
++	return false;
++
++    int diff = rot - myRotation;
++    bool clockWise = (diff > 0);
++
++    switch( abs(diff) ) {
++    case ROT_90:
++        rotate( clockWise ? ROT_90 : ROT_270 );
++	break;
++    case ROT_180:
++	rotate( ROT_180 );
++	break;
++    case ROT_270:
++        rotate( clockWise ? ROT_270 : ROT_90 );
++	break;
++    }
++
++    return true;
++}
++
++void KuickImage::flip( FlipMode flipMode )
++{
++    if ( flipMode & FlipHorizontal )
++	Imlib_flip_image_horizontal( myId, myIm );
++    if ( flipMode & FlipVertical )
++	Imlib_flip_image_vertical( myId, myIm );
++
++    myFlipMode = (FlipMode) (myFlipMode ^ flipMode);
++    myIsDirty = true;
++}
++
++bool KuickImage::flipAbs( int mode )
++{
++    if ( myFlipMode == mode )
++	return false;
++
++    bool changed = false;
++
++    if ( ((myFlipMode & FlipHorizontal) && !(mode & FlipHorizontal)) ||
++	 (!(myFlipMode & FlipHorizontal) && (mode & FlipHorizontal)) ) {
++	Imlib_flip_image_horizontal( myId, myIm );
++	changed = true;
++    }
++
++    if ( ((myFlipMode & FlipVertical) && !(mode & FlipVertical)) ||
++	 (!(myFlipMode & FlipVertical) && (mode & FlipVertical)) ) {
++	Imlib_flip_image_vertical( myId, myIm );
++	changed = true;
++    }
++
++    if ( changed ) {
++        myFlipMode = (FlipMode) mode;
++        myIsDirty = true;
++        return true;
++    }
++
++    return false;
++}
++
++
++void KuickImage::restoreOriginalSize()
++{
++	if (myWidth == myOrigWidth && myHeight == myOrigHeight)
++		return;
++
++//	qDebug("-- restoreOriginalSize");
++
++	if ( myOrigIm != 0L )
++	{
++		Imlib_destroy_image( myId, myIm );
++		myIm = myOrigIm;
++		myOrigIm = 0L;
++	}	
++	
++    myWidth   = myOrigWidth;
++    myHeight  = myOrigHeight;
++    myIsDirty = true;
++
++    if ( myRotation == ROT_90 || myRotation == ROT_270 )
++        qSwap( myWidth, myHeight );
++}
++
++void KuickImage::resize( int width, int height, KuickImage::ResizeMode mode )
++{
++	if ( myWidth == width && myHeight == height )
++		return;
++
++	if ( mode == KuickImage::SMOOTH )
++	{
++		if ( !smoothResize( width, height ) )
++			fastResize( width, height );
++	}
++	else
++	{
++		fastResize( width, height );
++	}
++}
++
++
++void KuickImage::fastResize( int width, int height )
++{
++//	qDebug("-- fastResize: %i x %i", width, height );
++	
++	// lazy resizing (only done when rendering pixmap)
++    myWidth   = width;
++    myHeight  = height;
++    myIsDirty = true;
++}
++
++bool KuickImage::smoothResize( int newWidth, int newHeight )
++{
++//	qDebug("-- smoothResize: %i x %i", newWidth, newHeight);
++	
++	QImage *image = newQImage();
++	// Note: QImage::ScaleMin seems to have a bug (off-by-one, sometimes results in width being 1 pixel too small)
++	QImage scaledImage = image->smoothScale(newWidth, newHeight, QImage::ScaleFree);
++		
++	delete image;
++	
++	
++	ImlibImage *newIm = toImage( myId, scaledImage );
++	if ( newIm )
++	{
++		if ( myOrigIm == 0 )
++			myOrigIm = myIm;
++			
++		myIm = newIm;
++		myWidth = newWidth;
++		myHeight = newHeight;
++		myIsDirty = true;	
++		return true;
++	}
++	
++	return false;
++}
++
++QImage * KuickImage::newQImage() const
++{
++	ImlibImage *im;
++
++//	qDebug("-- newQImage");
++
++	if ( myOrigIm != 0L && myRotation == ROT_0 && myFlipMode == FlipNone )
++	{
++		// use original image if no other modifications have been applied
++		// ### use orig image always and reapply mods?
++		im = myOrigIm;
++	}
++	else
++	{
++		im = myIm;
++	}
++	
++	int w = im->rgb_width;
++	int h = im->rgb_height;
++	
++	QImage *image = new QImage( w, h, 32 );
++	uchar *rgb = im->rgb_data;
++	QRgb **destImageData = reinterpret_cast<QRgb**>( image->jumpTable() );
++	
++
++	int byteIndex = 0;
++	int destLineIndex = 0;
++	int destByteIndex = 0;
++	for ( int pixel = 0; pixel < (w * h); pixel++ )
++	{
++		if ( pixel != 0 && (pixel % w) == 0 )
++		{
++			destLineIndex++;	
++			destByteIndex = 0;
++		}
++		
++		uchar r = rgb[byteIndex++];
++		uchar g = rgb[byteIndex++];
++		uchar b = rgb[byteIndex++];
++		
++		QRgb rgbPixel = qRgb( r, g, b );
++		destImageData[destLineIndex][destByteIndex++] = rgbPixel;
++	}
++	
++	return image;	
++}
++
++ImlibImage * KuickImage::toImage( ImlibData *id, QImage& image )
++{
++	if ( image.isNull() )
++		return 0L;
++    
++    if ( image.depth() != 32 ) 
++    {
++		image.setAlphaBuffer(false);
++		image = image.convertDepth(32);
++
++    	if ( image.isNull() )
++			return 0L;
++    }
++
++    // convert to 24 bpp (discard alpha)
++    int numPixels = image.width() * image.height();
++    const int NUM_BYTES_NEW  = 3; // 24 bpp
++    uchar *newImageData = new uchar[numPixels * NUM_BYTES_NEW];
++    uchar *newData = newImageData;
++
++    int w = image.width();
++    int h = image.height();
++
++	for (int y = 0; y < h; y++) {
++		QRgb *scanLine = reinterpret_cast<QRgb *>( image.scanLine(y) );
++		for (int x = 0; x < w; x++) {
++		    const QRgb& pixel = scanLine[x];
++		    *(newData++) = qRed(pixel);
++		    *(newData++) = qGreen(pixel);
++		    *(newData++) = qBlue(pixel);
++		}
++	}
++
++	ImlibImage *im = Imlib_create_image_from_data( id, newImageData, NULL,
++                                                   image.width(), image.height() );
++		
++    delete [] newImageData;
++
++    return im;
++}
++
++
++#if 0
++bool KuickImage::smoothResize( int newWidth, int newHeight )
++{
++	int numPixels = newWidth * newHeight;
++	const int NUM_BYTES_NEW  = 3; // 24 bpp
++	uchar *newImageData = new uchar[numPixels * NUM_BYTES_NEW];
++	
++	// ### endianness
++	// myIm : old image, old size
++	
++	
++	/////////////////////////////////////////////////
++//	int w = myOrigWidth; //myViewport.width();
++	//int h = myOrigHeight; //myViewport.height();
++
++	//QImage dst(w, h, myIm->depth(), myIm->numColors(), myIm->bitOrder());
++	
++	//QRgb *scanline;
++	
++	int basis_ox, basis_oy, basis_xx, basis_yy;
++	
++	// ### we only scale with a fixed factor for x and y anyway
++	double scalex = newWidth / (double) myOrigWidth;
++	double scaley = newHeight / (double) myOrigHeight;
++	
++//	basis_ox=(int) (myViewport.left() * 4096.0 / scalex);
++//	basis_oy=(int) (myViewport.top() * 4096.0 / scaley);
++	basis_ox = 0;
++	basis_oy = 0;
++	basis_xx = (int) (4096.0 / scalex);
++	basis_yy = (int) (4096.0 / scaley);
++
++	//qDebug("Basis: (%d, %d), (%d, 0), (0, %d)", basis_ox, basis_oy, basis_xx, basis_yy);
++		
++	int x2, y2;
++	
++	int max_x2 = (myOrigWidth << 12);
++	int max_y2 = (myOrigHeight << 12);
++	
++//	QRgb background = idata->backgroundColor.rgb();
++	
++//	QRgb **imdata = (QRgb **) myIm->jumpTable();
++//	QRgb *imdata = reinterpret_cast<QRgb*>( myIm->rgb_data );
++	uchar *imdata = myIm->rgb_data;
++	
++	
++	int y = 0;
++
++	
++//	for (;;)	//fill the top of the target pixmap with the background color
++//	{
++//		y2 = basis_oy + y * basis_yy;
++//		
++//		if ((y2 >= 0  && (y2 >> 12) < myIm->height()) || y >= h)
++//			break;
++//		
++//		scanline = (QRgb*) dst.scanLine(y);
++//		for (int i = 0; i < w; i++)
++//			*(scanline++) = background; //qRgb(0,255,0);
++//		y++;
++//	}
++	
++	for (; y < newHeight; y++)
++	{
++//		scanline = (QRgb*) dst.scanLine(y);
++	
++		x2 = basis_ox;
++		y2 = basis_oy + y * basis_yy;
++	
++		if (y2 >= max_y2)
++			break;
++		
++		int x = 0;
++		
++//		while  ((x2 < 0 || (x2 >> 12) >= myIm->width()) && x < w)	//fill the left of the target pixmap with the background color
++//		{
++//			*(scanline++) = background; //qRgb(0,0,255);
++//			x2 += basis_xx;
++//			x++;
++//		}
++		
++		int top = y2 >> 12;
++		int bottom = top + 1;
++		if (bottom >= myOrigHeight)
++			bottom--;						
++				
++//		for (; x < w; x++)
++		for (; x < newWidth; x++) // ### myOrigWidth orig
++		{
++			int left = x2 >> 12;
++			int right = left + 1;
++			
++			if (right >= myOrigWidth)
++				right = myOrigWidth - 1;
++
++			unsigned int wx = x2  & 0xfff; //12 bits of precision for reasons which will become clear
++			unsigned int wy = y2 & 0xfff; //12 bits of precision 
++			
++			unsigned int iwx = 0xfff - wx;
++			unsigned int iwy = 0xfff - wy;
++			
++			QRgb tl = 0, tr = 0, bl = 0, br = 0;
++			int ind = 0;
++			ind = (left + top * myOrigWidth) * 3;
++			tl  = (imdata[ind] << 16);
++			tl |= (imdata[ind + 1] << 8);
++			tl |= (imdata[ind + 2] << 0);
++			int bar = imdata[ind + 2] << 8;
++			bar = qBlue(bar);
++			
++			ind = (right + top * myOrigWidth) * 3;
++			tr  = (imdata[ind] << 16);
++			tr |= (imdata[ind + 1] << 8);
++			tr |= (imdata[ind + 2] << 0);
++			bar = imdata[ind + 2] << 8;
++			
++			ind = (left + bottom * myOrigWidth) * 3;
++			bl  = (imdata[ind] << 16);
++			bl |= (imdata[ind + 1] << 8);
++			bl |= (imdata[ind + 2] << 0);
++			bar = imdata[ind + 2] << 8;
++			
++			ind = (right + bottom * myOrigWidth) * 3;
++			br  = (imdata[ind] << 16);
++			br |= (imdata[ind + 1] << 8);
++			br |= (imdata[ind + 2] << 0);
++//			tl=imdata[top][left];
++//			tr=imdata[top][right];
++//			bl=imdata[bottom][left];
++//			br=imdata[bottom][right];
++
++			/*			
++			tl=getValidPixel(myIm, left, top, x, y);		//these calls are expensive
++			tr=getValidPixel(myIm, right, top, x, y);		//use them to debug segfaults in this function
++			bl=getValidPixel(myIm, left, bottom, x, y);
++			br=getValidPixel(myIm, right, bottom, x, y);
++			*/
++			
++			unsigned int r = (unsigned int) (qRed(tl) * iwx * iwy + qRed(tr) * wx* iwy + qRed(bl) * iwx * wy + qRed(br) * wx * wy); // NB 12+12+8 == 32
++			unsigned int g = (unsigned int) (qGreen(tl) * iwx * iwy + qGreen(tr) * wx * iwy + qGreen(bl) * iwx * wy + qGreen(br) * wx * wy);
++			unsigned int b = (unsigned int) (qBlue(tl) * iwx * iwy + qBlue(tr) * wx * iwy + qBlue(bl) * iwx * wy + qBlue(br) * wx * wy);
++			
++			// ### endianness
++			//we're actually off by one in 255 here! (254 instead of 255)
++			int foo = r >> 24;
++			foo = g >> 24;
++			foo = b >> 24;
++			newImageData[(y * newWidth * 3) + (x * 3) + 0] = (r >> 24);
++			newImageData[(y * newWidth * 3) + (x * 3) + 1] = (g >> 24);
++			newImageData[(y * newWidth * 3) + (x * 3) + 2] = (b >> 24);
++//			*(scanline++) = qRgb(r >> 24, g >> 24, b >> 24); //we're actually off by one in 255 here
++			
++			x2 += basis_xx;
++			
++			if (x2 > max_x2)
++			{
++				x++;
++				break;
++			}
++				
++		}
++		
++//		while  (x < w)	//fill the right of each scanline with the background colour
++//		{
++//			*(scanline++) = background; //qRgb(255,0,0);
++//			x++;
++//		}
++	}
++	
++//	for (;;)	//fill the bottom of the target pixmap with the background color
++//	{
++//		y2 = basis_oy + y * basis_yy;
++//		
++//		if (y >= h)
++//			break;
++//		
++//		scanline = (QRgb*) dst.scanLine(y);
++//		for (int i = 0; i < w; i++)
++//			*(scanline++) = background; //qRgb(255,255,0);
++//		y++;
++//	}
++
++	// ### keep orig image somewhere but delete all scaled images!
++	ImlibImage *newIm = Imlib_create_image_from_data( myId, newImageData, NULL,
++                                                      newWidth, newHeight );
++    delete[] newImageData;
++
++    if ( newIm )
++    {
++    	myScaledIm = newIm;
++    	myIsDirty = true;
++    	myWidth = newWidth;
++    	myHeight = newHeight;	
++    }
++    	
++    return myIm != 0L;	
++//	return dst.copy();
++}
++#endif
++
++#include "kuickimage.moc"
+Index: kuickshow/src/kuickshow.h
+===================================================================
+--- kuickshow/src/kuickshow.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/kuickshow.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -45,6 +45,8 @@
+ class KURL;
+ class KURLComboBox;
+ 
++class KuickFile;
++
+ class DelayedRepeatEvent
+ {
+ public:
+@@ -104,7 +106,7 @@
+     void 		slotPrint();
+     void 		slotConfigApplied();
+     void 		slotConfigClosed();
+-    void 		messageCantLoadImage( const QString& );
++    void 		messageCantLoadImage( const KuickFile * file, const QString& message);
+     void         	showImage(const KFileItem *, bool newWindow = false,
+                                   bool fullscreen = false, bool moveToTopLeft = true );
+     void 		showFileItem( ImageWindow *, const KFileItem * );
+Index: kuickshow/src/imagewindow.h
+===================================================================
+--- kuickshow/src/imagewindow.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/imagewindow.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -22,6 +22,7 @@
+ #include <qevent.h>
+ 
+ #include <kaction.h>
++#include <kurl.h>
+ 
+ #include "imlibwidget.h"
+ 
+@@ -32,6 +33,8 @@
+ class QTimer;
+ class QWidget;
+ 
++class KuickFile;
++
+ class ImageWindow : public ImlibWidget
+ {
+   Q_OBJECT
+@@ -41,7 +44,8 @@
+ 	       const char *name=0 );
+   ImageWindow( ImData *_idata=0, QWidget *parent=0, const char *name=0 );
+ 
+-  bool 		showNextImage( const QString& filename );
++  bool 		showNextImage( KuickFile * file );
++  bool 		showNextImage( const KURL& url );
+   void 		scrollImage( int, int, bool restrict=true );
+   void		setFullscreen( bool );
+   bool 		isFullscreen() 	const { return myIsFullscreen; }
+@@ -62,7 +66,7 @@
+   void autoScale( KuickImage *kuim );
+   virtual bool autoRotate( KuickImage *kuim );
+ 
+-  bool          saveImage( const QString& filename, bool keepOriginalSize ) const;
++  bool          saveImage( const KURL& dest, bool keepOriginalSize );
+ 
+ public slots:
+   void 		zoomIn();
+@@ -113,6 +117,7 @@
+   virtual void 	dropEvent( QDropEvent * );
+   virtual void  contextMenuEvent( QContextMenuEvent * );
+ 
++  void 			showWindow();
+   enum KuickCursor { DefaultCursor = 0, ZoomCursor, MoveCursor };
+   void 	updateCursor( KuickCursor cursor = DefaultCursor );
+ 
+Index: kuickshow/src/Makefile.am
+===================================================================
+--- kuickshow/src/Makefile.am	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/Makefile.am	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -15,7 +15,8 @@
+ 	aboutwidget.cpp     generalwidget.cpp  kuickconfigdlg.cpp  main.cpp \
+ 	defaultswidget.cpp  imagewindow.cpp    kuickdata.cpp  \
+ 	imdata.cpp filefinder.cpp kurlwidget.cpp filewidget.cpp \
+-	kuickio.cpp kuick.cpp imlibwidget.cpp slideshowwidget.cpp printing.cpp
++	kuick.cpp imlibwidget.cpp slideshowwidget.cpp printing.cpp \
++	kuickfile.cpp kuickimage.cpp filecache.cpp
+ 
+ # if you "make distclean", this files get removed. If you want to remove
+ # them while "make clean", use CLEANFILES
+Index: kuickshow/src/printing.cpp
+===================================================================
+--- kuickshow/src/printing.cpp	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/printing.cpp	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -43,10 +43,11 @@
+ #include "printing.h"
+ #include "version.h"
+ 
+-bool Printing::printImage( const ImageWindow& imageWin, QWidget *parent )
++bool Printing::printImage( ImageWindow& imageWin, QWidget *parent )
+ {
++    QString imageURL = imageWin.url().prettyURL();
+     KPrinter printer;
+-    printer.setDocName( imageWin.filename() );
++    printer.setDocName( imageURL );
+     printer.setCreator( "KuickShow-" KUICKSHOWVERSION );
+ 
+     KPrinter::addDialogPage( new KuickPrintDialogPage( parent, "kuick page"));
+@@ -59,7 +60,7 @@
+             tmpFile.setAutoDelete( true );
+             if ( imageWin.saveImage( tmpFile.name(), true ) )
+                 return printImageWithQt( tmpFile.name(), printer,
+-                                         imageWin.filename() );
++                                         imageURL );
+         }
+ 
+         return false;
+Index: kuickshow/src/version.h
+===================================================================
+--- kuickshow/src/version.h	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kuickshow/src/version.h	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -1,3 +1,3 @@
+ #ifndef KUICKSHOWVERSION
+-#define KUICKSHOWVERSION "0.8.9"
++#define KUICKSHOWVERSION "0.8.11"
+ #endif
+
+Property changes on: kuickshow/src
+___________________________________________________________________
+Name: svn:ignore
+   - *.lo
+*.la
+*.moc
+Makefile
+Makefile.in
+kuickshow
+.libs
+.deps
+*meta_unload.*
+dummy.cpp
+   + 
+*.lo
+*.la
+*.moc
+Makefile
+Makefile.in
+kuickshow
+.libs
+.deps
+*meta_unload.*
+dummy.cpp
+kuickshow_dummy.cpp
+kuickshow.la.cpp
+
+
+Index: ksvg/core/ksvgrenderer.desktop
+===================================================================
+--- ksvg/core/ksvgrenderer.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ ksvg/core/ksvgrenderer.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -17,6 +17,7 @@
+ Comment[eu]=KSVG errendatze programa
+ Comment[fi]=KSVG-piirtäjän taustaohjelma
+ Comment[fr]=Moteur de rendu KSVG
++Comment[ga]=Inneall Rindreála KSVG
+ Comment[gl]=Backend de Renderizado KSVG
+ Comment[he]=מנוע רינדור KSVG
+ Comment[hi]=के-एसवीजी रेंडरिंग बैकएण्ड
+@@ -35,7 +36,7 @@
+ Comment[ro]=Motorul de randare KSVG
+ Comment[ru]=Движок прорисовки KSVG
+ Comment[sk]=Nástroj pre zobrazovanie KSVG
+-Comment[sl]=Vmesnik za upodabljanje KSVG
++Comment[sl]=Izrisovalnik KSVG
+ Comment[sr]=KSVG-ов позадински систем за рендеровање
+ Comment[sr@Latn]=KSVG-ov pozadinski sistem za renderovanje
+ Comment[sv]=KSVG-uppritningsmodul
+Index: ksvg/plugin/backends/libart/ksvglibartcanvas.desktop
+===================================================================
+--- ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ ksvg/plugin/backends/libart/ksvglibartcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -18,6 +18,7 @@
+ Name[eu]=KSVG errendatze programa - Libart
+ Name[fi]=KSVG-piirtäjän taustaohjelma - Libart
+ Name[fr]=Moteur de rendu KSVG - Libart
++Name[ga]=Inneall Rindreála KSVG - Libart
+ Name[hi]=के-एसवीजी रेंडरिंग बैकएण्ड- लिबआर्ट
+ Name[hu]=KSVG megjelenítőmotor - Libart
+ Name[is]=KSVG teiknari - Libart
+@@ -34,7 +35,7 @@
+ Name[ro]=Motor de randare KSVG - Libart
+ Name[ru]=Движок отрисовки KSVG - Libart
+ Name[sk]=Nástroj pre zobrazovanie KSVG - libart
+-Name[sl]=Vmesnik za upodabljanje KSVG - Knjižnica
++Name[sl]=Izrisovalnik KSVG - Libart
+ Name[sr]=KSVG-ов позадински систем за рендеровање — Libart
+ Name[sr@Latn]=KSVG-ov pozadinski sistem za renderovanje — Libart
+ Name[sv]=KSVG-uppritningsmodul - konstbibliotek
+@@ -74,7 +75,7 @@
+ Comment[ro]=Motor de randare KSVG matur
+ Comment[ru]=Старый движок отрисовки ksvg
+ Comment[sk]=Stabilný nástroj pre zobrazovanie ksvg
+-Comment[sl]=Zrel vmesnik za upodabljanje ksvg
++Comment[sl]=Zrel izrisovalnik KSVG
+ Comment[sr]=Стари KSVG-ов позадински систем за рендеровање
+ Comment[sr@Latn]=Stari KSVG-ov pozadinski sistem za renderovanje
+ Comment[sv]=Mogen KSVG-uppritningsmodul
+Index: ksvg/plugin/backends/agg/ksvgaggcanvas.desktop
+===================================================================
+--- ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ ksvg/plugin/backends/agg/ksvgaggcanvas.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -35,7 +35,7 @@
+ Name[ro]=Motor de randare KSVG - Anti Grain Geometry
+ Name[ru]=Движок отрисовки KSVG - противозернистая геометрия
+ Name[sk]=Nástroj pre zobrazovanie KSVG - antigranularitná geometria
+-Name[sl]=Vmesnik za upodabljanje KSVG - Protizrnska geometrija
++Name[sl]=Izrisovalnik KSVG - Protizrnska geometrija
+ Name[sr]=KSVG-ов позадински систем за рендеровање — Противзрнаста геометрија
+ Name[sr@Latn]=KSVG-ov pozadinski sistem za renderovanje — Protivzrnasta geometrija
+ Name[sv]=KSVG-uppritningsmodul - geometri mot korninghet
+@@ -76,7 +76,7 @@
+ Comment[ro]=Motor de randare KSVG nou, netestat suficient
+ Comment[ru]=Новый, нестабильный движок прорисовки ksvg
+ Comment[sk]=Nová, nestabilná verzia nástroja pre zobrazovanie ksvg
+-Comment[sl]=Nov, nestabilen vmesnik za upodabljanje ksvg
++Comment[sl]=Nov, nestabilen izrisovalnik KSVG
+ Comment[sr]=Нов, нестабилан KSVG-ов позадински систем за рендеровање
+ Comment[sr@Latn]=Nov, nestabilan KSVG-ov pozadinski sistem za renderovanje
+ Comment[sv]=Ny, instabil KSVG-uppritningsmodul
+Index: kviewshell/plugins/djvu/djvumultipage.desktop
+===================================================================
+--- kviewshell/plugins/djvu/djvumultipage.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kviewshell/plugins/djvu/djvumultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -33,6 +33,7 @@
+ Comment[pt]='Plugin' do KViewShell para ficheiros do DjVu
+ Comment[pt_BR]='Plugin' do KViewShell para ficheiros do DjVu
+ Comment[ru]=Компонент просмотра файлов DjVu
++Comment[sl]=Vstavek za KViewShell za datoteke DjVu
+ Comment[sr]=KViewShell-ов прикључак за DjVu фајлове
+ Comment[sr@Latn]=KViewShell-ov priključak za DjVu fajlove
+ Comment[sv]=Kviewshell-insticksprogram för DjVu-filer
+Index: kmrml/kmrml/kcontrol/kcmkmrml.desktop
+===================================================================
+--- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -146,7 +146,7 @@
+ Keywords[ro]=imagini,căutare,caută,interogare,găseşte,dar,kmrml,mrml,CBIR
+ Keywords[ru]=изображения,поиск,запрос,kmrml,mrml,CBIR
+ Keywords[sk]=Obrázky,Hľadanie,Dotazy,Nájsť,kmrml,mrml,CBIR
+-Keywords[sl]=slike,iskanje,povpraševanje,išči,najdi,darilo,kmrml,mrml,CBIR
++Keywords[sl]=slike,iskanje,povpraševanje,išči,najdi,gift,kmrml,mrml,CBIR
+ Keywords[sr]=Images,Search,Query,Find,Gift,kmrml,mrml,CBIR,слике,тражи,упит,нађи,поклон
+ Keywords[sr@Latn]=Images,Search,Query,Find,Gift,kmrml,mrml,CBIR,slike,traži,upit,nađi,poklon
+ Keywords[sv]=Bilder,Sök,Förfrågan,Hitta,Gift,kmrml,mrml,CBIR
+Index: kmrml/kmrml/server/daemonwatcher.desktop
+===================================================================
+--- kmrml/kmrml/server/daemonwatcher.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kmrml/kmrml/server/daemonwatcher.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -35,7 +35,7 @@
+ Name[ru]=Служба MRML
+ Name[se]=KDED KMRML-duogášprográmmagoziheaddji
+ Name[sk]=Sledovanie démona KDED KMRML
+-Name[sl]=Opazovalnik demonov KDED KMRML
++Name[sl]=Opazovalnik demona KMRML za KDED
+ Name[sr]=KDED KMRML демон за праћење
+ Name[sr@Latn]=KDED KMRML demon za praćenje
+ Name[sv]=KDED KMRML-demonbevakare
+@@ -76,7 +76,7 @@
+ Comment[ro]=Porneşte demonii la cerere şi îi reporneşte în caz de eroare
+ Comment[ru]=Поддержка протокола MRML
+ Comment[sk]=Spustí démonov podľa požiadaviek a pri zlyhaní ich reštartuje
+-Comment[sl]=Zažene demone na zahtevo in jih znova zažene ob napaki
++Comment[sl]=Na zahtevo zažene demone in jih ob napaki znova zažene
+ Comment[sr]=На захтев покреће демоне и поново их покреће ако се сруше
+ Comment[sr@Latn]=Na zahtev pokreće demone i ponovo ih pokreće ako se sruše
+ Comment[sv]=Starta demoner vid behov och starta om dem vid fel
+Index: kfax/kfax.desktop
+===================================================================
+--- kfax/kfax.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfax/kfax.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -42,7 +42,7 @@
+ GenericName[ru]=Чтение факсов
+ GenericName[se]=Fáksačájeheaddji
+ GenericName[sk]=Prehliadač faxov
+-GenericName[sl]=Ogledovalnik faksov
++GenericName[sl]=Pregledovalnik faksov
+ GenericName[sr]=Приказивач факсова
+ GenericName[sr@Latn]=Prikazivač faksova
+ GenericName[sv]=Faxvisare
+Index: kamera/configure.in.in
+===================================================================
+--- kamera/configure.in.in	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kamera/configure.in.in	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -31,12 +31,13 @@
+ 
+ AC_MSG_CHECKING(for gPhoto2)
+ # the pkg-config way first, if user did not use --with-
+-AC_CHECK_PROG(gphoto_devel,gphoto2-config,gphoto2-config,no)
+-if test "$gphoto2_includes" = "" -a "$gphoto2_libraries" = "" -a "$gphoto_devel" = "gphoto2-config" 
++AC_CHECK_PROG(gphoto2_config,gphoto2-config,gphoto2-config,no)
++AC_CHECK_PROG(gphoto2_port_config,gphoto2-port-config,gphoto2-port-config,no)
++if test "$gphoto2_includes" = "" -a "$gphoto2_libraries" = "" -a "$gphoto2_config" != "no" -a "$gphoto2_port_config" != "no"
+ then
+ 	with_kamera="yes"
+-	GPHOTO2_INCS="`$gphoto_devel --cflags`"
+-	GPHOTO2_LIBS="`$gphoto_devel --libs`"
++	GPHOTO2_INCS="`$gphoto2_config --cflags` `$gphoto2_port_config --cflags`"
++	GPHOTO2_LIBS="`$gphoto2_config --libs` `$gphoto2_port_config --libs`"
+ else
+ #
+ # Search for gphoto2 include files.
 Index: kamera/kcontrol/kamera.desktop
 ===================================================================
---- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -78,7 +78,7 @@
- Keywords[et]=gphoto,kaamera,digitaalkaamera,veebikaamera,kamera
- Keywords[eu]=gphoto,kamera,digicam,webcam,kamera
- Keywords[fi]=gphoto,kamera,digicam,webcam
--Keywords[fr]=gphoto,camera,digicam,webcam,kamera,caméscope,caméra
-+Keywords[fr]=gphoto,camera,digicam,webcam,kamera,caméscope,caméra,appareil photo
- Keywords[he]=gphoto,kamera,מצלמה,מצלמת רשת,מצלמה דיגיטלית, amera,digicam,webcam
- Keywords[hi]=जीफोटो,केमरा,डिजिकेम,वेबकेम,केमरा
- Keywords[hu]=gphoto,fényképezőgép,digitális fényképezőgép,webkamera,videókamera
-@@ -116,7 +116,7 @@
- Name[br]=Kamera niverel
- Name[bs]=Digitalna kamera
- Name[ca]=Càmera digital
--Name[cs]=Digitální kamera
-+Name[cs]=Digitální fotoaparát
- Name[cy]=Camera Digidol
- Name[da]=Digitalt kamera
- Name[de]=Digitalkamera
-Index: kiconedit/kiconedit.desktop
+--- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -47,7 +47,7 @@
+ Comment[ru]=Настройка камеры
+ Comment[se]=Heivet govvenapperáhta
+ Comment[sk]=Nastaviť program Kamera
+-Comment[sl]=Nastavitve Kamere
++Comment[sl]=Nastavitve fotoaparata
+ Comment[sr]=Подеси Kamera-у
+ Comment[sr@Latn]=Podesi Kamera-u
+ Comment[sv]=Anpassa kamera
+@@ -97,7 +97,7 @@
+ Keywords[pt_BR]=gphoto,câmera,câmera digital,webcam,kamera
+ Keywords[ro]=gphoto,aparat,foto,digicam,webcam,camera,kamera
+ Keywords[ru]=gphoto,camera,digicam,webcam,kamera,камера,фото
+-Keywords[sl]=gphoto,kamera,digicam,webcam,foto
++Keywords[sl]=gphoto,kamera,digicam,webcam,foto,fotoaparat,spletna kamera
+ Keywords[sr]=gphoto,camera,digicam,webcam,kamera,камера
+ Keywords[sr@Latn]=gphoto,camera,digicam,webcam,kamera,kamera
+ Keywords[sv]=gphoto,kamera,digital kamera,webbkamera,kamera
+@@ -156,7 +156,7 @@
+ Name[ru]=Цифровая камера
+ Name[se]=Digitalalaš govvenapperáhtta
+ Name[sk]=Digitálny fotoaparát
+-Name[sl]=Digitalna kamera
++Name[sl]=Digitalni fotoaparat
+ Name[sr]=Дигитална камера
+ Name[sr@Latn]=Digitalna kamera
+ Name[sv]=Digitalkamera
+Index: kruler/eventsrc
 ===================================================================
---- kiconedit/kiconedit.desktop	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kiconedit/kiconedit.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -19,7 +19,7 @@
- GenericName[et]=Ikoonide redaktor
- GenericName[eu]=Ikono editorea
- GenericName[fi]=Kuvakemuokkain
--GenericName[fr]=Éditeur d'icône
-+GenericName[fr]=Éditeur d'icônes
- GenericName[ga]=Eagarthóir Deilbhíní
- GenericName[gl]=Editor de iconas
- GenericName[he]=עורך סמלים
-Index: kfile-plugins/raw/x-image-raw.desktop
+--- kruler/eventsrc	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kruler/eventsrc	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -104,7 +104,7 @@
+ Name[ro]=Mutat cu tastele cursor
+ Name[ru]=Передвижение стрелками
+ Name[sk]=Presunutý kurzorovými klávesmi
+-Name[sl]=Premikanje s smernimi tipkami
++Name[sl]=Premaknjeno s smernimi tipkami
+ Name[sr]=Померен курсорским тастерима
+ Name[sr@Latn]=Pomeren kursorskim tasterima
+ Name[sv]=Flyttade med piltangenteran
+Index: kfile-plugins/ps/kfile_ps.desktop
 ===================================================================
---- kfile-plugins/raw/x-image-raw.desktop	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kfile-plugins/raw/x-image-raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -15,7 +15,7 @@
- Comment[et]=Toores kaamerafail (RAW)
- Comment[eu]=RAW kamera-fitxategiak
- Comment[fi]=RAW-kuvatiedosto
--Comment[fr]=Fichiers brut d'appareil photo numériques
-+Comment[fr]=Fichiers RAW d'appareil photo
- Comment[ga]=Comhad Ceamara RAW
- Comment[hu]=RAW-fájl
- Comment[is]=RAW myndavélaskrá
+--- kfile-plugins/ps/kfile_ps.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/ps/kfile_ps.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -39,7 +39,7 @@
+ Name[ro]=Informaţii PostScript
+ Name[ru]=Информация о PostScript
+ Name[se]=PostScript-dieđut
+-Name[sl]=Informacije o PostScriptu
++Name[sl]=Podatki o PostScriptu
+ Name[sr]=PostScript информације
+ Name[sr@Latn]=PostScript informacije
+ Name[sv]=Postscript-information
+Index: kfile-plugins/dvi/kfile_dvi.desktop
+===================================================================
+--- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -35,7 +35,7 @@
+ Name[ro]=Informaţii DVI
+ Name[ru]=Информация о DVI
+ Name[se]=DVI-dieđut
+-Name[sl]=Informacije o DVI
++Name[sl]=Podatki o DVI
+ Name[sr]=DVI информације
+ Name[sr@Latn]=DVI informacije
+ Name[sv]=DVI-information
+Index: kfile-plugins/png/kfile_png.desktop
+===================================================================
+--- kfile-plugins/png/kfile_png.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/png/kfile_png.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -37,7 +37,7 @@
+ Name[ro]=Informaţii PNG
+ Name[ru]=Информация о PNG
+ Name[se]=PNG-dieđut
+-Name[sl]=Informacije o PNG
++Name[sl]=Podatki o PNG
+ Name[sr]=PNG информације
+ Name[sr@Latn]=PNG informacije
+ Name[sv]=PNG-information
+Index: kfile-plugins/jpeg/kfile_jpeg.desktop
+===================================================================
+--- kfile-plugins/jpeg/kfile_jpeg.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/jpeg/kfile_jpeg.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -36,7 +36,7 @@
+ Name[ro]=Informaţii EXIF JPEG
+ Name[ru]=Информация о JPEG EXIF
+ Name[se]=JPEG EXIF-dieđut
+-Name[sl]=Informacije o JPEG EXIF
++Name[sl]=Podatki o JPEG EXIF
+ Name[sr]=JPEG EXIF информације
+ Name[sr@Latn]=JPEG EXIF informacije
+ Name[sv]=JPEG EXIF-information
+Index: kfile-plugins/xbm/kfile_xbm.desktop
+===================================================================
+--- kfile-plugins/xbm/kfile_xbm.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/xbm/kfile_xbm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -37,7 +37,7 @@
+ Name[ro]=Informaţii XBM
+ Name[ru]=Информация о XBM
+ Name[se]=XBM-dieđut
+-Name[sl]=Informacije o XBM
++Name[sl]=Podatki o XBM
+ Name[sr]=XBM информације
+ Name[sr@Latn]=XBM informacije
+ Name[sv]=XBM-information
+Index: kfile-plugins/tiff/kfile_tiff.desktop
+===================================================================
+--- kfile-plugins/tiff/kfile_tiff.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/tiff/kfile_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -39,7 +39,7 @@
+ Name[ru]=Информация о метафайле TIFF
+ Name[se]=TIFF-filla metadieđut
+ Name[sk]=Meta-info o súbore TIFF
+-Name[sl]=Informacije o TIFF
++Name[sl]=Meta podatki o TIFF
+ Name[sr]=Мета информације TIFF фајла
+ Name[sr@Latn]=Meta informacije TIFF fajla
+ Name[sv]=Metainformation om TIFF-fil
 Index: kfile-plugins/raw/kfile_raw.desktop
 ===================================================================
---- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.1/kdegraphics)	(revision 505113)
-+++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 505113)
-@@ -12,8 +12,9 @@
- Name[et]=Toored kaamerafailid
- Name[eu]=RAW kamera-fitxategiak
- Name[fi]=RAW-kuvatiedostot
--Name[fr]=Fichiers bruts d'appareil photo numériques
-+Name[fr]=Fichiers RAW d'appareil photo numérique
- Name[ga]=Comhaid Cheamara RAW
-+Name[he]=קבצי מצלמה דיגיטלית גולמיים
- Name[hu]=RAW-fájlok
- Name[is]=RAW myndavélaskrár
- Name[it]=File grezzi fotocamera digitale
+--- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -28,6 +28,7 @@
+ Name[pt_BR]=Ficheiros de Máquina Fotográfica Digital RAW
+ Name[ro]=Fişiere foto brute
+ Name[ru]=Необработанные Файлы с цифровой камеры (RAW)
++Name[sl]=Surove datoteke s fotoaparata
+ Name[sr]=RAW фајлови слика
+ Name[sr@Latn]=RAW fajlovi slika
+ Name[sv]=Obehandlade kamerafiler
+Index: kfile-plugins/pnm/kfile_pnm.desktop
+===================================================================
+--- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -34,7 +34,7 @@
+ Name[ro]=Informaţii PNM
+ Name[ru]=Информация о PNM
+ Name[se]=PNM-dieđut
+-Name[sl]=Informacije o PNM
++Name[sl]=Podatki o PNM
+ Name[sr]=PNM информације
+ Name[sr@Latn]=PNM informacije
+ Name[sv]=PNM-information
+Index: kfile-plugins/pcx/kfile_pcx.desktop
+===================================================================
+--- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -36,7 +36,7 @@
+ Name[ru]=Информация о метафайле PCX
+ Name[se]=PCX-filla metadieđut
+ Name[sk]=Meta-info o súbore PCX
+-Name[sl]=Meta informacije o PCX
++Name[sl]=Meta podatki o PCX
+ Name[sr]=Мета информације PCX фајла
+ Name[sr@Latn]=Meta informacije PCX fajla
+ Name[sv]=Metainformation om PCX-fil
+Index: kfile-plugins/exr/kfile_exr.desktop
+===================================================================
+--- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -32,7 +32,7 @@
+ Name[ro]=Informaţii EXR
+ Name[ru]=Информация о EXR
+ Name[se]=EXR-dieđut
+-Name[sl]=Informacije o EXR
++Name[sl]=Podatki o EXR
+ Name[sr]=EXR информације
+ Name[sr@Latn]=EXR informacije
+ Name[sv]=EXR-information
+Index: kfile-plugins/xpm/kfile_xpm.desktop
+===================================================================
+--- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -27,7 +27,7 @@
+ Name[pt_BR]=Informações Sobre XPM
+ Name[ro]=Informaţii XPM
+ Name[ru]=Информация о XPM
+-Name[sl]=Informacije o XPM
++Name[sl]=Podatki o XPM
+ Name[sr]=XPM информације
+ Name[sr@Latn]=XPM informacije
+ Name[sv]=XPM-information
+Index: kfile-plugins/gif/kfile_gif.desktop
+===================================================================
+--- kfile-plugins/gif/kfile_gif.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/gif/kfile_gif.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -38,7 +38,7 @@
+ Name[ro]=Informaţii GIF
+ Name[ru]=Информация о GIF
+ Name[se]=GIF-dieđut
+-Name[sl]=Informacije o GIF
++Name[sl]=Podatki o GIF
+ Name[sr]=GIF информације
+ Name[sr@Latn]=GIF informacije
+ Name[sv]=Gif-information
+Index: kfile-plugins/pdf/kfile_pdf.desktop
+===================================================================
+--- kfile-plugins/pdf/kfile_pdf.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/pdf/kfile_pdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -37,7 +37,7 @@
+ Name[ro]=Informaţii PDF
+ Name[ru]=Информация о PDF
+ Name[se]=PDF-dieđut
+-Name[sl]=Informacije o PDF
++Name[sl]=Podatki o PDF
+ Name[sr]=PDF информације
+ Name[sr@Latn]=PDF informacije
+ Name[sv]=PDF-information
+Index: kfile-plugins/ico/kfile_ico.desktop
+===================================================================
+--- kfile-plugins/ico/kfile_ico.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/ico/kfile_ico.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -37,7 +37,7 @@
+ Name[ro]=Informaţii ICO
+ Name[ru]=Информация об ICO
+ Name[se]=ICO-dieđut
+-Name[sl]=Informacije o ICO
++Name[sl]=Podatki o ICO
+ Name[sr]=ICO информације
+ Name[sr@Latn]=ICO informacije
+ Name[sv]=Ico-information
+Index: kfile-plugins/dds/kfile_dds.desktop
+===================================================================
+--- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -29,7 +29,7 @@
+ Name[pt_BR]=Informações Sobre Superfícies Direct Draw
+ Name[ro]=Informaţii Suprafaţă DirectDraw
+ Name[ru]=Сведения о поверхности DirectDraw
+-Name[sl]=Informacije o površini DirectDraw
++Name[sl]=Podatki o površini DirectDraw
+ Name[sr]=Информације о DirectDraw површини
+ Name[sr@Latn]=Informacije o DirectDraw površini
+ Name[sv]=Directdraw ytinformation
+Index: kfile-plugins/tga/kfile_tga.desktop
+===================================================================
+--- kfile-plugins/tga/kfile_tga.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/tga/kfile_tga.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -36,7 +36,7 @@
+ Name[ro]=Informaţii Targa Truevision
+ Name[ru]=Информация о Truevision Targa
+ Name[se]=Truevision Targa-dieđut
+-Name[sl]=Informacije o Truevision Targa
++Name[sl]=Podatki o Truevision Targa
+ Name[sr]=Truevision Targa информације
+ Name[sr@Latn]=Truevision Targa informacije
+ Name[sv]=Information om Truevision Targa
+Index: kfile-plugins/bmp/kfile_bmp.desktop
+===================================================================
+--- kfile-plugins/bmp/kfile_bmp.desktop	(.../tags/KDE/3.5.2/kdegraphics)	(revision 526003)
++++ kfile-plugins/bmp/kfile_bmp.desktop	(.../branches/KDE/3.5/kdegraphics)	(revision 526003)
+@@ -38,7 +38,7 @@
+ Name[ro]=Informaţii BMP
+ Name[ru]=Информация о BMP
+ Name[se]=BMP-dieđut
+-Name[sl]=Informacije o BMP
++Name[sl]=Podatki o BMP
+ Name[sr]=BMP информације
+ Name[sr@Latn]=BMP informacije
+ Name[sv]=BMP-information
 
 Property changes on: .
 ___________________________________________________________________
