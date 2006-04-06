@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_without	kuickshow		# do not build kuickshow app (omit imlib req)
 %bcond_with	protections		# protections against fair use (printing and copying)
-%bcond_without	hidden_visibility	# pass '--fvisibility=hidden'
+%bcond_with	hidden_visibility	# pass '--fvisibility=hidden'
 					# & '--fvisibility-inlines-hidden'
 					# to g++
 #
@@ -16,13 +16,13 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.5.2
-Release:	1.1
+Release:	2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	8e1816a2191ea85b889930159a5d1e46
-Patch100:	%{name}-branch.diff
+#Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
@@ -527,7 +527,7 @@ aplikacjach KDE.
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 
