@@ -4,7 +4,7 @@
 %bcond_with	protections		# protections against fair use (printing and copying)
 %bcond_without	hidden_visibility	# pass '--fvisibility=hidden'
 					# & '--fvisibility-inlines-hidden'
-					# to g++ 
+					# to g++
 #
 %define		_state		stable
 %define		_minlibsevr	9:%{version}
@@ -46,11 +46,10 @@ BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	poppler-qt-devel
 %{?with_hidden_visibility:BuildRequires:	qt-devel >= 6:3.3.5.051113-1}
-BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
-BuildRequires:	rpmbuild(macros) >= 1.129
 #BuildRequires:	unsermake
+BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -122,12 +121,12 @@ Summary:	kdegraphics development files
 Summary(pl):	Pliki dla programistów kdegraphics
 Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
 Group:		X11/Development/Libraries
-Requires:	kdelibs-devel >= %{_minlibsevr}
 Requires:	%{name}-kghostview = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
 Requires:	%{name}-ksvg = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kview = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
+Requires:	kdelibs-devel >= %{_minlibsevr}
 
 %description devel
 kdegraphics development files.
@@ -209,8 +208,8 @@ Summary:	KDE DVI viewer
 Summary(pl):	Przegl±darka plików DVI dla KDE
 Summary(pt_BR):	Programa de exibição de DVIs
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kdvi
 KDVI is a plugin for the KViewshell program which allows KViewshell to
@@ -232,8 +231,8 @@ Summary:	KDE Fax viewer
 Summary(pl):	Przegl±darka faksów dla KDE
 Summary(pt_BR):	Programa de visualização de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
-Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kfax
 KFax is a Fax file viewer capable of displaying and printing all
