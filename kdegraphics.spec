@@ -16,7 +16,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.5.2
-Release:	2
+Release:	3
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -49,7 +49,6 @@ BuildRequires:	poppler-qt-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
 #BuildRequires:	unsermake
-BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
