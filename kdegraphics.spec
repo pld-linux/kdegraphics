@@ -15,13 +15,13 @@ Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	3.5.2
-Release:	1.1
+Version:	3.5.3
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	8e1816a2191ea85b889930159a5d1e46
+# Source0-md5:	56bd5537521dc94633f8effaace523cb
 Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
@@ -527,7 +527,7 @@ aplikacjach KDE.
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 
@@ -736,6 +736,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_datadir}/apps/kconf_update/update-to-xt-names.pl
 %{_datadir}/apps/kghostview
 %{_datadir}/config.kcfg/kghostview.kcfg
+%{_datadir}/services/kghostview_part.desktop
 %{_desktopdir}/kde/kghostview.desktop
 %{_iconsdir}/*/*/*/kghostview.*
 #%{_mandir}/man1/kghostview.1*
