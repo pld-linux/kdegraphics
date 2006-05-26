@@ -31,6 +31,7 @@ BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 %{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
 BuildRequires:	gettext-devel
+BuildRequires:	giflib-devel
 %{?with_kuickshow:BuildRequires:	imlib-devel}
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	kpathsea
@@ -41,7 +42,6 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 1.0.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
-BuildRequires:	libungif-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxml2-progs
 BuildRequires:	poppler-qt-devel
