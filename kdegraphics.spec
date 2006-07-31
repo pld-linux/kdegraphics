@@ -15,13 +15,13 @@ Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	3.5.3
+Version:	3.5.4
 Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	56bd5537521dc94633f8effaace523cb
+# Source0-md5:	de1f6d0597235f52186aaeeaabe7dc08
 Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
@@ -896,7 +896,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libphotobook.so
 %{_datadir}/apps/kview
 %{_datadir}/apps/kviewviewer
-#%{_datadir}/apps/photobookui.rc
+%{_datadir}/apps/photobook
 %{_datadir}/services/kconfiguredialog/kviewcanvasconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewgeneralconfig.desktop
 %{_datadir}/services/kconfiguredialog/kviewpluginsconfig.desktop
