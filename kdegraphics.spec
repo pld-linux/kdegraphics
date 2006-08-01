@@ -26,7 +26,7 @@ Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
-BuildRequires:	OpenGL-devel
+BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 %{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
