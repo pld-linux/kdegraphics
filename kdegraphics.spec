@@ -563,7 +563,7 @@ cp %{_datadir}/automake/config.sub admin
 
 %{__make} -f admin/Makefile.common cvs
 
-%if %{without kuickshow}
+%if !%{with kuickshow}
 export DO_NOT_COMPILE="$DO_NOT_COMPILE kuickshow"
 %endif
 
