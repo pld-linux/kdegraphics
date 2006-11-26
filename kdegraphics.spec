@@ -463,7 +463,6 @@ wektorowej (SVG - Scalable Vector Graphics).
 Summary:	Image viewer/browser
 Summary(pl):	Przegl±darka obrazków
 Group:		X11/Applications/Graphics
-Requires:	giflib >= 4.0.0
 Requires:	kdebase-core >= %{_minbaseevr}
 Provides:	kuickshow
 Obsoletes:	kuickshow
