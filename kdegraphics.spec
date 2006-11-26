@@ -464,6 +464,7 @@ Summary:	Image viewer/browser
 Summary(pl):	Przegl±darka obrazków
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
+Requires:	giflib >= 4.0.0
 Provides:	kuickshow
 Obsoletes:	kuickshow
 
