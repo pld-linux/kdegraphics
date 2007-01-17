@@ -15,18 +15,17 @@ Summary(es):	K Desktop Environment - aplicaciones gráficas
 Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
-Version:	3.5.5
-Release:	2
+Version:	3.5.6
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	cdbe15afc01c5da7af9557e803bbb7e6
+# Source0-md5:	79a1ffb7ae89bede1410411a30be3210
 #Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 Patch2:		kde-ac260-lt.patch
-Patch3:		kde-am.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	ed
@@ -54,9 +53,6 @@ BuildRequires:	sane-backends-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define         _noautoreq      libtool(.*)
-%define 	_noautoreqdep	libGL.so.1 libGLU.so.1
 
 %description
 Graphic applications for the K Desktop Environment.
@@ -534,7 +530,6 @@ aplikacjach KDE.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
 	kdvi/kdvi.desktop \
@@ -817,6 +812,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/[!l]*/*/*/kuickshow.*
 %endif
 
+%files kview -f kview.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kview
 %attr(755,root,root) %{_libdir}/libkdeinit_kview.so
