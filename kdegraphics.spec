@@ -16,7 +16,7 @@ Summary(pl):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.5.6
-Release:	0.1
+Release:	0.2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -26,6 +26,8 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.t
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 Patch2:		kde-ac260-lt.patch
+# taken from http://sourceforge.net/projects/kpdf2
+Patch3:		kpdf2-kdegraphics-3.5.5.patch
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	ed
@@ -49,7 +51,6 @@ BuildRequires:	poppler-qt-devel
 %{?with_hidden_visibility:BuildRequires:	qt-devel >= 6:3.3.5.051113-1}
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sane-backends-devel
-#BuildRequires:	unsermake
 BuildConflicts:	kdegraphics-mrml
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -531,6 +532,7 @@ aplikacjach KDE.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
 	kdvi/kdvi.desktop \
