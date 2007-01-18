@@ -1488,18 +1488,3 @@ diff -Nurw kdegraphics-3.5.5/kpdf/ui/thumbnaillist.cpp kdegraphics-3.5.5-bw/kpdf
          // draw the inner rect
          p.setPen( isBookmarked ? QColor( 0xFF8000 ) : Qt::black );
          p.drawRect( m_margin/2 - 1, m_margin/2 - 1, m_pixmapWidth + 2, m_pixmapHeight + 2 );
-diff -Nurw kdegraphics-3.5.5/ksvg/core/.deps/CanvasFactory.Plo kdegraphics-3.5.5-bw/ksvg/core/.deps/CanvasFactory.Plo
---- kdegraphics-3.5.5/ksvg/core/.deps/CanvasFactory.Plo	1969-12-31 16:00:00.000000000 -0800
-+++ kdegraphics-3.5.5-bw/ksvg/core/.deps/CanvasFactory.Plo	2007-01-13 13:46:25.000000000 -0800
-@@ -0,0 +1 @@
-+# dummy
-diff -Nurw kdegraphics-3.5.5/ksvg/core/.deps/CanvasItems.Plo kdegraphics-3.5.5-bw/ksvg/core/.deps/CanvasItems.Plo
---- kdegraphics-3.5.5/ksvg/core/.deps/CanvasItems.Plo	1969-12-31 16:00:00.000000000 -0800
-+++ kdegraphics-3.5.5-bw/ksvg/core/.deps/CanvasItems.Plo	2007-01-13 13:46:25.000000000 -0800
-@@ -0,0 +1 @@
-+# dummy
-diff -Nurw kdegraphics-3.5.5/ksvg/core/.deps/DocumentFactory.Plo kdegraphics-3.5.5-bw/ksvg/core/.deps/DocumentFactory.Plo
---- kdegraphics-3.5.5/ksvg/core/.deps/DocumentFactory.Plo	1969-12-31 16:00:00.000000000 -0800
-+++ kdegraphics-3.5.5-bw/ksvg/core/.deps/DocumentFactory.Plo	2007-01-13 13:46:25.000000000 -0800
-@@ -0,0 +1 @@
-+# dummy
