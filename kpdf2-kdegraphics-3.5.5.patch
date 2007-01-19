@@ -1108,8 +1108,8 @@ diff -Nurw kdegraphics-3.5.5/kpdf/ui/pagepainter.cpp kdegraphics-3.5.5-bw/kpdf/u
 +			QRect absRect = highlightRect.intersect( limits );
 +			absRect.moveBy( -limits.left(), -limits.top() );
 +			
-+			int ox = limits.left() - highlightRect.left() > 0 ? limits.left() - highlightRect.left() : 0
-+			int oy = limits.top() - highlightRect.top() > 0 ? limits.top() - highlightRect.top() : 0
++			int ox = limits.left() - highlightRect.left() > 0 ? limits.left() - highlightRect.left() : 0;
++			int oy = limits.top() - highlightRect.top() > 0 ? limits.top() - highlightRect.top() : 0;
 +			
 +			bitBlt(&backImage, absRect.x(), absRect.y(), 
 +					&paperClipPix, ox, oy, paperClipWidth, paperClipHeight);
