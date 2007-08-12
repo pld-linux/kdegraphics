@@ -1,7 +1,7 @@
 Index: kpdf/part.cpp
 ===================================================================
---- kpdf/part.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/part.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/part.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/part.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -186,9 +186,13 @@
  
  	int index;
@@ -28,8 +28,8 @@ Index: kpdf/part.cpp
    {
 Index: kpdf/core/document.cpp
 ===================================================================
---- kpdf/core/document.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/core/document.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/core/document.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/core/document.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -1117,15 +1117,21 @@
              break;
          }
@@ -61,8 +61,8 @@ Index: kpdf/core/document.cpp
      delete req;
 Index: kpdf/core/generator_pdf/generator_pdf.cpp
 ===================================================================
---- kpdf/core/generator_pdf/generator_pdf.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/core/generator_pdf/generator_pdf.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/core/generator_pdf/generator_pdf.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/core/generator_pdf/generator_pdf.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -316,7 +316,7 @@
      // 1. Set OutputDev parameters and Generate contents
      // note: thread safety is set on 'false' for the GUI (this) thread
@@ -92,8 +92,8 @@ Index: kpdf/core/generator_pdf/generator_pdf.cpp
  
 Index: kpdf/xpdf/xpdf/Stream.cc
 ===================================================================
---- kpdf/xpdf/xpdf/Stream.cc	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/xpdf/xpdf/Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/xpdf/xpdf/Stream.cc	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/xpdf/xpdf/Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -411,9 +411,9 @@
  
    nVals = width * nComps;
@@ -109,8 +109,8 @@ Index: kpdf/xpdf/xpdf/Stream.cc
    pixBytes = (nComps * nBits + 7) >> 3;
 Index: kpdf/shell/kpdf.desktop
 ===================================================================
---- kpdf/shell/kpdf.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/shell/kpdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/shell/kpdf.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/shell/kpdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -1,6 +1,6 @@
  [Desktop Entry]
  Encoding=UTF-8
@@ -121,8 +121,8 @@ Index: kpdf/shell/kpdf.desktop
  Name[ar]=برنامج KPDF
 Index: kpdf/ui/pagepainter.cpp
 ===================================================================
---- kpdf/ui/pagepainter.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/ui/pagepainter.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/ui/pagepainter.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/ui/pagepainter.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -49,11 +49,24 @@
      // if have no pixmap, draw blank page with gray cross and exit
      if ( !pixmap )
@@ -155,8 +155,8 @@ Index: kpdf/ui/pagepainter.cpp
          // helps a lot on pages that take much to render
 Index: kpdf/ui/pageview.cpp
 ===================================================================
---- kpdf/ui/pageview.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/ui/pageview.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/ui/pageview.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/ui/pageview.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -59,53 +59,6 @@
  // definition of searchID for this class
  #define PAGEVIEW_SEARCH_ID 2
@@ -278,8 +278,8 @@ Index: kpdf/ui/pageview.cpp
                 nY = (double)(p.y() - pageItem->geometry().top()) / (double)pageItem->height();
 Index: kpdf/ui/toc.cpp
 ===================================================================
---- kpdf/ui/toc.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpdf/ui/toc.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpdf/ui/toc.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpdf/ui/toc.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -64,7 +64,8 @@
  #endif
      setSorting(-1);
@@ -292,8 +292,8 @@ Index: kpdf/ui/toc.cpp
      connect(this, SIGNAL(returnPressed(QListViewItem *)), this, SLOT(slotExecuted(QListViewItem *)));
 Index: kfaxview/kfaxmultipage_tiff.desktop
 ===================================================================
---- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -45,6 +45,7 @@
  Comment[sr]=KViewShell-ов прикључак за факс фајлове
  Comment[sr@Latn]=KViewShell-ov priključak za faks fajlove
@@ -304,8 +304,8 @@ Index: kfaxview/kfaxmultipage_tiff.desktop
  Comment[zh_CN]=传真文件的 KViewShell 插件
 Index: kfaxview/kfaxmultipage.desktop
 ===================================================================
---- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -48,6 +48,7 @@
  Comment[sr]=KViewShell-ов прикључак за факс фајлове
  Comment[sr@Latn]=KViewShell-ov priključak za faks fajlove
@@ -316,8 +316,8 @@ Index: kfaxview/kfaxmultipage.desktop
  Comment[zh_CN]=传真文件的 KViewShell 插件
 Index: kfaxview/kfaxview.desktop
 ===================================================================
---- kfaxview/kfaxview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfaxview/kfaxview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfaxview/kfaxview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfaxview/kfaxview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -34,7 +34,7 @@
  GenericName[ms]=Pemapar Faks
  GenericName[nb]=Faksfremviser
@@ -338,8 +338,8 @@ Index: kfaxview/kfaxview.desktop
  Icon=kfaxview
 Index: kview/kview.desktop
 ===================================================================
---- kview/kview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kview/kview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kview/kview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kview/kview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -72,7 +72,7 @@
  GenericName[zh_HK]=圖像檢視器
  GenericName[zh_TW]=影像檢視程式
@@ -351,8 +351,8 @@ Index: kview/kview.desktop
  Name[ar]=برنامج KView
 Index: kview/config/kview.setdlg
 ===================================================================
---- kview/config/kview.setdlg	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kview/config/kview.setdlg	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -193,7 +193,7 @@
  Comment[ms]=Di sini anda boleh set opsyen yang khas kepada aplikasi KView apabila dilancar secara tunggal. Apa yang anda ubah di sini tidak akan memberikan kesan kepada aplikasi lain.
  Comment[nb]=Her finner du innstillinger som bare påvirker KView som frittstående program. Disse innstillingene har ingenting å si for andre programmer.
@@ -364,8 +364,8 @@ Index: kview/config/kview.setdlg
  Comment[pl]=Tutaj można zmienić ustawienia, które będą używane, gdy KView jest uruchamiane jako oddzielny program. Zmiany dokonane tutaj nie będą miały wpływu na inne programy.
 Index: kview/kviewviewer/kviewviewer.desktop
 ===================================================================
---- kview/kviewviewer/kviewviewer.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kview/kviewviewer/kviewviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kview/kviewviewer/kviewviewer.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kview/kviewviewer/kviewviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -89,7 +89,7 @@
  Name[ms]=Pemapar Imej KView
  Name[nb]=Bildeviseren KView
@@ -377,8 +377,8 @@ Index: kview/kviewviewer/kviewviewer.desktop
  Name[pa]=KView ਚਿੱਤਰ ਦਰਸ਼ਕ
 Index: kview/modules/effects/kvieweffects.desktop
 ===================================================================
---- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -93,7 +93,7 @@
  Comment[ms]=Menyediakan beberapa kesan imej
  Comment[nb]=Utfører noen effekter på bilder
@@ -390,8 +390,8 @@ Index: kview/modules/effects/kvieweffects.desktop
  Comment[pl]=Dodaje kilka efektów do obrazków
 Index: libkscan/kscandevice.cpp
 ===================================================================
---- libkscan/kscandevice.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ libkscan/kscandevice.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- libkscan/kscandevice.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ libkscan/kscandevice.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -60,12 +60,13 @@
  {
  public:
@@ -479,8 +479,8 @@ Index: libkscan/kscandevice.cpp
  	    kdDebug(29000) << "Scanning a preview !" << endl;
 Index: libkscan/kscanoption.cpp
 ===================================================================
---- libkscan/kscanoption.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ libkscan/kscanoption.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- libkscan/kscanoption.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ libkscan/kscanoption.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -156,7 +156,7 @@
  	}
      }
@@ -492,8 +492,8 @@ Index: libkscan/kscanoption.cpp
  KScanOption::KScanOption( const KScanOption &so ) :
 Index: kpovmodeler/main.cpp
 ===================================================================
---- kpovmodeler/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kpovmodeler/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kpovmodeler/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kpovmodeler/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -64,7 +64,6 @@
        shell = new PMShell;
        shell->show( );
@@ -505,8 +505,8 @@ Index: kpovmodeler/main.cpp
  }
 Index: kgamma/kcmkgamma/kgamma.desktop
 ===================================================================
---- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -42,6 +42,7 @@
  Comment[sv]=Kalibreringsverktyg för skärmen
  Comment[ta]=திரை நிலைக்கருவி
@@ -517,8 +517,8 @@ Index: kgamma/kcmkgamma/kgamma.desktop
  Comment[zh_CN]=监视器校准工具
 Index: kdvi/squeeze.c
 ===================================================================
---- kdvi/squeeze.c	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kdvi/squeeze.c	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kdvi/squeeze.c	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kdvi/squeeze.c	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -54,8 +54,7 @@
   *   we simply put it out, since any special character terminates the
   *   preceding token.
@@ -531,8 +531,8 @@ Index: kdvi/squeeze.c
        (void)fputs("\\n\\\n", out);
 Index: kcoloredit/kcoloredit.desktop
 ===================================================================
---- kcoloredit/kcoloredit.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kcoloredit/kcoloredit.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kcoloredit/kcoloredit.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kcoloredit/kcoloredit.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -61,7 +61,7 @@
  GenericName[ta]=வண்ணகளஞ்சியம்
  GenericName[tg]=Муҳаррири палитра
@@ -544,8 +544,8 @@ Index: kcoloredit/kcoloredit.desktop
  GenericName[wa]=Aspougneu del palete di coleurs
 Index: kooka/main.cpp
 ===================================================================
---- kooka/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kooka/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kooka/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kooka/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -113,7 +113,7 @@
     kooka->show();
     app.processEvents();
@@ -557,8 +557,8 @@ Index: kooka/main.cpp
     return ret;
 Index: kuickshow/src/kuickshow.desktop
 ===================================================================
---- kuickshow/src/kuickshow.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kuickshow/src/kuickshow.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kuickshow/src/kuickshow.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kuickshow/src/kuickshow.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -18,7 +18,7 @@
  Exec=kuickshow %i %m -caption "%c" %U
  Icon=kuickshow
@@ -570,15 +570,15 @@ Index: kuickshow/src/kuickshow.desktop
  InitialPreference=6
 Index: kolourpaint/VERSION
 ===================================================================
---- kolourpaint/VERSION	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/VERSION	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/VERSION	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/VERSION	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -1 +1 @@
 -1.4.7_relight
 +1.4.8_relight-pre
 Index: kolourpaint/kpdocument.cpp
 ===================================================================
---- kolourpaint/kpdocument.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/kpdocument.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/kpdocument.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/kpdocument.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -1141,7 +1141,12 @@
          if (m_selection->pixmap ())
              slotContentsChanged (m_selection->boundingRect ());
@@ -622,8 +622,8 @@ Index: kolourpaint/kpdocument.cpp
      }
 Index: kolourpaint/BUGS
 ===================================================================
---- kolourpaint/BUGS	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/BUGS	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/BUGS	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/BUGS	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -1,9 +1,8 @@
  
 -Please send bug reports and feature requests to http://bugs.kde.org/ or
@@ -640,8 +640,8 @@ Index: kolourpaint/BUGS
  This file lists known bugs in this version that are not considered
 Index: kolourpaint/NEWS
 ===================================================================
---- kolourpaint/NEWS	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/NEWS	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/NEWS	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/NEWS	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -2,6 +2,12 @@
  KolourPaint 1.4_relight Series (branches/KDE/3.5/)
  ===============================
@@ -657,8 +657,8 @@ Index: kolourpaint/NEWS
     * Save local files atomically - KolourPaint will no longer truncate
 Index: kolourpaint/kpmainwindow_file.cpp
 ===================================================================
---- kolourpaint/kpmainwindow_file.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/kpmainwindow_file.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/kpmainwindow_file.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/kpmainwindow_file.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -432,35 +432,19 @@
          #if DEBUG_KP_MAIN_WINDOW
              kdDebug () << "\tcould not create scan dialog" << endl;
@@ -731,8 +731,8 @@ Index: kolourpaint/kpmainwindow_file.cpp
  
 Index: kolourpaint/kolourpaint.cpp
 ===================================================================
---- kolourpaint/kolourpaint.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/kolourpaint.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/kolourpaint.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/kolourpaint.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -65,14 +65,7 @@
          I18N_NOOP ("Paint Program for KDE"),
          KAboutData::License_Custom,
@@ -784,8 +784,8 @@ Index: kolourpaint/kolourpaint.cpp
      aboutData.addAuthor ("Clarence Dang", I18N_NOOP ("Maintainer"), "dang@kde.org");
 Index: kolourpaint/pixmapfx/kpeffectbalance.cpp
 ===================================================================
---- kolourpaint/pixmapfx/kpeffectbalance.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/pixmapfx/kpeffectbalance.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/pixmapfx/kpeffectbalance.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/pixmapfx/kpeffectbalance.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -274,6 +274,8 @@
      m_gammaInput->setRange (-50, 50, 1/*step*/, true/*slider*/);
      // TODO: This is what should be shown in the m_gammaInput spinbox
@@ -797,8 +797,8 @@ Index: kolourpaint/pixmapfx/kpeffectbalance.cpp
      QPushButton *gammaResetPushButton = new QPushButton (i18n ("Rese&t"), this);
 Index: kolourpaint/kolourpaint.desktop
 ===================================================================
---- kolourpaint/kolourpaint.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/kolourpaint.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/kolourpaint.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/kolourpaint.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -83,7 +83,7 @@
  # SYNC: Run branches/kolourpaint/control/scripts/gen_mimetype_line.sh in
  #       the version of kdelibs/kimgio/ (e.g. KDE 3.5) KolourPaint is
@@ -810,8 +810,8 @@ Index: kolourpaint/kolourpaint.desktop
  Terminal=false
 Index: kolourpaint/README
 ===================================================================
---- kolourpaint/README	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kolourpaint/README	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kolourpaint/README	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kolourpaint/README	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -1,5 +1,5 @@
  
 -KolourPaint Version 1.4.7_relight (KDE 3.5.7 Release Frozen 2007-05-14)
@@ -844,8 +844,8 @@ Index: kolourpaint/README
  
 Index: ksnapshot/ksnapshot.desktop
 ===================================================================
---- ksnapshot/ksnapshot.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ ksnapshot/ksnapshot.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- ksnapshot/ksnapshot.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ ksnapshot/ksnapshot.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -71,7 +71,7 @@
  Name[fr]=KSnapShot
  Name[hi]=के-स्नेपशॉट
@@ -857,8 +857,8 @@ Index: ksnapshot/ksnapshot.desktop
  Name[ta]=கேதிரையை நகலெடுத்தல்
 Index: ksnapshot/main.cpp
 ===================================================================
---- ksnapshot/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ ksnapshot/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- ksnapshot/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ ksnapshot/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -67,6 +67,7 @@
    else
       toplevel = new KSnapshot();
@@ -869,8 +869,8 @@ Index: ksnapshot/main.cpp
    app.setMainWidget(toplevel);
 Index: kviewshell/plugins/djvu/libdjvu/DataPool.cpp
 ===================================================================
---- kviewshell/plugins/djvu/libdjvu/DataPool.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kviewshell/plugins/djvu/libdjvu/DataPool.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kviewshell/plugins/djvu/libdjvu/DataPool.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kviewshell/plugins/djvu/libdjvu/DataPool.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -1438,7 +1438,7 @@
          OpenFiles::get()->stream_released(f->stream, this);
        }
@@ -882,8 +882,8 @@ Index: kviewshell/plugins/djvu/libdjvu/DataPool.cpp
  void
 Index: kmrml/kmrml/mrml.desktop
 ===================================================================
---- kmrml/kmrml/mrml.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kmrml/kmrml/mrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kmrml/kmrml/mrml.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kmrml/kmrml/mrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -44,6 +44,7 @@
  Comment[sv]=Multimedia Retrieval Markup Language-dokument
  Comment[ta]=பல் ஊடக திரும்பப்பெறு அடையாள மொழி ஆவணம்
@@ -894,8 +894,8 @@ Index: kmrml/kmrml/mrml.desktop
  Comment[ven]=Manwalwa a luambo lwau humbula zwa khasho nnzhi
 Index: kmrml/kmrml/kcontrol/kcmkmrml.desktop
 ===================================================================
---- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -68,7 +68,7 @@
  
  Comment=Configuration for using the GNU Image Finding Tool
@@ -907,8 +907,8 @@ Index: kmrml/kmrml/kcontrol/kcmkmrml.desktop
  Comment[cs]=Konfigurace používání nástroje GNU Image Finding Tool
 Index: kmrml/kmrml/mrml-servicemenu.desktop
 ===================================================================
---- kmrml/kmrml/mrml-servicemenu.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kmrml/kmrml/mrml-servicemenu.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kmrml/kmrml/mrml-servicemenu.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kmrml/kmrml/mrml-servicemenu.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -50,6 +50,7 @@
  Name[sv]=Sök efter liknande bilder...
  Name[ta]=இதே போன்ற பிம்பங்களை தேடுக...
@@ -919,8 +919,8 @@ Index: kmrml/kmrml/mrml-servicemenu.desktop
  Name[uz]=Ўхшаш расмларни қидириш
 Index: kmrml/kmrml/mrml_part.desktop
 ===================================================================
---- kmrml/kmrml/mrml_part.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kmrml/kmrml/mrml_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kmrml/kmrml/mrml_part.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kmrml/kmrml/mrml_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -45,6 +45,7 @@
  Name[sr@Latn]=MRML prikazivač
  Name[ta]=MRML காட்சி
@@ -931,8 +931,8 @@ Index: kmrml/kmrml/mrml_part.desktop
  Name[ven]=Mbonalelo ya MRML
 Index: kmrml/kmrml/lib/kmrml_config.cpp
 ===================================================================
---- kmrml/kmrml/lib/kmrml_config.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kmrml/kmrml/lib/kmrml_config.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kmrml/kmrml/lib/kmrml_config.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kmrml/kmrml/lib/kmrml_config.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -291,7 +291,7 @@
  ServerSettings ServerSettings::defaults()
  {
@@ -944,8 +944,8 @@ Index: kmrml/kmrml/lib/kmrml_config.cpp
  
 Index: kmrml/kmrml/server/daemonwatcher.desktop
 ===================================================================
---- kmrml/kmrml/server/daemonwatcher.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kmrml/kmrml/server/daemonwatcher.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kmrml/kmrml/server/daemonwatcher.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kmrml/kmrml/server/daemonwatcher.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -29,7 +29,7 @@
  Name[ms]=Pemerhati Daemon KDED KMRML
  Name[nb]=KDED KMRML nisseovervåker
@@ -974,8 +974,8 @@ Index: kmrml/kmrml/server/daemonwatcher.desktop
  Comment[pl]=Uruchamia usługi na żądanie i wznawia je po awarii
 Index: kfax/kfax.desktop
 ===================================================================
---- kfax/kfax.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfax/kfax.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfax/kfax.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfax/kfax.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -35,7 +35,7 @@
  GenericName[ms]=Pemapar Faks
  GenericName[nb]=Faksfremviser
@@ -995,8 +995,8 @@ Index: kfax/kfax.desktop
  Name[zh_TW]=KFax 傳真檢視器
 Index: kghostview/kgv_miniwidget.cpp
 ===================================================================
---- kghostview/kgv_miniwidget.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kghostview/kgv_miniwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kghostview/kgv_miniwidget.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kghostview/kgv_miniwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -38,6 +38,7 @@
  #endif
  
@@ -1007,8 +1007,8 @@ Index: kghostview/kgv_miniwidget.cpp
  #include "marklist.h"
 Index: kghostview/dscparse.cpp
 ===================================================================
---- kghostview/dscparse.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kghostview/dscparse.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kghostview/dscparse.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kghostview/dscparse.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -83,7 +83,7 @@
  #define CDSC_NEEDMORE 11
  
@@ -1020,8 +1020,8 @@ Index: kghostview/dscparse.cpp
  dsc_private void * dsc_memalloc(P2(CDSC *dsc, size_t size));
 Index: kghostview/main.cpp
 ===================================================================
---- kghostview/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kghostview/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kghostview/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kghostview/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -64,6 +64,7 @@
  	}
  	shell->show();
@@ -1032,8 +1032,8 @@ Index: kghostview/main.cpp
  
 Index: kghostview/kghostview_part.desktop
 ===================================================================
---- kghostview/kghostview_part.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kghostview/kghostview_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kghostview/kghostview_part.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kghostview/kghostview_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -9,7 +9,6 @@
  Name[ne]=केडीई घोस्ट दृश्य
  Name[sv]=Kghostview
@@ -1044,8 +1044,8 @@ Index: kghostview/kghostview_part.desktop
  Name[xh]=Imboniselo yeKGhost
 Index: kghostview/kghostview.desktop
 ===================================================================
---- kghostview/kghostview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kghostview/kghostview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kghostview/kghostview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kghostview/kghostview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -9,11 +9,10 @@
  Name[ne]=केडीई घोस्ट दृश्य
  Name[sv]=Kghostview
@@ -1061,8 +1061,8 @@ Index: kghostview/kghostview.desktop
  Icon=kghostview
 Index: kamera/kcontrol/kamera.cpp
 ===================================================================
---- kamera/kcontrol/kamera.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kamera/kcontrol/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kamera/kcontrol/kamera.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kamera/kcontrol/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -41,12 +41,6 @@
  #include "kamera.h"
  #include "kamera.moc"
@@ -1078,8 +1078,8 @@ Index: kamera/kcontrol/kamera.cpp
  
 Index: kamera/kcontrol/kamera.desktop
 ===================================================================
---- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -4,7 +4,7 @@
  Comment[af]=Konfigureer Kamera
  Comment[ar]=إعداد Kamera
@@ -1100,8 +1100,8 @@ Index: kamera/kcontrol/kamera.desktop
  Comment[uz]=Фотоапаратни мослаш
 Index: kamera/kioslave/kamera.cpp
 ===================================================================
---- kamera/kioslave/kamera.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kamera/kioslave/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kamera/kioslave/kamera.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kamera/kioslave/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -2,7 +2,7 @@
  
      Copyright (C) 2001 The Kompany
@@ -1421,8 +1421,8 @@ Index: kamera/kioslave/kamera.cpp
  
 Index: kamera/kioslave/kamera.h
 ===================================================================
---- kamera/kioslave/kamera.h	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kamera/kioslave/kamera.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kamera/kioslave/kamera.h	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kamera/kioslave/kamera.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -2,7 +2,7 @@
  
      Copyright (C) 2001 The Kompany
@@ -1489,8 +1489,8 @@ Index: kamera/kioslave/kamera.h
  #endif
 Index: kruler/eventsrc
 ===================================================================
---- kruler/eventsrc	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kruler/eventsrc	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kruler/eventsrc	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kruler/eventsrc	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -163,7 +163,7 @@
  Comment[mt]=Ir-riga mxiet b'tikka waħda permezz tal-buttuni vleġeġ
  Comment[nb]=Linjalen ble flyttet punktvis ved bruk av piltastene
@@ -1502,8 +1502,8 @@ Index: kruler/eventsrc
  Comment[nso]=Molaodi o tsamaile ka mokgwa wa pixelwise a somisa ditobetswa tsa cursor
 Index: kruler/kruler.desktop
 ===================================================================
---- kruler/kruler.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kruler/kruler.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kruler/kruler.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kruler/kruler.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -68,7 +68,7 @@
  Name[is]=KReglustika
  Name[lv]=KRulers
@@ -1515,8 +1515,8 @@ Index: kruler/kruler.desktop
  Name[ro]=Riglă
 Index: kiconedit/kiconedit.desktop
 ===================================================================
---- kiconedit/kiconedit.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kiconedit/kiconedit.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kiconedit/kiconedit.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kiconedit/kiconedit.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -82,7 +82,6 @@
  Name[ro]=Editor iconiţe
  Name[sv]=Kiconedit
@@ -1527,8 +1527,8 @@ Index: kiconedit/kiconedit.desktop
  Name[zh_TW]=KIconEdit 圖示編輯器
 Index: kfile-plugins/dvi/kfile_dvi.desktop
 ===================================================================
---- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -45,6 +45,7 @@
  Name[sv]=DVI-information
  Name[ta]=DVI தகவல்
@@ -1539,8 +1539,8 @@ Index: kfile-plugins/dvi/kfile_dvi.desktop
  Name[uz]=DVI ҳақида маълумот
 Index: kfile-plugins/png/kfile_png.desktop
 ===================================================================
---- kfile-plugins/png/kfile_png.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/png/kfile_png.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/png/kfile_png.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/png/kfile_png.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -47,7 +47,7 @@
  Name[sv]=PNG-information
  Name[ta]=PNG தகவல்
@@ -1552,8 +1552,8 @@ Index: kfile-plugins/png/kfile_png.desktop
  Name[uz]=PNG ҳақида маълумот
 Index: kfile-plugins/jpeg/kfile_jpeg.desktop
 ===================================================================
---- kfile-plugins/jpeg/kfile_jpeg.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/jpeg/kfile_jpeg.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/jpeg/kfile_jpeg.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/jpeg/kfile_jpeg.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -46,6 +46,7 @@
  Name[sv]=JPEG EXIF-information
  Name[ta]=JPEG EXIF தகவல்
@@ -1564,8 +1564,8 @@ Index: kfile-plugins/jpeg/kfile_jpeg.desktop
  Name[uz]=JPEG EXIF ҳақида маълумот
 Index: kfile-plugins/xbm/kfile_xbm.desktop
 ===================================================================
---- kfile-plugins/xbm/kfile_xbm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/xbm/kfile_xbm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/xbm/kfile_xbm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/xbm/kfile_xbm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -47,6 +47,7 @@
  Name[sv]=XBM-information
  Name[ta]=XBM தகவல்
@@ -1576,8 +1576,8 @@ Index: kfile-plugins/xbm/kfile_xbm.desktop
  Name[uz]=XBM ҳақида маълумот
 Index: kfile-plugins/tiff/kfile_tiff.desktop
 ===================================================================
---- kfile-plugins/tiff/kfile_tiff.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/tiff/kfile_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/tiff/kfile_tiff.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/tiff/kfile_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -49,6 +49,7 @@
  Name[sv]=Metainformation om TIFF-fil
  Name[ta]=TIFF மீக்கோப்பு தகவல்
@@ -1588,8 +1588,8 @@ Index: kfile-plugins/tiff/kfile_tiff.desktop
  Name[uz]=TIFF-файлининг мета-маълумоти
 Index: kfile-plugins/raw/kfile_raw.desktop
 ===================================================================
---- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -41,6 +41,7 @@
  Name[sr]=RAW фајлови слика
  Name[sr@Latn]=RAW fajlovi slika
@@ -1600,8 +1600,8 @@ Index: kfile-plugins/raw/kfile_raw.desktop
  Name[zh_CN]=RAW 相机文件
 Index: kfile-plugins/pnm/kfile_pnm.desktop
 ===================================================================
---- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -44,7 +44,7 @@
  Name[sv]=PNM-information
  Name[ta]=PNM தகவல்
@@ -1613,8 +1613,8 @@ Index: kfile-plugins/pnm/kfile_pnm.desktop
  Name[uz]=PNM ҳақида маълумот
 Index: kfile-plugins/pcx/kfile_pcx.desktop
 ===================================================================
---- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -46,6 +46,7 @@
  Name[sv]=Metainformation om PCX-fil
  Name[ta]=PCX File Meta தகவல்
@@ -1625,8 +1625,8 @@ Index: kfile-plugins/pcx/kfile_pcx.desktop
  Name[uz]=PCX-файлининг мета-маълумоти
 Index: kfile-plugins/exr/kfile_exr.desktop
 ===================================================================
---- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -42,6 +42,7 @@
  Name[sv]=EXR-information
  Name[ta]=EXR தகவல்
@@ -1637,8 +1637,8 @@ Index: kfile-plugins/exr/kfile_exr.desktop
  Name[uz]=EXR ҳақида маълумот
 Index: kfile-plugins/xpm/kfile_xpm.desktop
 ===================================================================
---- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -38,6 +38,7 @@
  Name[sr@Latn]=XPM informacije
  Name[sv]=XPM-information
@@ -1649,8 +1649,8 @@ Index: kfile-plugins/xpm/kfile_xpm.desktop
  Name[uz]=XPM ҳақида маълумот
 Index: kfile-plugins/gif/kfile_gif.desktop
 ===================================================================
---- kfile-plugins/gif/kfile_gif.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/gif/kfile_gif.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/gif/kfile_gif.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/gif/kfile_gif.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -48,6 +48,7 @@
  Name[sv]=Gif-information
  Name[ta]=GIF தகவல்
@@ -1661,8 +1661,8 @@ Index: kfile-plugins/gif/kfile_gif.desktop
  Name[uz]=GIF ҳақида маълумот
 Index: kfile-plugins/pdf/kfile_pdf.desktop
 ===================================================================
---- kfile-plugins/pdf/kfile_pdf.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/pdf/kfile_pdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/pdf/kfile_pdf.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/pdf/kfile_pdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -47,7 +47,7 @@
  Name[sv]=PDF-information
  Name[ta]=PDF தகவல்
@@ -1674,8 +1674,8 @@ Index: kfile-plugins/pdf/kfile_pdf.desktop
  Name[uz]=PDF ҳақида маълумот
 Index: kfile-plugins/ico/kfile_ico.desktop
 ===================================================================
---- kfile-plugins/ico/kfile_ico.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/ico/kfile_ico.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/ico/kfile_ico.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/ico/kfile_ico.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -47,6 +47,7 @@
  Name[sv]=Ico-information
  Name[ta]=ICO தகவல்
@@ -1686,8 +1686,8 @@ Index: kfile-plugins/ico/kfile_ico.desktop
  Name[uz]=ICO ҳақида маълумот
 Index: kfile-plugins/dds/kfile_dds.desktop
 ===================================================================
---- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -40,6 +40,7 @@
  Name[sr@Latn]=Informacije o DirectDraw površini
  Name[sv]=Directdraw ytinformation
@@ -1698,8 +1698,8 @@ Index: kfile-plugins/dds/kfile_dds.desktop
  Name[zh_CN]=DirectDraw 表面信息
 Index: kfile-plugins/tga/kfile_tga.desktop
 ===================================================================
---- kfile-plugins/tga/kfile_tga.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/tga/kfile_tga.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/tga/kfile_tga.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/tga/kfile_tga.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -46,6 +46,7 @@
  Name[sv]=Information om Truevision Targa
  Name[ta]=சரியான பார்வை தார்கா தகவல்
@@ -1710,8 +1710,8 @@ Index: kfile-plugins/tga/kfile_tga.desktop
  Name[uz]=TGA ҳақида маълумот
 Index: kfile-plugins/bmp/kfile_bmp.desktop
 ===================================================================
---- kfile-plugins/bmp/kfile_bmp.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 694616)
-+++ kfile-plugins/bmp/kfile_bmp.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 694616)
+--- kfile-plugins/bmp/kfile_bmp.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
++++ kfile-plugins/bmp/kfile_bmp.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
 @@ -48,6 +48,7 @@
  Name[sv]=BMP-information
  Name[ta]=BMP தகவல்
