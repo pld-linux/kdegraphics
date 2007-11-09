@@ -1,1725 +1,1675 @@
-Index: kpdf/part.cpp
-===================================================================
---- kpdf/part.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/part.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -186,9 +186,13 @@
- 
- 	int index;
- 	// [left toolbox: Table of Contents] | []
--	m_tocFrame = new TOC( m_toolBox, m_document );
-+	// dummy wrapper with layout to enable horizontal scroll bars (bug: 147233)
-+	QWidget *tocWrapper = new QWidget(m_toolBox);
-+	QVBoxLayout *tocWrapperLayout = new QVBoxLayout(tocWrapper);
-+	m_tocFrame = new TOC( tocWrapper, m_document );
-+	tocWrapperLayout->add(m_tocFrame);
- 	connect(m_tocFrame, SIGNAL(hasTOC(bool)), this, SLOT(enableTOC(bool)));
--	index = m_toolBox->addItem( m_tocFrame, QIconSet(SmallIcon("text_left")), i18n("Contents") );
-+	index = m_toolBox->addItem( tocWrapper, QIconSet(SmallIcon("text_left")), i18n("Contents") );
- 	m_toolBox->setItemToolTip(index, i18n("Contents"));
- 	enableTOC( false );
- 
-@@ -619,6 +623,7 @@
-     }
-     if (m_wasPresentationOpen) slotShowPresentation();
-     emit enablePrintAction(true);
-+    emit setWindowCaption(url().filename());
-   }
-   else
-   {
-Index: kpdf/core/document.cpp
-===================================================================
---- kpdf/core/document.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/core/document.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -1117,15 +1117,21 @@
-             break;
-         }
- 
--    // [MEM] 1.2 append memory allocation descriptor to the FIFO
--    int memoryBytes = 4 * req->width * req->height;
--    AllocatedPixmap * memoryPage = new AllocatedPixmap( req->id, req->pageNumber, memoryBytes );
--    d->allocatedPixmapsFifo.append( memoryPage );
--    d->allocatedPixmapsTotalMemory += memoryBytes;
-+    if ( d->observers.contains( req->id ) )
-+    {
-+        // [MEM] 1.2 append memory allocation descriptor to the FIFO
-+        int memoryBytes = 4 * req->width * req->height;
-+        AllocatedPixmap * memoryPage = new AllocatedPixmap( req->id, req->pageNumber, memoryBytes );
-+        d->allocatedPixmapsFifo.append( memoryPage );
-+        d->allocatedPixmapsTotalMemory += memoryBytes;
- 
--    // 2. notify an observer that its pixmap changed
--    if ( d->observers.contains( req->id ) )
-+        // 2. notify an observer that its pixmap changed
-         d->observers[ req->id ]->notifyPageChanged( req->pageNumber, DocumentObserver::Pixmap );
-+    }
-+#ifndef NDEBUG
-+    else
-+        kdWarning() << "Receiving a done request for the defunct observer " << req->id << endl;
-+#endif
- 
-     // 3. delete request
-     delete req;
 Index: kpdf/core/generator_pdf/generator_pdf.cpp
 ===================================================================
---- kpdf/core/generator_pdf/generator_pdf.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/core/generator_pdf/generator_pdf.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -316,7 +316,7 @@
-     // 1. Set OutputDev parameters and Generate contents
-     // note: thread safety is set on 'false' for the GUI (this) thread
-     kpdfOutputDev->setParams( request->width, request->height, genObjectRects, genObjectRects, false );
--    pdfdoc->displayPage( kpdfOutputDev, page->number() + 1, fakeDpiX, fakeDpiY, 0, false, true, genObjectRects );
-+    pdfdoc->displayPage( kpdfOutputDev, page->number() + 1, fakeDpiX, fakeDpiY, 0, false, true, false );
-     if ( genObjectRects )
-         pdfdoc->processLinks( kpdfOutputDev, page->number() + 1 );
- 
-@@ -498,7 +498,7 @@
-         docLock.lock();
-         for ( ; pIt != pEnd; ++pIt )
-         {
--            pdfdoc->displayPage(psOut, *pIt, 72, 72, 0, false, globalParams->getPSCrop(), gFalse);
-+            pdfdoc->displayPage(psOut, *pIt, 72, 72, 0, false, globalParams->getPSCrop(), gTrue);
+--- kpdf/core/generator_pdf/generator_pdf.cpp	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/core/generator_pdf/generator_pdf.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -152,7 +152,7 @@
          }
-         docLock.unlock();
  
-@@ -1197,7 +1197,7 @@
-     d->generator->kpdfOutputDev->setParams( width, height, 
-                                             genObjectRects, genObjectRects, TRUE /*thread safety*/ );
-     d->generator->pdfdoc->displayPage( d->generator->kpdfOutputDev, page->number() + 1,
--                                       fakeDpiX, fakeDpiY, 0, false, true, genObjectRects );
-+                                       fakeDpiX, fakeDpiY, 0, false, true, false );
-     if ( genObjectRects )
-         d->generator->pdfdoc->processLinks( d->generator->kpdfOutputDev, page->number() + 1 );
- 
+         // 2. reopen the document using the password
+-        GString * pwd2 = new GString( password.data() );
++        GString * pwd2 = new GString( QString::fromLocal8Bit(password.data()).latin1() );
+             delete pdfdoc;
+         pdfdoc = new PDFDoc( new GString( QFile::encodeName( filePath ) ), pwd2, pwd2 );
+             delete pwd2;
 Index: kpdf/xpdf/xpdf/Stream.cc
 ===================================================================
---- kpdf/xpdf/xpdf/Stream.cc	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/xpdf/xpdf/Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -411,9 +411,9 @@
- 
-   nVals = width * nComps;
-   if (width <= 0 || nComps <= 0 || nBits <= 0 ||
--      nComps >= INT_MAX / nBits ||
--      width >= INT_MAX / nComps / nBits ||
--      nVals * nBits + 7 < 0) {
-+      nComps > gfxColorMaxComps || nBits > 16 ||
-+      width >= INT_MAX / nComps ||
-+      nVals >= (INT_MAX - 7) / nBits) {
-     return;
+--- kpdf/xpdf/xpdf/Stream.cc	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/xpdf/Stream.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -1245,23 +1245,30 @@
+   columns = columnsA;
+   if (columns < 1) {
+     columns = 1;
++  } else if (columns > INT_MAX - 2) {
++    columns = INT_MAX - 2;
    }
-   pixBytes = (nComps * nBits + 7) >> 3;
-Index: kpdf/shell/kpdf.desktop
-===================================================================
---- kpdf/shell/kpdf.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/shell/kpdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -1,6 +1,6 @@
- [Desktop Entry]
- Encoding=UTF-8
--MimeType=application/pdf
-+MimeType=application/pdf;
- Terminal=false
- Name=KPDF
- Name[ar]=برنامج KPDF
-Index: kpdf/ui/pagepainter.cpp
-===================================================================
---- kpdf/ui/pagepainter.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/ui/pagepainter.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -49,11 +49,24 @@
-     // if have no pixmap, draw blank page with gray cross and exit
-     if ( !pixmap )
-     {
--        if ( KpdfSettings::changeColors() &&
--             KpdfSettings::renderMode() == KpdfSettings::EnumRenderMode::Paper )
--            destPainter->fillRect( limits, KpdfSettings::paperColor() );
--        else
--            destPainter->fillRect( limits, Qt::white );
-+        QColor color = Qt::white;
-+        if ( KpdfSettings::changeColors() )
-+        {
-+            switch ( KpdfSettings::renderMode() )
-+            {
-+                case KpdfSettings::EnumRenderMode::Inverted:
-+                    color = Qt::black;
-+                    break;
-+                case KpdfSettings::EnumRenderMode::Paper:
-+                    color = KpdfSettings::paperColor();
-+                    break;
-+                case KpdfSettings::EnumRenderMode::Recolor:
-+                    color = KpdfSettings::recolorBackground();
-+                    break;
-+                default: ;
-+            }
-+        }
-+        destPainter->fillRect( limits, color );
+-  if (columns + 4 <= 0) {
+-    columns = INT_MAX - 4;
+-  }
+   rows = rowsA;
+   endOfBlock = endOfBlockA;
+   black = blackA;
+-  refLine = (short *)gmallocn(columns + 3, sizeof(short));
+-  codingLine = (short *)gmallocn(columns + 2, sizeof(short));
++  // 0 <= codingLine[0] < codingLine[1] < ... < codingLine[n] = columns
++  // ---> max codingLine size = columns + 1
++  // refLine has one extra guard entry at the end
++  // ---> max refLine size = columns + 2
++  codingLine = (int *)gmallocn_checkoverflow(columns + 1, sizeof(int));
++  refLine = (int *)gmallocn_checkoverflow(columns + 2, sizeof(int));
  
-         // draw a cross (to  that the pixmap as not yet been loaded)
-         // helps a lot on pages that take much to render
-Index: kpdf/ui/pageview.cpp
-===================================================================
---- kpdf/ui/pageview.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/ui/pageview.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -59,53 +59,6 @@
- // definition of searchID for this class
- #define PAGEVIEW_SEARCH_ID 2
+-  eof = gFalse;
++  if (codingLine != NULL && refLine != NULL) {
++    eof = gFalse;
++    codingLine[0] = columns;
++  } else {
++    eof = gTrue;
++  }
+   row = 0;
+   nextLine2D = encoding < 0;
+   inputBits = 0;
+-  codingLine[0] = 0;
+-  codingLine[1] = refLine[2] = columns;
+-  a0 = 1;
++  a0i = 0;
++  outputBits = 0;
  
--class PageViewTip : public QToolTip
--{
--    public:
--        PageViewTip( PageView * view )
--            : QToolTip( view->viewport() ), m_view( view )
--        {
--        }
--
--        ~PageViewTip()
--        {
--            remove( m_view->viewport() );
--        }
--
--
--    protected:
--        void maybeTip( const QPoint &p );
--
--    private:
--        PageView * m_view;
--};
--
--void PageViewTip::maybeTip( const QPoint &_p )
--{
--    QPoint p( _p.x() + m_view->contentsX(), _p.y() + m_view->contentsY() );
--    PageViewItem * pageItem = m_view->pickItemOnPoint( p.x(), p.y() );
--    if ( pageItem )
--    {
--        double nX = (double)(p.x() - pageItem->geometry().left()) / (double)pageItem->width(),
--               nY = (double)(p.y() - pageItem->geometry().top()) / (double)pageItem->height();
--
--        // if over a ObjectRect (of type Link) change cursor to hand
--        const ObjectRect * object = pageItem->page()->hasObject( ObjectRect::Link, nX, nY );
--        if ( object )
--        {
--            // set tooltip over link's rect
--            KPDFLink *link = (KPDFLink *)object->pointer();
--            QString strtip = link->linkTip();
--            if ( !strtip.isEmpty() )
--            {
--                QRect linkRect = object->geometry( pageItem->width(), pageItem->height() );
--                linkRect.moveBy( - m_view->contentsX() + pageItem->geometry().left(), - m_view->contentsY() + pageItem->geometry().top() );
--                tip( linkRect, strtip );
--            }
--        }
--    }
--}
--
- // structure used internally by PageView for data storage
- class PageViewPrivate
- {
-@@ -165,6 +118,55 @@
+   buf = EOF;
+ }
+@@ -1276,13 +1283,18 @@
+   short code1;
  
+   str->reset();
+-  eof = gFalse;
++
++  if (codingLine != NULL && refLine != NULL) {
++    eof = gFalse;
++    codingLine[0] = columns;
++  } else {
++    eof = gTrue;
++  }
+   row = 0;
+   nextLine2D = encoding < 0;
+   inputBits = 0;
+-  codingLine[0] = 0;
+-  codingLine[1] = columns;
+-  a0 = 1;
++  a0i = 0;
++  outputBits = 0;
+   buf = EOF;
  
+   // skip any initial zero bits and end-of-line marker, and get the 2D
+@@ -1299,211 +1311,230 @@
+   }
+ }
  
-+class PageViewTip : public QToolTip
-+{
-+    public:
-+        PageViewTip( PageView * view )
-+            : QToolTip( view->viewport() ), m_view( view )
-+        {
-+        }
-+
-+        ~PageViewTip()
-+        {
-+            remove( m_view->viewport() );
-+        }
-+
-+
-+    protected:
-+        void maybeTip( const QPoint &p );
-+
-+    private:
-+        PageView * m_view;
-+};
-+
-+void PageViewTip::maybeTip( const QPoint &_p )
-+{
-+    QPoint p( _p.x() + m_view->contentsX(), _p.y() + m_view->contentsY() );
-+    PageViewItem * pageItem = m_view->pickItemOnPoint( p.x(), p.y() );
-+    if ( pageItem && m_view->d->mouseMode == PageView::MouseNormal )
-+    {
-+        double nX = (double)(p.x() - pageItem->geometry().left()) / (double)pageItem->width(),
-+               nY = (double)(p.y() - pageItem->geometry().top()) / (double)pageItem->height();
-+
-+        // if over a ObjectRect (of type Link) change cursor to hand
-+        const ObjectRect * object = pageItem->page()->hasObject( ObjectRect::Link, nX, nY );
-+        if ( object )
-+        {
-+            // set tooltip over link's rect
-+            KPDFLink *link = (KPDFLink *)object->pointer();
-+            QString strtip = link->linkTip();
-+            if ( !strtip.isEmpty() )
-+            {
-+                QRect linkRect = object->geometry( pageItem->width(), pageItem->height() );
-+                linkRect.moveBy( - m_view->contentsX() + pageItem->geometry().left(), - m_view->contentsY() + pageItem->geometry().top() );
-+                tip( linkRect, strtip );
-+            }
-+        }
++inline void CCITTFaxStream::addPixels(int a1, int blackPixels) {
++  if (a1 > codingLine[a0i]) {
++    if (a1 > columns) {
++      error(getPos(), "CCITTFax row is wrong length (%d)", a1);
++      err = gTrue;
++      a1 = columns;
 +    }
++    if ((a0i & 1) ^ blackPixels) {
++      ++a0i;
++    }
++    codingLine[a0i] = a1;
++  }
++}
++
++inline void CCITTFaxStream::addPixelsNeg(int a1, int blackPixels) {
++  if (a1 > codingLine[a0i]) {
++    if (a1 > columns) {
++      error(getPos(), "CCITTFax row is wrong length (%d)", a1);
++      err = gTrue;
++      a1 = columns;
++    }
++    if ((a0i & 1) ^ blackPixels) {
++      ++a0i;
++    }
++    codingLine[a0i] = a1;
++  } else if (a1 < codingLine[a0i]) {
++    if (a1 < 0) {
++      error(getPos(), "Invalid CCITTFax code");
++      err = gTrue;
++      a1 = 0;
++    }
++    while (a0i > 0 && a1 <= codingLine[a0i - 1]) {
++      --a0i;
++    }
++    codingLine[a0i] = a1;
++  }
++}
++
+ int CCITTFaxStream::lookChar() {
+   short code1, code2, code3;
+-  int a0New;
+-  GBool err, gotEOL;
+-  int ret;
+-  int bits, i;
++  int b1i, blackPixels, i, bits;
++  GBool gotEOL;
+ 
+-  // if at eof just return EOF
+-  if (eof && codingLine[a0] >= columns) {
+-    return EOF;
++  if (buf != EOF) {
++    return buf;
+   }
+ 
+   // read the next row
+-  err = gFalse;
+-  if (codingLine[a0] >= columns) {
++  if (outputBits == 0) {
+ 
++    // if at eof just return EOF
++    if (eof) {
++      return EOF;
++    }
++
++    err = gFalse;
++
+     // 2-D encoding
+     if (nextLine2D) {
+-      // state:
+-      //   a0New = current position in coding line (0 <= a0New <= columns)
+-      //   codingLine[a0] = last change in coding line
+-      //                    (black-to-white if a0 is even,
+-      //                     white-to-black if a0 is odd)
+-      //   refLine[b1] = next change in reference line of opposite color
+-      //                 to a0
+-      // invariants:
+-      //   0 <= codingLine[a0] <= a0New
+-      //           <= refLine[b1] <= refLine[b1+1] <= columns
+-      //   0 <= a0 <= columns+1
+-      //   refLine[0] = 0
+-      //   refLine[n] = refLine[n+1] = columns
+-      //     -- for some 1 <= n <= columns+1
+-      // end condition:
+-      //   0 = codingLine[0] <= codingLine[1] < codingLine[2] < ...
+-      //     < codingLine[n-1] < codingLine[n] = columns
+-      //     -- where 1 <= n <= columns+1
+       for (i = 0; codingLine[i] < columns; ++i) {
+ 	refLine[i] = codingLine[i];
+       }
+-      refLine[i] = refLine[i + 1] = columns;
+-      b1 = 1;
+-      a0New = codingLine[a0 = 0] = 0;
+-      do {
++      refLine[i++] = columns;
++      refLine[i] = columns;
++      codingLine[0] = 0;
++      a0i = 0;
++      b1i = 0;
++      blackPixels = 0;
++      // invariant:
++      // refLine[b1i-1] <= codingLine[a0i] < refLine[b1i] < refLine[b1i+1]
++      //                                                             <= columns
++      // exception at left edge:
++      //   codingLine[a0i = 0] = refLine[b1i = 0] = 0 is possible
++      // exception at right edge:
++      //   refLine[b1i] = refLine[b1i+1] = columns is possible
++      while (codingLine[a0i] < columns) {
+ 	code1 = getTwoDimCode();
+ 	switch (code1) {
+ 	case twoDimPass:
+-	  if (refLine[b1] < columns) {
+-	    a0New = refLine[b1 + 1];
+-	    b1 += 2;
++	  addPixels(refLine[b1i + 1], blackPixels);
++	  if (refLine[b1i + 1] < columns) {
++	    b1i += 2;
+ 	  }
+ 	  break;
+ 	case twoDimHoriz:
+-	  if ((a0 & 1) == 0) {
+-	    code1 = code2 = 0;
++	  code1 = code2 = 0;
++	  if (blackPixels) {
+ 	    do {
+-	      code1 += code3 = getWhiteCode();
++	      code1 += code3 = getBlackCode();
+ 	    } while (code3 >= 64);
+ 	    do {
+-	      code2 += code3 = getBlackCode();
++	      code2 += code3 = getWhiteCode();
+ 	    } while (code3 >= 64);
+ 	  } else {
+-	    code1 = code2 = 0;
+ 	    do {
+-	      code1 += code3 = getBlackCode();
++	      code1 += code3 = getWhiteCode();
+ 	    } while (code3 >= 64);
+ 	    do {
+-	      code2 += code3 = getWhiteCode();
++	      code2 += code3 = getBlackCode();
+ 	    } while (code3 >= 64);
+ 	  }
+-	  if (code1 > 0 || code2 > 0) {
+-	    if (a0New + code1 <= columns) {
+-	      codingLine[a0 + 1] = a0New + code1;
+-	    } else {
+-	      codingLine[a0 + 1] = columns;
++	  addPixels(codingLine[a0i] + code1, blackPixels);
++	  if (codingLine[a0i] < columns) {
++	    addPixels(codingLine[a0i] + code2, blackPixels ^ 1);
++	  }
++	  while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	    b1i += 2;
++	  }
++	  break;
++	case twoDimVertR3:
++	  addPixels(refLine[b1i] + 3, blackPixels);
++	  blackPixels ^= 1;
++	  if (codingLine[a0i] < columns) {
++	    ++b1i;
++	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	      b1i += 2;
+ 	    }
+-	    ++a0;
+-	    if (codingLine[a0] + code2 <= columns) {
+-	      codingLine[a0 + 1] = codingLine[a0] + code2;
+-	    } else {
+-	      codingLine[a0 + 1] = columns;
+-	    }
+-	    ++a0;
+-	    a0New = codingLine[a0];
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
+-	    }
+ 	  }
+ 	  break;
+-	case twoDimVert0:
+-	  if (refLine[b1] < columns) {
+-	    a0New = codingLine[++a0] = refLine[b1];
+-	    ++b1;
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
++	case twoDimVertR2:
++	  addPixels(refLine[b1i] + 2, blackPixels);
++	  blackPixels ^= 1;
++	  if (codingLine[a0i] < columns) {
++	    ++b1i;
++	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	      b1i += 2;
+ 	    }
+-	  } else {
+-	    a0New = codingLine[++a0] = columns;
+ 	  }
+ 	  break;
+ 	case twoDimVertR1:
+-	  if (refLine[b1] + 1 < columns) {
+-	    a0New = codingLine[++a0] = refLine[b1] + 1;
+-	    ++b1;
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
++	  addPixels(refLine[b1i] + 1, blackPixels);
++	  blackPixels ^= 1;
++	  if (codingLine[a0i] < columns) {
++	    ++b1i;
++	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	      b1i += 2;
+ 	    }
+-	  } else {
+-	    a0New = codingLine[++a0] = columns;
+ 	  }
+ 	  break;
+-	case twoDimVertL1:
+-	  if (refLine[b1] - 1 > a0New || (a0 == 0 && refLine[b1] == 1)) {
+-	    a0New = codingLine[++a0] = refLine[b1] - 1;
+-	    --b1;
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
++	case twoDimVert0:
++	  addPixels(refLine[b1i], blackPixels);
++	  blackPixels ^= 1;
++	  if (codingLine[a0i] < columns) {
++	    ++b1i;
++	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	      b1i += 2;
+ 	    }
+ 	  }
+ 	  break;
+-	case twoDimVertR2:
+-	  if (refLine[b1] + 2 < columns) {
+-	    a0New = codingLine[++a0] = refLine[b1] + 2;
+-	    ++b1;
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
++	case twoDimVertL3:
++	  addPixelsNeg(refLine[b1i] - 3, blackPixels);
++	  blackPixels ^= 1;
++	  if (codingLine[a0i] < columns) {
++	    if (b1i > 0) {
++	      --b1i;
++	    } else {
++	      ++b1i;
+ 	    }
+-	  } else {
+-	    a0New = codingLine[++a0] = columns;
++	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	      b1i += 2;
++	    }
+ 	  }
+ 	  break;
+ 	case twoDimVertL2:
+-	  if (refLine[b1] - 2 > a0New || (a0 == 0 && refLine[b1] == 2)) {
+-	    a0New = codingLine[++a0] = refLine[b1] - 2;
+-	    --b1;
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
++	  addPixelsNeg(refLine[b1i] - 2, blackPixels);
++	  blackPixels ^= 1;
++	  if (codingLine[a0i] < columns) {
++	    if (b1i > 0) {
++	      --b1i;
++	    } else {
++	      ++b1i;
+ 	    }
+-	  }
+-	  break;
+-	case twoDimVertR3:
+-	  if (refLine[b1] + 3 < columns) {
+-	    a0New = codingLine[++a0] = refLine[b1] + 3;
+-	    ++b1;
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
++	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	      b1i += 2;
+ 	    }
+-	  } else {
+-	    a0New = codingLine[++a0] = columns;
+ 	  }
+ 	  break;
+-	case twoDimVertL3:
+-	  if (refLine[b1] - 3 > a0New || (a0 == 0 && refLine[b1] == 3)) {
+-	    a0New = codingLine[++a0] = refLine[b1] - 3;
+-	    --b1;
+-	    while (refLine[b1] <= a0New && refLine[b1] < columns) {
+-	      b1 += 2;
++	case twoDimVertL1:
++	  addPixelsNeg(refLine[b1i] - 1, blackPixels);
++	  blackPixels ^= 1;
++	  if (codingLine[a0i] < columns) {
++	    if (b1i > 0) {
++	      --b1i;
++	    } else {
++	      ++b1i;
+ 	    }
++	    while (refLine[b1i] <= codingLine[a0i] && refLine[b1i] < columns) {
++	      b1i += 2;
++	    }
+ 	  }
+ 	  break;
+ 	case EOF:
++	  addPixels(columns, 0);
+ 	  eof = gTrue;
+-	  codingLine[a0 = 0] = columns;
+-	  return EOF;
++	  break;
+ 	default:
+ 	  error(getPos(), "Bad 2D code %04x in CCITTFax stream", code1);
++	  addPixels(columns, 0);
+ 	  err = gTrue;
+ 	  break;
+ 	}
+-      } while (codingLine[a0] < columns);
++      }
+ 
+     // 1-D encoding
+     } else {
+-      codingLine[a0 = 0] = 0;
+-      while (1) {
++      codingLine[0] = 0;
++      a0i = 0;
++      blackPixels = 0;
++      while (codingLine[a0i] < columns) {
+ 	code1 = 0;
+-	do {
+-	  code1 += code3 = getWhiteCode();
+-	} while (code3 >= 64);
+-	codingLine[a0+1] = codingLine[a0] + code1;
+-	++a0;
+-	if (codingLine[a0] >= columns) {
+-	  break;
++	if (blackPixels) {
++	  do {
++	    code1 += code3 = getBlackCode();
++	  } while (code3 >= 64);
++	} else {
++	  do {
++	    code1 += code3 = getWhiteCode();
++	  } while (code3 >= 64);
+ 	}
+-	code2 = 0;
+-	do {
+-	  code2 += code3 = getBlackCode();
+-	} while (code3 >= 64);
+-	codingLine[a0+1] = codingLine[a0] + code2;
+-	++a0;
+-	if (codingLine[a0] >= columns) {
+-	  break;
+-	}
++	addPixels(codingLine[a0i] + code1, blackPixels);
++	blackPixels ^= 1;
+       }
+     }
+ 
+-    if (codingLine[a0] != columns) {
+-      error(getPos(), "CCITTFax row is wrong length (%d)", codingLine[a0]);
+-      // force the row to be the correct length
+-      while (codingLine[a0] > columns) {
+-	--a0;
+-      }
+-      codingLine[++a0] = columns;
+-      err = gTrue;
+-    }
+-
+     // byte-align the row
+     if (byteAlign) {
+       inputBits &= ~7;
+@@ -1562,14 +1593,17 @@
+     // this if we know the stream contains end-of-line markers because
+     // the "just plow on" technique tends to work better otherwise
+     } else if (err && endOfLine) {
+-      do {
++      while (1) {
++	code1 = lookBits(13);
+ 	if (code1 == EOF) {
+ 	  eof = gTrue;
+ 	  return EOF;
+ 	}
++	if ((code1 >> 1) == 0x001) {
++	  break;
++	}
+ 	eatBits(1);
+-	code1 = lookBits(13);
+-      } while ((code1 >> 1) != 0x001);
++      }
+       eatBits(12); 
+       if (encoding > 0) {
+ 	eatBits(1);
+@@ -1577,11 +1611,11 @@
+       }
+     }
+ 
+-    a0 = 0;
+-    outputBits = codingLine[1] - codingLine[0];
+-    if (outputBits == 0) {
+-      a0 = 1;
+-      outputBits = codingLine[2] - codingLine[1];
++    // set up for output
++    if (codingLine[0] > 0) {
++      outputBits = codingLine[a0i = 0];
++    } else {
++      outputBits = codingLine[a0i = 1];
+     }
+ 
+     ++row;
+@@ -1589,39 +1623,43 @@
+ 
+   // get a byte
+   if (outputBits >= 8) {
+-    ret = ((a0 & 1) == 0) ? 0xff : 0x00;
+-    if ((outputBits -= 8) == 0) {
+-      ++a0;
+-      if (codingLine[a0] < columns) {
+-	outputBits = codingLine[a0 + 1] - codingLine[a0];
+-      }
++    buf = (a0i & 1) ? 0x00 : 0xff;
++    outputBits -= 8;
++    if (outputBits == 0 && codingLine[a0i] < columns) {
++      ++a0i;
++      outputBits = codingLine[a0i] - codingLine[a0i - 1];
+     }
+   } else {
+     bits = 8;
+-    ret = 0;
++    buf = 0;
+     do {
+       if (outputBits > bits) {
+-	i = bits;
++	buf <<= bits;
++	if (!(a0i & 1)) {
++	  buf |= 0xff >> (8 - bits);
++	}
++	outputBits -= bits;
+ 	bits = 0;
+-	if ((a0 & 1) == 0) {
+-	  ret |= 0xff >> (8 - i);
++      } else {
++	buf <<= outputBits;
++	if (!(a0i & 1)) {
++	  buf |= 0xff >> (8 - outputBits);
+ 	}
+-	outputBits -= i;
+-      } else {
+-	i = outputBits;
+ 	bits -= outputBits;
+-	if ((a0 & 1) == 0) {
+-	  ret |= (0xff >> (8 - i)) << bits;
+-	}
+ 	outputBits = 0;
+-	++a0;
+-	if (codingLine[a0] < columns) {
+-	  outputBits = codingLine[a0 + 1] - codingLine[a0];
++	if (codingLine[a0i] < columns) {
++	  ++a0i;
++	  outputBits = codingLine[a0i] - codingLine[a0i - 1];
++	} else if (bits > 0) {
++	  buf <<= bits;
++	  bits = 0;
+ 	}
+       }
+-    } while (bits > 0 && codingLine[a0] < columns);
++    } while (bits);
+   }
+-  buf = black ? (ret ^ 0xff) : ret;
++  if (black) {
++    buf ^= 0xff;
++  }
+   return buf;
+ }
+ 
+@@ -1663,6 +1701,9 @@
+   code = 0; // make gcc happy
+   if (endOfBlock) {
+     code = lookBits(12);
++    if (code == EOF) {
++      return 1;
++    }
+     if ((code >> 5) == 0) {
+       p = &whiteTab1[code];
+     } else {
+@@ -1675,6 +1716,9 @@
+   } else {
+     for (n = 1; n <= 9; ++n) {
+       code = lookBits(n);
++      if (code == EOF) {
++	return 1;
++      }
+       if (n < 9) {
+ 	code <<= 9 - n;
+       }
+@@ -1686,6 +1730,9 @@
+     }
+     for (n = 11; n <= 12; ++n) {
+       code = lookBits(n);
++      if (code == EOF) {
++	return 1;
++      }
+       if (n < 12) {
+ 	code <<= 12 - n;
+       }
+@@ -1711,9 +1758,12 @@
+   code = 0; // make gcc happy
+   if (endOfBlock) {
+     code = lookBits(13);
++    if (code == EOF) {
++      return 1;
++    }
+     if ((code >> 7) == 0) {
+       p = &blackTab1[code];
+-    } else if ((code >> 9) == 0) {
++    } else if ((code >> 9) == 0 && (code >> 7) != 0) {
+       p = &blackTab2[(code >> 1) - 64];
+     } else {
+       p = &blackTab3[code >> 7];
+@@ -1725,6 +1775,9 @@
+   } else {
+     for (n = 2; n <= 6; ++n) {
+       code = lookBits(n);
++      if (code == EOF) {
++	return 1;
++      }
+       if (n < 6) {
+ 	code <<= 6 - n;
+       }
+@@ -1736,6 +1789,9 @@
+     }
+     for (n = 7; n <= 12; ++n) {
+       code = lookBits(n);
++      if (code == EOF) {
++	return 1;
++      }
+       if (n < 12) {
+ 	code <<= 12 - n;
+       }
+@@ -1749,6 +1805,9 @@
+     }
+     for (n = 10; n <= 13; ++n) {
+       code = lookBits(n);
++      if (code == EOF) {
++	return 1;
++      }
+       if (n < 13) {
+ 	code <<= 13 - n;
+       }
+@@ -1963,6 +2022,12 @@
+     // allocate a buffer for the whole image
+     bufWidth = ((width + mcuWidth - 1) / mcuWidth) * mcuWidth;
+     bufHeight = ((height + mcuHeight - 1) / mcuHeight) * mcuHeight;
++    if (bufWidth <= 0 || bufHeight <= 0 ||
++	bufWidth > INT_MAX / bufWidth / (int)sizeof(int)) {
++      error(getPos(), "Invalid image size in DCT stream");
++      y = height;
++      return;
++    }
+     for (i = 0; i < numComps; ++i) {
+       frameBuf[i] = (int *)gmallocn(bufWidth * bufHeight, sizeof(int));
+       memset(frameBuf[i], 0, bufWidth * bufHeight * sizeof(int));
+@@ -3038,6 +3103,11 @@
+   }
+   scanInfo.firstCoeff = str->getChar();
+   scanInfo.lastCoeff = str->getChar();
++  if (scanInfo.firstCoeff < 0 || scanInfo.lastCoeff > 63 ||
++      scanInfo.firstCoeff > scanInfo.lastCoeff) {
++    error(getPos(), "Bad DCT coefficient numbers in scan info block");
++    return gFalse;
++  }
+   c = str->getChar();
+   scanInfo.ah = (c >> 4) & 0x0f;
+   scanInfo.al = c & 0x0f;
+Index: kpdf/xpdf/xpdf/Stream.h
+===================================================================
+--- kpdf/xpdf/xpdf/Stream.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/xpdf/Stream.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -528,13 +528,15 @@
+   int row;			// current row
+   int inputBuf;			// input buffer
+   int inputBits;		// number of bits in input buffer
+-  short *refLine;		// reference line changing elements
+-  int b1;			// index into refLine
+-  short *codingLine;		// coding line changing elements
+-  int a0;			// index into codingLine
++  int *codingLine;		// coding line changing elements
++  int *refLine;			// reference line changing elements
++  int a0i;			// index into codingLine
++  GBool err;			// error on current line
+   int outputBits;		// remaining ouput bits
+   int buf;			// character buffer
+ 
++  void addPixels(int a1, int black);
++  void addPixelsNeg(int a1, int black);
+   short getTwoDimCode();
+   short getWhiteCode();
+   short getBlackCode();
+Index: kpdf/xpdf/goo/gmem.cc
+===================================================================
+--- kpdf/xpdf/goo/gmem.cc	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/goo/gmem.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -172,6 +172,25 @@
+   return gmalloc(n);
+ }
+ 
++void *gmallocn_checkoverflow(int nObjs, int objSize) GMEM_EXCEP {
++  int n;
++
++  if (nObjs == 0) {
++    return NULL;
++  }
++  n = nObjs * objSize;
++  if (objSize <= 0 || nObjs < 0 || nObjs >= INT_MAX / objSize) {
++#if USE_EXCEPTIONS
++    throw GMemException();
++#else
++    fprintf(stderr, "Bogus memory allocation size\n");
++    return NULL;
++#endif
++  }
++  return gmalloc(n);
 +}
 +
 +
-+
- /* PageView. What's in this file? -> quick overview.
-  * Code weight (in rows) and meaning:
-  *  160 - constructor and creating actions plus their connected slots (empty stuff)
-@@ -1605,7 +1607,7 @@
- {
-     // detect the underlaying page (if present)
-     PageViewItem * pageItem = pickItemOnPoint( p.x(), p.y() );
--    if ( pageItem )
-+    if ( pageItem && d->mouseMode == MouseNormal )
-     {
-         double nX = (double)(p.x() - pageItem->geometry().left()) / (double)pageItem->width(),
-                nY = (double)(p.y() - pageItem->geometry().top()) / (double)pageItem->height();
-Index: kpdf/ui/toc.cpp
+ void *greallocn(void *p, int nObjs, int objSize) GMEM_EXCEP {
+   int n;
+ 
+Index: kpdf/xpdf/goo/gmem.h
 ===================================================================
---- kpdf/ui/toc.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpdf/ui/toc.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -64,7 +64,8 @@
+--- kpdf/xpdf/goo/gmem.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/goo/gmem.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -52,6 +52,7 @@
+  */
+ extern void *gmallocn(int nObjs, int objSize) GMEM_EXCEP;
+ extern void *greallocn(void *p, int nObjs, int objSize) GMEM_EXCEP;
++extern void *gmallocn_checkoverflow(int nObjs, int objSize) GMEM_EXCEP;
+ 
+ /*
+  * Same as free, but checks for and ignores NULL pointers.
+Index: kpdf/xpdf/splash/Splash.h
+===================================================================
+--- kpdf/xpdf/splash/Splash.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/Splash.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -151,7 +151,7 @@
+ 
+   // Draw a glyph, using the current fill pattern.  This function does
+   // not free any data, i.e., it ignores glyph->freeData.
+-  SplashError fillGlyph(SplashCoord x, SplashCoord y,
++  void fillGlyph(SplashCoord x, SplashCoord y,
+ 			SplashGlyphBitmap *glyph);
+ 
+   // Draws an image mask using the fill color.  This will read <h>
+@@ -267,7 +267,7 @@
+   SplashPath *makeDashedPath(SplashPath *xPath);
+   SplashError fillWithPattern(SplashPath *path, GBool eo,
+ 			      SplashPattern *pattern, SplashCoord alpha);
+-  SplashError fillGlyph2(int x0, int y0, SplashGlyphBitmap *glyph);
++  void fillGlyph2(int x0, int y0, SplashGlyphBitmap *glyph, GBool noclip);
+   void dumpPath(SplashPath *path);
+   void dumpXPath(SplashXPath *path);
+ 
+Index: kpdf/xpdf/splash/SplashFont.cc
+===================================================================
+--- kpdf/xpdf/splash/SplashFont.cc	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/SplashFont.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -74,11 +74,15 @@
+   } else {
+     cacheSets = 1;
+   }
+-  cache = (Guchar *)gmallocn(cacheSets * cacheAssoc, glyphSize);
+-  cacheTags = (SplashFontCacheTag *)gmallocn(cacheSets * cacheAssoc,
++  cache = (Guchar *)gmallocn_checkoverflow(cacheSets * cacheAssoc, glyphSize);
++  if (cache != NULL) {
++    cacheTags = (SplashFontCacheTag *)gmallocn(cacheSets * cacheAssoc,
+ 					     sizeof(SplashFontCacheTag));
+-  for (i = 0; i < cacheSets * cacheAssoc; ++i) {
+-    cacheTags[i].mru = i & (cacheAssoc - 1);
++    for (i = 0; i < cacheSets * cacheAssoc; ++i) {
++      cacheTags[i].mru = i & (cacheAssoc - 1);
++    }
++  } else {
++    cacheAssoc = 0;
+   }
+ }
+ 
+@@ -93,7 +97,7 @@
+ }
+ 
+ GBool SplashFont::getGlyph(int c, int xFrac, int yFrac,
+-			   SplashGlyphBitmap *bitmap) {
++			   SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes) {
+   SplashGlyphBitmap bitmap2;
+   int size;
+   Guchar *p;
+@@ -127,15 +131,28 @@
+       bitmap->aa = aa;
+       bitmap->data = cache + (i+j) * glyphSize;
+       bitmap->freeData = gFalse;
++
++      *clipRes = clip->testRect(x0 - bitmap->x,
++                                y0 - bitmap->y,
++                                x0 - bitmap->x + bitmap->w - 1,
++                                y0 - bitmap->y + bitmap->h - 1);
++
+       return gTrue;
+     }
+   }
+ 
+   // generate the glyph bitmap
+-  if (!makeGlyph(c, xFrac, yFrac, &bitmap2)) {
++  if (!makeGlyph(c, xFrac, yFrac, &bitmap2, x0, y0, clip, clipRes)) {
+     return gFalse;
+   }
+ 
++  if (*clipRes == splashClipAllOutside)
++  {
++    bitmap->freeData = gFalse;
++    if (bitmap2.freeData) gfree(bitmap2.data);
++    return gTrue;
++  }
++
+   // if the glyph doesn't fit in the bounding box, return a temporary
+   // uncached bitmap
+   if (bitmap2.w > glyphW || bitmap2.h > glyphH) {
+Index: kpdf/xpdf/splash/SplashFont.h
+===================================================================
+--- kpdf/xpdf/splash/SplashFont.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/SplashFont.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -15,6 +15,7 @@
+ 
+ #include "gtypes.h"
+ #include "SplashTypes.h"
++#include "SplashClip.h"
+ 
+ struct SplashGlyphBitmap;
+ struct SplashFontCacheTag;
+@@ -66,12 +67,12 @@
+   // should override this to zero out xFrac and/or yFrac if they don't
+   // support fractional coordinates.
+   virtual GBool getGlyph(int c, int xFrac, int yFrac,
+-			 SplashGlyphBitmap *bitmap);
++			 SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes);
+ 
+   // Rasterize a glyph.  The <xFrac> and <yFrac> values are the same
+   // as described for getGlyph.
+   virtual GBool makeGlyph(int c, int xFrac, int yFrac,
+-			  SplashGlyphBitmap *bitmap) = 0;
++			  SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes) = 0;
+ 
+   // Return the path for a glyph.
+   virtual SplashPath *getGlyphPath(int c) = 0;
+Index: kpdf/xpdf/splash/SplashT1Font.h
+===================================================================
+--- kpdf/xpdf/splash/SplashT1Font.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/SplashT1Font.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -33,12 +33,12 @@
+ 
+   // Munge xFrac and yFrac before calling SplashFont::getGlyph.
+   virtual GBool getGlyph(int c, int xFrac, int yFrac,
+-			 SplashGlyphBitmap *bitmap);
++			 SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes);
+ 
+   // Rasterize a glyph.  The <xFrac> and <yFrac> values are the same
+   // as described for getGlyph.
+   virtual GBool makeGlyph(int c, int xFrac, int yFrac,
+-			  SplashGlyphBitmap *bitmap);
++			  SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes);
+ 
+   // Return the path for a glyph.
+   virtual SplashPath *getGlyphPath(int c);
+Index: kpdf/xpdf/splash/Splash.cc
+===================================================================
+--- kpdf/xpdf/splash/Splash.cc	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/Splash.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -1626,7 +1626,7 @@
+   SplashGlyphBitmap glyph;
+   SplashCoord xt, yt;
+   int x0, y0, xFrac, yFrac;
+-  SplashError err;
++  SplashClipResult clipRes;
+ 
+   if (debugMode) {
+     printf("fillChar: x=%.2f y=%.2f c=%3d=0x%02x='%c'\n",
+@@ -1637,17 +1637,20 @@
+   xFrac = splashFloor((xt - x0) * splashFontFraction);
+   y0 = splashFloor(yt);
+   yFrac = splashFloor((yt - y0) * splashFontFraction);
+-  if (!font->getGlyph(c, xFrac, yFrac, &glyph)) {
++  if (!font->getGlyph(c, xFrac, yFrac, &glyph, x0, y0, state->clip, &clipRes)) {
+     return splashErrNoGlyph;
+   }
+-  err = fillGlyph2(x0, y0, &glyph);
++  if (clipRes != splashClipAllOutside) {
++    fillGlyph2(x0, y0, &glyph, clipRes == splashClipAllInside);
++  }
++  opClipRes = clipRes;
+   if (glyph.freeData) {
+     gfree(glyph.data);
+   }
+-  return err;
++  return splashOk;
+ }
+ 
+-SplashError Splash::fillGlyph(SplashCoord x, SplashCoord y,
++void Splash::fillGlyph(SplashCoord x, SplashCoord y,
+ 			      SplashGlyphBitmap *glyph) {
+   SplashCoord xt, yt;
+   int x0, y0;
+@@ -1655,24 +1658,22 @@
+   transform(state->matrix, x, y, &xt, &yt);
+   x0 = splashFloor(xt);
+   y0 = splashFloor(yt);
+-  return fillGlyph2(x0, y0, glyph);
++  SplashClipResult clipRes = state->clip->testRect(x0 - glyph->x,
++                             y0 - glyph->y,
++                             x0 - glyph->x + glyph->w - 1,
++                             y0 - glyph->y + glyph->h - 1);
++  if (clipRes != splashClipAllOutside) {
++    fillGlyph2(x0, y0, glyph, clipRes == splashClipAllInside);
++  }
++  opClipRes = clipRes;
+ }
+ 
+-SplashError Splash::fillGlyph2(int x0, int y0, SplashGlyphBitmap *glyph) {
++void Splash::fillGlyph2(int x0, int y0, SplashGlyphBitmap *glyph, GBool noClip) {
+   SplashPipe pipe;
+-  SplashClipResult clipRes;
+-  GBool noClip;
+   int alpha0, alpha;
+   Guchar *p;
+   int x1, y1, xx, xx1, yy;
+ 
+-  if ((clipRes = state->clip->testRect(x0 - glyph->x,
+-				       y0 - glyph->y,
+-				       x0 - glyph->x + glyph->w - 1,
+-				       y0 - glyph->y + glyph->h - 1))
+-      != splashClipAllOutside) {
+-    noClip = clipRes == splashClipAllInside;
+-
+     if (noClip) {
+       if (glyph->aa) {
+ 	pipeInit(&pipe, x0 - glyph->x, y0 - glyph->y,
+@@ -1763,10 +1764,6 @@
+ 	}
+       }
+     }
+-  }
+-  opClipRes = clipRes;
+-
+-  return splashOk;
+ }
+ 
+ SplashError Splash::fillImageMask(SplashImageMaskSource src, void *srcData,
+Index: kpdf/xpdf/splash/SplashFTFont.cc
+===================================================================
+--- kpdf/xpdf/splash/SplashFTFont.cc	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/SplashFTFont.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -147,12 +147,12 @@
+ }
+ 
+ GBool SplashFTFont::getGlyph(int c, int xFrac, int /*yFrac*/,
+-			     SplashGlyphBitmap *bitmap) {
+-  return SplashFont::getGlyph(c, xFrac, 0, bitmap);
++			     SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes) {
++  return SplashFont::getGlyph(c, xFrac, 0, bitmap, x0, y0, clip, clipRes);
+ }
+ 
+ GBool SplashFTFont::makeGlyph(int c, int xFrac, int /*yFrac*/,
+-			      SplashGlyphBitmap *bitmap) {
++			      SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes) {
+   SplashFTFontFile *ff;
+   FT_Vector offset;
+   FT_GlyphSlot slot;
+@@ -196,6 +196,24 @@
+     return gFalse;
+   }
  #endif
-     setSorting(-1);
-     setRootIsDecorated(true);
--    setResizeMode(AllColumns);
-+    // the next line causes bug:147233
-+//    setResizeMode(AllColumns);
-     setAllColumnsShowFocus(true);
-     connect(this, SIGNAL(clicked(QListViewItem *)), this, SLOT(slotExecuted(QListViewItem *)));
-     connect(this, SIGNAL(returnPressed(QListViewItem *)), this, SLOT(slotExecuted(QListViewItem *)));
++
++  FT_Glyph_Metrics *glyphMetrics = &(ff->face->glyph->metrics);
++  // prelimirary values from FT_Glyph_Metrics
++  bitmap->x = splashRound(-glyphMetrics->horiBearingX / 64.0);
++  bitmap->y = splashRound(glyphMetrics->horiBearingY / 64.0);
++  bitmap->w = splashRound(glyphMetrics->width / 64.0);
++  bitmap->h = splashRound(glyphMetrics->height / 64.0);
++
++  *clipRes = clip->testRect(x0 - bitmap->x,
++                            y0 - bitmap->y,
++                            x0 - bitmap->x + bitmap->w - 1,
++                            y0 - bitmap->y + bitmap->h - 1);
++  if (*clipRes == splashClipAllOutside)
++  {
++    bitmap->freeData = gFalse;
++    return gTrue;
++  }
++
+   if (FT_Render_Glyph(slot, aa ? ft_render_mode_normal
+ 		               : ft_render_mode_mono)) {
+     return gFalse;
+Index: kpdf/xpdf/splash/SplashFTFont.h
+===================================================================
+--- kpdf/xpdf/splash/SplashFTFont.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/SplashFTFont.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -35,12 +35,12 @@
+ 
+   // Munge xFrac and yFrac before calling SplashFont::getGlyph.
+   virtual GBool getGlyph(int c, int xFrac, int yFrac,
+-			 SplashGlyphBitmap *bitmap);
++			 SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes);
+ 
+   // Rasterize a glyph.  The <xFrac> and <yFrac> values are the same
+   // as described for getGlyph.
+   virtual GBool makeGlyph(int c, int xFrac, int yFrac,
+-			  SplashGlyphBitmap *bitmap);
++			  SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes);
+ 
+   // Return the path for a glyph.
+   virtual SplashPath *getGlyphPath(int c);
+Index: kpdf/xpdf/splash/SplashT1Font.cc
+===================================================================
+--- kpdf/xpdf/splash/SplashT1Font.cc	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpdf/xpdf/splash/SplashT1Font.cc	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -176,12 +176,12 @@
+ }
+ 
+ GBool SplashT1Font::getGlyph(int c, int xFrac, int yFrac,
+-			     SplashGlyphBitmap *bitmap) {
+-  return SplashFont::getGlyph(c, 0, 0, bitmap);
++			     SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes) {
++  return SplashFont::getGlyph(c, 0, 0, bitmap, x0, y0, clip, clipRes);
+ }
+ 
+ GBool SplashT1Font::makeGlyph(int c, int xFrac, int yFrac,
+-			      SplashGlyphBitmap *bitmap) {
++			      SplashGlyphBitmap *bitmap, int x0, int y0, SplashClip *clip, SplashClipResult *clipRes) {
+   GLYPH *glyph;
+   int n, i;
+ 
+@@ -211,6 +211,11 @@
+     bitmap->freeData = gTrue;
+   }
+ 
++  *clipRes = clip->testRect(x0 - bitmap->x,
++                            y0 - bitmap->y,
++                            x0 - bitmap->x + bitmap->w - 1,
++                            y0 - bitmap->y + bitmap->h - 1);
++
+   return gTrue;
+ }
+ 
 Index: kfaxview/kfaxmultipage_tiff.desktop
 ===================================================================
---- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -45,6 +45,7 @@
- Comment[sr]=KViewShell-ов прикључак за факс фајлове
- Comment[sr@Latn]=KViewShell-ov priključak za faks fajlove
- Comment[sv]=Kviewshell-insticksprogram för telefaxfiler
-+Comment[th]=ปลั๊กอินสำหรับแสดงแฟ้มโทรสารของ KViewShell
- Comment[tr]=Faks dosyaları için KViewShell eklentisi
- Comment[uk]=Втулок перегляду файлів факсів для KViewShell
- Comment[zh_CN]=传真文件的 KViewShell 插件
+--- kfaxview/kfaxmultipage_tiff.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfaxview/kfaxmultipage_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -16,6 +16,7 @@
+ Comment[da]=Kviewshell-plugin for telefaxfiler
+ Comment[de]=Ein Modul für KViewShell zum Betrachten von Faxdateien
+ Comment[el]=Πρόσθετο του KViewShell για αρχεία φαξ
++Comment[eo]=KViewShell-kromaĵo for faksdosieroj
+ Comment[es]=Extensión KViewShell para archivos de fax
+ Comment[et]=KView faksifailide plugin
+ Comment[eu]=Fax fitxategientzatko KViewShell-en plugina
 Index: kfaxview/kfaxmultipage.desktop
 ===================================================================
---- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -48,6 +48,7 @@
- Comment[sr]=KViewShell-ов прикључак за факс фајлове
- Comment[sr@Latn]=KViewShell-ov priključak za faks fajlove
- Comment[sv]=Kviewshell-insticksprogram för telefaxfiler
-+Comment[th]=ปลั๊กอินสำหรับแสดงแฟ้มโทรสารของ KViewShell
- Comment[tr]=Faks dosyaları için KViewShell eklentisi
- Comment[uk]=Втулок перегляду файлів факсів для KViewShell
- Comment[zh_CN]=传真文件的 KViewShell 插件
-Index: kfaxview/kfaxview.desktop
+--- kfaxview/kfaxmultipage.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfaxview/kfaxmultipage.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -19,6 +19,7 @@
+ Comment[da]=Kviewshell-plugin for telefaxfiler
+ Comment[de]=Ein Modul für KViewShell zum Betrachten von Faxdateien
+ Comment[el]=Πρόσθετο του KViewShell για αρχεία φαξ
++Comment[eo]=KViewShell-kromaĵo for faksdosieroj
+ Comment[es]=Extensión KViewShell para archivos de fax
+ Comment[et]=KView faksifailide plugin
+ Comment[eu]=Fax fitxategientzatko KViewShell-en plugina
+Index: kview/kviewcanvas/config/kviewcanvasconfig.desktop
 ===================================================================
---- kfaxview/kfaxview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfaxview/kfaxview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -34,7 +34,7 @@
- GenericName[ms]=Pemapar Faks
- GenericName[nb]=Faksfremviser
- GenericName[nds]=Faxkieker
--GenericName[ne]=फ्याक्स दर्शक
-+GenericName[ne]=फ्याक्स द्रष्टा
- GenericName[nl]=Faxweergaveprogramma
- GenericName[nn]=Faksvisar
- GenericName[pa]=ਫੈਕਸ ਦਰਸ਼ਕ
-@@ -67,7 +67,7 @@
- Name[ne]=केडीई फ्याक्स दृश्य
- Name[sv]=Kfaxview
- Name[zh_TW]=KFaxView 傳真檢視
--MimeType=image/fax-g3
-+MimeType=image/fax-g3;
- InitialPreference=6
- Exec=kfaxview %f
- Icon=kfaxview
-Index: kview/kview.desktop
+--- kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/kviewcanvas/config/kviewcanvasconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -23,6 +23,7 @@
+ Name[da]=Fremviser
+ Name[de]=Betrachter
+ Name[el]=Προβολέας
++Name[eo]=Rigardilo
+ Name[es]=Visor
+ Name[et]=Näitaja
+ Name[eu]=Ikustailua
+@@ -75,6 +76,7 @@
+ Comment[da]=Generel indstilling af KViewCanvas
+ Comment[de]=Allgemeine Einstellungen für KViewCanvas
+ Comment[el]=Γενική ρύθμιση του KViewCanvas
++Comment[eo]=Ĝenerala Agordo de KViewCanvas
+ Comment[es]=Configuración general de KViewCanvas
+ Comment[et]=KView lõuendite üldine seadistus
+ Comment[eu]=KViewCanvas konfigurazio orokorra
+Index: kview/config/kviewgeneralconfig.desktop
 ===================================================================
---- kview/kview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kview/kview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -72,7 +72,7 @@
- GenericName[zh_HK]=圖像檢視器
- GenericName[zh_TW]=影像檢視程式
- GenericName[zu]=Umbonisi Womfanekiso
--MimeType=image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/x-bmp;image/png;image/x-ico;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-greymap;image/tiff;image/jp2
-+MimeType=image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/x-bmp;image/png;image/x-ico;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-greymap;image/tiff;image/jp2;
- Name=KView
- Name[af]=K-bekyk
- Name[ar]=برنامج KView
+--- kview/config/kviewgeneralconfig.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/config/kviewgeneralconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -88,6 +88,7 @@
+ Comment[da]=Indstilling af den alenestående udgave af KView
+ Comment[de]=Einstellungen für die Anwendung KView
+ Comment[el]=Ρύθμιση της standalone έκδοσης του KView
++Comment[eo]=Agordo por la aŭtonoma versio de KView
+ Comment[es]=Configuración para la versión independiente de KView
+ Comment[et]=KView iseseisva versiooni seadistus
+ Comment[eu]=KView programaren konfigurazioa
+Index: kview/config/plugins/kviewpluginsconfig.desktop
+===================================================================
+--- kview/config/plugins/kviewpluginsconfig.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/config/plugins/kviewpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -23,6 +23,7 @@
+ Name[da]=Plugin
+ Name[de]=Module
+ Name[el]=Πρόσθετα
++Name[eo]=Kromaĵoj
+ Name[es]=Extensiones
+ Name[et]=Pluginad
+ Name[eu]=Pluginak
+@@ -75,6 +76,7 @@
+ Comment[da]=Vælg og indstil dine plugin
+ Comment[de]=Auswahl und Einrichtung der Module
+ Comment[el]=Επιλέξτε και ρυθμίστε τα πρόσθετα σας
++Comment[eo]=Elektu kaj agordu viajn kromprogramojn
+ Comment[es]=Seleccione y configure sus extensiones
+ Comment[et]=Pluginate valimine ja seadistamine
+ Comment[eu]=Aukeratu eta konfigurau zure pluginak
 Index: kview/config/kview.setdlg
 ===================================================================
---- kview/config/kview.setdlg	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -193,7 +193,7 @@
- Comment[ms]=Di sini anda boleh set opsyen yang khas kepada aplikasi KView apabila dilancar secara tunggal. Apa yang anda ubah di sini tidak akan memberikan kesan kepada aplikasi lain.
- Comment[nb]=Her finner du innstillinger som bare påvirker KView som frittstående program. Disse innstillingene har ingenting å si for andre programmer.
- Comment[nds]=Hier laat sik de Instellen fastleggen, de bloots för dat KView-Enkelprogramm gellt. Wat Du hier ännerst, bedröppt keen anner Programmen.
--Comment[ne]=यहाँ तपाईँले स्यान्ड अलोन चलिरहेको बेलामा केडीई दृश्य अनुप्रयोगका लागि विशेष विकल्पहरू सेट गर्न सक्नुहुन्छ । तपाईँको यहाँको परिवर्तनले अन्य अनुप्रयोगलाई प्रभाव पार्ने छैन ।
-+Comment[ne]=यहाँ तपाईँले स्यान्ड अलोन चलिरहेको बेलामा केडीई दृश्य अनुप्रयोगका लागि विशेष विकल्प सेट गर्न सक्नुहुन्छ । तपाईँको यहाँको परिवर्तनले अन्य अनुप्रयोगलाई प्रभाव पार्ने छैन ।
- Comment[nl]=Deze instellingen gelden alleen voor de KView-toepassing op zichzelf. Wat u hier instelt heeft geen invloed op andere toepassingen.
- Comment[nn]=Her finn du innstillingar som berre påverkar KView som frittståande program. Desse innstillingane har ingenting å seia for andre program.
- Comment[pl]=Tutaj można zmienić ustawienia, które będą używane, gdy KView jest uruchamiane jako oddzielny program. Zmiany dokonane tutaj nie będą miały wpływu na inne programy.
+--- kview/config/kview.setdlg	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/config/kview.setdlg	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -10,6 +10,7 @@
+ Name[da]=Fremviser
+ Name[de]=Betrachter
+ Name[el]=Προβολέας
++Name[eo]=Rigardilo
+ Name[es]=Visor
+ Name[et]=Näitaja
+ Name[eu]=Ikustailua
 Index: kview/kviewviewer/kviewviewer.desktop
 ===================================================================
---- kview/kviewviewer/kviewviewer.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kview/kviewviewer/kviewviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -89,7 +89,7 @@
- Name[ms]=Pemapar Imej KView
- Name[nb]=Bildeviseren KView
- Name[nds]=Bildkieker KView
--Name[ne]=के दृश्य छवि दर्शक
-+Name[ne]=केडीई दृश्य छवि दर्शक
- Name[nl]=KView afbeeldingenweergave
- Name[nn]=Biletvisaren KView
- Name[pa]=KView ਚਿੱਤਰ ਦਰਸ਼ਕ
+--- kview/kviewviewer/kviewviewer.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/kviewviewer/kviewviewer.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -70,6 +70,7 @@
+ Name[da]=KView-billedfremviser
+ Name[de]=Bildbetrachter KView
+ Name[el]=Προβολέας εικόνων KView
++Name[eo]=KView-Bildrigardilo
+ Name[es]=Visor de imágenes de KView
+ Name[et]=KView pildifailide näitaja
+ Name[eu]=KView irudi ikustailea
+Index: kview/kviewviewer/config/kviewviewerpluginsconfig.desktop
+===================================================================
+--- kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/kviewviewer/config/kviewviewerpluginsconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -23,6 +23,7 @@
+ Name[da]=Plugin
+ Name[de]=Module
+ Name[el]=Πρόσθετα
++Name[eo]=Kromaĵoj
+ Name[es]=Extensiones
+ Name[et]=Pluginad
+ Name[eu]=Pluginak
+@@ -75,6 +76,7 @@
+ Comment[da]=Vælg og indstil dine plugin
+ Comment[de]=Auswahl und Einrichtung der Module
+ Comment[el]=Επιλέξτε και ρυθμίστε τα πρόσθετα σας
++Comment[eo]=Elektu kaj agordu viajn kromprogramojn
+ Comment[es]=Seleccione y configure sus extensiones
+ Comment[et]=Pluginate valimine ja seadistamine
+ Comment[eu]=Aukeratu eta konfigurau zure pluginak
 Index: kview/modules/effects/kvieweffects.desktop
 ===================================================================
---- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -93,7 +93,7 @@
- Comment[ms]=Menyediakan beberapa kesan imej
- Comment[nb]=Utfører noen effekter på bilder
- Comment[nds]=Stellt en poor Bildeffekten praat
--Comment[ne]=केहि छवि असर प्रदान गर्दछ
-+Comment[ne]=केही छवि असर प्रदान गर्दछ
- Comment[nl]=Biedt enkele effecten om afbeeldingen te bewerken
- Comment[nn]=Utfører nokre effektar på bilete
- Comment[pl]=Dodaje kilka efektów do obrazków
+--- kview/modules/effects/kvieweffects.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/modules/effects/kvieweffects.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -21,6 +21,7 @@
+ Name[da]=Effekter
+ Name[de]=Effekte
+ Name[el]=Εφέ
++Name[eo]=Efektoj
+ Name[es]=Efectos
+ Name[et]=Efektid
+ Name[eu]=Efectuak
+@@ -74,6 +75,7 @@
+ Comment[da]=Sørger for nogle billedeffekter
+ Comment[de]=Stellt einige Bildverarbeitungseffekte zur Verfügung
+ Comment[el]=Παρέχει μερικά εφέ εικόνας
++Comment[eo]=Provizas kelkajn bildefektojn
+ Comment[es]=Proporciona alguno efectos para imágenes
+ Comment[et]=Mõned pildiefektid
+ Comment[eu]=Irudi efektu batzuk eskuratzen ditu
+Index: kview/modules/browser/kviewbrowser.desktop
+===================================================================
+--- kview/modules/browser/kviewbrowser.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/modules/browser/kviewbrowser.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -82,6 +82,7 @@
+ Comment[da]=Lader dig gennemse alle billederne i denne mappe.
+ Comment[de]=Ermöglicht das Durchsehen der Bilder im aktuellen Ordner.
+ Comment[el]=Σας επιτρέπει να περιηγηθείτε σε όλες τις εικόνες στον τρέχον κατάλογο.
++Comment[eo]=Permesas al vi povas trarigardi ĉiujn bildojn en la nuna dosierujo.
+ Comment[es]=Le permite navegar por todas las imágenes del directorio actual.
+ Comment[et]=Võimaldab sirvida aktiivse kataloogi kõiki pilte.
+ Comment[eu]=Uneko direktorioko irudien artean nabigatzen uzten dizu.
+Index: kview/modules/presenter/config/kviewpresenterconfig.desktop
+===================================================================
+--- kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/modules/presenter/config/kviewpresenterconfig.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -18,6 +18,7 @@
+ Name[cy]=Enw
+ Name[da]=Navn
+ Name[el]=Όνομα
++Name[eo]=Nomo
+ Name[es]=Nombre
+ Name[et]=Nimi
+ Name[eu]=Izena
+@@ -71,6 +72,7 @@
+ Comment[da]=Kommentar
+ Comment[de]=Kommentar
+ Comment[el]=Σχόλιο
++Comment[eo]=Komento
+ Comment[es]=Comentario
+ Comment[et]=Kommentaar
+ Comment[eu]=Iruzkina
+Index: kview/modules/presenter/imagelistdialog.ui
+===================================================================
+--- kview/modules/presenter/imagelistdialog.ui	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/modules/presenter/imagelistdialog.ui	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -253,6 +253,7 @@
+     </connection>
+ </connections>
+ <includes>
++    <include location="global" impldecl="in declaration">kdialog.h</include>
+     <include location="global" impldecl="in implementation">kdebug.h</include>
+     <include location="global" impldecl="in implementation">kimageviewer/viewer.h</include>
+     <include location="global" impldecl="in implementation">kio/netaccess.h</include>
+Index: kview/modules/template/kviewtemplate.desktop
+===================================================================
+--- kview/modules/template/kviewtemplate.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kview/modules/template/kviewtemplate.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -80,6 +80,7 @@
+ Comment[da]=En længere beskrivelse af hvad dette plugin gør
+ Comment[de]=Hier sollte eine längere Beschreibung des Moduls stehen
+ Comment[el]=Μια μεγαλύτερη περιγραφή για το τι κάνει το πρόσθετο
++Comment[eo]=Pli longa priskribo pri la kromaĵo
+ Comment[es]=Una descripción más completa de la función del plugin
+ Comment[et]=Pluginate tegevuse pikemad kirjeldused
+ Comment[eu]=Pluginak egiten duenaren azalpen luzeagoa
 Index: libkscan/kscandevice.cpp
 ===================================================================
---- libkscan/kscandevice.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ libkscan/kscandevice.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -60,12 +60,13 @@
- {
- public:
-     KScanDevicePrivate()
--	: currScanResolution(0)
-+	: currScanResolutionX(0),
-+	  currScanResolutionY(0)
- 	{
- 	    
- 	}
- 
--    int currScanResolution;
-+    int currScanResolutionX, currScanResolutionY;
-     
- };
- 
-@@ -788,13 +789,16 @@
-    }
- 
-    /* Set scan resolution for preview. */
--   if( optionExists( SANE_NAME_SCAN_Y_RESOLUTION ) )
-+   if( !optionExists( SANE_NAME_SCAN_Y_RESOLUTION ) )
-+      d->currScanResolutionY = 0;
-+   else
-    {
-       KScanOption yres ( SANE_NAME_SCAN_Y_RESOLUTION );
-       /* if active ? */
-       storeOptions->backupOption( yres );
-       yres.set( set_dpi );
-       apply( &yres );
-+      yres.get( &d->currScanResolutionY );
- 
-       /* Resolution bind switch ? */
-       if( optionExists( SANE_NAME_RESOLUTION_BIND ) )
-@@ -811,8 +815,10 @@
-    apply( &res );
- 
-    /* Store the resulting preview for additional image information */
--   res.get( &d->currScanResolution );
-+   res.get( &d->currScanResolutionX );
- 
-+   if ( d->currScanResolutionY == 0 )
-+      d->currScanResolutionY = d->currScanResolutionX;
- 
-    /* Start scanning */
-    KScanStat stat = acquire_data( true );
-@@ -914,6 +920,18 @@
-  	        kdDebug(29000) << "Option <" << so->getName() << "> is not active !" << endl;
-  	    }
-  	}
-+
-+	/** Scan Resolution should always exist. **/
-+	KScanOption res( SANE_NAME_SCAN_RESOLUTION );
-+	res.get( &d->currScanResolutionX );
-+        if ( !optionExists( SANE_NAME_SCAN_Y_RESOLUTION ) )
-+           d->currScanResolutionY = d->currScanResolutionX;
-+        else
-+        {
-+           KScanOption yres( SANE_NAME_SCAN_Y_RESOLUTION );
-+           yres.get( &d->currScanResolutionY );
-+        }
-+
- 	return( acquire_data( false ));
-     }
-     else
-@@ -1169,13 +1187,14 @@
-     if( status == KSCAN_OK && img )
-     {
- 	ImgScanInfo info;
--	/* FIXME: Both resolutions are equal here but should be
--	 *        x and y different
--	 */
--	info.setXResolution(d->currScanResolution);
--	info.setYResolution(d->currScanResolution);
-+	info.setXResolution(d->currScanResolutionX);
-+	info.setYResolution(d->currScanResolutionY);
- 	info.setScannerName(shortScannerName());
- 
-+	// put the resolution also into the image itself
-+	img->setDotsPerMeterX(static_cast<int>(d->currScanResolutionX / 0.0254 + 0.5));
-+	img->setDotsPerMeterY(static_cast<int>(d->currScanResolutionY / 0.0254 + 0.5));
-+
- 	if( scanningPreview )
- 	{
- 	    kdDebug(29000) << "Scanning a preview !" << endl;
-Index: libkscan/kscanoption.cpp
-===================================================================
---- libkscan/kscanoption.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ libkscan/kscanoption.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -156,7 +156,7 @@
- 	}
-     }
- 
--   return( desc > 0 );
-+   return desc;
+--- libkscan/kscandevice.cpp	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ libkscan/kscandevice.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -228,6 +228,7 @@
+   if( storeOptions )  delete (storeOptions );
+   kdDebug(29000) << "Calling sane_exit to finish sane!" << endl;
+   sane_exit();
++  delete d;
  }
  
- KScanOption::KScanOption( const KScanOption &so ) :
-Index: kpovmodeler/main.cpp
+ 
+Index: kpovmodeler/kpovmodeler.desktop
 ===================================================================
---- kpovmodeler/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kpovmodeler/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -64,7 +64,6 @@
-       shell = new PMShell;
-       shell->show( );
-    }
--
-+   args->clear();   
-    return app.exec( );
--   delete shell;
- }
+--- kpovmodeler/kpovmodeler.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kpovmodeler/kpovmodeler.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -4,6 +4,7 @@
+ Icon=kpovmodeler
+ MimeType=application/x-kpovmodeler;
+ Name=KPovModeler
++Name[eo]=KPovModelilo
+ Name[es]=Modelador Povray
+ Name[he]=מעצב Povray
+ Name[nb]=KPov-modellerer
+@@ -17,6 +18,7 @@
+ GenericName[da]=Povray-modellering
+ GenericName[de]=Povray-Modellierer
+ GenericName[en_GB]=Povray Modeller
++GenericName[eo]=Povray-modelilo
+ GenericName[es]=Modelador Povray
+ GenericName[et]=Povray modelleerija
+ GenericName[eu]=Povray modelatzailea
 Index: kgamma/kcmkgamma/kgamma.desktop
 ===================================================================
---- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -42,6 +42,7 @@
- Comment[sv]=Kalibreringsverktyg för skärmen
- Comment[ta]=திரை நிலைக்கருவி
- Comment[tg]=Утилита барои калибратсия кардани монитор
-+Comment[th]=เครื่องมือปรับความเที่ยงตรงของจอภาพ
- Comment[tr]=Monitör kalibrasyon aracı
- Comment[uk]=Засіб для калібрування монітора
- Comment[zh_CN]=监视器校准工具
-Index: kdvi/squeeze.c
-===================================================================
---- kdvi/squeeze.c	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kdvi/squeeze.c	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -54,8 +54,7 @@
-  *   we simply put it out, since any special character terminates the
-  *   preceding token.
-  */
--void specialout(c)
--char c ;
-+void specialout(char c)
- {
-    if (linepos + 1 > LINELENGTH) {
-       (void)fputs("\\n\\\n", out);
-Index: kcoloredit/kcoloredit.desktop
-===================================================================
---- kcoloredit/kcoloredit.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kcoloredit/kcoloredit.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -61,7 +61,7 @@
- GenericName[ta]=வண்ணகளஞ்சியம்
- GenericName[tg]=Муҳаррири палитра
- GenericName[th]=เครื่องมือแก้ไขจานสีของ KDE
--GenericName[tr]=Renk Paledi Düzenleyici
-+GenericName[tr]=Renk Paleti Düzenleyici
- GenericName[uk]=Редактор палітри кольорів
- GenericName[ven]=Musengulusi wa phalete ya muvhala
- GenericName[wa]=Aspougneu del palete di coleurs
-Index: kooka/main.cpp
-===================================================================
---- kooka/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kooka/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -113,7 +113,7 @@
-    kooka->show();
-    app.processEvents();
-    kooka->startup();
--
-+   args->clear();
-    int ret = app.exec();
- 
-    return ret;
-Index: kuickshow/src/kuickshow.desktop
-===================================================================
---- kuickshow/src/kuickshow.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kuickshow/src/kuickshow.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -18,7 +18,7 @@
- Exec=kuickshow %i %m -caption "%c" %U
- Icon=kuickshow
- Type=Application
--MimeType=image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/png;image/tiff;image/x-bmp;image/x-psd;image/x-eim;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-greymap
-+MimeType=image/gif;image/x-xpm;image/x-xbm;image/jpeg;image/png;image/tiff;image/x-bmp;image/x-psd;image/x-eim;image/x-portable-bitmap;image/x-portable-pixmap;image/x-portable-greymap;
- DocPath=kuickshow/index.html
- Terminal=false
- InitialPreference=6
+--- kgamma/kcmkgamma/kgamma.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kgamma/kcmkgamma/kgamma.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -9,6 +9,7 @@
+ Comment[da]=Et skærmkalibreringsværktøj
+ Comment[de]=Ein Kalibrierungswerkzeug für Monitore
+ Comment[el]=Ένα εργαλείο ρύθμισης της οθόνης
++Comment[eo]=Ekrankalibrilo
+ Comment[es]=Una herramienta de calibración del monitor
+ Comment[et]=Monitori kalibreerija
+ Comment[eu]=Monitoreak kalibratzeko tresna
 Index: kolourpaint/VERSION
 ===================================================================
---- kolourpaint/VERSION	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/VERSION	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
+--- kolourpaint/VERSION	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/VERSION	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
 @@ -1 +1 @@
--1.4.7_relight
-+1.4.8_relight-pre
+-1.4.8_relight
++1.4.8_relight-post
 Index: kolourpaint/kpdocument.cpp
 ===================================================================
---- kolourpaint/kpdocument.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/kpdocument.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -1141,7 +1141,12 @@
-         if (m_selection->pixmap ())
-             slotContentsChanged (m_selection->boundingRect ());
-         else
-+            // TODO: Should emit contentsChanged() instead?
-+            //       I don't think it matters since contentsChanged() is
-+            //       connected to updateViews() anyway (see
-+            //       kpMainWindow::setDocument ()).
-             vm->updateViews (m_selection->boundingRect ());
-+
-         delete m_selection;
-     }
+--- kolourpaint/kpdocument.cpp	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/kpdocument.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -619,6 +619,9 @@
+                                    bool lossyPrompt,
+                                    QWidget *parent)
+ {
++    // TODO: Use KIO::NetAccess:mostLocalURL() for accessing home:/ (and other
++    //       such local URLs) for efficiency and because only local writes
++    //       are atomic.
+ #if DEBUG_KP_DOCUMENT
+     kdDebug () << "kpDocument::savePixmapToFile ("
+                << url
+Index: kolourpaint/kpmainwindow.h
+===================================================================
+--- kolourpaint/kpmainwindow.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/kpmainwindow.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -224,6 +224,30 @@
+     bool toolIsTextTool () const;
  
-@@ -1187,8 +1192,18 @@
-     if (m_selection->pixmap ())
-         slotContentsChanged (m_selection->boundingRect ());
-     else
-+        // TODO: Should emit contentsChanged() instead?
-+        //       I don't think it matters since contentsChanged() is
-+        //       connected to updateViews() anyway (see
-+        //       kpMainWindow::setDocument ()).
-         vm->updateViews (m_selection->boundingRect ());
- 
-+    // There's no need to disconnect() the old selection since we:
+     kpSelectionTransparency selectionTransparency () const;
++    // The drawing background color is set to <transparency>.transparentColor()
++    // if the <transparency> is in Transparent mode or if <forceColorChange>
++    // is true (not the default).  [x]
 +    //
-+    // 1. Connect our _copy_ of the given selection.
-+    // 2. We delete our copy when setSelection() is called again.
++    // If <transparency> is in Opaque mode and <forceColorChange> is false,
++    // the background color is not changed because:
 +    //
-+    // See code above for both.
-     connect (m_selection, SIGNAL (changed (const QRect &)),
-              this, SLOT (slotContentsChanged (const QRect &)));
- 
-@@ -1395,6 +1410,8 @@
- 
-     if (!sel->isText ())
-     {
-+        // We can't use kpSelection::paint() since that always uses the
-+        // transparent pixmap.
-         paintPixmapAt (useTransparentPixmap ? sel->transparentPixmap () : sel->opaquePixmap (),
-                        boundingRect.topLeft ());
-     }
++    //   1. It is ignored by the selection in Opaque mode anyway.
++    //   2. This avoids irritating the user with an unnecessary background
++    //      color change.
++    //
++    // The only case where you should set <forceColorChange> to true is in
++    // kpToolSelectionTransparencyCommand to ensure that the state
++    // is identical to when the command was constructed.
++    // Later: I don't think setting it to true is ever necessary since:
++    //
++    //          1. The background color only counts in Transparent mode.
++    //
++    //          2. Any kpToolSelectionTransparencyCommand that switches to
++    //             Transparent mode will automatically set the background
++    //             color due to the first part of [x] anyway.
++    //
++    // The other fields of <transparency> are copied into the main window
++    // as expected.
+     void setSelectionTransparency (const kpSelectionTransparency &transparency,
+                                    bool forceColorChange = false);
+     int settingSelectionTransparency () const;
 Index: kolourpaint/BUGS
 ===================================================================
---- kolourpaint/BUGS	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/BUGS	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -1,9 +1,8 @@
+--- kolourpaint/BUGS	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/BUGS	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -62,17 +62,15 @@
  
--Please send bug reports and feature requests to http://bugs.kde.org/ or
--http://www.kolourpaint.org/support.  Don't hesitate to report bugs
--nor hesitate to send us your wishes - it provides valuable feedback that
--will help to improve future versions of KolourPaint and you will not
--receive flames for reporting duplicates.
-+Please send bug reports and feature requests to http://bugs.kde.org/.
-+Don't hesitate to report bugs nor hesitate to send us your wishes - it
-+provides valuable feedback that will help to improve future versions of
-+KolourPaint and you will not receive flames for reporting duplicates.
+ 14. The text cursor may be momentarily misrendered when scrolling the view.
  
+-16. The Edit/Paste option is not disabled when the clipboard data is lost
+-    due to the owner terminating (no QClipboard::dataChanged() signal).
+-
+ 17. a) Using KolourPaint on a remote X display may result in redraw errors
+        and pixel data corruption.
  
- This file lists known bugs in this version that are not considered
+     b) KolourPaint is screen depth dependent.  Opening an image with a
+        an alpha channel and/or a depth higher than the screen and then
+-       saving it will likely result in loss of colour information.  To
+-       reduce data loss, run your screen at 24-bit.  This bug will be
+-       addressed in a future version of KolourPaint.
++       saving it will likely result in loss of colour information.  Also,
++       8-bit screens are not supported at all.  To reduce data loss, run
++       your screen at 24-bit.  This bug will be addressed in a future
++       version of KolourPaint.
+ 
+ 19. Read support for EPS files is extremely slow.  You should not enable
+     the "Save Preview" dialog when saving to EPS.  This is an issue with
+Index: kolourpaint/tools/kptoolresizescale.cpp
+===================================================================
+--- kolourpaint/tools/kptoolresizescale.cpp	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/tools/kptoolresizescale.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -662,6 +662,7 @@
+               "</ul>"
+               "</qt>"));
+ 
++    // TODO: ALT+R doesn't select the button.
+     m_resizeButton = new QToolButton (m_operationGroupBox);
+     toolButtonSetLook (m_resizeButton,
+                        QString::fromLatin1 ("resize"),
 Index: kolourpaint/NEWS
 ===================================================================
---- kolourpaint/NEWS	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/NEWS	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -2,6 +2,12 @@
+--- kolourpaint/NEWS	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/NEWS	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -2,6 +2,11 @@
  KolourPaint 1.4_relight Series (branches/KDE/3.5/)
  ===============================
  
-+KolourPaint 1.4.8_relight (Frozen ???)
++KolourPaint 1.4.9_relight (Frozen ???)
 +
-+   * Add error dialogs for:
-+    - if scanning support is unavailable
-+    - running out of graphics memory during a scan
++   * Ensure selection operations always repaint correctly
++     [the effects of this change are unlikely to be functionality visible]
 +
- KolourPaint 1.4.7_relight (Frozen 2007-05-14)
+ KolourPaint 1.4.8_relight (Frozen 2007-10-08)
  
-    * Save local files atomically - KolourPaint will no longer truncate
-Index: kolourpaint/kpmainwindow_file.cpp
+    * Always enable the paste actions to guarantee that pasting from
+Index: kolourpaint/kpmainwindow.cpp
 ===================================================================
---- kolourpaint/kpmainwindow_file.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/kpmainwindow_file.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -432,35 +432,19 @@
-         #if DEBUG_KP_MAIN_WINDOW
-             kdDebug () << "\tcould not create scan dialog" << endl;
-         #endif
--            // STRING: We really need a dialog here.  We can't due to string freeze.
--            //         In order to signal to the user -- without a dialog -- that
--            //         scanning support is not installed, we disable the action
--            //         in every window.
-+            // Instead, we could try to create the scan dialog in the ctor
-+            // and just disable the action in the first place, removing
-+            // the need for this dialog.
-             //
--            //         Or we could try to create the scan dialog in the ctor
--            //         and just disable the action in the first place.  But
--            //         this increases startup time and is also too risky on
--            //         the stable branch (e.g. if the scan support hangs,
--            //         KolourPaint would not be able to be started at all).
--
--            // TODO: PROPAGATE: interprocess
--            if (KMainWindow::memberList)
--            {
--                for (QPtrList <KMainWindow>::const_iterator it = KMainWindow::memberList->begin ();
--                     it != KMainWindow::memberList->end ();
--                     it++)
--                {
--                    kpMainWindow *mw = dynamic_cast <kpMainWindow *> (*it);
--                    Q_ASSERT (mw);
--
--                #if DEBUG_KP_MAIN_WINDOW
--                    kdDebug () << "\t\tmw=" << mw << endl;
--                #endif
--
--                    mw->m_actionScan->setEnabled (false);
--                }
--            }
--
-+            // But this increases startup time and is a bit risky e.g. if
-+            // the scan support hangs, KolourPaint would not be able to be
-+            // started at all.
-+            //
-+            // Also, disabling the action is bad because the scan support
-+            // can be installed while KolourPaint is still running.
-+            KMessageBox::sorry (this,
-+                         i18n ("Scanning support is not installed."),
-+                         i18n ("No Scanning Support"));
-             return;
-         }
+--- kolourpaint/kpmainwindow.cpp	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/kpmainwindow.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -987,10 +987,20 @@
+ void kpMainWindow::slotScrollViewAboutToScroll ()
+ {
+ #if DEBUG_KP_MAIN_WINDOW && 0
+-    kdDebug () << "kpMainWindow::slotScrollViewAboutToScroll()" << endl;
+-    kdDebug () << "\tfastUpdates=" << viewManager ()->fastUpdates ()
+-               << " queueUpdates=" << viewManager ()->queueUpdates ()
+-               << endl;
++    kdDebug () << "kpMainWindow::slotScrollViewAboutToScroll() tool="
++               << tool () << " viewManager=" << viewManager () << endl;
++    if (viewManager ())
++    {
++        kdDebug () << "\tfastUpdates=" << viewManager ()->fastUpdates ()
++                   << " queueUpdates=" << viewManager ()->queueUpdates ()
++                   << endl;
++    }
++    else
++    {
++        // We're getting a late signal from the scrollview (thanks to
++        // a timer inside the QScrollView).  By now, setDocument() has
++        // already killed the document(), tool() and viewManager().
++    }
+ #endif
  
-@@ -531,8 +515,6 @@
-     kpDocumentMetaInfo metaInfo;
-     const QPixmap pixmap = kpDocument::convertToPixmapAsLosslessAsPossible (
-         image,
--        // STRING: After string freeze, have a custom message about the
--        //         "scanned image".
-         kpMainWindow::pasteWarnAboutLossInfo (),
-         &saveOptions,
-         &metaInfo);
-@@ -542,9 +524,9 @@
-     #if DEBUG_KP_MAIN_WINDOW
-         kdDebug () << "\tcould not convert to pixmap" << endl;
-     #endif
--        // STRING: After string freeze, we need a message like
--        //         "out of graphics memory" (see
--        //         kpDocument::getPixmapFromFile()).
-+        KMessageBox::sorry (this,
-+                            i18n ("Cannot scan - out of graphics memory."),
-+                            i18n ("Cannot Scan"));
-         return;
-     }
- 
-Index: kolourpaint/kolourpaint.cpp
+     QTimer::singleShot (0, this, SLOT (slotScrollViewAfterScroll ()));
+Index: kolourpaint/pixmapfx/kppixmapfx.h
 ===================================================================
---- kolourpaint/kolourpaint.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/kolourpaint.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -65,14 +65,7 @@
-         I18N_NOOP ("Paint Program for KDE"),
-         KAboutData::License_Custom,
-         0/*copyright statement - see licence instead*/,
--#if 1
--        0/*free text*/,
--// STRING: After string freeze, make below the "free text" but point to
--//         http://www.kolourpaint.org/support.
--#else
--        I18N_NOOP ("Support / Feedback:\n"
--                   "kolourpaint-support@lists.sourceforge.net\n"),
--#endif
-+        0/*no free text*/,
-         "http://www.kolourpaint.org/"
-     );
+--- kolourpaint/pixmapfx/kppixmapfx.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/pixmapfx/kppixmapfx.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -93,6 +93,23 @@
+     //
+     // Converts <pixmap> to a QImage and returns it.
+     //
++    // WARNING: On an 8-bit screen:
++    //
++    //              QPixmap result = convertToPixmap (convertToImage (pixmap));
++    //
++    //          <result> is slightly differently colored to <pixmap>.
++    //
++    //          KolourPaint needs to convert to QImage occasionally as
++    //          QImage allows KolourPaint to read pixels and because the QImage
++    //          methods give reliable results and pixel-identical results on
++    //          all platforms.  The QPixmap paint engine has no such guarantee
++    //          and even depends on the quality of the video driver.
++    //
++    //          As a result, KolourPaint should not be used on an 8-bit screen.
++    //          HITODO: Add warning on startup, like in KolourPaint/KDE4.
++    //
++    //          This bug will be fixed when KolourPaint gets a proper image library,
++    //          where QPixmap -> QImage -> QPixmap transitions will be not be needed.
+     static QImage convertToImage (const QPixmap &pixmap);
  
-@@ -81,32 +74,6 @@
-     aboutData.setLicenseText (kpLicenseText);
- 
- 
--// STRING: After string freeze, make below the custom author text but point to
--//         http://www.kolourpaint.org/support.
--#if 0
--    aboutData.setCustomAuthorText (
--        I18N_NOOP
--        (
--            "\n"
--            "For support, or to report bugs and feature requests, please email\n"
--            "<kolourpaint-support@lists.sourceforge.net>"
--            " - the free and friendly\n"
--            "KolourPaint support service.\n"
--            "\n"
--        ),
--        I18N_NOOP
--        (
--            "<qt>"
--            "For support, or to report bugs and feature requests, please email<br>"
--            "<a href=\"mailto:kolourpaint-support@lists.sourceforge.net\">kolourpaint-support@lists.sourceforge.net</a>"
--            " - the free and friendly<br>"
--            "KolourPaint support service.<br>"
--            "<br>"
--            "</qt>"
--        ));
--#endif
--
--
-     // SYNC: with AUTHORS
- 
-     aboutData.addAuthor ("Clarence Dang", I18N_NOOP ("Maintainer"), "dang@kde.org");
-Index: kolourpaint/pixmapfx/kpeffectbalance.cpp
+     //
+Index: kolourpaint/kpselectiontransparency.h
 ===================================================================
---- kolourpaint/pixmapfx/kpeffectbalance.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/pixmapfx/kpeffectbalance.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -274,6 +274,8 @@
-     m_gammaInput->setRange (-50, 50, 1/*step*/, true/*slider*/);
-     // TODO: This is what should be shown in the m_gammaInput spinbox
-     m_gammaLabel = new QLabel (this);
-+    // TODO: This doesn't seem to be wide enough with some fonts so the
-+    //       whole layout moves when we drag the gamma slider.
-     m_gammaLabel->setMinimumWidth (m_gammaLabel->fontMetrics ().width (" 10.00 "));
-     m_gammaLabel->setAlignment (m_gammaLabel->alignment () | Qt::AlignRight);
-     QPushButton *gammaResetPushButton = new QPushButton (i18n ("Rese&t"), this);
-Index: kolourpaint/kolourpaint.desktop
-===================================================================
---- kolourpaint/kolourpaint.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/kolourpaint.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -83,7 +83,7 @@
- # SYNC: Run branches/kolourpaint/control/scripts/gen_mimetype_line.sh in
- #       the version of kdelibs/kimgio/ (e.g. KDE 3.5) KolourPaint is
- #       shipped with.
--MimeType=image/fax-g3;image/gif;image/jp2;image/jpeg;image/png;image/tiff;image/x-bmp;image/x-dds;image/x-eps;image/x-exr;image/x-hdr;image/x-ico;image/x-pcx;image/x-portable-bitmap;image/x-portable-greymap;image/x-portable-pixmap;image/x-rgb;image/x-targa;image/x-vnd.adobe.photoshop;image/x-xbm;image/x-xcf-gimp;image/x-xpm;video/x-mng
-+MimeType=image/fax-g3;image/gif;image/jp2;image/jpeg;image/png;image/tiff;image/x-bmp;image/x-dds;image/x-eps;image/x-exr;image/x-hdr;image/x-ico;image/x-pcx;image/x-portable-bitmap;image/x-portable-greymap;image/x-portable-pixmap;image/x-rgb;image/x-targa;image/x-vnd.adobe.photoshop;image/x-xbm;image/x-xcf-gimp;image/x-xpm;video/x-mng;
+--- kolourpaint/kpselectiontransparency.h	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/kpselectiontransparency.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -39,10 +39,18 @@
+     kpSelectionTransparency ();
+     // Selection that's transparent at pixels with <color>
+     kpSelectionTransparency (const kpColor &transparentColor, double colorSimilarity);
++    // If <isOpaque>, <transparentColor> is allowed to be anything
++    // (including invalid) as the color would have no effect.
++    // However, you are encouraged to set it as you would if !<isOpaque>,
++    // because setTransparent(true) might be called later, after which
++    // the <transparentColor> would suddenly become important.
++    //
++    // It is a similar case with <colorSimilarity>, although <colorSimilarity>
++    // must be in-range (see kpColorSimilarityDialog).
+     kpSelectionTransparency (bool isOpaque, const kpColor &transparentColor, double colorSimilarity);
+     // Returns whether they are visually equivalent.
+     // This is the same as a memcmp() except that if they are both opaque,
+-    // this function will return true regardless of the transaprentColor's.
++    // this function will return true regardless of the transparentColor's.
+     bool operator== (const kpSelectionTransparency &rhs) const;
+     bool operator!= (const kpSelectionTransparency &rhs) const;
+     ~kpSelectionTransparency ();
+@@ -52,6 +60,8 @@
+     void setOpaque (bool yes = true);
+     void setTransparent (bool yes = true);
  
- Categories=Qt;KDE;Graphics;
- Terminal=false
++    // If isOpaque(), transparentColor() is generally not called because
++    // the transparent color would have no effect.
+     kpColor transparentColor () const;
+     void setTransparentColor (const kpColor &transparentColor);
+ 
+Index: kolourpaint/kpviewscrollablecontainer.cpp
+===================================================================
+--- kolourpaint/kpviewscrollablecontainer.cpp	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/kpviewscrollablecontainer.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -389,6 +389,7 @@
+ }
+ 
+ 
++// TODO: Are we checking for m_view == 0 often enough?
+ kpViewScrollableContainer::kpViewScrollableContainer (kpMainWindow *parent,
+                                                       const char *name)
+     : QScrollView ((QWidget *) parent, name, Qt::WStaticContents | Qt::WNoAutoErase),
 Index: kolourpaint/README
 ===================================================================
---- kolourpaint/README	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kolourpaint/README	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
+--- kolourpaint/README	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/README	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
 @@ -1,5 +1,5 @@
  
--KolourPaint Version 1.4.7_relight (KDE 3.5.7 Release Frozen 2007-05-14)
-+KolourPaint Version 1.4.8_relight (KDE 3.5.8 Release Frozen ???)
+-KolourPaint Version 1.4.8_relight (KDE 3.5.8 Release Frozen 2007-10-08)
++KolourPaint Version 1.4.9_relight (KDE 3.5.9 Release Frozen ???)
  http://www.kolourpaint.org/
  
  Copyright (c) 2003,2004,2005,2006 Clarence Dang <dang@kde.org>
-@@ -85,7 +85,7 @@
- 4. Support
- ==========
- 
--Visit: http://www.kolourpaint.org/support
-+Visit: http://www.kolourpaint.org/
- 
- If you have any questions about compiling, installing or using KolourPaint,
- don't be afraid to contact us.  We try to support all versions of
-@@ -95,9 +95,8 @@
- 5. Feedback
- ===========
- 
--Please send bug reports and feature requests to http://bugs.kde.org/ or
--http://www.kolourpaint.org/support.  Don't hesitate to report bugs nor
--hesitate to send us your wishes - it provides valuable feedback that will
--help to improve future versions of KolourPaint and you will not receive
--flames for reporting duplicates.
-+Please send bug reports and feature requests to http://bugs.kde.org/.
-+Don't hesitate to report bugs nor hesitate to send us your wishes - it
-+provides valuable feedback that will help to improve future versions of
-+KolourPaint and you will not receive flames for reporting duplicates.
- 
-Index: ksnapshot/ksnapshot.desktop
+Index: kolourpaint/kpselection.cpp
 ===================================================================
---- ksnapshot/ksnapshot.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ ksnapshot/ksnapshot.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -71,7 +71,7 @@
- Name[fr]=KSnapShot
- Name[hi]=के-स्नेपशॉट
- Name[lv]=KSnapšots
--Name[ne]=केडीई स्न्यापशट
-+Name[ne]=केडीई स्न्यापसट
- Name[pl]=Zrzuty ekranu
- Name[sv]=Ksnapshot
- Name[ta]=கேதிரையை நகலெடுத்தல்
-Index: ksnapshot/main.cpp
-===================================================================
---- ksnapshot/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ ksnapshot/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -67,6 +67,7 @@
-   else
-      toplevel = new KSnapshot();
+--- kolourpaint/kpselection.cpp	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kolourpaint/kpselection.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -545,14 +545,12 @@
+     //       it's a border, not a text box) but saves memory when using
+     //       that kpSelection::setPixmap (QPixmap ()) hack.
+     m_pixmap = pixmap.isNull () ? 0 : new QPixmap (pixmap);
++    QRect changedRect = boundingRect ();
  
-+  args->clear();
-   app.dcopClient()->setDefaultObject( toplevel->objId() );
-   toplevel->setCaption( app.makeStdCaption("") );
-   app.setMainWidget(toplevel);
-Index: kviewshell/plugins/djvu/libdjvu/DataPool.cpp
-===================================================================
---- kviewshell/plugins/djvu/libdjvu/DataPool.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kviewshell/plugins/djvu/libdjvu/DataPool.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -1438,7 +1438,7 @@
-         OpenFiles::get()->stream_released(f->stream, this);
-       }
-       fstream=0;
--   } else DEBUG_MSG("Not connected\n");
-+   } else { DEBUG_MSG("Not connected\n"); }
+-    QRect oldRect = boundingRect ();
+-    emit changed (oldRect);
+-
+     if (m_pixmap)
+     {
+-        const bool changedSize = (m_pixmap->width () != oldRect.width () ||
+-                                  m_pixmap->height () != oldRect.height ());
++        const bool changedSize = (m_pixmap->width () != m_rect.width () ||
++                                  m_pixmap->height () != m_rect.height ());
+         const bool changedFromText = (m_type == Text);
+         if (changedSize || changedFromText)
+         {
+@@ -560,8 +558,8 @@
+             {
+                 kdError () << "kpSelection::setPixmap() changes the size of the selection!"
+                         << "   old:"
+-                        << " w=" << oldRect.width ()
+-                        << " h=" << oldRect.height ()
++                        << " w=" << m_rect.width ()
++                        << " h=" << m_rect.height ()
+                         << "   new:"
+                         << " w=" << m_pixmap->width ()
+                         << " h=" << m_pixmap->height ()
+@@ -580,11 +578,13 @@
+ 
+             m_textLines = QValueVector <QString> ();
+ 
+-            emit changed (boundingRect ());
++            changedRect = changedRect.unite (boundingRect ());
+         }
+     }
+ 
+     calculateTransparencyMask ();
++
++    emit changed (changedRect);
  }
  
- void
-Index: kmrml/kmrml/mrml.desktop
-===================================================================
---- kmrml/kmrml/mrml.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kmrml/kmrml/mrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -44,6 +44,7 @@
- Comment[sv]=Multimedia Retrieval Markup Language-dokument
- Comment[ta]=பல் ஊடக திரும்பப்பெறு அடையாள மொழி ஆவணம்
- Comment[tg]=Санади MRML (Multimedia Retrieval Markup Language)
-+Comment[th]=เอกสาร Multimedia Retrieval Markup Language
- Comment[tr]=Multimedia Retrieval Markup Language Belgesi
- Comment[uk]=Документ формату зберігання мультимедіа
- Comment[ven]=Manwalwa a luambo lwau humbula zwa khasho nnzhi
+ 
 Index: kmrml/kmrml/kcontrol/kcmkmrml.desktop
 ===================================================================
---- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -68,7 +68,7 @@
- 
- Comment=Configuration for using the GNU Image Finding Tool
- Comment[ar]=اعدادات لاستخدام أداة GNU للبحث عن الصور
--Comment[bg]=Настройки на програмата за индексиране и търсене на изображения
-+Comment[bg]=Настройване на програмата за индексиране и търсене на изображения
- Comment[bs]=Podešavanje za upotrebu GNU Alata za pronalaženje slika
- Comment[ca]=Configuració per a l'ús de l'eina de cerca d'imatges GNU
- Comment[cs]=Konfigurace používání nástroje GNU Image Finding Tool
+--- kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kmrml/kmrml/kcontrol/kcmkmrml.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -18,6 +18,7 @@
+ Name[da]=Billedindeks
+ Name[de]=Bildindex
+ Name[el]=Ευρετήριο εικόνων
++Name[eo]=Bildindekso
+ Name[es]=Índice de imágenes
+ Name[et]=Pildiindeks
+ Name[eu]=Irudiaren indizea
 Index: kmrml/kmrml/mrml-servicemenu.desktop
 ===================================================================
---- kmrml/kmrml/mrml-servicemenu.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kmrml/kmrml/mrml-servicemenu.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -50,6 +50,7 @@
- Name[sv]=Sök efter liknande bilder...
- Name[ta]=இதே போன்ற பிம்பங்களை தேடுக...
- Name[tg]=Ҷустуҷӯи тасвироти якхела...
-+Name[th]=ค้นหาภาพที่เหมือนกัน...
- Name[tr]=Benzer Resimleri Ara...
- Name[uk]=Пошук схожих зображень...
- Name[uz]=Ўхшаш расмларни қидириш
+--- kmrml/kmrml/mrml-servicemenu.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kmrml/kmrml/mrml-servicemenu.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -14,6 +14,7 @@
+ Name[da]=Søg efter lignende filer...
+ Name[de]=Nach ähnlichen Bildern suchen ...
+ Name[el]=Αναζήτηση για παρόμοιες εικόνες...
++Name[eo]=Serĉi Similajn Bildojn...
+ Name[es]=Búsqueda de imágenes similares...
+ Name[et]=Otsi sarnaseid pilte...
+ Name[eu]=Bilatu antzeko irudiak...
+@@ -31,11 +32,11 @@
+ Name[km]=ស្វែងរក​រូបភាព​ស្រដៀង​គ្នា...
+ Name[lt]=Panašių paveikslėlių paieška...
+ Name[ms]=Cari Imej Serupa...
+-Name[nb]=Søk etter liknende bilder ...
++Name[nb]=Søk etter liknende bilder …
+ Name[nds]=Na lieke Biller söken...
+ Name[ne]=उस्तै छविका लागि खोजी गर्नुहोस्...
+ Name[nl]=Zoeken naar vergelijkbare afbeeldingen...
+-Name[nn]=Søk etter liknande bilete ...
++Name[nn]=Søk etter liknande bilete …
+ Name[nso]=Nyako ya Diponagalo tseo di Swanago...
+ Name[pl]=Szukaj podobnych obrazków
+ Name[pt]=Procurar por Imagens Semelhantes...
 Index: kmrml/kmrml/mrml_part.desktop
 ===================================================================
---- kmrml/kmrml/mrml_part.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kmrml/kmrml/mrml_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -45,6 +45,7 @@
- Name[sr@Latn]=MRML prikazivač
- Name[ta]=MRML காட்சி
- Name[tg]=Намоиши MRML
-+Name[th]=ดู MRML
- Name[tr]=MRML Görünümü
- Name[uk]=Перегляд MRML
- Name[ven]=Mbonalelo ya MRML
-Index: kmrml/kmrml/lib/kmrml_config.cpp
+--- kmrml/kmrml/mrml_part.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kmrml/kmrml/mrml_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -10,6 +10,7 @@
+ Name[da]=MRML-visning
+ Name[de]=MRML-Ansicht
+ Name[el]=Προβολή MRML
++Name[eo]=MRML-Rigardo
+ Name[es]=Vista de MRML
+ Name[et]=MRML vaade
+ Name[eu]=MRML ikuspegia
+Index: kfile-plugins/ps/gsthumbnail.desktop
 ===================================================================
---- kmrml/kmrml/lib/kmrml_config.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kmrml/kmrml/lib/kmrml_config.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -291,7 +291,7 @@
- ServerSettings ServerSettings::defaults()
- {
-     return ServerSettings( DEFAULT_HOST, DEFAULT_PORT,
--                           (QString(DEFAULT_HOST) == "localhost" && DEFAULT_PORT),
-+                           (!strcmp(DEFAULT_HOST, "localhost") && DEFAULT_PORT),
-                            DEFAULT_AUTH, DEFAULT_USER, DEFAULT_PASS );
- }
- 
-Index: kmrml/kmrml/server/daemonwatcher.desktop
-===================================================================
---- kmrml/kmrml/server/daemonwatcher.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kmrml/kmrml/server/daemonwatcher.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -29,7 +29,7 @@
- Name[ms]=Pemerhati Daemon KDED KMRML
- Name[nb]=KDED KMRML nisseovervåker
- Name[nds]=KMRML-Luerdämoon för KDED
--Name[ne]=KDED KMRML डेइमोन दर्शक
-+Name[ne]=KDED KMRML डेइमन दर्शक
- Name[nl]=KDED KMRML-daemonbeheer
- Name[nn]=KDED KMRML-nisseovervaking
- Name[pl]=Monitor usług KMRML
-@@ -45,6 +45,7 @@
- Name[sv]=KDED KMRML-demonbevakare
- Name[ta]=KDED டிமென் வாட்சர்
- Name[tg]=Мудири демони KDED KMRML
-+Name[th]=ตัวเฝ้าดูแดมอน KDED KMRML
- Name[tr]=KDED KMRML Aracı İzleyici
- Name[uk]=Спостерігач демону KDED KMRML
- Name[zh_CN]=KDED KMRML 守护程序监视器
-@@ -76,7 +77,7 @@
- Comment[ms]=Mulakan daemons atas permintaan dan mula semula atas kegagalan
- Comment[nb]=Starter nisser på forespørsler og starter dem igjen ved feil.
- Comment[nds]=Start Achtergrundperzessen op Nafraag un bi Fehlers nieg
--Comment[ne]=माग गरेको बेलामा डेइमोन सुरु गर्दछ र अफफल भएमा फेरि सुरु गर्दछ
-+Comment[ne]=माग गरेको बेलामा डेइमन सुरु गर्दछ र अफफल भएमा फेरि सुरु गर्दछ
- Comment[nl]=Start achtergrondprogramma's op en herstart deze indien nodig
- Comment[nn]=Startar nissar når dei trengst og startar dei om att ved feil
- Comment[pl]=Uruchamia usługi na żądanie i wznawia je po awarii
-Index: kfax/kfax.desktop
-===================================================================
---- kfax/kfax.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfax/kfax.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -35,7 +35,7 @@
- GenericName[ms]=Pemapar Faks
- GenericName[nb]=Faksfremviser
- GenericName[nds]=Faxkieker
--GenericName[ne]=फ्याक्स दर्शक
-+GenericName[ne]=फ्याक्स द्रष्टा
- GenericName[nl]=Faxweergaveprogramma
- GenericName[nn]=Faksvisar
- GenericName[pa]=ਫੈਕਸ ਦਰਸ਼ਕ
-@@ -73,7 +73,6 @@
- Name[ne]=केडीई फ्याक्स
- Name[sv]=Kfax
- Name[ta]=கேஃபாக்ஸ்
--Name[th]=โทรสาร - K
- Name[ven]=Fekisi ya K
- Name[wa]=KFacs
- Name[zh_TW]=KFax 傳真檢視器
-Index: kghostview/kgv_miniwidget.cpp
-===================================================================
---- kghostview/kgv_miniwidget.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kghostview/kgv_miniwidget.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -38,6 +38,7 @@
- #endif
- 
- #include <config.h>
-+#include <stdlib.h>
- 
- #include "infodialog.h"
- #include "marklist.h"
-Index: kghostview/dscparse.cpp
-===================================================================
---- kghostview/dscparse.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kghostview/dscparse.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -83,7 +83,7 @@
- #define CDSC_NEEDMORE 11
- 
- template<class T>
--inline const T min (const T& a, const T& b) { return a < b ? a : b; }
-+inline T min (T a, T b) { return a < b ? a : b; }
- 
- /* local prototypes */
- dsc_private void * dsc_memalloc(P2(CDSC *dsc, size_t size));
-Index: kghostview/main.cpp
-===================================================================
---- kghostview/main.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kghostview/main.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -64,6 +64,7 @@
- 	}
- 	shell->show();
-     }
-+    args->clear();
-     return app.exec();
- }
- 
-Index: kghostview/kghostview_part.desktop
-===================================================================
---- kghostview/kghostview_part.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kghostview/kghostview_part.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -9,7 +9,6 @@
- Name[ne]=केडीई घोस्ट दृश्य
- Name[sv]=Kghostview
- Name[ta]=கேமற்றொரு காட்சி
--Name[th]=อ่านแฟ้มโพสต์สคริปต์ - K
- Name[tr]=GhostView
- Name[ven]=Mbonalelo ya tshipuku tsha K
- Name[xh]=Imboniselo yeKGhost
-Index: kghostview/kghostview.desktop
-===================================================================
---- kghostview/kghostview.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kghostview/kghostview.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -9,11 +9,10 @@
- Name[ne]=केडीई घोस्ट दृश्य
- Name[sv]=Kghostview
- Name[ta]=கேமற்றொரு காட்சி
--Name[th]=อ่านแฟ้มโพสต์สคริปต์ - K
- Name[tr]=GhostView
- Name[ven]=Mbonalelo ya tshipuku tsha K
- Name[xh]=Imboniselo yeKGhost
--MimeType=application/pdf;application/postscript;image/x-eps;application/x-gzpostscript;application/illustrator
-+MimeType=application/pdf;application/postscript;image/x-eps;application/x-gzpostscript;application/illustrator;
- InitialPreference=6
- Exec=kghostview %u -caption "%c" %i %m
- Icon=kghostview
-Index: kamera/kcontrol/kamera.cpp
-===================================================================
---- kamera/kcontrol/kamera.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kamera/kcontrol/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -41,12 +41,6 @@
- #include "kamera.h"
- #include "kamera.moc"
- 
--// XXX HACK HACK HACK
--// XXX All tocstr(string) references can be safely replaced with
--// XXX string.latin1() as soon as the gphoto2 API uses 'const char *'
--// XXX instead of 'char *' in calls that don't modify the string
--#define tocstr(x) ((char *)((x).latin1()))
--
- typedef KGenericFactory<KKameraConfig, QWidget> KKameraConfigFactory;
- K_EXPORT_COMPONENT_FACTORY( kcm_kamera, KKameraConfigFactory( "kcmkamera" ) )
- 
-Index: kamera/kcontrol/kamera.desktop
-===================================================================
---- kamera/kcontrol/kamera.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kamera/kcontrol/kamera.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -4,7 +4,7 @@
- Comment[af]=Konfigureer Kamera
- Comment[ar]=إعداد Kamera
- Comment[az]=Kameranı Quraşdır
--Comment[bg]=Настройки на цифров фотоапарат
-+Comment[bg]=Настройване на цифров фотоапарат
- Comment[br]=Kefluniañ Kamera
- Comment[bs]=Podesi kameru
- Comment[ca]=Configura Kamera
-@@ -57,7 +57,7 @@
- Comment[sv]=Anpassa kamera
- Comment[ta]=காமிராவை அமை
- Comment[tg]=Танзимоти камера
--Comment[th]=ปรับแต่งกล้อง
-+Comment[th]=ปรับแต่ง Kamera
- Comment[tr]=Kamera'yı Yapılandır
- Comment[uk]=Налаштувати Kamera
- Comment[uz]=Фотоапаратни мослаш
-Index: kamera/kioslave/kamera.cpp
-===================================================================
---- kamera/kioslave/kamera.cpp	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kamera/kioslave/kamera.cpp	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -2,7 +2,7 @@
- 
-     Copyright (C) 2001 The Kompany
- 		  2001-2003	Ilya Konstantinov <kde-devel@future.shiny.co.il>
--		  2001-2003	Marcus Meissner <marcus@jet.franken.de>
-+		  2001-2007	Marcus Meissner <marcus@jet.franken.de>
- 
-     This program is free software; you can redistribute it and/or modify
-     it under the terms of the GNU General Public License as published by
-@@ -23,6 +23,7 @@
- #include <stdlib.h>
- #include <unistd.h>
- #include <stdio.h>
-+#include <fcntl.h>
- #include <sys/stat.h>
- #include <sys/types.h>
- #include <signal.h>
-@@ -33,6 +34,7 @@
- 
- #include <kdebug.h>
- #include <kinstance.h>
-+#include <kstandarddirs.h>
- #include <kconfig.h>
- #include <ksimpleconfig.h>
- #include <klocale.h>
-@@ -43,6 +45,8 @@
- 
- #include "kamera.h"
- 
-+#define MAXIDLETIME	30	/* seconds */
-+
- #define tocstr(x) ((x).local8Bit())
- 
- using namespace KIO;
-@@ -63,18 +67,15 @@
- 
- int kdemain(int argc, char **argv)
- {
--	KInstance instance("kio_kamera");
-+	KInstance	instance("kio_kamera");
- 
- 	if(argc != 4) {
- 		kdDebug(7123) << "Usage: kio_kamera protocol "
- 			     "domain-socket1 domain-socket2" << endl;
- 		exit(-1);
- 	}
--
- 	KameraProtocol slave(argv[2], argv[3]);
--
- 	slave.dispatchLoop();
--
- 	return 0;
- }
- 
-@@ -88,10 +89,44 @@
- 	m_file = NULL;
- 	m_config = new KSimpleConfig(KProtocolInfo::config("camera"));
- 	m_context = gp_context_new();
-+	actiondone = true;
-+	cameraopen = false;
-+	m_lockfile = locateLocal("tmp", "kamera");
-+	idletime = 0;
- }
- 
-+// This handler is getting called every second. We use it to do the
-+// delayed close of the camera.
-+// Logic is:
-+// 	- No more requests in the queue (signaled by actiondone) AND
-+//		- We are MAXIDLETIME seconds idle OR
-+//		- Another slave wants to have access to the camera.
-+//
-+// The existance of a lockfile is used to signify "please give up camera".
-+//
-+void KameraProtocol::special(const QByteArray&) {
-+	kdDebug(7123) << "KameraProtocol::special() at " << getpid() << endl;
-+
-+	if (!actiondone && cameraopen) {
-+		struct stat	stbuf;
-+		if ((-1!=::stat(m_lockfile.utf8(),&stbuf)) || (idletime++ >= MAXIDLETIME)) {
-+			kdDebug(7123) << "KameraProtocol::special() closing camera." << endl;
-+			closeCamera();
-+			setTimeoutSpecialCommand(-1);
-+		} else {
-+			// continue to wait
-+			setTimeoutSpecialCommand(1);
-+		}
-+	} else {
-+		// We let it run until the slave gets no actions anymore.
-+		setTimeoutSpecialCommand(1);
-+	}
-+	actiondone = false;
-+}
-+
- KameraProtocol::~KameraProtocol()
- {
-+	kdDebug(7123) << "KameraProtocol::~KameraProtocol()" << endl;
- 	delete m_config;
- 	if(m_camera) {
- 		closeCamera();
-@@ -101,21 +136,34 @@
- }
- 
- // initializes the camera for usage - should be done before operations over the wire
--bool KameraProtocol::openCamera(void) {
-+bool KameraProtocol::openCamera(QString &str) {
-+	idletime = 0;
-+	actiondone = true;
- 	if (!m_camera) {
- 		reparseConfiguration();
- 	} else {
--		int ret, tries = 15;
--		
--		while (tries--) {
--			ret = gp_camera_init(m_camera, m_context);
--			if (	(ret == GP_ERROR_IO_USB_CLAIM) || 
--				(ret == GP_ERROR_IO_LOCK)) {
--				sleep(1);
--				continue;
-+		if (!cameraopen) {
-+			int ret, tries = 15;
-+			kdDebug(7123) << "KameraProtocol::openCamera at " << getpid() << endl;
-+			while (tries--) {
-+				ret = gp_camera_init(m_camera, m_context);
-+				if (	(ret == GP_ERROR_IO_USB_CLAIM) || 
-+					(ret == GP_ERROR_IO_LOCK)) {
-+					// just create / touch if not there
-+					int fd = ::open(m_lockfile.utf8(),O_CREAT|O_WRONLY,0600);
-+					if (fd != -1) ::close(fd);
-+					::sleep(1);
-+					kdDebug(7123) << "openCamera at " << getpid() << "- busy, ret " << ret << ", trying again." << endl;
-+					continue;
-+				}
-+				if (ret == GP_OK) break;
-+				str = gp_result_as_string(ret);
-+				return false;
- 			}
--			if (ret == GP_OK) break;
--			return false;
-+			::unlink(m_lockfile.utf8());
-+			setTimeoutSpecialCommand(1);
-+			kdDebug(7123) << "openCamera succeeded at " << getpid() << endl;
-+			cameraopen = true;
- 		}
- 	}
- 	return true;
-@@ -129,12 +177,14 @@
- 	if (!m_camera)
- 		return;
- 
-+	kdDebug(7123) << "KameraProtocol::closeCamera at " << getpid() << endl;
- 	if ((gpr=gp_camera_exit(m_camera,m_context))!=GP_OK) {
- 		kdDebug(7123) << "closeCamera failed with " << gp_result_as_string(gpr) << endl;
- 	}
- 	// HACK: gp_camera_exit() in gp 2.0 does not close the port if there
- 	//       is no camera_exit function.
- 	gp_port_close(m_camera->port);
-+	cameraopen = false;
- 	return;
- }
- 
-@@ -183,7 +233,6 @@
- 		processedSize(strlen(xx.text));				\
- 		chunkDataBuffer.resetRawData(xx.text, strlen(xx.text));	\
- 		finished();						\
--		closeCamera();						\
- 		return;							\
- 	}
- 
-@@ -204,12 +253,11 @@
- 	gpr = gp_camera_file_get_info(m_camera, tocstr(fix_foldername(url.directory(false))), tocstr(url.fileName()), &info, m_context);
- 	if (gpr != GP_OK) {
- 		// fprintf(stderr,"Folder %s / File %s not found, gpr is %d\n",folder.latin1(), url.fileName().latin1(), gpr);
--		gp_file_free(m_file);
-+		gp_file_unref(m_file);
- 		if ((gpr == GP_ERROR_FILE_NOT_FOUND) || (gpr == GP_ERROR_DIRECTORY_NOT_FOUND))
- 			error(KIO::ERR_DOES_NOT_EXIST, url.path());
- 		else
- 			error(KIO::ERR_UNKNOWN, gp_result_as_string(gpr));
--		closeCamera();
- 		return;
- 	}
- 
-@@ -246,16 +294,14 @@
- 			break;
- 		case GP_ERROR_FILE_NOT_FOUND:
- 		case GP_ERROR_DIRECTORY_NOT_FOUND:
--			gp_file_free(m_file);
-+			gp_file_unref(m_file);
- 			m_file = NULL;
- 			error(KIO::ERR_DOES_NOT_EXIST, url.fileName());
--			closeCamera();
- 			return ;
- 		default:
--			gp_file_free(m_file);
-+			gp_file_unref(m_file);
- 			m_file = NULL;
- 			error(KIO::ERR_UNKNOWN, gp_result_as_string(gpr));
--			closeCamera();
- 			return;
- 	}
- 	// emit the mimetype
-@@ -276,7 +322,6 @@
- 		gp_file_free(m_file);
- 		m_file = NULL;
- 		error(KIO::ERR_UNKNOWN, gp_result_as_string(gpr));
--		closeCamera();
- 		return;
- 	}
- 	// make sure we're not sending zero-sized chunks (=EOF)
-@@ -306,9 +351,8 @@
- 	}
- 
- 	finished();
--	gp_file_free(m_file);
-+	gp_file_unref(m_file); /* just unref, might be stored in fs */
- 	m_file = NULL;
--	closeCamera();
- }
- 
- // The KIO slave "stat" function.
-@@ -356,6 +400,10 @@
- 	statEntry(entry);
- 
- 	finished();
-+
-+	// This call happens on autodetect by kdemm. So close the camera, but
-+	// only if no more requests are pending. 
-+	idletime = MAXIDLETIME;
- }
- 
- // Implements a regular stat() of a file / directory, returning all we know about it
-@@ -384,7 +432,6 @@
- 		else
- 			error(KIO::ERR_UNKNOWN, gp_result_as_string(gpr));
- 		gp_list_free(dirList);
--		closeCamera();
- 		return;
- 	}
- 
-@@ -399,7 +446,6 @@
- 		translateTextToUDS(entry,#xx".txt",xx.text);		\
- 		statEntry(entry);					\
- 		finished();						\
--		closeCamera();						\
- 		return;							\
- 	}
- 	GPHOTO_TEXT_FILE(about);
-@@ -416,7 +462,6 @@
- 			translateDirectoryToUDS(entry, url.fileName());
- 			statEntry(entry);
- 			finished();
--			closeCamera();
- 			return;
- 		}
- 	}
-@@ -430,13 +475,11 @@
- 			error(KIO::ERR_DOES_NOT_EXIST, url.path());
- 		else
- 			error(KIO::ERR_UNKNOWN, gp_result_as_string(gpr));
--		closeCamera();
- 		return;
- 	}
- 	translateFileToUDS(entry, info, url.fileName());
- 	statEntry(entry);
- 	finished();
--	closeCamera();
- }
- 
- // The KIO slave "del" function.
-@@ -465,7 +508,6 @@
- 			finished();
- 		}
- 	}
--	closeCamera();
- }
- 
- // The KIO slave "listDir" function.
-@@ -643,7 +685,6 @@
- 	gpr = readCameraFolder(url.path(), dirList, fileList);
- 	if(gpr != GP_OK) {
- 		kdDebug(7123) << "read Camera Folder failed:" << gp_result_as_string(gpr) <<endl;
--		closeCamera();
- 		gp_list_free(dirList);
- 		gp_list_free(fileList);
- 		gp_list_free(specialList);
-@@ -687,7 +728,6 @@
- 		}
- 	}
- 
--	closeCamera();
- 
- 	gp_list_free(fileList);
- 	gp_list_free(dirList);
-@@ -764,18 +804,14 @@
- 		gp_camera_set_port_info(m_camera, port_info);
- 		gp_camera_set_port_speed(m_camera, 0); // TODO: the value needs to be configurable
- 		kdDebug(7123) << "Opening camera model " << user << " at " << host << endl;
--#if 0
--		// initialize the camera (might take time on a non-existant or disconnected camera)
--		gpr = gp_camera_init(m_camera, m_context);
--		if(gpr != GP_OK) {
--			gp_camera_unref(m_camera);
--			m_camera = NULL;
-+
-+		QString errstr;
-+		if (!openCamera(errstr)) {
- 			kdDebug(7123) << "Unable to init camera: " << gp_result_as_string(gpr) << endl;
--			error(KIO::ERR_UNKNOWN, gp_result_as_string(gpr));
-+			error(KIO::ERR_SERVICE_NOT_AVAILABLE, errstr);
-+			gp_camera_exit(m_camera, m_context);
- 			return;
- 		}
--		gp_camera_exit(m_camera, m_context);
--#endif
- 	}
- }
- 
-Index: kamera/kioslave/kamera.h
-===================================================================
---- kamera/kioslave/kamera.h	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kamera/kioslave/kamera.h	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -2,7 +2,7 @@
- 
-     Copyright (C) 2001 The Kompany
- 		  2001-2003	Ilya Konstantinov <kde-devel@future.shiny.co.il>
--		  2001-2003	Marcus Meissner <marcus@jet.franken.de>
-+		  2001-2007	Marcus Meissner <marcus@jet.franken.de>
- 
-     This program is free software; you can redistribute it and/or modify
-     it under the terms of the GNU General Public License as published by
-@@ -38,12 +38,13 @@
- 	virtual void get(const KURL &url);
- 	virtual void stat(const KURL &url);
- 	virtual void del(const KURL &url, bool isFile);
--        virtual void setHost(const QString& host, int port, const QString& user, const QString& pass );
-+	virtual void setHost(const QString& host, int port, const QString& user, const QString& pass );
- 	virtual void listDir(const KURL &url);
-+	virtual void special(const QByteArray &data);
- 
--        CameraFile *getFile() { return m_file; }
--        int getFileSize() { return m_fileSize; }
--        void setFileSize(int newfs) { m_fileSize = newfs; }
-+	CameraFile *getFile() { return m_file; }
-+	int getFileSize() { return m_fileSize; }
-+	void setFileSize(int newfs) { m_fileSize = newfs; }
- 
- private:
- 	Camera *m_camera;
-@@ -53,26 +54,28 @@
- 	GPContext	*m_context;
- 
- 	void reparseConfiguration(void);
--	bool openCamera(void);
-+	bool openCamera(QString& str);
-+	bool openCamera(void ) {
-+		QString errstr;
-+		return openCamera(errstr);
-+	}
- 	void closeCamera(void);
- 
- 	void statRoot(void);
- 	void statRegular(const KURL &url);
--        void translateTextToUDS(KIO::UDSEntry &udsEntry, const QString &info, const char *txt);
--        void translateFileToUDS(KIO::UDSEntry &udsEntry, const CameraFileInfo &info, QString name);
-+	void translateTextToUDS(KIO::UDSEntry &udsEntry, const QString &info, const char *txt);
-+	void translateFileToUDS(KIO::UDSEntry &udsEntry, const CameraFileInfo &info, QString name);
- 	void translateDirectoryToUDS(KIO::UDSEntry &udsEntry, const QString &dirname);
- 	bool cameraSupportsPreview(void);
- 	bool cameraSupportsDel(void);
- 	bool cameraSupportsPut(void);
- 	int readCameraFolder(const QString &folder, CameraList *dirList, CameraList *fileList);
--	QString lockFileName();
--	void lock();
--	void unlock();
- 
--	QString m_cfgModel;
--	QString m_cfgPath;
-+	QString m_lockfile;
-+	int	idletime;
- 
- 	int m_fileSize;
- 	CameraFile *m_file;
-+	bool actiondone, cameraopen;
- };
- #endif
-Index: kruler/eventsrc
-===================================================================
---- kruler/eventsrc	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kruler/eventsrc	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -163,7 +163,7 @@
- Comment[mt]=Ir-riga mxiet b'tikka waħda permezz tal-buttuni vleġeġ
- Comment[nb]=Linjalen ble flyttet punktvis ved bruk av piltastene
- Comment[nds]=Dat Lineaal warrt mit de Pieltasten pixelwies verschaven
--Comment[ne]=कर्सर कुञ्जी प्रयोग गरेर रूलर पिक्सवाइज सारियो
-+Comment[ne]=कर्सर कुञ्जी प्रयोग गरेर रूलर पिक्सेलअनुसार सारियो
- Comment[nl]=De liniaal is enkele pixels verplaatst via de cursortoetsen
- Comment[nn]=Linjalen vert flytta piksel for piksel med piltastane
- Comment[nso]=Molaodi o tsamaile ka mokgwa wa pixelwise a somisa ditobetswa tsa cursor
-Index: kruler/kruler.desktop
-===================================================================
---- kruler/kruler.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kruler/kruler.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -68,7 +68,7 @@
- Name[is]=KReglustika
- Name[lv]=KRulers
- Name[ms]=KPembaris
--Name[ne]=के डी ई रूलर
-+Name[ne]=केडीई रूलर
- Name[pl]=Linijka
- Name[pt_BR]=KRégua
- Name[ro]=Riglă
-Index: kiconedit/kiconedit.desktop
-===================================================================
---- kiconedit/kiconedit.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kiconedit/kiconedit.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -82,7 +82,6 @@
- Name[ro]=Editor iconiţe
- Name[sv]=Kiconedit
- Name[ta]=கேசின்னம் திருத்து
--Name[th]=แก้ไขไอคอน - K
- Name[tr]=K Icon Düzenleyici
- Name[ven]=U sengulusa ha aikhono ya K
- Name[zh_TW]=KIconEdit 圖示編輯器
+--- kfile-plugins/ps/gsthumbnail.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfile-plugins/ps/gsthumbnail.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -11,6 +11,7 @@
+ Name[da]=PostScript, PDF- og DVI-filer
+ Name[de]=PostScript-, PDF- und DVI-Dateien
+ Name[el]=Αρχεία PostScript, PDF και DVI
++Name[eo]=Postskriptaj, PDF- kaj DVI-dosieroj
+ Name[es]=Archivos PostScript, PDF y DVI
+ Name[et]=PostScript-, PDF- ja DVI-failid
+ Name[eu]=PostScript, PDF eta DVI fitxategiak
 Index: kfile-plugins/dvi/kfile_dvi.desktop
 ===================================================================
---- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -45,6 +45,7 @@
- Name[sv]=DVI-information
- Name[ta]=DVI தகவல்
- Name[tg]=Иттилоот оиди DVI
-+Name[th]=ข้อมูลแฟ้ม DVI
- Name[tr]=DVI Bilgisi
- Name[uk]=Інформація по DVI
- Name[uz]=DVI ҳақида маълумот
-Index: kfile-plugins/png/kfile_png.desktop
-===================================================================
---- kfile-plugins/png/kfile_png.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/png/kfile_png.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -47,7 +47,7 @@
- Name[sv]=PNG-information
- Name[ta]=PNG தகவல்
- Name[tg]=Иттилоот оиди PNG
--Name[th]=ข้อมูล PNG
-+Name[th]=ข้อมูลแฟ้ม PNG
- Name[tr]=PNG Bilgisi
- Name[uk]=Інформація про PNG
- Name[uz]=PNG ҳақида маълумот
-Index: kfile-plugins/jpeg/kfile_jpeg.desktop
-===================================================================
---- kfile-plugins/jpeg/kfile_jpeg.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/jpeg/kfile_jpeg.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -46,6 +46,7 @@
- Name[sv]=JPEG EXIF-information
- Name[ta]=JPEG EXIF தகவல்
- Name[tg]=Иттилоот оиди JPEG EXIF
-+Name[th]=ข้อมูลแฟ้ม JPEG EXIF
- Name[tr]=JPEG EXIF Bilgisi
- Name[uk]=Інформація про JPEG EXIF
- Name[uz]=JPEG EXIF ҳақида маълумот
-Index: kfile-plugins/xbm/kfile_xbm.desktop
-===================================================================
---- kfile-plugins/xbm/kfile_xbm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/xbm/kfile_xbm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -47,6 +47,7 @@
- Name[sv]=XBM-information
- Name[ta]=XBM தகவல்
- Name[tg]=Иттилоот оиди XBM
-+Name[th]=ข้อมูลแฟ้ม XBM
- Name[tr]=XBM Bilgisi
- Name[uk]=Інформація по XBM
- Name[uz]=XBM ҳақида маълумот
-Index: kfile-plugins/tiff/kfile_tiff.desktop
-===================================================================
---- kfile-plugins/tiff/kfile_tiff.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/tiff/kfile_tiff.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -49,6 +49,7 @@
- Name[sv]=Metainformation om TIFF-fil
- Name[ta]=TIFF மீக்கோப்பு தகவல்
- Name[tg]=Иттилоот оиди метафайли TIFF
-+Name[th]=ข้อมูลเมตาแฟ้ม TIFF
- Name[tr]=TIFF Dosya Bilgisi
- Name[uk]=Метаінформація про файл TIFF
- Name[uz]=TIFF-файлининг мета-маълумоти
-Index: kfile-plugins/raw/kfile_raw.desktop
-===================================================================
---- kfile-plugins/raw/kfile_raw.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/raw/kfile_raw.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -41,6 +41,7 @@
- Name[sr]=RAW фајлови слика
- Name[sr@Latn]=RAW fajlovi slika
- Name[sv]=Obehandlade kamerafiler
-+Name[th]=แฟ้มภาพ RAW จากกล้อง
- Name[tr]=RAW Kamera Dosyaları
- Name[uk]=Файли цифрової камери RAW
- Name[zh_CN]=RAW 相机文件
+--- kfile-plugins/dvi/kfile_dvi.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfile-plugins/dvi/kfile_dvi.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -11,6 +11,7 @@
+ Name[da]=DVI-info
+ Name[de]=DVI-Info
+ Name[el]=Πληροφορίες DVI
++Name[eo]=DVI-informo
+ Name[es]=Info DVI
+ Name[et]=DVI info
+ Name[fa]=اطلاعات DVI
 Index: kfile-plugins/pnm/kfile_pnm.desktop
 ===================================================================
---- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -44,7 +44,7 @@
- Name[sv]=PNM-information
- Name[ta]=PNM தகவல்
- Name[tg]=Иттилоот оиди PNM
--Name[th]=ข้อมูล PNM
-+Name[th]=ข้อมูลแฟ้ม PNM
- Name[tr]=PNM Bilgisi
- Name[uk]=Інформація про PNM
- Name[uz]=PNM ҳақида маълумот
+--- kfile-plugins/pnm/kfile_pnm.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfile-plugins/pnm/kfile_pnm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -10,6 +10,7 @@
+ Name[da]=PNG-info
+ Name[de]=PNM-Info
+ Name[el]=Πληροφορίες PNM
++Name[eo]=PNM-informo
+ Name[es]=Info PNM
+ Name[et]=PNM info
+ Name[fa]=اطلاعات PNM
 Index: kfile-plugins/pcx/kfile_pcx.desktop
 ===================================================================
---- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -46,6 +46,7 @@
- Name[sv]=Metainformation om PCX-fil
- Name[ta]=PCX File Meta தகவல்
- Name[tg]=Иттилоот оиди метафайли PCX
-+Name[th]=ข้อมูลเมตาแฟ้ม PCX
- Name[tr]=PCX Dosya Bilgisi
- Name[uk]=Метаінформація про файл PCX
- Name[uz]=PCX-файлининг мета-маълумоти
+--- kfile-plugins/pcx/kfile_pcx.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfile-plugins/pcx/kfile_pcx.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -11,6 +11,7 @@
+ Name[da]=PCX Fil-meta-info
+ Name[de]=PCX Metainformation
+ Name[el]=Μετα-πληροφορίες αρχείου PCX
++Name[eo]=PCX-dosiera metainformo
+ Name[es]=Info meta de archivos PCX
+ Name[et]=PCX faili metainfo
+ Name[eu]=PCX fitxategi meta info
 Index: kfile-plugins/exr/kfile_exr.desktop
 ===================================================================
---- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -42,6 +42,7 @@
- Name[sv]=EXR-information
- Name[ta]=EXR தகவல்
- Name[tg]=Иттилоот оиди EXR
-+Name[th]=ข้อมูลแฟ้ม EXR
- Name[tr]=EXR Bilgisi
- Name[uk]=Інформація по EXR
- Name[uz]=EXR ҳақида маълумот
+--- kfile-plugins/exr/kfile_exr.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfile-plugins/exr/kfile_exr.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -9,6 +9,7 @@
+ Name[da]=EXR-Info
+ Name[de]=EXR-Info
+ Name[el]=Πληροφορίες EXR
++Name[eo]=EXR-informo
+ Name[es]=Info EXR
+ Name[et]=EXR info
+ Name[fa]=اطلاعات EXR
 Index: kfile-plugins/xpm/kfile_xpm.desktop
 ===================================================================
---- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -38,6 +38,7 @@
- Name[sr@Latn]=XPM informacije
- Name[sv]=XPM-information
- Name[ta]=XPM தகவல்
-+Name[th]=ข้อมูลแฟ้ม XPM
- Name[tr]=XPM Bilgisi
- Name[uk]=Інформація про XPM
- Name[uz]=XPM ҳақида маълумот
-Index: kfile-plugins/gif/kfile_gif.desktop
-===================================================================
---- kfile-plugins/gif/kfile_gif.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/gif/kfile_gif.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -48,6 +48,7 @@
- Name[sv]=Gif-information
- Name[ta]=GIF தகவல்
- Name[tg]=Иттилоот оиди GIF
-+Name[th]=ข้อมูลแฟ้ม GIF
- Name[tr]=GIF Bilgisi
- Name[uk]=Інформація по GIF
- Name[uz]=GIF ҳақида маълумот
-Index: kfile-plugins/pdf/kfile_pdf.desktop
-===================================================================
---- kfile-plugins/pdf/kfile_pdf.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/pdf/kfile_pdf.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -47,7 +47,7 @@
- Name[sv]=PDF-information
- Name[ta]=PDF தகவல்
- Name[tg]=Иттилоот оиди PDF
--Name[th]=ข้อมูล PDF
-+Name[th]=ข้อมูลแฟ้ม PDF
- Name[tr]=PDF Bilgisi
- Name[uk]=Інформація про PDF
- Name[uz]=PDF ҳақида маълумот
-Index: kfile-plugins/ico/kfile_ico.desktop
-===================================================================
---- kfile-plugins/ico/kfile_ico.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/ico/kfile_ico.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -47,6 +47,7 @@
- Name[sv]=Ico-information
- Name[ta]=ICO தகவல்
- Name[tg]=Иттилоот оиди ICO
-+Name[th]=ข้อมูลแฟ้ม ICO
- Name[tr]=ICO Bilgisi
- Name[uk]=Інформація по ICO
- Name[uz]=ICO ҳақида маълумот
+--- kfile-plugins/xpm/kfile_xpm.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfile-plugins/xpm/kfile_xpm.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -7,6 +7,7 @@
+ Name[cs]=XPM info
+ Name[de]=XPM-Info
+ Name[el]=Πληροφορίες XPM
++Name[eo]=XPM-informo
+ Name[es]=Información XPM
+ Name[et]=XPM info
+ Name[fa]=اطلاعات XPM
 Index: kfile-plugins/dds/kfile_dds.desktop
 ===================================================================
---- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -40,6 +40,7 @@
- Name[sr@Latn]=Informacije o DirectDraw površini
- Name[sv]=Directdraw ytinformation
- Name[ta]=நேரடி மேற்பரப்பு தகவல்
-+Name[th]=ข้อมูลแฟ้มพื้นผิว DirectDraw
- Name[tr]=DirectDraw Yüzey Bilgisi
- Name[uk]=Інформація про поверхню DirectDraw
- Name[zh_CN]=DirectDraw 表面信息
-Index: kfile-plugins/tga/kfile_tga.desktop
-===================================================================
---- kfile-plugins/tga/kfile_tga.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/tga/kfile_tga.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -46,6 +46,7 @@
- Name[sv]=Information om Truevision Targa
- Name[ta]=சரியான பார்வை தார்கா தகவல்
- Name[tg]=Иттилоот оиди Truevision Targa
-+Name[th]=ข้อมูลแฟ้ม Truevision Targa
- Name[tr]=Truevision Targa Bilgisi
- Name[uk]=Інформація по Truevision Targa
- Name[uz]=TGA ҳақида маълумот
-Index: kfile-plugins/bmp/kfile_bmp.desktop
-===================================================================
---- kfile-plugins/bmp/kfile_bmp.desktop	(.../tags/KDE/3.5.7/kdegraphics)	(wersja 699343)
-+++ kfile-plugins/bmp/kfile_bmp.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 699343)
-@@ -48,6 +48,7 @@
- Name[sv]=BMP-information
- Name[ta]=BMP தகவல்
- Name[tg]=Иттилоот оиди BMP
-+Name[th]=ข้อมูลแฟ้ม BMP
- Name[tr]=BMP Bilgisi
- Name[uk]=Інформація по BMP
- Name[uz]=BMP ҳақида маълумот
+--- kfile-plugins/dds/kfile_dds.desktop	(.../tags/KDE/3.5.8/kdegraphics)	(wersja 734657)
++++ kfile-plugins/dds/kfile_dds.desktop	(.../branches/KDE/3.5/kdegraphics)	(wersja 734657)
+@@ -7,6 +7,7 @@
+ Name[da]=DirectDraw overflade-info
+ Name[de]=DirectDraw Oberflächeninfo
+ Name[el]=Πληροφορίες επιφάνειας DirectDraw
++Name[eo]=DirectDraw surfac-informo
+ Name[es]=Información de la primera vista de DirectDraw
+ Name[et]=DirectDraw Surface'i info
+ Name[eu]=DirectDraw Surface informazioa
 
 Zmiany atrybutów dla: .
 ___________________________________________________________________
