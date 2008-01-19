@@ -2,9 +2,7 @@
 # Conditional build:
 %bcond_without	kuickshow		# do not build kuickshow app (omit imlib req)
 %bcond_with	protections		# protections against fair use (printing and copying)
-%bcond_without	hidden_visibility	# pass '--fvisibility=hidden'
-					# & '--fvisibility-inlines-hidden'
-					# to g++
+%bcond_without	hidden_visibility	# no gcc hidden visibility
 #
 %define		_state		stable
 %define		_minlibsevr	9:%{version}
@@ -27,6 +25,7 @@ Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 Patch2:		kde-ac260-lt.patch
 Patch3:		%{name}-kuickshow-imlib.patch
+URL:		http://www.kde.org/
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	ed
