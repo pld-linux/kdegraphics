@@ -11,9 +11,9 @@
 %define		_minbaseevr	9:%{version}
 
 Summary:	K Desktop Environment - Graphic Applications
-Summary(es):	K Desktop Environment - aplicaciones gráficas
-Summary(pl):	K Desktop Environment - Aplikacje graficzne
-Summary(pt_BR):	K Desktop Environment - Aplicações gráficas
+Summary(es.UTF-8):	K Desktop Environment - aplicaciones grÃ¡ficas
+Summary(pl.UTF-8):	K Desktop Environment - Aplikacje graficzne
+Summary(pt_BR.UTF-8):	K Desktop Environment - AplicaÃ§Ãµes grÃ¡ficas
 Name:		kdegraphics
 Version:	3.5.8
 Release:	2
@@ -75,8 +75,8 @@ Included with this package are:
 - KuickShow - an image viewer
 - KView - displays numerous graphic file formats.
 
-%description -l es
-Aplicaciones gráficas para KDE.
+%description -l es.UTF-8
+Aplicaciones grÃ¡ficas para KDE.
 
 Incluidos en este paquete:
 - KDVI - visualiza archivos TeX's independientes de dispositivo,
@@ -84,42 +84,42 @@ Incluidos en este paquete:
 - KFract - creador de fractal
 - KGhostview - visualiza archivos postscript (.ps),
 - KPaint - un programa sencillo de dibujo,
-- KView - visualiza numerosos formatos de archivos gráficos.
+- KView - visualiza numerosos formatos de archivos grÃ¡ficos.
 
-%description -l pl
+%description -l pl.UTF-8
 Aplikacje graficzne dla KDE.
 
 Pakiet zawiera programy:
 
-- Kamera - obs³uga kamer cyfrowych
-- KDVI - przegl±darka plików DVI,
-- KColorEdit - edytor palety kolorów
-- KColorChooser - wybór koloru
-- KFax - program do wy¶wietlania faksów,
+- Kamera - obsÅ‚uga kamer cyfrowych
+- KDVI - przeglÄ…darka plikÃ³w DVI,
+- KColorEdit - edytor palety kolorÃ³w
+- KColorChooser - wybÃ³r koloru
+- KFax - program do wyÅ›wietlania faksÃ³w,
 - KFract - generator fraktali,
-- KGhostview - program do ogl±dania postscriptu (.ps),
+- KGhostview - program do oglÄ…dania postscriptu (.ps),
 - KIconedit - program do edycji ikon dla KDE,
 - KPaint - prosty program do grafiki rastrowej,
 - KRuler - linijka ekranowa
-- KSnapshot - program do przechwytywania wygl±du ekranu,
-- KuickShow - przegl±darka plików graficznych.
-- KView - przegl±darka plików graficznych.
+- KSnapshot - program do przechwytywania wyglÄ…du ekranu,
+- KuickShow - przeglÄ…darka plikÃ³w graficznych.
+- KView - przeglÄ…darka plikÃ³w graficznych.
 
-%description -l pt_BR
-Aplicações gráficas para o KDE.
+%description -l pt_BR.UTF-8
+AplicaÃ§Ãµes grÃ¡ficas para o KDE.
 
-Incluídos neste pacote:
+IncluÃ­dos neste pacote:
 - KDVI - visualiza arquivos TeX's independentes de dispositivo,
 - KFax - visualiza arquivos de fax,
 - KFract - gerador de fractal,
 - KGhostview - visualiza arquivos postscript (.ps),
 - KPaint - um programa simples de desenho,
-- KView - visualiza numerosos formatos de arquivos gráficos.
+- KView - visualiza numerosos formatos de arquivos grÃ¡ficos.
 
 %package devel
 Summary:	kdegraphics development files
-Summary(pl):	Pliki dla programistów kdegraphics
-Summary(pt_BR):	Arquivos de inclusão para compilação de aplicações com kdegraphics
+Summary(pl.UTF-8):	Pliki dla programistÃ³w kdegraphics
+Summary(pt_BR.UTF-8):	Arquivos de inclusÃ£o para compilaÃ§Ã£o de aplicaÃ§Ãµes com kdegraphics
 Group:		X11/Development/Libraries
 Requires:	%{name}-kghostview = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kooka = %{epoch}:%{version}-%{release}
@@ -131,16 +131,16 @@ Requires:	kdelibs-devel >= %{_minlibsevr}
 %description devel
 kdegraphics development files.
 
-%description devel -l pl
-Pliki dla programistów kdegraphics.
+%description devel -l pl.UTF-8
+Pliki dla programistÃ³w kdegraphics.
 
-%description devel -l pt_BR
-Arquivos de inclusão para compilação de aplicações que usem as
+%description devel -l pt_BR.UTF-8
+Arquivos de inclusÃ£o para compilaÃ§Ã£o de aplicaÃ§Ãµes que usem as
 bibliotecas do kdegraphics.
 
 %package daemonwatcher
 Summary:	KDED Daemon Watcher
-Summary(pl):	Stra¿nik demona KDED
+Summary(pl.UTF-8):	StraÅ¼nik demona KDED
 Group:		X11/Applications
 Requires:	kdelibs >= %{_minlibsevr}
 Conflicts:	kdegraphics-mrml < 8:3.1-6
@@ -148,12 +148,12 @@ Conflicts:	kdegraphics-mrml < 8:3.1-6
 %description daemonwatcher
 Starts daemons on demand and restarts them on failure.
 
-%description daemonwatcher -l pl
-Uruchamia demony na ¿±danie lub restartuje je po awarii.
+%description daemonwatcher -l pl.UTF-8
+Uruchamia demony na Å¼Ä…danie lub restartuje je po awarii.
 
 %package kamera
 Summary:	Digital camera support
-Summary(pl):	Obs³uga kamer cyfrowych
+Summary(pl.UTF-8):	ObsÅ‚uga kamer cyfrowych
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
@@ -165,30 +165,30 @@ start using it with most KDE applications in two easy steps: simply
 configure your camera model and port type from a list in KControl,
 then start accessing the camera contents with a kamera:/ URL.
 
-%description kamera -l pl
-kamera to modu³ IO slave oraz panelu KControl umo¿liwiaj±cy dostêp do
-folderów i zdjêæ w dowolnym aparacie cyfrowym obs³ugiwanym przez
-biblioteki gPhoto2. Je¶li mamy obs³ugiwany aparat, mo¿na zacz±æ u¿ywaæ
-go w wiêkszo¶ci aplikacji KDE w dwóch krokach: wybraæ model i port
-aparatu z listy w KControl, a nastêpnie odwo³ywaæ siê do zawarto¶ci
+%description kamera -l pl.UTF-8
+kamera to moduÅ‚ IO slave oraz panelu KControl umoÅ¼liwiajÄ…cy dostÄ™p do
+folderÃ³w i zdjÄ™Ä‡ w dowolnym aparacie cyfrowym obsÅ‚ugiwanym przez
+biblioteki gPhoto2. JeÅ›li mamy obsÅ‚ugiwany aparat, moÅ¼na zaczÄ…Ä‡ uÅ¼ywaÄ‡
+go w wiÄ™kszoÅ›ci aplikacji KDE w dwÃ³ch krokach: wybraÄ‡ model i port
+aparatu z listy w KControl, a nastÄ™pnie odwoÅ‚ywaÄ‡ siÄ™ do zawartoÅ›ci
 aparatu przez URL kamera:/.
 
 %package kcolorchooser
 Summary:	Color chooser
-Summary(pl):	Program do wybierania kolorów
+Summary(pl.UTF-8):	Program do wybierania kolorÃ³w
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{_minlibsevr}
 
 %description kcolorchooser
 Color chooser.
 
-%description kcolorchooser -l pl
-Program do wybierania kolorów.
+%description kcolorchooser -l pl.UTF-8
+Program do wybierania kolorÃ³w.
 
 %package kcoloredit
 Summary:	Color palette editor
-Summary(pl):	Edytor palety kolorów
-Summary(pt_BR):	Editor de cores
+Summary(pl.UTF-8):	Edytor palety kolorÃ³w
+Summary(pt_BR.UTF-8):	Editor de cores
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
@@ -196,17 +196,17 @@ Requires:	kdebase-core >= %{_minbaseevr}
 KColorEdit is a palette files editor. It can be used for editing color
 palettes and for color choosing and naming.
 
-%description kcoloredit -l pl
-KColorEdit to edytor plików palety kolorów. Mo¿e byæ u¿ywany do edycji
-palet kolorów oraz wybierania i nazywania kolorów.
+%description kcoloredit -l pl.UTF-8
+KColorEdit to edytor plikÃ³w palety kolorÃ³w. MoÅ¼e byÄ‡ uÅ¼ywany do edycji
+palet kolorÃ³w oraz wybierania i nazywania kolorÃ³w.
 
-%description kcoloredit -l pt_BR
+%description kcoloredit -l pt_BR.UTF-8
 Editor de cores do KDE.
 
 %package kdvi
 Summary:	KDE DVI viewer
-Summary(pl):	Przegl±darka plików DVI dla KDE
-Summary(pt_BR):	Programa de exibição de DVIs
+Summary(pl.UTF-8):	PrzeglÄ…darka plikÃ³w DVI dla KDE
+Summary(pt_BR.UTF-8):	Programa de exibiÃ§Ã£o de DVIs
 Group:		X11/Applications/Graphics
 Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -217,19 +217,19 @@ display DVI-files (.dvi) which are produced by the TeX typesetting
 system. KDVI supports many extensions of the DVI standard, for
 instance the inclusion of PostScript graphics or hyperlinks.
 
-%description kdvi -l pl
-KDVI to wtyczka dla programu KViewshell umo¿liwiaj±ca mu ogl±danie
-plików DVI (.dvi) stworzonych przez system sk³adu TeX. KDVI obs³uguje
-wiele rozszerzeñ standardu DVI, na przyk³ad do³±czanie grafiki
-postscriptowej i hiper³±cza.
+%description kdvi -l pl.UTF-8
+KDVI to wtyczka dla programu KViewshell umoÅ¼liwiajÄ…ca mu oglÄ…danie
+plikÃ³w DVI (.dvi) stworzonych przez system skÅ‚adu TeX. KDVI obsÅ‚uguje
+wiele rozszerzeÅ„ standardu DVI, na przykÅ‚ad doÅ‚Ä…czanie grafiki
+postscriptowej i hiperÅ‚Ä…cza.
 
-%description kdvi -l pt_BR
-Programa de exibição de DVIs.
+%description kdvi -l pt_BR.UTF-8
+Programa de exibiÃ§Ã£o de DVIs.
 
 %package kfax
 Summary:	KDE Fax viewer
-Summary(pl):	Przegl±darka faksów dla KDE
-Summary(pt_BR):	Programa de visualização de faxes (formato TIFF)
+Summary(pl.UTF-8):	PrzeglÄ…darka faksÃ³w dla KDE
+Summary(pt_BR.UTF-8):	Programa de visualizaÃ§Ã£o de faxes (formato TIFF)
 Group:		X11/Applications/Graphics
 Requires:	%{name}-kviewshell = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -245,23 +245,23 @@ common fax encoding such as group 3 (1 and 2 dimensional) and group 4
 can be displayed. KFax has built in native postscript printing
 capabilities.
 
-%description kfax -l pl
-KFax to przegl±darka plików faksowych potrafi±ca wy¶wietlaæ i drukowaæ
-wszystkie popularne formaty plików faksowych. W szczególno¶ci mo¿na
-wy¶wietlaæ pliki faksów u¿ywane przez pakiety do wysy³ania i
-odbierania faksów mgetty/sendfax oraz hylafax. Mo¿na wy¶wietliæ tak¿e
-pierwsz± (lub jedyn±) stronê plików w stylu "PC-Research" (DigiFAX)
+%description kfax -l pl.UTF-8
+KFax to przeglÄ…darka plikÃ³w faksowych potrafiÄ…ca wyÅ›wietlaÄ‡ i drukowaÄ‡
+wszystkie popularne formaty plikÃ³w faksowych. W szczegÃ³lnoÅ›ci moÅ¼na
+wyÅ›wietlaÄ‡ pliki faksÃ³w uÅ¼ywane przez pakiety do wysyÅ‚ania i
+odbierania faksÃ³w mgetty/sendfax oraz hylafax. MoÅ¼na wyÅ›wietliÄ‡ takÅ¼e
+pierwszÄ… (lub jedynÄ…) stronÄ™ plikÃ³w w stylu "PC-Research" (DigiFAX)
 stworzonych przez sterowniki dfaxhigh i dfaxlow z ghostscripta. Pliki
-wej¶ciowe mog± u¿ywaæ dowolnego popularnego kodowania, takiego jak G3
-(1- i 2-wymiarowego) lub G4. KFax ma wbudowan± natywn± mo¿liwo¶æ
+wejÅ›ciowe mogÄ… uÅ¼ywaÄ‡ dowolnego popularnego kodowania, takiego jak G3
+(1- i 2-wymiarowego) lub G4. KFax ma wbudowanÄ… natywnÄ… moÅ¼liwoÅ›Ä‡
 wydruku do postscriptu.
 
-%description kfax -l pt_BR
-Programa de visualização de faxes (formato TIFF).
+%description kfax -l pt_BR.UTF-8
+Programa de visualizaÃ§Ã£o de faxes (formato TIFF).
 
 %package kfile
 Summary:	Graphic formats enhanced information
-Summary(pl):	Rozszerzone informacje o plikach graficznych
+Summary(pl.UTF-8):	Rozszerzone informacje o plikach graficznych
 Group:		X11/Applications/Graphics
 Requires:	konqueror >= %{version}
 
@@ -269,26 +269,26 @@ Requires:	konqueror >= %{version}
 This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations.
 
-%description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
-dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
+%description kfile -l pl.UTF-8
+Ten pakiet dodaje do okna dialogowego "wÅ‚aÅ›ciwoÅ›ci pliku" konquerora
+dodatkowÄ… zakÅ‚adkÄ™ z rozszerzonymi informacjami o pliku.
 
 %package kgamma
 Summary:	A monitor calibration tool
-Summary(pl):	Narzêdzie do kalibracji monitora
+Summary(pl.UTF-8):	NarzÄ™dzie do kalibracji monitora
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kgamma
 A monitor calibration tool.
 
-%description kgamma -l pl
-Narzêdzie do kalibracji monitora.
+%description kgamma -l pl.UTF-8
+NarzÄ™dzie do kalibracji monitora.
 
 %package kghostview
 Summary:	KDE Postscript viewer
-Summary(pl):	Przegl±darka postscriptu dla KDE
-Summary(pt_BR):	Programa de visualização de arquivos Postscript e PDF
+Summary(pl.UTF-8):	PrzeglÄ…darka postscriptu dla KDE
+Summary(pt_BR.UTF-8):	Programa de visualizaÃ§Ã£o de arquivos Postscript e PDF
 Group:		X11/Applications/Graphics
 Requires:	ghostscript
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -302,38 +302,38 @@ is the major page description language for printing on UNIX systems
 and this application can be used to preview material intended for
 printing or for reading documents online.
 
-%description kghostview -l pl
-KGhostView wy¶wietla i drukuje pliki w formacie PostScript (.ps, .eps)
+%description kghostview -l pl.UTF-8
+KGhostView wyÅ›wietla i drukuje pliki w formacie PostScript (.ps, .eps)
 oraz Portable Document Format (.pdf). Jest to port KDE programu
-GhostView Tima Theisena, u¿ywaj±cego Alladin Ghostscripta do
-przegl±dania dokumentów przygotowanych w jêzyku opisu strony
-PostScript Adobe'a. PostScript to g³ówny jêzyk opisu strony u¿ywany do
-drukowania w systemach uniksowych, a tej aplikacji mo¿na u¿ywaæ do
-podgl±du materia³ów przeznaczonych do druku oraz do czytania
-dokumentów online.
+GhostView Tima Theisena, uÅ¼ywajÄ…cego Alladin Ghostscripta do
+przeglÄ…dania dokumentÃ³w przygotowanych w jÄ™zyku opisu strony
+PostScript Adobe'a. PostScript to gÅ‚Ã³wny jÄ™zyk opisu strony uÅ¼ywany do
+drukowania w systemach uniksowych, a tej aplikacji moÅ¼na uÅ¼ywaÄ‡ do
+podglÄ…du materiaÅ‚Ã³w przeznaczonych do druku oraz do czytania
+dokumentÃ³w online.
 
-%description kghostview -l pt_BR
-Programa de visualização de arquivos Postscript e PDF.
+%description kghostview -l pt_BR.UTF-8
+Programa de visualizaÃ§Ã£o de arquivos Postscript e PDF.
 
 %package kiconedit
 Summary:	KDE Icon Editor
-Summary(pl):	Edytor ikon dla ¶rodowiska KDE
-Summary(pt_BR):	Editor de ícones
+Summary(pl.UTF-8):	Edytor ikon dla Å›rodowiska KDE
+Summary(pt_BR.UTF-8):	Editor de Ã­cones
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kiconedit
 KDE Icon editor.
 
-%description kiconedit -l pl
+%description kiconedit -l pl.UTF-8
 Edytor ikon dla KDE.
 
-%description kiconedit -l pt_BR
-Editor de ícones, lida inclusive com arquivos .ICO.
+%description kiconedit -l pt_BR.UTF-8
+Editor de Ã­cones, lida inclusive com arquivos .ICO.
 
 %package kmrml
 Summary:	Advanced Search
-Summary(pl):	Zaawansowane wyszukiwanie
+Summary(pl.UTF-8):	Zaawansowane wyszukiwanie
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics-mrml
@@ -342,14 +342,14 @@ Obsoletes:	kdegraphics-mrml
 This package provides graphics files advanced search with file
 indexing.
 
-%description kmrml -l pl
-Ten pakiet umo¿liwia zaawansowane wyszukiwanie plików graficznych z
-indeksowaniem plików.
+%description kmrml -l pl.UTF-8
+Ten pakiet umoÅ¼liwia zaawansowane wyszukiwanie plikÃ³w graficznych z
+indeksowaniem plikÃ³w.
 
 %package kolourpaint
 Summary:	KDE Painter
-Summary(pl):	Program graficzny KDE
-Summary(pt_BR):	Editor básico de imagens bitmap
+Summary(pl.UTF-8):	Program graficzny KDE
+Summary(pt_BR.UTF-8):	Editor bÃ¡sico de imagens bitmap
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdegraphics-kpaint
@@ -357,16 +357,16 @@ Obsoletes:	kdegraphics-kpaint
 %description kolourpaint
 A (very) simple painting program for KDE.
 
-%description kolourpaint -l pl
+%description kolourpaint -l pl.UTF-8
 (Bardzo) prosty program do rysowania pod KDE.
 
-%description kolourpaint -l pt_BR
-Editor básico de imagens bitmap.
+%description kolourpaint -l pt_BR.UTF-8
+Editor bÃ¡sico de imagens bitmap.
 
 %package kooka
 Summary:	Scanning tool
-Summary(pl):	Narzêdzie do skanowania
-Summary(pt_BR):	Um programa de rasterização de imagens, baseado no SANE e libkscan
+Summary(pl.UTF-8):	NarzÄ™dzie do skanowania
+Summary(pt_BR.UTF-8):	Um programa de rasterizaÃ§Ã£o de imagens, baseado no SANE e libkscan
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
@@ -374,28 +374,28 @@ Requires:	kdebase-core >= %{_minbaseevr}
 Kooka is a KDE application that enables easy scanning using SANE
 libraries.
 
-%description kooka -l pl
-Kooka to aplikacja KDE umo¿liwiaj±ca ³atwe skanowanie przy u¿yciu
+%description kooka -l pl.UTF-8
+Kooka to aplikacja KDE umoÅ¼liwiajÄ…ca Å‚atwe skanowanie przy uÅ¼yciu
 bibliotek SANE.
 
-%description kooka -l pt_BR
-Um programa de rasterização de imagens, baseado no SANE e libkscan.
+%description kooka -l pt_BR.UTF-8
+Um programa de rasterizaÃ§Ã£o de imagens, baseado no SANE e libkscan.
 
 %package kpdf
 Summary:	Kpdf is an xpdf based pdf viewer for KDE
-Summary(pl):	Kpdf - program bazuj±cy na xpdf do przegl±dania plików pdf w KDE
+Summary(pl.UTF-8):	Kpdf - program bazujÄ…cy na xpdf do przeglÄ…dania plikÃ³w pdf w KDE
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kpdf
 Kpdf is an xpdf based pdf viewer for KDE.
 
-%description kpdf -l pl
-Program bazuj±cy na xpdf do przegl±dania plików pdf w KDE.
+%description kpdf -l pl.UTF-8
+Program bazujÄ…cy na xpdf do przeglÄ…dania plikÃ³w pdf w KDE.
 
 %package kpovmodeler
 Summary:	Povary Modeler
-Summary(pl):	Modeler Povary
+Summary(pl.UTF-8):	Modeler Povary
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	povray
@@ -403,13 +403,13 @@ Requires:	povray
 %description kpovmodeler
 Modeler for POV-Ray scenes.
 
-%description kpovmodeler -l pl
+%description kpovmodeler -l pl.UTF-8
 Modeler do scen POV-Raya.
 
 %package kruler
 Summary:	KRuler
-Summary(pl):	Linijka dla KDE
-Summary(pt_BR):	Régua de pixels para a tela
+Summary(pl.UTF-8):	Linijka dla KDE
+Summary(pt_BR.UTF-8):	RÃ©gua de pixels para a tela
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
@@ -417,17 +417,17 @@ Requires:	kdebase-core >= %{_minbaseevr}
 KRuler is a very simple application, with only one aim in life. To
 measure distances on your screen.
 
-%description kruler -l pl
-KRuler jest prost± aplikacj±, z tylko jednym celem w ¿yciu: mierzenie
-odleg³o¶ci na ekranie.
+%description kruler -l pl.UTF-8
+KRuler jest prostÄ… aplikacjÄ…, z tylko jednym celem w Å¼yciu: mierzenie
+odlegÅ‚oÅ›ci na ekranie.
 
-%description kruler -l pt_BR
-Régua de pixels para a tela.
+%description kruler -l pt_BR.UTF-8
+RÃ©gua de pixels para a tela.
 
 %package ksnapshot
 Summary:	KDE Snap Shot
-Summary(pl):	Program do przechwytywania ekranu dla KDE
-Summary(pt_BR):	Programa de captura de tela
+Summary(pl.UTF-8):	Program do przechwytywania ekranu dla KDE
+Summary(pt_BR.UTF-8):	Programa de captura de tela
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
@@ -436,17 +436,17 @@ KSnapshot is a simple application for taking screenshots. It is
 capable of capturing images of either the whole desktop or just a
 single window. The images can then be saved in a variety of formats.
 
-%description ksnapshot -l pl
-KSnapshot to prosta aplikacja do robienia zrzutów ekranu. Potrafi
-przechwytywaæ obraz ca³ego pulpitu lub tylko pojedynczego okna. Obrazy
-mog± byæ nastêpnie zapisane w wielu formatach.
+%description ksnapshot -l pl.UTF-8
+KSnapshot to prosta aplikacja do robienia zrzutÃ³w ekranu. Potrafi
+przechwytywaÄ‡ obraz caÅ‚ego pulpitu lub tylko pojedynczego okna. Obrazy
+mogÄ… byÄ‡ nastÄ™pnie zapisane w wielu formatach.
 
-%description ksnapshot -l pt_BR
+%description ksnapshot -l pt_BR.UTF-8
 Programa de captura de tela.
 
 %package ksvg
 Summary:	Scalable Vector Graphics for KDE
-Summary(pl):	Skalowalna grafika wektorowa (SVG) dla KDE
+Summary(pl.UTF-8):	Skalowalna grafika wektorowa (SVG) dla KDE
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{_minlibsevr}
 
@@ -454,13 +454,13 @@ Requires:	kdelibs >= %{_minlibsevr}
 KSVG is a KDE implementation of the Scalable Vector Graphics
 Specifications.
 
-%description ksvg -l pl
-KSVG stanowi implementacjê dla KDE specyfikacji skalowalnej grafiki
+%description ksvg -l pl.UTF-8
+KSVG stanowi implementacjÄ™ dla KDE specyfikacji skalowalnej grafiki
 wektorowej (SVG - Scalable Vector Graphics).
 
 %package kuickshow
 Summary:	Image viewer/browser
-Summary(pl):	Przegl±darka obrazków
+Summary(pl.UTF-8):	PrzeglÄ…darka obrazkÃ³w
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 Provides:	kuickshow
@@ -473,17 +473,17 @@ following image formats are supported: jpg, gif, tiff, png, bmp, psd,
 xpm, xbm, eim. Images can be displayed either in their own window, as
 large as the image, or fullscreen.
 
-%description kuickshow -l pl
-KuickShow to wygodna przegl±darka obrazków. Wy¶wietla przegl±darkê
-plików, w której mo¿na wybieraæ obrazki do pokazania. Obs³ugiwane s±
-nastêpuj±ce formaty obrazków: jpg, gif, tiff, png, bmp, psd, xpm, xbm,
-eim. Obrazki mog± byæ wy¶wietlane w swoim oknie o rozmiarze obrazka
-lub na pe³nym ekranie.
+%description kuickshow -l pl.UTF-8
+KuickShow to wygodna przeglÄ…darka obrazkÃ³w. WyÅ›wietla przeglÄ…darkÄ™
+plikÃ³w, w ktÃ³rej moÅ¼na wybieraÄ‡ obrazki do pokazania. ObsÅ‚ugiwane sÄ…
+nastÄ™pujÄ…ce formaty obrazkÃ³w: jpg, gif, tiff, png, bmp, psd, xpm, xbm,
+eim. Obrazki mogÄ… byÄ‡ wyÅ›wietlane w swoim oknie o rozmiarze obrazka
+lub na peÅ‚nym ekranie.
 
 %package kview
 Summary:	KDE graphics file viewer
-Summary(pl):	Przegl±darka plików graficznych dla KDE
-Summary(pt_BR):	Visualizador de imagens
+Summary(pl.UTF-8):	PrzeglÄ…darka plikÃ³w graficznych dla KDE
+Summary(pt_BR.UTF-8):	Visualizador de imagens
 Group:		X11/Applications/Graphics
 Requires:	kdebase-core >= %{_minbaseevr}
 
@@ -497,22 +497,22 @@ stretching/shrinking, rotation and filtering. You can tile your images
 directly onto the desktop as a background picture, or arrange them in
 a little slideshow.
 
-%description kview -l pl
-KView to przegl±darka plików graficznych dla KDE. Pozwala ogl±daæ
-grafikê w wielu ró¿nych formatach, takich jak PostScript, TIFF itd.
-Zapisuj±c pliki w innym formacie ni¿ oryginalny mo¿na ³atwo
-przekonwertowaæ obrazki do innych formatów graficznych. Ponadto KView
-dostarcza pewnych mo¿liwo¶ci prostej obróbki obrazu, takich jak
-rozci±ganie/zmniejszanie, obracanie i filtrowanie. Mo¿na umieszczaæ
-obrazki bezpo¶rednio na pulpicie jako t³o lub ³±czyæ je w przegl±d
-slajdów.
+%description kview -l pl.UTF-8
+KView to przeglÄ…darka plikÃ³w graficznych dla KDE. Pozwala oglÄ…daÄ‡
+grafikÄ™ w wielu rÃ³Å¼nych formatach, takich jak PostScript, TIFF itd.
+ZapisujÄ…c pliki w innym formacie niÅ¼ oryginalny moÅ¼na Å‚atwo
+przekonwertowaÄ‡ obrazki do innych formatÃ³w graficznych. Ponadto KView
+dostarcza pewnych moÅ¼liwoÅ›ci prostej obrÃ³bki obrazu, takich jak
+rozciÄ…ganie/zmniejszanie, obracanie i filtrowanie. MoÅ¼na umieszczaÄ‡
+obrazki bezpoÅ›rednio na pulpicie jako tÅ‚o lub Å‚Ä…czyÄ‡ je w przeglÄ…d
+slajdÃ³w.
 
-%description kview -l pt_BR
+%description kview -l pt_BR.UTF-8
 Visualizador de imagens poderoso para KDE.
 
 %package kviewshell
 Summary:	KDE generic framework for graphics viewers
-Summary(pl):	Szkielet dla przegl±darek grafiki
+Summary(pl.UTF-8):	Szkielet dla przeglÄ…darek grafiki
 Group:		X11/Applications/Graphics
 Requires:	kdelibs >= %{_minlibsevr}
 Conflicts:	kdegraphics-kview < 9:3.2.90.040514
@@ -521,8 +521,8 @@ Conflicts:	kdegraphics-kview < 9:3.2.90.040514
 KDE generic framework for graphics viewers allowing them to be
 embedded in KDE applications.
 
-%description kviewshell -l pl
-Szkielet KDE dla przegl±darek grafiki pozwala na zagnie¿d¿nie w
+%description kviewshell -l pl.UTF-8
+Szkielet KDE dla przeglÄ…darek grafiki pozwala na zagnieÅ¼dÅ¼nie w
 aplikacjach KDE.
 
 %prep
