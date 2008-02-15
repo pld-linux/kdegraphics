@@ -601,6 +601,10 @@ fi
 if [ ! -f installed.stamp ]; then
 	rm -f $RPM_BUILD_ROOT%{_datadir}/applnk/Graphics/kruler.desktop
 	rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/*.la
+
+	# unsupported
+	rm -rf $RPM_BUILD_ROOT%{_iconsdir}/locolor
+
 	touch installed.stamp
 fi
 
@@ -669,14 +673,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcolorchooser
 %{_desktopdir}/kde/kcolorchooser.desktop
-%{_iconsdir}/[!l]*/*/*/kcolorchooser.*
+%{_iconsdir}/hicolor/*/*/kcolorchooser.*
 
 %files kcoloredit -f kcoloredit.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kcoloredit
 %{_datadir}/apps/kcoloredit
 %{_desktopdir}/kde/kcoloredit.desktop
-%{_iconsdir}/[!l]*/*/*/kcoloredit.*
+%{_iconsdir}/hicolor/*/*/kcoloredit.*
 
 %files kdvi -f kdvi.lang
 %defattr(644,root,root,755)
@@ -701,7 +705,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kfax.desktop
 %{_desktopdir}/kde/kfaxview.desktop
 %{_iconsdir}/*/*/*/kfax.*
-%{_iconsdir}/[!l]*/*/*/kfaxview.*
+%{_iconsdir}/hicolor/*/*/kfaxview.*
 
 %files kfile
 %defattr(644,root,root,755)
@@ -757,7 +761,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kolourpaint
 %{_datadir}/apps/kolourpaint
 %{_desktopdir}/kde/kolourpaint.desktop
-%{_iconsdir}/[!l]*/*/*/kolourpaint.*
+%{_iconsdir}/hicolor/*/*/kolourpaint.*
 
 %files kooka -f kooka.lang
 %defattr(644,root,root,755)
@@ -778,7 +782,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/kpdf.kcfg
 %{_datadir}/services/kpdf_part.desktop
 %{_desktopdir}/kde/kpdf.desktop
-%{_iconsdir}/[!l]*/*/*/kpdf.*
+%{_iconsdir}/hicolor/*/*/kpdf.*
 
 %files kpovmodeler -f kpovmodeler.lang
 %defattr(644,root,root,755)
@@ -787,7 +791,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.so*
 %{_datadir}/apps/kpovmodeler
 %{_desktopdir}/kde/kpovmodeler.desktop
-%{_iconsdir}/[!l]*/*/*/kpovmodeler*
+%{_iconsdir}/crystalsvg/*/*/kpovmodeler_doc.png
+%{_iconsdir}/hicolor/*/*/kpovmodeler.png
 
 %files kruler -f kruler.lang
 %defattr(644,root,root,755)
@@ -825,7 +830,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kuickshow.so
 %{_datadir}/apps/kuickshow
 %{_desktopdir}/kde/kuickshow.desktop
-%{_iconsdir}/[!l]*/*/*/kuickshow.*
+%{_iconsdir}/hicolor/*/*/kuickshow.*
 %endif
 
 %files kview -f kview.lang
