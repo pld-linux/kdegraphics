@@ -1,13 +1,3 @@
-# TODO
-# - unpackaged:
-#   /usr/lib/libkghostviewlib.so
-#   /usr/lib/libkghostviewlib.so.0
-#   /usr/lib/libkimageviewer.so.0
-#   /usr/lib/libkmultipage.so.0
-#   /usr/lib/libkpovmodeler.so
-#   /usr/lib/libkscan.so.1
-#   /usr/lib/libksvg.so.0
-#   /usr/lib/libtext2path.so.0
 #
 # Conditional build:
 %bcond_without	kuickshow		# do not build kuickshow app (omit imlib req)
@@ -24,7 +14,7 @@ Summary(pl.UTF-8):	K Desktop Environment - Aplikacje graficzne
 Summary(pt_BR.UTF-8):	K Desktop Environment - Aplicações gráficas
 Name:		kdegraphics
 Version:	3.5.9
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications/Graphics
@@ -644,9 +634,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libkscan.so
-%attr(755,root,root) %{_libdir}/libkmultipage.so
+%attr(755,root,root) %{_libdir}/libkghostviewlib.so
 %attr(755,root,root) %{_libdir}/libkimageviewer.so
+%attr(755,root,root) %{_libdir}/libkmultipage.so
+%attr(755,root,root) %{_libdir}/libkpovmodeler.so
+%attr(755,root,root) %{_libdir}/libkscan.so
 %attr(755,root,root) %{_libdir}/libksvg.so
 %attr(755,root,root) %{_libdir}/libtext2path.so
 %{_libdir}/*.la
@@ -726,6 +718,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kghostview
 %attr(755,root,root) %{_libdir}/libkghostviewlib.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkghostviewlib.so.0
 %attr(755,root,root) %{_libdir}/kde3/libkghostviewpart.so
 %{_datadir}/apps/kconf_update/kghostview.upd
 %attr(755,root,root) %{_datadir}/apps/kconf_update/update-to-xt-names.pl
@@ -767,6 +760,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kooka
 %attr(755,root,root) %{_libdir}/libkscan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkscan.so.1
 %{_datadir}/apps/kooka
 %{_datadir}/config/kookarc
 %{_datadir}/services/scanservice.desktop
@@ -787,8 +781,9 @@ rm -rf $RPM_BUILD_ROOT
 %files kpovmodeler -f kpovmodeler.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kpovmodeler
-%attr(755,root,root) %{_libdir}/libkpovmodeler.so.*
-%attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.so*
+%attr(755,root,root) %{_libdir}/libkpovmodeler.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkpovmodeler.so.0
+%attr(755,root,root) %{_libdir}/kde3/libkpovmodelerpart.so
 %{_datadir}/apps/kpovmodeler
 %{_desktopdir}/kde/kpovmodeler.desktop
 %{_iconsdir}/crystalsvg/*/*/kpovmodeler_doc.png
@@ -812,7 +807,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/printnodetest
 %attr(755,root,root) %{_bindir}/svgdisplay
 %attr(755,root,root) %{_libdir}/libksvg.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libksvg.so.0
 %attr(755,root,root) %{_libdir}/libtext2path.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libtext2path.so.0
 %attr(755,root,root) %{_libdir}/kde3/libksvgplugin.so
 %attr(755,root,root) %{_libdir}/kde3/libksvgrendererlibart.so
 %attr(755,root,root) %{_libdir}/kde3/svgthumbnail.so
@@ -838,6 +835,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kview
 %attr(755,root,root) %{_libdir}/libkdeinit_kview.so
 %attr(755,root,root) %{_libdir}/libkimageviewer.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkimageviewer.so.0
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewcanvasconfig.so
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewgeneralconfig.so
 %attr(755,root,root) %{_libdir}/kde3/kcm_kviewpluginsconfig.so
@@ -871,6 +869,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kviewshell
 %attr(755,root,root) %{_libdir}/libkmultipage.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkmultipage.so.0
 %attr(755,root,root) %{_libdir}/kde3/emptymultipagepart.so
 %attr(755,root,root) %{_libdir}/kde3/kviewerpart.so
 %{_datadir}/apps/kviewerpart
