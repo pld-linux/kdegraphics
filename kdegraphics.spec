@@ -588,13 +588,23 @@ export DO_NOT_COMPILE="$DO_NOT_COMPILE kuickshow"
 %{__make}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-rm -rf *.lang
+if [ ! -f makeinstall.stamp -o ! -d $RPM_BUILD_ROOT ]; then
+	rm -rf makeinstall.stamp installed.stamp $RPM_BUILD_ROOT
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	kde_htmldir=%{_kdedocdir}
+	%{__make} install \
+		DESTDIR=$RPM_BUILD_ROOT \
+		kde_htmldir=%{_kdedocdir}
 
+	touch makeinstall.stamp
+fi
+
+if [ ! -f installed.stamp ]; then
+	rm -f $RPM_BUILD_ROOT%{_datadir}/applnk/Graphics/kruler.desktop
+	rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/*.la
+	touch installed.stamp
+fi
+
+rm -f *.lang
 %find_lang kamera	--with-kde
 %find_lang kcoloredit	--with-kde
 %find_lang kgamma	--with-kde
@@ -609,9 +619,6 @@ rm -rf *.lang
 %find_lang ksnapshot	--with-kde
 %find_lang kuickshow	--with-kde
 %find_lang kview	--with-kde
-
-rm -f $RPM_BUILD_ROOT%{_datadir}/applnk/Graphics/kruler.desktop
-rm -f $RPM_BUILD_ROOT%{_libdir}/kde3/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
