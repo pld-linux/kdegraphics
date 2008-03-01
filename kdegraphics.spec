@@ -20,7 +20,7 @@ License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	3d75e27180573a4e077e0245055891a5
-#Patch100:	%{name}-branch.diff
+Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 Patch2:		kde-ac260-lt.patch
@@ -525,7 +525,7 @@ ich w aplikacjach KDE.
 
 %prep
 %setup -q
-#%patch100 -p0
+%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
