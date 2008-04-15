@@ -1,3 +1,8 @@
+# TODO
+# - switch to gtk+2 port or something?
+#kdegraphics-kuickshow-3.5.9-3.i686 marks imlib-1.9.15-9.i686 (cap libImlib.so.1)
+#  imlib-1.9.15-9.i686 marks gtk+-1.2.10-20.i686 (cap libgdk-1.2.so.0)
+#    gtk+-1.2.10-20.i686 marks glib-1.2.10-16.i686 (cap glib >= 1.2.10)
 #
 # Conditional build:
 %bcond_without	kuickshow		# do not build kuickshow app (omit imlib req)
