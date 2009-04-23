@@ -1,8 +1,0 @@
-
-Property changes on: .
-___________________________________________________________________
-Deleted: svn:mergeinfo
-Added: svn:externals
-   + admin https://svn.kde.org/home/kde/branches/KDE/3.5/kde-common/admin
-
-
