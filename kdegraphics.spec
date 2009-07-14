@@ -25,11 +25,11 @@ License:	GPL
 Group:		X11/Applications/Graphics
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	a09094b5357d8cd5c49d45b5d291dcfe
-Patch100:	%{name}-branch.diff
 Patch0:		kde-common-PLD.patch
 Patch1:		%{name}-allowprint.patch
 Patch2:		kde-ac260-lt.patch
 Patch3:		%{name}-kuickshow-imlib.patch
+Patch4:		%{name}-am.patch
 URL:		http://www.kde.org/
 BuildRequires:	OpenEXR-devel >= 1.1.0
 BuildRequires:	OpenGL-GLU-devel
@@ -530,11 +530,11 @@ ich w aplikacjach KDE.
 
 %prep
 %setup -q
-%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Graphics;Viewer;/' \
 	kdvi/kdvi.desktop \
