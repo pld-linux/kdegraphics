@@ -582,6 +582,7 @@ export DO_NOT_COMPILE="$DO_NOT_COMPILE kuickshow"
 	--with-qt-libraries=%{_libdir}
 
 %{__make}
+rm -f makeinstall.stamp
 
 %install
 if [ ! -f makeinstall.stamp -o ! -d $RPM_BUILD_ROOT ]; then
