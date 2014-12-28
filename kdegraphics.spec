@@ -36,7 +36,7 @@ BuildRequires:	OpenGL-GLU-devel
 BuildRequires:	ed
 BuildRequires:	fribidi-devel >= 0.10.4
 %{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	giflib-devel
 %{?with_kuickshow:BuildRequires:	imlib-devel}
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
